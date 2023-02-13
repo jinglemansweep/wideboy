@@ -1,0 +1,16 @@
+[Unit]
+Description=WideBoy RGB Video Wall
+Requires=xvfb.service
+After=xvfb.service
+
+[Service]
+WorkingDirectory=/opt/rgbmatrix
+ExecStart=/bin/bash ./start.sh
+Environment=PYTHONUNBUFFERED=1
+Restart=always
+Type=simple
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=default.target

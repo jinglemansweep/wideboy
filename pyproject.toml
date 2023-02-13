@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "wideboy"
+version = "0.1.0"
+description = "WideBoy RGB Matrix Display Board"
+authors = ["Louis King <jinglemansweep@gmail.com>"]
+readme = "README.md"
+packages = []
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pygame = "^2.1.2"
+numpy = "^1.24.2"
+python-dotenv = "^0.21.1"
+pillow = "^9.4.0"
+aiohttp = "^3.8.3"
+asyncio = "^3.4.3"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+mypy = "^1.0.0"
+types-pillow = "^9.4.0.10"
+types-paho-mqtt = "^1.6.0.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
