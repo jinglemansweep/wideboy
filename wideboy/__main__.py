@@ -91,7 +91,8 @@ async def start_main_loop():
 
         frame, delta = clock_tick(clock)
 
-        stage.clock.rect.x = frame % CANVAS_SIZE[0]
+        stage.clock.rect.x = frame % CANVAS_SIZE[0] - 128
+        stage.clock.dirty = 1
         stage_updates = stage.render(frame, delta)
         updates = [] + stage_updates
         if len(updates):
