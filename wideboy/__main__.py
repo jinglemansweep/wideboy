@@ -86,6 +86,7 @@ async def start_main_loop():
     stage = Stage(screen, color_bg=(0, 0, 64, 255))
 
     clock_x = 0.0
+    clock_speed = 50
 
     while running:
         for event in pygame.event.get():
@@ -93,9 +94,9 @@ async def start_main_loop():
 
         frame, delta = clock_tick(clock)
 
-        clock_x += 2.0 + delta
-        if clock_x > CANVAS_SIZE[0] + 128:
-            clock_x = 0
+        clock_x += clock_speed * delta
+        if clock_x > CANVAS_SIZE[0]:
+            clock_x = -128
         stage.clock.rect.x = int(clock_x)
         stage.clock.dirty = 1
         stage_updates = stage.render(frame, delta)
