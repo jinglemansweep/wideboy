@@ -3,7 +3,7 @@ from typing import Any
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
-from wideboy.config import MATRIX_SIZE, matrix_options
+from wideboy.config import MATRIX_SIZE, MATRIX_PANEL_SIZE, matrix_options
 
 
 def setup_led_matrix() -> tuple[RGBMatrix, Any]:
@@ -15,11 +15,11 @@ def setup_led_matrix() -> tuple[RGBMatrix, Any]:
 def render_led_matrix(
     matrix: RGBMatrix, surface: pygame.surface.Surface, buffer: Any
 ) -> Any:
-    temp_surface = wrap_surface(surface, MATRIX_SIZE, (64, 64))
+    temp_surface = wrap_surface(surface, MATRIX_SIZE, MATRIX_PANEL_SIZE)
     # Convert PyGame surface to RGB byte array
     image_str = pygame.image.tostring(temp_surface, "RGB", False)
     # Create a PIL compatible image from the byte array
-    image_rgb = Image.frombytes("RGB", (64 * 4, 64 * 3), image_str).convert()
+    image_rgb = Image.frombytes("RGB", MATRIX_SIZE, image_str).convert()
     # Render PIL image to buffer
     buffer.SetImage(image_rgb)
     # Flip and return next buffer

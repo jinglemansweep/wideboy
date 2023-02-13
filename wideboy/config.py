@@ -13,9 +13,14 @@ CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
 CANVAS_SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
 
 MATRIX_ENABLED = get_config_env_var("MATRIX_ENABLED", "true") == "true"
+
 MATRIX_WIDTH = int(get_config_env_var("MATRIX_WIDTH", 64 * 4))
 MATRIX_HEIGHT = int(get_config_env_var("MATRIX_HEIGHT", 64 * 3))
 MATRIX_SIZE = (MATRIX_WIDTH, MATRIX_HEIGHT)
+
+MATRIX_PANEL_WIDTH = int(get_config_env_var("MATRIX_PANEL_WIDTH", 64))
+MATRIX_PANEL_HEIGHT = int(get_config_env_var("MATRIX_PANEL_HEIGHT", 64))
+MATRIX_PANEL_SIZE = (MATRIX_PANEL_WIDTH, MATRIX_PANEL_HEIGHT)
 
 DEBUG = get_config_env_var("DEBUG", "false") == "true"
 LOG_DEBUG = get_config_env_var("LOG_LEVEL", "info").lower() == "debug"
