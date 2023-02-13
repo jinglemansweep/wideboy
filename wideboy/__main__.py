@@ -44,30 +44,31 @@ running = True
 
 
 class Stage:
-    def __init__(self, screen: pygame.surface.Surface) -> None:
-        self.screen = screen
-        self.background = pygame.surface.Surface(CANVAS_SIZE)
-        self.background.fill((0, 0, 0, 255))
+    def __init__(self, dest: pygame.surface.Surface, color_bg=(0, 0, 0)) -> None:
+        self.dest = dest
+        width, height = dest.get_width(), dest.get_height()
+        self.background = pygame.surface.Surface((width, height))
+        self.background.fill(color_bg)
         self.group = pygame.sprite.LayeredDirty()
         self.clock = ClockWidgetSprite(
-            (CANVAS_SIZE[0] - 128, 0, 128, CANVAS_SIZE[1]),
+            (width - 128, 0, 128, height),
             color_bg=(128, 0, 0, 192),
         )
         self.group.add(self.clock)
 
     def render(self, *args, **kwargs) -> None:
-        self._update(*args, **kwargs)
-        self._clear()
-        return self._draw()
+        self.update(*args, **kwargs)
+        self.clear()
+        return self.draw()
 
-    def _update(self, *args, **kwargs) -> None:
+    def clear(self) -> None:
+        self.group.clear(self.dest, self.background)
+
+    def update(self, *args, **kwargs) -> None:
         self.group.update(*args, **kwargs)
 
-    def _clear(self) -> None:
-        self.group.clear(self.screen, self.background)
-
-    def _draw(self) -> list[pygame.rect.Rect]:
-        return self.group.draw(screen)
+    def draw(self) -> list[pygame.rect.Rect]:
+        return self.group.draw(self.dest)
 
 
 # Main Loop
@@ -77,7 +78,7 @@ async def start_main_loop():
 
     loop = asyncio.get_event_loop()
 
-    stage = Stage(screen)
+    stage = Stage(screen, color_bg=(0, 0, 64, 255))
 
     while running:
         for event in pygame.event.get():
@@ -88,7 +89,7 @@ async def start_main_loop():
         stage_updates = stage.render(frame, delta)
         updates = [] + stage_updates
         if len(updates):
-            logger.debug(f"display:updates rects={len(updates)}")
+            logger.debug(f"display:draw rects={len(updates)}")
         pygame.display.update(updates)
 
         loop_debug(
