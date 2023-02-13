@@ -12,6 +12,10 @@ CANVAS_WIDTH = int(get_config_env_var("CANVAS_WIDTH", 64 * 12))
 CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
 CANVAS_SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
 
+MATRIX_WIDTH = int(get_config_env_var("MATRIX_WIDTH", 64 * 4))
+MATRIX_HEIGHT = int(get_config_env_var("MATRIX_HEIGHT", 64 * 3))
+MATRIX_SIZE = (MATRIX_WIDTH, MATRIX_HEIGHT)
+
 DEBUG = get_config_env_var("DEBUG", "false") == "true"
 LOG_DEBUG = get_config_env_var("LOG_LEVEL", "info").lower() == "debug"
 PROFILING = get_config_env_var("PROFILING", "")
@@ -37,7 +41,7 @@ LED_CHAIN = int(get_config_env_var("LED_CHAIN", 4))  # 4
 LED_PARALLEL = int(get_config_env_var("LED_PARALLEL", 1))  # 3
 LED_MULTIPLEXING = int(get_config_env_var("LED_MULTIPLEXING", 0))  # 0-18
 LED_PIXEL_MAPPER = get_config_env_var(
-        "LED_PIXEL_MAPPER", ""
+    "LED_PIXEL_MAPPER", ""
 )  # U-mapper;V-mapper;Rotate:90
 LED_PWM_BITS = int(get_config_env_var("LED_PWM_BITS", 11))  # 1-11
 LED_BRIGHTNESS = int(get_config_env_var("LED_BRIGHTNESS", 100))  # 0-100
