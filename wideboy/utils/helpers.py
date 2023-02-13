@@ -6,7 +6,7 @@ import pygame
 import random
 from typing import Any, Optional
 from wideboy import _APP_NAME, _APP_DESCRIPTION, _APP_VERSION
-from wideboy.config import DEBUG, CANVAS_SIZE
+from wideboy.config import DEBUG, LOG_DEBUG, CANVAS_SIZE
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,8 @@ def intro_debug() -> None:
     logger.info("=" * 80)
     logger.info(f"{_APP_DESCRIPTION} [{_APP_NAME}] v{_APP_VERSION}")
     logger.info("=" * 80)
-    logger.info(f"Debug: {DEBUG}")
+    logger.info(f"Debug:       {DEBUG}")
+    logger.info(f"Log Debug:   {LOG_DEBUG}")
     logger.info(f"Canvas Size: {CANVAS_SIZE[0]}x{CANVAS_SIZE[1]}")
     logger.info("=" * 80)
 

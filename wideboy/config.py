@@ -12,4 +12,5 @@ CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
 CANVAS_SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
 
 DEBUG = get_config_env_var("DEBUG", "false") == "true"
+LOG_DEBUG = get_config_env_var("LOG_LEVEL", "info").lower() == "debug"
 PROFILING = get_config_env_var("PROFILING", "")

@@ -50,10 +50,13 @@ def run_loop(loop_func: Callable) -> None:
 
 
 def loop_debug(
-    frame: int, clock: pygame.time.Clock, delta: float, every: int = 200
+    frame: int,
+    clock: pygame.time.Clock,
+    delta: float,
+    every: int = 200,
 ) -> None:
     if frame % every == 0:
-        logger.info(f"debug:loop frame={frame} fps={clock.get_fps()} delta={delta}")
+        logger.info(f"loop:debug frame={frame} fps={clock.get_fps()} delta={delta}")
 
 
 def clock_tick(clock: pygame.time.Clock) -> tuple[int, float]:
