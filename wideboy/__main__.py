@@ -99,6 +99,7 @@ async def start_main_loop():
             clock_x = -128
         stage.clock.rect.x = int(clock_x)
         stage.clock.dirty = 1
+
         stage_updates = stage.render(frame, delta)
         updates = [] + stage_updates
         if len(updates):
