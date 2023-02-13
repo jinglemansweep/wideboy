@@ -93,8 +93,8 @@ async def start_main_loop():
 
         frame, delta = clock_tick(clock)
 
-        clock_x += 1.0 + delta
-        if clock_x > CANVAS_SIZE[0]:
+        clock_x += 2.0 + delta
+        if clock_x > CANVAS_SIZE[0] + 128:
             clock_x = 0
         stage.clock.rect.x = int(clock_x)
         stage.clock.dirty = 1
