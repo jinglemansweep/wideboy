@@ -86,7 +86,7 @@ async def start_main_loop():
     stage = Stage(screen, color_bg=(0, 0, 64, 255))
 
     clock_x = 0.0
-    clock_speed = 50
+    clock_speed = 150
 
     while running:
         for event in pygame.event.get():
