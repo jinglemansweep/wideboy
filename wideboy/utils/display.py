@@ -13,7 +13,7 @@ def setup_led_matrix():
 
 
 def render_led_matrix(matrix: RGBMatrix, surface: pygame.surface.Surface, buffer: Any):
-    temp_surface = pygame.surface.Surface((surface.get_width(), surface.get_height()))
+    temp_surface = pygame.surface.Surface((256,192))
     # Blit first 4 panels to top row
     temp_surface.blit(
         surface,

@@ -33,11 +33,11 @@ LED_GPIO_MAPPING = get_config_env_var(
 )  # regular, adafruit, adafruit-pwm
 LED_ROWS = int(get_config_env_var("LED_ROWS", 64))  # 64
 LED_COLS = int(get_config_env_var("LED_COLS", 64))  # 64
-LED_CHAIN = int(get_config_env_var("LED_CHAIN", 1))  # 8
+LED_CHAIN = int(get_config_env_var("LED_CHAIN", 4))  # 4
 LED_PARALLEL = int(get_config_env_var("LED_PARALLEL", 1))  # 3
 LED_MULTIPLEXING = int(get_config_env_var("LED_MULTIPLEXING", 0))  # 0-18
 LED_PIXEL_MAPPER = get_config_env_var(
-    "LED_PIXEL_MAPPER", ""
+        "LED_PIXEL_MAPPER", ""
 )  # U-mapper;V-mapper;Rotate:90
 LED_PWM_BITS = int(get_config_env_var("LED_PWM_BITS", 11))  # 1-11
 LED_BRIGHTNESS = int(get_config_env_var("LED_BRIGHTNESS", 100))  # 0-100
@@ -55,7 +55,7 @@ LED_NO_HARDWARE_PULSE = (
     get_config_env_var("LED_NO_HARDWARE_PULSE", "false").lower() == "true"
 )  # true/false
 LED_PANEL_TYPE = get_config_env_var("LED_PANEL_TYPE")  # FM6126A, FM6127
-LED_SLOWDOWN_GPIO = int(get_config_env_var("LED_SLOWDOWN_GPIO", 0))  # 0-4
+LED_SLOWDOWN_GPIO = int(get_config_env_var("LED_SLOWDOWN_GPIO", 4))  # 0-4
 LED_DAEMON = get_config_env_var("LED_DAEMON", "false").lower() == "true"  # true/false
 LED_NO_DROP_PRIVS = (
     get_config_env_var("LED_NO_DROP_PRIVS", "false").lower() == "true"

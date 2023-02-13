@@ -79,6 +79,8 @@ class Stage:
 
 async def start_main_loop():
 
+    global matrix, matrix_buffer
+
     loop = asyncio.get_event_loop()
 
     stage = Stage(screen, color_bg=(0, 0, 64, 255))
