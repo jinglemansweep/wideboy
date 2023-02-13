@@ -8,7 +8,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 from wideboy import _APP_NAME
-from wideboy.config import DEBUG, LOG_DEBUG, CANVAS_SIZE
+from wideboy.config import LOG_DEBUG, CANVAS_SIZE, MATRIX_ENABLED
 from wideboy.utils.display import setup_led_matrix, render_led_matrix
 from wideboy.utils.helpers import (
     intro_debug,
@@ -36,8 +36,8 @@ intro_debug()
 # PyGame & Display
 
 clock, screen = setup_pygame(CANVAS_SIZE)
-matrix, matrix_buffer = setup_led_matrix()
-
+if MATRIX_ENABLED:
+    matrix, matrix_buffer = setup_led_matrix()
 
 # Loop Setup
 
@@ -96,7 +96,8 @@ async def start_main_loop():
         if len(updates):
             logger.debug(f"display:draw rects={len(updates)}")
         pygame.display.update(updates)
-        matrix_buffer = render_led_matrix(matrix, screen, matrix_buffer)
+        if MATRIX_ENABLED:
+            matrix_buffer = render_led_matrix(matrix, screen, matrix_buffer)
         loop_debug(
             frame,
             clock,

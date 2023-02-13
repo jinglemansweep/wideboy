@@ -12,6 +12,7 @@ CANVAS_WIDTH = int(get_config_env_var("CANVAS_WIDTH", 64 * 12))
 CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
 CANVAS_SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
 
+MATRIX_ENABLED = get_config_env_var("MATRIX_ENABLED", "true") == "true"
 MATRIX_WIDTH = int(get_config_env_var("MATRIX_WIDTH", 64 * 4))
 MATRIX_HEIGHT = int(get_config_env_var("MATRIX_HEIGHT", 64 * 3))
 MATRIX_SIZE = (MATRIX_WIDTH, MATRIX_HEIGHT)
