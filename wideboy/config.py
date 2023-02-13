@@ -1,31 +1,15 @@
 import os
 
-# Read environment variable configuration and set any default values
 
-DEBUG = os.environ.get("DEBUG", "false") == "true"
-PROFILING = os.environ.get("PROFILING", "")
-PYGAME_FPS = int(os.environ.get("PYGAME_FPS", 60))
+def get_config_env_var(key, default=None):
+    return os.environ.get(key, default)
 
-FT_HOST = os.environ.get("FT_HOST", "localhost")
-FT_PORT = int(os.environ.get("FT_PORT", 1337))
-FT_WIDTH = int(os.environ.get("FT_WIDTH", 256))
-FT_HEIGHT = int(os.environ.get("FT_HEIGHT", 192))
-FT_SIZE = (FT_WIDTH, FT_HEIGHT)
-FT_POS_X = int(os.environ.get("FT_POS_X", 0))
-FT_POS_Y = int(os.environ.get("FT_POS_Y", 0))
-FT_POS = (FT_POS_X, FT_POS_Y)
-FT_LAYER = int(os.environ.get("FT_LAYER", 5))
-FT_TRANSPARENT = os.environ.get("FT_TRANSPARENT", "true").lower() == "true"
-FT_TILE_WIDTH = int(os.environ.get("FT_TILE_WIDTH", 128))
-FT_TILE_HEIGHT = int(os.environ.get("FT_TILE_HEIGHT", 64))
-FT_TILE_SIZE = (FT_TILE_WIDTH, FT_TILE_HEIGHT)
 
-MQTT_HOST = os.environ.get("MQTT_HOST")
-MQTT_PORT = int(os.environ.get("MQTT_PORT", 8883))
-MQTT_USER = os.environ.get("MQTT_USER")
-MQTT_PASSWORD = os.environ.get("MQTT_PASSWORD")
+FPS = int(get_config_env_var("FPS", 60))
 
-DEVICE_NAME = os.environ.get("DEVICE_NAME", "default")
+CANVAS_WIDTH = int(get_config_env_var("CANVAS_WIDTH", 64 * 12))
+CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
+CANVAS_SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
 
-IMAGE_PATH = "images"
-TICKER_DISPLAY_INTERVAL = int(os.environ.get("TICKER_DISPLAY_INTERVAL", 300))  # 5 mins
+DEBUG = get_config_env_var("DEBUG", "false") == "true"
+PROFILING = get_config_env_var("PROFILING", "")

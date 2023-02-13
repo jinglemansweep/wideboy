@@ -19,7 +19,6 @@ asyncio = "^3.4.3"
 black = "^23.1.0"
 mypy = "^1.0.0"
 types-pillow = "^9.4.0.10"
-types-paho-mqtt = "^1.6.0.3"
 
 [build-system]
 requires = ["poetry-core"]

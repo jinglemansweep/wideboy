@@ -9,7 +9,7 @@ from typing import Callable
 
 from wideboy import _APP_DESCRIPTION
 from wideboy.config import (
-    PYGAME_FPS,
+    FPS,
     PROFILING,
 )
 
@@ -58,6 +58,6 @@ def loop_debug(
 
 def clock_tick(clock: pygame.time.Clock) -> tuple[int, float]:
     global frame
-    delta = clock.tick(PYGAME_FPS) / 1000
+    delta = clock.tick(FPS) / 1000
     frame += 1
     return frame, delta

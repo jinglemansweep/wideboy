@@ -10,10 +10,9 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 from wideboy import _APP_NAME
-from wideboy.config import DEBUG
+from wideboy.config import DEBUG, CANVAS_SIZE
 from wideboy.utils.helpers import (
     intro_debug,
-    get_config_env_var,
 )
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.pygame import (
@@ -32,13 +31,6 @@ setup_logger(debug=DEBUG)
 logger = logging.getLogger(_APP_NAME)
 
 # Startup
-
-
-# Configuration
-
-CANVAS_WIDTH = int(get_config_env_var("CANVAS_WIDTH", 64 * 12))
-CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
-CANVAS_SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
 
 intro_debug()
 logger.info(f"Canvas Size: {CANVAS_SIZE[0]}x{CANVAS_SIZE[1]}")
