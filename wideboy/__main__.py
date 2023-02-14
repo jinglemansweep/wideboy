@@ -83,10 +83,10 @@ async def start_main_loop():
 
     loop = asyncio.get_event_loop()
 
-    stage = Stage(screen, color_bg=(0, 0, 64, 255))
+    stage = Stage(screen, color_bg=(32, 0, 32, 255))
 
     clock_x = 0.0
-    clock_speed = 150
+    clock_speed = 10
 
     while running:
         for event in pygame.event.get():
