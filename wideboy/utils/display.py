@@ -1,3 +1,4 @@
+import numpy as np
 import pygame
 from typing import Any
 from PIL import Image
@@ -18,8 +19,9 @@ def render_led_matrix(
     temp_surface = wrap_surface(
         surface, MATRIX_SIZE, MATRIX_PANEL_SIZE
     )  # numpy arrays might be faster than pygame blitting
-    with pygame.surfarray.pixels3d(temp_surface) as pixels:
-        buffer.SetImage(pixels)
+    pixels = np.fliplr(np.rot90(pygame.surfarray.pixels3d(temp_surface), -1))
+    image = Image.fromarray(pixels)
+    buffer.SetImage(image)
     # Flip and return next buffer
     return matrix.SwapOnVSync(buffer)
 
