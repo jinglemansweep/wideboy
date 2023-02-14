@@ -112,6 +112,7 @@ async def start_main_loop():
             clock,
             delta,
         )
+        print(pygame.surfarray.pixels3d(screen)[:10, :10])
         await asyncio.sleep(0)
 
 
