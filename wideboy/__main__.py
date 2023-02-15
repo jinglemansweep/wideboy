@@ -54,7 +54,7 @@ async def start_main_loop():
 
     loop = asyncio.get_event_loop()
 
-    scene = DefaultScene(screen, bg_color=(64, 0, 64, 255))
+    scene = DefaultScene(screen)
 
     while running:
         for event in pygame.event.get():
