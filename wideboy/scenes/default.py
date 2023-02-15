@@ -43,7 +43,7 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.clock_widget)
         # Schedule some test events
-        schedule.every(5).seconds.do(self._mode_toggle)
+        schedule.every(20).seconds.do(self._mode_toggle)
         self._mode_toggle()
 
     def update(self, frame, delta) -> None:
