@@ -22,7 +22,7 @@ class DefaultScene(BaseScene):
             (0, 0, surface.get_rect().width, surface.get_rect().height),
             (surface.get_rect().height * 4, surface.get_rect().height * 4),
             (surface.get_rect().width, surface.get_rect().height),
-            128,
+            255,
         )
         self.group.add(self.background_widget)
         self.clock_visible = True
