@@ -44,6 +44,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.clock_widget)
         # Schedule some test events
         schedule.every(5).seconds.do(self._mode_toggle)
+        self._mode_toggle()
 
     def update(self, frame, delta) -> None:
         super().update(frame, delta)
@@ -74,7 +75,7 @@ class DefaultScene(BaseScene):
     # Clock widget actions
 
     def _clock_hide(self):
-        self.clock_widget.mover.move((self.surface.get_rect().width, 0), 50)
+        self.clock_widget.mover.move((0, 0), 50)
 
     def _clock_show(self):
         self.clock_widget.mover.move((self.surface.get_rect().width - 128, 0), 50)
