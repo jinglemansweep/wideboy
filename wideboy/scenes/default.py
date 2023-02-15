@@ -1,8 +1,13 @@
+import logging
 import pygame
 import random
+import schedule
 
 from wideboy.sprites.clock import ClockWidgetSprite
 from wideboy.scenes import BaseScene, build_background
+
+
+logger = logging.getLogger(__name__)
 
 
 class DefaultScene(BaseScene):
@@ -13,7 +18,8 @@ class DefaultScene(BaseScene):
         self.background = build_background(
             (surface.get_rect().width, surface.get_rect().height), bg_color
         )
-        self.clock1_widget = ClockWidgetSprite(
+        self.clock_visible = True
+        self.clock_widget = ClockWidgetSprite(
             (
                 self.surface.get_rect().width - 128,
                 0,
@@ -22,44 +28,27 @@ class DefaultScene(BaseScene):
             ),
             color_bg=(128, 0, 0, 255),
         )
-        self.group.add(self.clock1_widget)
+        self.group.add(self.clock_widget)
+        schedule.every(10).seconds.do(self.toggle_clock_visibility)
 
-        self.clock2_widget = ClockWidgetSprite(
-            (
-                320,
-                0,
-                128,
-                self.surface.get_rect().height,
-            ),
-            color_bg=(0, 0, 128, 255),
-        )
-        self.group.add(self.clock2_widget)
-
-        self.clock3_widget = ClockWidgetSprite(
-            (
-                0,
-                0,
-                128,
-                self.surface.get_rect().height,
-            ),
-            color_bg=(0, 128, 0, 255),
-        )
-        self.group.add(self.clock3_widget)
+    def toggle_clock_visibility(self):
+        if self.clock_visible:
+            # hide clock
+            self.clock_widget.mover.move((0, 0), 50)
+            self.clock_visible = False
+        else:
+            # show clock
+            self.clock_widget.mover.move((self.surface.get_rect().width - 128, 0), 50)
+            self.clock_visible = True
+        logger.info(f"clock:toggle visible={self.clock_visible}")
 
     def update(self, frame, delta) -> None:
         super().update(frame, delta)
+        schedule.run_pending()
+        """
         if frame % 200 == 0:
             self.clock1_widget.mover.move(
                 (random.randint(0, 640), 0),
                 50,
             )
-        if frame % 300 == 0:
-            self.clock2_widget.mover.move(
-                (random.randint(0, 640), 0),
-                100,
-            )
-        if frame % 350 == 0:
-            self.clock3_widget.mover.move(
-                (random.randint(0, 640), 0),
-                200,
-            )
+        """
