@@ -1,5 +1,8 @@
+import logging
 import pygame
 import time
+
+logger = logging.getLogger(__name__)
 
 
 class BaseScene:
@@ -10,7 +13,6 @@ class BaseScene:
         )
         self.group = pygame.sprite.LayeredDirty()
         self.mode = None
-        self.mode_next = None
 
     def render(self, frame: int, delta: float) -> None:
         self.update(frame, delta)
@@ -26,8 +28,19 @@ class BaseScene:
     def draw(self) -> list[pygame.rect.Rect]:
         return self.group.draw(self.surface)
 
-    def change_mode(self, mode: str):
+    def change_mode(self, mode: str, timeout: int = 0):
+        logger.info(f"scene:mode_change mode={mode} timeout={timeout}")
         self.mode_next = mode
+        self.mode_timeout = timeout
+        self.mode_changed = time.time()
+
+    def handle_mode_timeout(self):
+        # if mode timeout is set, and timeout has elapsed, reset to "default" mode
+        if (
+            self.mode_timeout > 0
+            and time.time() > self.mode_changed + self.mode_timeout
+        ):
+            self.change_mode("default")
 
 
 def build_background(size: tuple[int, int], color: pygame.color.Color):

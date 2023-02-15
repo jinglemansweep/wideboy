@@ -43,26 +43,27 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.clock_widget)
         # Schedule some test events
-        schedule.every(20).seconds.do(self._mode_toggle)
-        self._mode_toggle()
+        schedule.every(30).seconds.do(self.change_mode, mode="blank", timeout=5)
+        self.change_mode("default")
 
     def update(self, frame, delta) -> None:
         super().update(frame, delta)
         schedule.run_pending()
+        self.handle_mode_timeout()
+        self.handle_modes()
+
+    # Modes
+
+    def handle_modes(self):
         if self.mode_next != self.mode:
             self.mode = self.mode_next
-            logger.info(f"scene:mode mode={self.mode}")
-            if self.mode == "blank":
-                self._background_hide()
-                self._clock_hide()
-            elif self.mode == "normal":
+            logger.info(f"scene:handle_modes mode={self.mode}")
+            if self.mode == "default":
                 self._background_show()
                 self._clock_show()
-
-    # Mode actions
-
-    def _mode_toggle(self):
-        self.change_mode("blank" if self.mode == "normal" else "normal")
+            elif self.mode == "blank":
+                self._background_hide()
+                self._clock_hide()
 
     # Background widget actions
 
