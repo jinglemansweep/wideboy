@@ -26,6 +26,17 @@ class DefaultScene(BaseScene):
 
         self.clock2_widget = ClockWidgetSprite(
             (
+                320,
+                0,
+                128,
+                self.surface.get_rect().height,
+            ),
+            color_bg=(0, 0, 128, 255),
+        )
+        self.group.add(self.clock2_widget)
+
+        self.clock3_widget = ClockWidgetSprite(
+            (
                 0,
                 0,
                 128,
@@ -33,17 +44,22 @@ class DefaultScene(BaseScene):
             ),
             color_bg=(0, 128, 0, 255),
         )
-        self.group.add(self.clock2_widget)
+        self.group.add(self.clock3_widget)
 
     def update(self, frame, delta) -> None:
         super().update(frame, delta)
         if frame % 200 == 0:
             self.clock1_widget.mover.move(
                 (random.randint(0, 640), 0),
-                100,
+                50,
             )
         if frame % 300 == 0:
             self.clock2_widget.mover.move(
                 (random.randint(0, 640), 0),
                 100,
+            )
+        if frame % 350 == 0:
+            self.clock3_widget.mover.move(
+                (random.randint(0, 640), 0),
+                200,
             )
