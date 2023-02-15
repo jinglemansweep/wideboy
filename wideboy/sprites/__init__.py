@@ -30,7 +30,7 @@ class Mover:
         )
 
     def is_moving(self):
-        return self.index is not None and self.index < self.length
+        return self.index is not None and self.index <= self.length
 
     def tick(self, update_sprite=True):
         if not self.is_moving():
@@ -39,7 +39,10 @@ class Mover:
         tween_val = self.tweener(ri)
         x = self.origin[0] + (self.distances[0] * tween_val)
         y = self.origin[1] + (self.distances[1] * tween_val)
-        self.current = (x, y)
+        if self.index != self.length:
+            self.current = (x, y)
+        else:
+            self.current = self.target
         if update_sprite:
             self.sprite.rect.x, self.sprite.rect.y = self.current
             self.sprite.dirty = 1

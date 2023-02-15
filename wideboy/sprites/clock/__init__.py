@@ -36,8 +36,7 @@ class ClockWidgetSprite(BaseSprite):
         super().update(frame, delta)
         # Common updates
         now = datetime.now()
-        # Only render text every new minute
-        print(now.second)
+        # Only render text every new second
         if self.sec_prev is not None and self.sec_prev == now.second:
             return
         # logger.debug("clock:epoch new=second")

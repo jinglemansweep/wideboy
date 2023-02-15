@@ -44,7 +44,7 @@ class DefaultScene(BaseScene):
     def toggle_background_visibility(self):
         if self.background_visible:
             # hide background
-            self.background_widget.mover.move((self.surface.get_rect().width, 0), 50)
+            self.background_widget.mover.move((0, self.surface.get_rect().height), 50)
             self.background_visible = False
         else:
             # show background
