@@ -3,8 +3,8 @@ import pygame
 import random
 import schedule
 
-from wideboy.sprites.background import BackgroundSprite
-from wideboy.sprites.clock import ClockWidgetSprite
+from wideboy.sprites.image import ImageSprite
+from wideboy.sprites.clock import ClockSprite
 from wideboy.scenes import BaseScene, build_background
 
 
@@ -15,20 +15,18 @@ class DefaultScene(BaseScene):
     def __init__(
         self, surface: pygame.surface.Surface, bg_color: pygame.color.Color = (0, 0, 0)
     ) -> None:
-        super().__init__(surface)
-        self.background = build_background(
-            (surface.get_rect().width, surface.get_rect().height), bg_color
-        )
+        super().__init__(surface, bg_color)
         self.background_visible = True
-        self.background_widget = BackgroundSprite(
+        self.background_widget = ImageSprite(
             "images/backgrounds/mandms.png",
             (0, 0, surface.get_rect().width, surface.get_rect().height),
             (surface.get_rect().height * 4, surface.get_rect().height * 4),
             (surface.get_rect().width, surface.get_rect().height),
+            128,
         )
         self.group.add(self.background_widget)
         self.clock_visible = True
-        self.clock_widget = ClockWidgetSprite(
+        self.clock_widget = ClockSprite(
             (
                 self.surface.get_rect().width - 128,
                 0,

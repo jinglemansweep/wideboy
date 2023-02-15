@@ -2,9 +2,11 @@ import pygame
 
 
 class BaseScene:
-    def __init__(self, surface: pygame.surface.Surface, background=None):
+    def __init__(self, surface: pygame.surface.Surface, bg_color: pygame.color.Color):
         self.surface = surface
-        self.background = background
+        self.background = build_background(
+            (surface.get_rect().width, surface.get_rect().height), bg_color
+        )
         self.group = pygame.sprite.LayeredDirty()
 
     def render(self, frame: int, delta: float) -> None:

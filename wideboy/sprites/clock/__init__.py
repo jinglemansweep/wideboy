@@ -10,7 +10,7 @@ logger = logging.getLogger("sprites.clock")
 # ['bitstreamverasansmono', 'bitstreamverasans', 'anonymousprominus', 'anonymouspro', 'bitstreamveraserif']
 
 
-class ClockWidgetSprite(BaseSprite):
+class ClockSprite(BaseSprite):
     def __init__(
         self,
         rect,
