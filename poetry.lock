@@ -836,6 +836,17 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "pytweening"
+version = "1.0.4"
+description = "A collection of tweening / easing functions."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytweening-1.0.4.tar.gz", hash = "sha256:8533282cf70b31de8a0499e1cf420930b0013c787118872b2ec899382792e2e6"},
+]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -848,22 +859,10 @@ files = [
 ]
 
 [[package]]
-name = "types-paho-mqtt"
-version = "1.6.0.3"
-description = "Typing stubs for paho-mqtt"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "types-paho-mqtt-1.6.0.3.tar.gz", hash = "sha256:5a3f383229e0f3ce7498b188f1e86ca6c188277ae8d49b545605697b60fa580b"},
-    {file = "types_paho_mqtt-1.6.0.3-py3-none-any.whl", hash = "sha256:0013fd49312aa29b81a24f2c7e3645541b5c7d20d3cb6237c6ff4dd66a26e22e"},
-]
-
-[[package]]
 name = "types-pillow"
 version = "9.4.0.10"
 description = "Typing stubs for Pillow"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 files = [
@@ -974,4 +973,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "b572c1b1c62d9c10f6510644534b5a678bbf8694c6adfa9921ecec51259c90bb"
+content-hash = "7f0419fba683bfbea24059b94c1317d9d5029891ee75b3e585f452e3b2de3887"

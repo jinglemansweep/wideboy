@@ -22,7 +22,8 @@ from wideboy.utils.pygame import (
     loop_debug,
     clock_tick,
 )
-from wideboy.sprites.clock import ClockWidgetSprite
+
+from wideboy.scenes.default import DefaultScene
 
 # Logging
 
@@ -43,36 +44,6 @@ if MATRIX_ENABLED:
 
 running = True
 
-# Scratch Area
-
-
-class Stage:
-    def __init__(self, dest: pygame.surface.Surface, color_bg=(0, 0, 0)) -> None:
-        self.dest = dest
-        width, height = dest.get_width(), dest.get_height()
-        self.background = pygame.surface.Surface((width, height))
-        self.background.fill(color_bg)
-        self.group = pygame.sprite.LayeredDirty()
-        self.clock = ClockWidgetSprite(
-            (width - 128, 0, 128, height),
-            color_bg=(0, 0, 0, 0),
-        )
-        self.group.add(self.clock)
-
-    def render(self, *args, **kwargs) -> None:
-        self.update(*args, **kwargs)
-        self.clear()
-        return self.draw()
-
-    def clear(self) -> None:
-        self.group.clear(self.dest, self.background)
-
-    def update(self, *args, **kwargs) -> None:
-        self.group.update(*args, **kwargs)
-
-    def draw(self) -> list[pygame.rect.Rect]:
-        return self.group.draw(self.dest)
-
 
 # Main Loop
 
@@ -83,10 +54,7 @@ async def start_main_loop():
 
     loop = asyncio.get_event_loop()
 
-    stage = Stage(screen, color_bg=(0, 0, 0, 255))
-
-    clock_x = 0.0
-    clock_speed = 128
+    scene = DefaultScene(screen, bg_color=(64, 0, 64, 255))
 
     while running:
         for event in pygame.event.get():
@@ -94,13 +62,7 @@ async def start_main_loop():
 
         frame, delta = clock_tick(clock)
 
-        clock_x += clock_speed * delta
-        if clock_x > CANVAS_SIZE[0]:
-            clock_x = -128
-        stage.clock.rect.x = int(clock_x)
-        stage.clock.dirty = 1
-
-        stage_updates = stage.render(frame, delta)
+        stage_updates = scene.render(frame, delta)
         updates = [] + stage_updates
         if len(updates):
             logger.debug(f"display:draw rects={len(updates)}")

@@ -2,6 +2,7 @@ import logging
 import pygame
 from datetime import datetime
 from pygame import SRCALPHA
+from wideboy.sprites import BaseSprite
 
 
 logger = logging.getLogger("sprites.clock")
@@ -9,7 +10,7 @@ logger = logging.getLogger("sprites.clock")
 # ['bitstreamverasansmono', 'bitstreamverasans', 'anonymousprominus', 'anonymouspro', 'bitstreamveraserif']
 
 
-class ClockWidgetSprite(pygame.sprite.DirtySprite):
+class ClockWidgetSprite(BaseSprite):
     def __init__(
         self,
         rect,
@@ -20,7 +21,7 @@ class ClockWidgetSprite(pygame.sprite.DirtySprite):
         antialias=True,
         time_fmt="%H:%M",
     ):
-        pygame.sprite.DirtySprite.__init__(self)
+        super().__init__()
         self.rect = pygame.rect.Rect(*rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         pygame.font.init()
