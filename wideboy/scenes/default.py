@@ -16,6 +16,7 @@ class DefaultScene(BaseScene):
         self, surface: pygame.surface.Surface, bg_color: pygame.color.Color = (0, 0, 0)
     ) -> None:
         super().__init__(surface, bg_color)
+        # Setup background widget
         self.background_visible = True
         self.background_widget = ImageSprite(
             "images/backgrounds/mandms.png",
@@ -25,6 +26,7 @@ class DefaultScene(BaseScene):
             255,
         )
         self.group.add(self.background_widget)
+        # Setup clock widget
         self.clock_visible = True
         self.clock_widget = ClockSprite(
             (
@@ -36,38 +38,42 @@ class DefaultScene(BaseScene):
             color_bg=(128, 0, 0, 255),
         )
         self.group.add(self.clock_widget)
-        schedule.every(15).seconds.do(self.toggle_background_visibility)
-        schedule.every(10).seconds.do(self.toggle_clock_visibility)
-
-    def toggle_background_visibility(self):
-        if self.background_visible:
-            # hide background
-            self.background_widget.mover.move((0, self.surface.get_rect().height), 50)
-            self.background_visible = False
-        else:
-            # show background
-            self.background_widget.mover.move((0, 0), 50)
-            self.background_visible = True
-        logger.info(f"background:toggle visible={self.clock_visible}")
-
-    def toggle_clock_visibility(self):
-        if self.clock_visible:
-            # hide clock
-            self.clock_widget.mover.move((0, 0), 50)
-            self.clock_visible = False
-        else:
-            # show clock
-            self.clock_widget.mover.move((self.surface.get_rect().width - 128, 0), 50)
-            self.clock_visible = True
-        logger.info(f"clock:toggle visible={self.clock_visible}")
+        # Schedule some test events
+        schedule.every(15).seconds.do(self._background_toggle)
+        schedule.every(10).seconds.do(self._clock_toggle)
 
     def update(self, frame, delta) -> None:
         super().update(frame, delta)
         schedule.run_pending()
-        """
-        if frame % 200 == 0:
-            self.clock1_widget.mover.move(
-                (random.randint(0, 640), 0),
-                50,
-            )
-        """
+
+    # Background widget actions
+
+    def _background_hide(self):
+        self.background_widget.mover.move((0, self.surface.get_rect().height), 50)
+        self.background_visible = False
+
+    def _background_show(self):
+        self.background_widget.mover.move((0, 0), 50)
+        self.background_visible = True
+
+    def _background_toggle(self):
+        if self.background_visible:
+            self._background_hide()
+        else:
+            self._background_show()
+
+    # Clock widget actions
+
+    def _clock_toggle(self):
+        if self.clock_visible:
+            self._clock_hide()
+        else:
+            self._clock_show()
+
+    def _clock_hide(self):
+        self.clock_widget.mover.move((0, 0), 50)
+        self.clock_visible = False
+
+    def _clock_show(self):
+        self.clock_widget.mover.move((self.surface.get_rect().width - 128, 0), 50)
+        self.clock_visible = True
