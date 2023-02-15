@@ -26,6 +26,8 @@ def setup_pygame(
 
     pygame.init()
     pygame.mixer.quit()
+    pygame.event.set_allowed(None)
+    pygame.event.set_allowed(QUIT)
     clock = pygame.time.Clock()
     pygame.display.set_caption(_APP_DESCRIPTION)
     screen = pygame.display.set_mode(display_size, DISPLAY_FLAGS)

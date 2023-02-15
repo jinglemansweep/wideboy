@@ -55,7 +55,7 @@ class Stage:
         self.group = pygame.sprite.LayeredDirty()
         self.clock = ClockWidgetSprite(
             (width - 128, 0, 128, height),
-            color_bg=(128, 0, 0, 192),
+            color_bg=(0, 0, 0, 0),
         )
         self.group.add(self.clock)
 
@@ -86,7 +86,7 @@ async def start_main_loop():
     stage = Stage(screen, color_bg=(64, 0, 64, 255))
 
     clock_x = 0.0
-    clock_speed = 10
+    clock_speed = 30
 
     while running:
         for event in pygame.event.get():
