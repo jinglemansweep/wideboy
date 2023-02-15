@@ -33,7 +33,7 @@ class ClockWidgetSprite(BaseSprite):
         self.sec_prev = None
 
     def update(self, frame: str, delta: float):
-        super().update(frame)
+        super().update(frame, delta)
         # Common updates
         now = datetime.now()
         # Only render text every new minue

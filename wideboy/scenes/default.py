@@ -3,6 +3,7 @@ import pygame
 import random
 import schedule
 
+from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import ClockWidgetSprite
 from wideboy.scenes import BaseScene, build_background
 
@@ -18,6 +19,14 @@ class DefaultScene(BaseScene):
         self.background = build_background(
             (surface.get_rect().width, surface.get_rect().height), bg_color
         )
+        self.background_visible = True
+        self.background_widget = BackgroundSprite(
+            "images/backgrounds/mandms.png",
+            (0, 0, surface.get_rect().width, surface.get_rect().height),
+            (surface.get_rect().height * 4, surface.get_rect().height * 4),
+            (surface.get_rect().width, surface.get_rect().height),
+        )
+        self.group.add(self.background_widget)
         self.clock_visible = True
         self.clock_widget = ClockWidgetSprite(
             (
@@ -29,7 +38,19 @@ class DefaultScene(BaseScene):
             color_bg=(128, 0, 0, 255),
         )
         self.group.add(self.clock_widget)
+        schedule.every(15).seconds.do(self.toggle_background_visibility)
         schedule.every(10).seconds.do(self.toggle_clock_visibility)
+
+    def toggle_background_visibility(self):
+        if self.background_visible:
+            # hide background
+            self.background_widget.mover.move((self.surface.get_rect().width, 0), 50)
+            self.background_visible = False
+        else:
+            # show background
+            self.background_widget.mover.move((0, 0), 50)
+            self.background_visible = True
+        logger.info(f"background:toggle visible={self.clock_visible}")
 
     def toggle_clock_visibility(self):
         if self.clock_visible:
