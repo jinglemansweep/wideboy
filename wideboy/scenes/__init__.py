@@ -1,4 +1,5 @@
 import pygame
+import time
 
 
 class BaseScene:
@@ -8,6 +9,8 @@ class BaseScene:
             (surface.get_rect().width, surface.get_rect().height), bg_color
         )
         self.group = pygame.sprite.LayeredDirty()
+        self.mode = None
+        self.mode_next = None
 
     def render(self, frame: int, delta: float) -> None:
         self.update(frame, delta)
@@ -22,6 +25,9 @@ class BaseScene:
 
     def draw(self) -> list[pygame.rect.Rect]:
         return self.group.draw(self.surface)
+
+    def change_mode(self, mode: str):
+        self.mode_next = mode
 
 
 def build_background(size: tuple[int, int], color: pygame.color.Color):
