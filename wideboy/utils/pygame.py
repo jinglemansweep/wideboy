@@ -13,6 +13,8 @@ from wideboy.config import (
     PROFILING,
 )
 
+DISPLAY_FLAGS = RESIZABLE # | SCALED | DOUBLEBUF
+
 logger = logging.getLogger(__name__)
 
 frame = 0
@@ -23,9 +25,10 @@ def setup_pygame(
 ) -> tuple[pygame.time.Clock, pygame.surface.Surface]:
 
     pygame.init()
+    pygame.mixer.quit()
     clock = pygame.time.Clock()
     pygame.display.set_caption(_APP_DESCRIPTION)
-    screen = pygame.display.set_mode(display_size, RESIZABLE | SCALED | DOUBLEBUF)
+    screen = pygame.display.set_mode(display_size, DISPLAY_FLAGS)
     return clock, screen
 
 

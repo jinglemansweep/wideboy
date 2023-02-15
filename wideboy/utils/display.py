@@ -16,9 +16,10 @@ def setup_led_matrix() -> tuple[RGBMatrix, Any]:
 def render_led_matrix(
     matrix: RGBMatrix, surface: pygame.surface.Surface, buffer: Any
 ) -> Any:
-    temp_surface = wrap_surface(
-        surface, MATRIX_SIZE, MATRIX_PANEL_SIZE
-    )  # numpy arrays might be faster than pygame blitting
+    #temp_surface = wrap_surface(
+    #    surface, MATRIX_SIZE, MATRIX_PANEL_SIZE
+    #)  # numpy arrays might be faster than pygame blitting
+    temp_surface = surface
     pixels = np.fliplr(np.rot90(pygame.surfarray.pixels3d(temp_surface), -1))
     image = Image.fromarray(pixels)
     buffer.SetImage(image)
