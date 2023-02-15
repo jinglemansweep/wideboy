@@ -15,7 +15,7 @@ class ClockSprite(BaseSprite):
         self,
         rect,
         font_date="bitstreamverasans",
-        font_time="bitstreamverasans",
+        font_time="molot",
         color_bg=(0, 0, 0),
         color_fg=(255, 255, 255),
         antialias=True,
