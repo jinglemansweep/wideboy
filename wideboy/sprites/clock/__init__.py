@@ -21,8 +21,7 @@ class ClockWidgetSprite(BaseSprite):
         antialias=True,
         time_fmt="%H:%M",
     ):
-        super().__init__()
-        self.rect = pygame.rect.Rect(*rect)
+        super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         pygame.font.init()
         self.font_date = pygame.font.SysFont(font_date, 20, bold=True)

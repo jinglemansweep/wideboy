@@ -5,7 +5,6 @@ class BaseScene:
     def __init__(self, surface: pygame.surface.Surface, background=None):
         self.surface = surface
         self.background = background
-        self.actors = dict()
         self.group = pygame.sprite.LayeredDirty()
 
     def render(self, frame: int, delta: float) -> None:

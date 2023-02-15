@@ -13,36 +13,37 @@ class DefaultScene(BaseScene):
         self.background = build_background(
             (surface.get_rect().width, surface.get_rect().height), bg_color
         )
-        self.actors = {
-            "clock": ClockWidgetSprite(
-                (
-                    self.surface.get_rect().width - 128,
-                    0,
-                    128,
-                    self.surface.get_rect().height,
-                ),
-                color_bg=(128, 0, 0, 255),
-            )
-        }
-        self.group.add(self.actors["clock"])
+        self.clock1_widget = ClockWidgetSprite(
+            (
+                self.surface.get_rect().width - 128,
+                0,
+                128,
+                self.surface.get_rect().height,
+            ),
+            color_bg=(128, 0, 0, 255),
+        )
+        self.group.add(self.clock1_widget)
+
+        self.clock2_widget = ClockWidgetSprite(
+            (
+                0,
+                0,
+                128,
+                self.surface.get_rect().height,
+            ),
+            color_bg=(0, 128, 0, 255),
+        )
+        self.group.add(self.clock2_widget)
 
     def update(self, frame, delta) -> None:
         super().update(frame, delta)
-        clock = self.actors["clock"]
         if frame % 200 == 0:
-            clock.mover.move(
-                (clock.rect[0], clock.rect[1]),
+            self.clock1_widget.mover.move(
                 (random.randint(0, 640), 0),
                 100,
             )
-
-        clock.mover.tick()
-        if clock.mover.is_moving():
-            clock.rect.x, clock.rect.y = clock.mover.current
-            clock.dirty = 1
-
-        """
-        print("UPDATE")
-        self.actors["clock"].rect.y += 1
-        self.actors["clock"].dirty = 1
-        """
+        if frame % 300 == 0:
+            self.clock2_widget.mover.move(
+                (random.randint(0, 640), 0),
+                100,
+            )
