@@ -6,7 +6,7 @@ def get_config_env_var(key, default=None):
     return os.environ.get(key, default)
 
 
-FPS = int(get_config_env_var("FPS", 60))
+FPS = int(get_config_env_var("FPS", 50))
 
 CANVAS_WIDTH = int(get_config_env_var("CANVAS_WIDTH", 64 * 12))
 CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
@@ -47,10 +47,10 @@ LED_CHAIN = int(get_config_env_var("LED_CHAIN", 4))  # 4
 LED_PARALLEL = int(get_config_env_var("LED_PARALLEL", 3))  # 3
 LED_MULTIPLEXING = int(get_config_env_var("LED_MULTIPLEXING", 0))  # 0-18
 LED_PIXEL_MAPPER = get_config_env_var(
-    "LED_PIXEL_MAPPER", ""
+    "LED_PIXEL_MAPPER", "Rotate:270;Mirror:H"
 )  # U-mapper;V-mapper;Rotate:90
-LED_PWM_BITS = int(get_config_env_var("LED_PWM_BITS", 11))  # 1-11
-LED_BRIGHTNESS = int(get_config_env_var("LED_BRIGHTNESS", 33))  # 0-100
+LED_PWM_BITS = int(get_config_env_var("LED_PWM_BITS", 7))  # 1-11
+LED_BRIGHTNESS = int(get_config_env_var("LED_BRIGHTNESS", 50))  # 0-100
 LED_SCAN_MODE = int(get_config_env_var("LED_SCAN_MODE", 0))  # 0,1
 LED_ROW_ADDR_TYPE = int(get_config_env_var("LED_ROW_ADDR_TYPE", 0))  # 0-4
 LED_SHOW_REFRESH = (
@@ -59,7 +59,7 @@ LED_SHOW_REFRESH = (
 LED_LIMIT_REFRESH = int(get_config_env_var("LED_LIMIT_REFRESH", 0))  # 0
 LED_INVERSE = get_config_env_var("LED_INVERSE", "false").lower() == "true"  # true/false
 LED_RGB_SEQUENCE = get_config_env_var("LED_RGB_SEQUENCE", "RGB")  # RGB, RBG
-LED_PWM_LSB_NANOSECONDS = int(get_config_env_var("LED_PWM_LSB_NANOSECONDS", 130))  # 130
+LED_PWM_LSB_NANOSECONDS = int(get_config_env_var("LED_PWM_LSB_NANOSECONDS", 200))  # 130
 LED_PWM_DITHER_BITS = int(get_config_env_var("LED_PWM_DITHER_BITS", 0))  # 0-2
 LED_NO_HARDWARE_PULSE = (
     get_config_env_var("LED_NO_HARDWARE_PULSE", "false").lower() == "true"
