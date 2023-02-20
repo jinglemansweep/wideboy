@@ -1,6 +1,6 @@
 venv
 __pycache__
-images/private
+images/
 dietpi.txt
 .env
 *.token
