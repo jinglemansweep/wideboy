@@ -72,8 +72,7 @@ async def start_main_loop():
             clock,
             delta,
         )
-        await asyncio.sleep(0)
-        pygame.time.wait(1)
+        await asyncio.sleep(0.02)
 
 
 # Entrypoint
