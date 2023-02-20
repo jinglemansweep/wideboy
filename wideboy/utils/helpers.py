@@ -1,9 +1,9 @@
 import aiohttp
 import async_timeout
 import logging
-
 import pygame
 import random
+from datetime import datetime
 from typing import Any, Optional
 from wideboy import _APP_NAME, _APP_DESCRIPTION, _APP_VERSION
 from wideboy.config import DEBUG, LOG_DEBUG, CANVAS_SIZE
@@ -29,6 +29,29 @@ async def async_fetch(session: aiohttp.ClientSession, url: str) -> str:
     with async_timeout.timeout(10):
         async with session.get(url) as response:
             return await response.text()
+
+
+class EpochEmitter:
+    def __init__(self):
+        self._update()
+
+    def check(self, unit=None):
+        now = datetime.timetuple(datetime.now())
+        is_new_sec = now.tm_sec != self.then.tm_sec
+        is_new_min = now.tm_min != self.then.tm_min
+        is_new_hour = now.tm_hour != self.then.tm_hour
+        is_new_mday = now.tm_mday != self.then.tm_mday
+        epochs = dict(
+            sec=is_new_sec, min=is_new_min, hour=is_new_hour, mday=is_new_mday
+        )
+        self._update()
+        if unit is not None:
+            return epochs.get(unit)
+        else:
+            return epochs
+
+    def _update(self):
+        self.then = datetime.timetuple(datetime.now())
 
 
 class JoyPad:

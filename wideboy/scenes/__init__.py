@@ -14,16 +14,20 @@ class BaseScene:
         self.group = pygame.sprite.LayeredDirty()
         self.mode = None
 
-    def render(self, frame: int, delta: float) -> None:
-        self.update(frame, delta)
+    def render(
+        self, frame: int, delta: float, events: list[pygame.event.Event]
+    ) -> None:
+        self.update(frame, delta, events)
         self.clear()
         return self.draw()
 
     def clear(self) -> None:
         self.group.clear(self.surface, self.background)
 
-    def update(self, frame: int, delta: float) -> None:
-        self.group.update(frame, delta)
+    def update(
+        self, frame: int, delta: float, events: list[pygame.event.Event]
+    ) -> None:
+        self.group.update(frame, delta, events)
 
     def draw(self) -> list[pygame.rect.Rect]:
         return self.group.draw(self.surface)

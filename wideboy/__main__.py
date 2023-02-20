@@ -10,13 +10,11 @@ load_dotenv(find_dotenv())
 from wideboy import _APP_NAME
 from wideboy.config import LOG_DEBUG, CANVAS_SIZE, MATRIX_ENABLED
 from wideboy.utils.display import setup_led_matrix, render_led_matrix
-from wideboy.utils.helpers import (
-    intro_debug,
-)
+from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.pygame import (
     setup_pygame,
-    handle_event,
+    process_events,
     main_entrypoint,
     run_loop,
     loop_debug,
@@ -57,12 +55,12 @@ async def start_main_loop():
     scene = DefaultScene(screen)
 
     while running:
-        for event in pygame.event.get():
-            handle_event(event)
+        events = pygame.event.get()
+        process_events(events)
 
         frame, delta = clock_tick(clock)
 
-        stage_updates = scene.render(frame, delta)
+        stage_updates = scene.render(frame, delta, events)
         updates = [] + stage_updates
         if len(updates):
             logger.debug(f"display:draw rects={len(updates)}")

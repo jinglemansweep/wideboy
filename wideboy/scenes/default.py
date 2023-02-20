@@ -46,8 +46,10 @@ class DefaultScene(BaseScene):
         schedule.every(30).seconds.do(self.change_mode, mode="blank", timeout=5)
         self.change_mode("default")
 
-    def update(self, frame, delta) -> None:
-        super().update(frame, delta)
+    def update(
+        self, frame: int, delta: float, events: list[pygame.event.Event]
+    ) -> None:
+        super().update(frame, delta, events)
         schedule.run_pending()
         self.handle_mode_timeout()
         self.handle_modes()

@@ -22,5 +22,7 @@ class ImageSprite(BaseSprite):
         image.fill((255, 255, 255, alpha), special_flags=pygame.BLEND_RGBA_MULT)
         self.image = tile_surface(image, fill_size)
 
-    def update(self, frame: int, delta: float) -> None:
-        super().update(frame, delta)
+    def update(
+        self, frame: int, delta: float, events: list[pygame.event.Event]
+    ) -> None:
+        super().update(frame, delta, events)

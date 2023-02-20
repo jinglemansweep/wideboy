@@ -8,14 +8,20 @@ from pygame import QUIT, DOUBLEBUF, RESIZABLE, SCALED
 from typing import Callable
 
 from wideboy import _APP_DESCRIPTION
+from wideboy.utils.helpers import EpochEmitter
 from wideboy.config import (
     FPS,
     PROFILING,
 )
 
-DISPLAY_FLAGS = RESIZABLE # | SCALED | DOUBLEBUF
+DISPLAY_FLAGS = RESIZABLE  # | SCALED | DOUBLEBUF
 
 logger = logging.getLogger(__name__)
+
+EVENT_EPOCH_SECOND = pygame.USEREVENT + 11
+EVENT_EPOCH_MINUTE = pygame.USEREVENT + 12
+
+epoch_emitter = EpochEmitter()
 
 frame = 0
 
@@ -32,6 +38,18 @@ def setup_pygame(
     pygame.display.set_caption(_APP_DESCRIPTION)
     screen = pygame.display.set_mode(display_size, DISPLAY_FLAGS)
     return clock, screen
+
+
+def process_events(events: list[pygame.event.Event]) -> None:
+    # Process received messages
+    for event in events:
+        handle_event(event)
+    # Post custom messages
+    epochs = epoch_emitter.check()
+    if epochs.get("sec"):
+        pygame.event.post(pygame.event.Event(EVENT_EPOCH_SECOND))
+    if epochs.get("min"):
+        pygame.event.post(pygame.event.Event(EVENT_EPOCH_MINUTE))
 
 
 def handle_event(event: pygame.event.Event) -> None:

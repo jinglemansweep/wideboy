@@ -2,6 +2,7 @@ import logging
 import pygame
 from datetime import datetime
 from pygame import SRCALPHA
+from wideboy.utils.pygame import EVENT_EPOCH_SECOND, EVENT_EPOCH_MINUTE
 from wideboy.sprites import BaseSprite
 
 
@@ -30,17 +31,16 @@ class ClockSprite(BaseSprite):
         self.color_fg = color_fg
         self.antialias = antialias
         self.time_fmt = time_fmt
-        self.sec_prev = None
+        self.render()
 
-    def update(self, frame: str, delta: float):
-        super().update(frame, delta)
-        # Common updates
+    def update(self, frame: str, delta: float, events: list[pygame.event.Event]):
+        super().update(frame, delta, events)
+        for event in events:
+            if event.type == EVENT_EPOCH_MINUTE:
+                self.render()
+
+    def render(self):
         now = datetime.now()
-        # Only render text every new second
-        if self.sec_prev is not None and self.sec_prev == now.second:
-            return
-        # logger.debug("clock:epoch new=second")
-        self.sec_prev = now.second
         dow_str = now.strftime("%A")[:3]
         ddmm_str = now.strftime("%d/%m")
         date_str = f"{dow_str} {ddmm_str}"
