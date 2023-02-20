@@ -75,6 +75,7 @@ class DefaultScene(BaseScene):
         self.act = Act(
             100,
             [
+                (0, lambda: self.background_widget.set_random_image()),
                 (
                     0,
                     Animation(
