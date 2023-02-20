@@ -38,7 +38,7 @@ class DefaultScene(BaseScene):
                 128,
                 self.surface.get_rect().height,
             ),
-            color_bg=(128, 0, 0, 255),
+            color_bg=(32, 0, 32, 192),
         )
         self.group.add(self.clock_widget)
         self.change_mode("default")

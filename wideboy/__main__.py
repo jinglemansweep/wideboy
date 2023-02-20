@@ -72,7 +72,7 @@ async def start_main_loop():
             clock,
             delta,
         )
-        await asyncio.sleep(0.02)
+        await asyncio.sleep(0.015) # 0.01 - 0.03
 
 
 # Entrypoint
