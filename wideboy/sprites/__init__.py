@@ -84,7 +84,6 @@ class Animation:
         return self.index is not None and self.index < self.duration
 
     def update(self):
-        print(self.index)
         if not self.is_moving():
             return
         ri = self.index / self.duration

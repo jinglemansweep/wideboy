@@ -47,23 +47,23 @@ class DefaultScene(BaseScene):
         schedule.every(30).seconds.do(self.change_mode, mode="blank", timeout=5)
         self.change_mode("default")
         self.act = Act(
-            1000,
+            300,
             [
                 (
                     0,
                     Animation(
                         self.clock_widget,
                         (self.surface.get_rect().width - 128, 0),
-                        200,
+                        64,
                         (0, 0),
                     ),
                 ),
                 (
-                    300,
+                    100,
                     Animation(
                         self.clock_widget,
                         (0, 0),
-                        200,
+                        64,
                         (self.surface.get_rect().width - 128, 0),
                     ),
                 ),
