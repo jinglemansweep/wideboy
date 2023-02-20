@@ -73,7 +73,7 @@ class DefaultScene(BaseScene):
 
     def _mode_default(self):
         self.act = Act(
-            100,
+            32,
             [
                 (0, lambda: self.background_widget.set_random_image()),
                 (
@@ -81,7 +81,7 @@ class DefaultScene(BaseScene):
                     Animation(
                         self.clock_widget,
                         (self.surface.get_rect().width - 128, 0),
-                        100,
+                        32,
                     ),
                 ),
                 (
@@ -89,7 +89,7 @@ class DefaultScene(BaseScene):
                     Animation(
                         self.background_widget,
                         (0, 0),
-                        100,
+                        32,
                         (0, self.surface.get_rect().height),
                     ),
                 ),
@@ -99,14 +99,14 @@ class DefaultScene(BaseScene):
 
     def _mode_blank(self):
         self.act = Act(
-            100,
+            32,
             [
                 (
                     0,
                     Animation(
                         self.clock_widget,
                         (self.surface.get_rect().width, 0),
-                        64,
+                        32,
                     ),
                 ),
                 (
@@ -114,7 +114,7 @@ class DefaultScene(BaseScene):
                     Animation(
                         self.background_widget,
                         (0, self.surface.get_rect().height),
-                        64,
+                        32,
                         (0, 0),
                     ),
                 ),
