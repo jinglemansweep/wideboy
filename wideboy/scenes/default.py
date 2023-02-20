@@ -105,8 +105,8 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.clock_widget,
-                        (0, 0),
-                        100,
+                        (self.surface.get_rect().width, 0),
+                        64,
                     ),
                 ),
                 (
@@ -114,7 +114,7 @@ class DefaultScene(BaseScene):
                     Animation(
                         self.background_widget,
                         (0, self.surface.get_rect().height),
-                        100,
+                        64,
                         (0, 0),
                     ),
                 ),
