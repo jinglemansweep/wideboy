@@ -4,6 +4,7 @@ import random
 import schedule
 import time
 
+from wideboy.sprites import Act, Animation
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.scenes import BaseScene, build_background
@@ -45,14 +46,40 @@ class DefaultScene(BaseScene):
         # Schedule some test events
         schedule.every(30).seconds.do(self.change_mode, mode="blank", timeout=5)
         self.change_mode("default")
+        self.act = Act(
+            1000,
+            [
+                (
+                    0,
+                    Animation(
+                        self.clock_widget,
+                        (self.surface.get_rect().width - 128, 0),
+                        200,
+                        (0, 0),
+                    ),
+                ),
+                (
+                    300,
+                    Animation(
+                        self.clock_widget,
+                        (0, 0),
+                        200,
+                        (self.surface.get_rect().width - 128, 0),
+                    ),
+                ),
+            ],
+            True,
+        )
+        self.act.run()
 
     def update(
         self, frame: int, delta: float, events: list[pygame.event.Event]
     ) -> None:
         super().update(frame, delta, events)
         schedule.run_pending()
-        self.handle_mode_timeout()
-        self.handle_modes()
+        # self.handle_mode_timeout()
+        # self.handle_modes()
+        self.act.update()
 
     # Modes
 
