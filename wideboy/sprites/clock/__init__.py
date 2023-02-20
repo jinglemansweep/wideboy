@@ -63,3 +63,6 @@ class ClockSprite(BaseSprite):
         )
         self.image.blit(time_sprite, time_pos)
         self.dirty = 1
+
+    def poop(self):
+        logger.info("POOP")

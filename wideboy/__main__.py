@@ -63,7 +63,7 @@ async def start_main_loop():
         stage_updates = scene.render(frame, delta, events)
         updates = [] + stage_updates
         if len(updates):
-            logger.debug(f"display:draw rects={len(updates)}")
+            # logger.debug(f"display:draw rects={len(updates)}")
             pygame.display.update(updates)
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(matrix, screen, matrix_buffer)

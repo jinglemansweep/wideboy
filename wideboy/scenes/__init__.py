@@ -27,6 +27,7 @@ class BaseScene:
     def update(
         self, frame: int, delta: float, events: list[pygame.event.Event]
     ) -> None:
+        self.handle_events(events)
         self.group.update(frame, delta, events)
 
     def draw(self) -> list[pygame.rect.Rect]:
@@ -37,6 +38,9 @@ class BaseScene:
         self.mode_next = mode
         self.mode_timeout = timeout
         self.mode_changed = time.time()
+
+    def handle_events(self, events: list[pygame.event.Event]) -> None:
+        pass
 
     def handle_mode_timeout(self):
         # if mode timeout is set, and timeout has elapsed, reset to "default" mode

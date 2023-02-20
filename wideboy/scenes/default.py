@@ -1,13 +1,11 @@
 import logging
 import pygame
-import random
-import schedule
-import time
 
 from wideboy.sprites import Act, Animation
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.scenes import BaseScene, build_background
+from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 
 
 logger = logging.getLogger(__name__)
@@ -43,43 +41,24 @@ class DefaultScene(BaseScene):
             color_bg=(128, 0, 0, 255),
         )
         self.group.add(self.clock_widget)
-        # Schedule some test events
-        schedule.every(30).seconds.do(self.change_mode, mode="blank", timeout=5)
         self.change_mode("default")
-        self.act = Act(
-            300,
-            [
-                (
-                    0,
-                    Animation(
-                        self.clock_widget,
-                        (self.surface.get_rect().width - 128, 0),
-                        64,
-                        (0, 0),
-                    ),
-                ),
-                (
-                    100,
-                    Animation(
-                        self.clock_widget,
-                        (0, 0),
-                        64,
-                        (self.surface.get_rect().width - 128, 0),
-                    ),
-                ),
-            ],
-            True,
-        )
-        self.act.run()
 
     def update(
         self, frame: int, delta: float, events: list[pygame.event.Event]
     ) -> None:
         super().update(frame, delta, events)
-        schedule.run_pending()
-        # self.handle_mode_timeout()
-        # self.handle_modes()
-        self.act.update()
+        self.handle_mode_timeout()
+        self.handle_modes()
+        if self.act is not None:
+            self.act.update()
+
+    # Handle Events
+
+    def handle_events(self, events: list[pygame.event.Event]):
+        super().handle_events(events)
+        for event in events:
+            if event.type == EVENT_EPOCH_MINUTE:
+                self.change_mode("blank", 5)
 
     # Modes
 
@@ -88,24 +67,56 @@ class DefaultScene(BaseScene):
             self.mode = self.mode_next
             logger.info(f"scene:handle_modes mode={self.mode}")
             if self.mode == "default":
-                self._background_show()
-                self._clock_show()
+                self._mode_default()
             elif self.mode == "blank":
-                self._background_hide()
-                self._clock_hide()
+                self._mode_blank()
 
-    # Background widget actions
+    def _mode_default(self):
+        self.act = Act(
+            100,
+            [
+                (
+                    0,
+                    Animation(
+                        self.clock_widget,
+                        (self.surface.get_rect().width - 128, 0),
+                        100,
+                    ),
+                ),
+                (
+                    0,
+                    Animation(
+                        self.background_widget,
+                        (0, 0),
+                        100,
+                        (0, self.surface.get_rect().height),
+                    ),
+                ),
+            ],
+        )
+        self.act.start()
 
-    def _background_hide(self):
-        self.background_widget.mover.move((0, self.surface.get_rect().height), 50)
-
-    def _background_show(self):
-        self.background_widget.mover.move((0, 0), 50)
-
-    # Clock widget actions
-
-    def _clock_hide(self):
-        self.clock_widget.mover.move((0, 0), 50)
-
-    def _clock_show(self):
-        self.clock_widget.mover.move((self.surface.get_rect().width - 128, 0), 50)
+    def _mode_blank(self):
+        self.act = Act(
+            100,
+            [
+                (
+                    0,
+                    Animation(
+                        self.clock_widget,
+                        (0, 0),
+                        100,
+                    ),
+                ),
+                (
+                    0,
+                    Animation(
+                        self.background_widget,
+                        (0, self.surface.get_rect().height),
+                        100,
+                        (0, 0),
+                    ),
+                ),
+            ],
+        )
+        self.act.start()
