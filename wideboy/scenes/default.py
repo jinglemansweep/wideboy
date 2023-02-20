@@ -25,7 +25,7 @@ class DefaultScene(BaseScene):
                 surface.get_rect().width,
                 surface.get_rect().height,
             ),
-            (surface.get_rect().height * 4, surface.get_rect().height * 4),
+            (surface.get_rect().height * 2, surface.get_rect().height * 2),
             (surface.get_rect().width, surface.get_rect().height),
             255,
         )
