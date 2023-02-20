@@ -6,8 +6,6 @@ def get_config_env_var(key, default=None):
     return os.environ.get(key, default)
 
 
-FPS = int(get_config_env_var("FPS", 50))
-
 CANVAS_WIDTH = int(get_config_env_var("CANVAS_WIDTH", 64 * 12))
 CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
 CANVAS_SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -56,7 +54,7 @@ LED_ROW_ADDR_TYPE = int(get_config_env_var("LED_ROW_ADDR_TYPE", 0))  # 0-4
 LED_SHOW_REFRESH = (
     get_config_env_var("LED_SHOW_REFRESH", "false").lower() == "true"
 )  # true/false
-LED_LIMIT_REFRESH = int(get_config_env_var("LED_LIMIT_REFRESH", 0))  # 0
+LED_LIMIT_REFRESH = int(get_config_env_var("LED_LIMIT_REFRESH", 60))  # 60
 LED_INVERSE = get_config_env_var("LED_INVERSE", "false").lower() == "true"  # true/false
 LED_RGB_SEQUENCE = get_config_env_var("LED_RGB_SEQUENCE", "RGB")  # RGB, RBG
 LED_PWM_LSB_NANOSECONDS = int(get_config_env_var("LED_PWM_LSB_NANOSECONDS", 200))  # 130

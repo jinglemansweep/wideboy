@@ -64,7 +64,7 @@ async def start_main_loop():
         updates = [] + stage_updates
         if len(updates):
             logger.debug(f"display:draw rects={len(updates)}")
-        pygame.display.update(updates)
+            pygame.display.update(updates)
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(matrix, screen, matrix_buffer)
         loop_debug(
@@ -73,6 +73,7 @@ async def start_main_loop():
             delta,
         )
         await asyncio.sleep(0)
+        pygame.time.wait(1)
 
 
 # Entrypoint

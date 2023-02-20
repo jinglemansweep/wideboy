@@ -10,7 +10,6 @@ from typing import Callable
 from wideboy import _APP_DESCRIPTION
 from wideboy.utils.helpers import EpochEmitter
 from wideboy.config import (
-    FPS,
     PROFILING,
 )
 
@@ -84,6 +83,6 @@ def loop_debug(
 
 def clock_tick(clock: pygame.time.Clock) -> tuple[int, float]:
     global frame
-    delta = clock.tick(FPS) / 1000
+    delta = clock.tick() / 1000
     frame += 1
     return frame, delta
