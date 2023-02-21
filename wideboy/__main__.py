@@ -77,8 +77,8 @@ async def start_main_loop():
             clock,
             delta,
         )
-        mqtt.loop()
-        await asyncio.sleep(0.015)  # 0.01 - 0.03
+        mqtt.loop(0.0015)
+        await asyncio.sleep(0)
 
 
 # Entrypoint
