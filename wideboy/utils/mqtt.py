@@ -50,5 +50,5 @@ class MQTT:
         self.client.subscribe(f"{MQTT_PREFIX}/#")
 
     def _on_message(self, client, userdata, msg):
-        topic, payload = str(msg.topic), str(msg.payload)
+        topic, payload = msg.topic, msg.payload.decode("utf-8")
         logger.info(f"mqtt:message topic={topic} payload={payload}")
