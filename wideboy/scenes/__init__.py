@@ -52,6 +52,14 @@ class BaseScene:
         ):
             self.change_mode("default")
 
+    @property
+    def height(self):
+        return self.surface.get_rect().height
+
+    @property
+    def width(self):
+        return self.surface.get_rect().width
+
 
 def build_background(
     size: tuple[int, int], color: pygame.color.Color

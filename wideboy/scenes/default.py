@@ -20,22 +20,22 @@ class DefaultScene(BaseScene):
         self.background_widget = ImageSprite(
             (
                 0,
-                surface.get_rect().height,
-                surface.get_rect().width,
-                surface.get_rect().height,
+                self.height,
+                self.width,
+                self.height,
             ),
-            (surface.get_rect().height * 2, surface.get_rect().height * 2),
-            (surface.get_rect().width, surface.get_rect().height),
+            (self.height * 2, self.height * 2),
+            (self.width, self.height),
             255,
         )
         self.group.add(self.background_widget)
         # Setup clock widget
         self.clock_widget = ClockSprite(
             (
-                self.surface.get_rect().width,
+                self.width,
                 0,
                 128,
-                self.surface.get_rect().height,
+                self.height,
             ),
             color_bg=(32, 0, 32, 192),
         )
@@ -79,7 +79,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.clock_widget,
-                        (self.surface.get_rect().width - 128, 0),
+                        (self.width - 128, 0),
                         100,
                     ),
                 ),
@@ -89,7 +89,7 @@ class DefaultScene(BaseScene):
                         self.background_widget,
                         (0, 0),
                         100,
-                        (0, self.surface.get_rect().height),
+                        (0, self.height),
                     ),
                 ),
             ],
@@ -104,7 +104,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.clock_widget,
-                        (self.surface.get_rect().width, 0),
+                        (self.width, 0),
                         64,
                     ),
                 ),
@@ -112,7 +112,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.background_widget,
-                        (0, self.surface.get_rect().height),
+                        (0, self.height),
                         64,
                         (0, 0),
                     ),
