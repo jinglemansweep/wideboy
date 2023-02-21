@@ -30,7 +30,7 @@ class ImageSprite(BaseSprite):
     def set_random_image(self):
         filename = random.choice(self.files)
         tile_size = random.randint(64 * 2, 64 * 8)
-        self.image = self.load_image(filename, tile_size=tile_size)
+        self.image = self.load_image(filename, tile_size=(tile_size, tile_size))
 
     def glob_images(self):
         return glob_files("images/backgrounds", "*.png")
