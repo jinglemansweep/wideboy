@@ -26,10 +26,10 @@ class Act:
     ) -> None:
         self.actions.append((time_index, action))
 
-    def start(self):
+    def start(self) -> None:
         self.act_time_index = 0
 
-    def update(self):
+    def update(self) -> None:
         if self.act_time_index is not None:
             for time_index, action in self.actions:
                 if isinstance(action, Animation):
@@ -52,7 +52,7 @@ class Animation:
         duration: int,
         origin: Optional[tuple[int, int]] = None,
         tweener=easeInOutSine,
-    ):
+    ) -> None:
         self.sprite: pygame.sprite.Sprite = sprite
         self.tweener = tweener
         self.target: tuple[int, int] = target
@@ -71,13 +71,13 @@ class Animation:
             f"sprite::animation target={self.target} origin={self.origin} duration={self.duration} distances={self.distances}"
         )
 
-    def start(self):
+    def start(self) -> None:
         self.index = 0
 
-    def is_moving(self):
+    def is_moving(self) -> bool:
         return self.index is not None and self.index < self.duration
 
-    def update(self):
+    def update(self) -> None:
         if not self.is_moving():
             return
         self.index += 1
@@ -94,9 +94,9 @@ class Animation:
 
 
 class BaseSprite(pygame.sprite.DirtySprite):
-    def __init__(self, rect: pygame.rect.Rect):
+    def __init__(self, rect: pygame.rect.Rect) -> None:
         super().__init__()
         self.rect = pygame.rect.Rect(*rect)
 
-    def update(self, *args, **kwargs):
+    def update(self, *args, **kwargs) -> None:
         super().update(*args, **kwargs)

@@ -11,17 +11,17 @@ logger = logging.getLogger("sprites.ticker")
 class TickerWidgetSprite(pygame.sprite.DirtySprite):
     def __init__(
         self,
-        rect,
-        text_font="freesans",
-        text_size=20,
-        text_color=(255, 255, 255, 255),
-        text_antialias=True,
-        padding=0,
-        item_margin=0,
-        scroll_speed=60.0,
-        loop_count=0,
-        autorun=True,
-    ):
+        rect: pygame.rect.Rect,
+        text_font: str = "freesans",
+        text_size: int = 20,
+        text_color: pygame.color.Color = (255, 255, 255, 255),
+        text_antialias: bool = True,
+        padding: int = 0,
+        item_margin: int = 0,
+        scroll_speed: float = 60.0,
+        loop_count: int = 0,
+        autorun: bool = True,
+    ) -> None:
         super().__init__()
         pygame.font.init()
         self.rect = pygame.Rect(*rect)
@@ -114,7 +114,7 @@ class TickerWidgetSprite(pygame.sprite.DirtySprite):
     def _get_surface_width(self, surface: pygame.Surface) -> int:
         return surface.get_rect().width + self.item_margin
 
-    def next_loop(self, run_now: bool = False):
+    def next_loop(self, run_now: bool = False) -> None:
         if run_now or self.x < 0 - self.image.get_rect().width:
             if self.loop_count == 0 or self.loop_idx < self.loop_count:
                 self.loop_idx += 1
@@ -123,7 +123,7 @@ class TickerWidgetSprite(pygame.sprite.DirtySprite):
                 )
                 self.reset_position()
 
-    def update(self, frame: int, delta: float):
+    def update(self, frame: int, delta: float) -> None:
         super().update()
         if self.running:
             self.x -= self.scroll_speed * delta

@@ -21,7 +21,7 @@ def intro_debug() -> None:
     logger.info("=" * 80)
 
 
-def random_color() -> tuple[int, int, int]:
+def random_color() -> pygame.color.Color:
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 
@@ -32,10 +32,10 @@ async def async_fetch(session: aiohttp.ClientSession, url: str) -> str:
 
 
 class EpochEmitter:
-    def __init__(self):
+    def __init__(self) -> None:
         self._update()
 
-    def check(self, unit=None):
+    def check(self, unit=None) -> Any:
         now = datetime.timetuple(datetime.now())
         is_new_sec = now.tm_sec != self.then.tm_sec
         is_new_min = now.tm_min != self.then.tm_min
@@ -50,7 +50,7 @@ class EpochEmitter:
         else:
             return epochs
 
-    def _update(self):
+    def _update(self) -> None:
         self.then = datetime.timetuple(datetime.now())
 
 

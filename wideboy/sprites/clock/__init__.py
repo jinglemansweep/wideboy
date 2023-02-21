@@ -14,14 +14,14 @@ logger = logging.getLogger("sprites.clock")
 class ClockSprite(BaseSprite):
     def __init__(
         self,
-        rect,
-        font_date="bitstreamverasans",
-        font_time="molot",
-        color_bg=(0, 0, 0),
-        color_fg=(255, 255, 255),
-        antialias=True,
-        time_fmt="%H:%M",
-    ):
+        rect: pygame.rect.Rect,
+        font_date: str = "bitstreamverasans",
+        font_time: str = "molot",
+        color_bg: pygame.color.Color = (0, 0, 0),
+        color_fg: pygame.color.Color = (255, 255, 255),
+        antialias: bool = True,
+        time_fmt: str = "%H:%M",
+    ) -> None:
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         pygame.font.init()
@@ -33,13 +33,15 @@ class ClockSprite(BaseSprite):
         self.time_fmt = time_fmt
         self.render()
 
-    def update(self, frame: str, delta: float, events: list[pygame.event.Event]):
+    def update(
+        self, frame: str, delta: float, events: list[pygame.event.Event]
+    ) -> None:
         super().update(frame, delta, events)
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
                 self.render()
 
-    def render(self):
+    def render(self) -> None:
         now = datetime.now()
         dow_str = now.strftime("%A")[:3]
         ddmm_str = now.strftime("%d/%m")
@@ -64,5 +66,5 @@ class ClockSprite(BaseSprite):
         self.image.blit(time_sprite, time_pos)
         self.dirty = 1
 
-    def poop(self):
+    def poop(self) -> None:
         logger.info("POOP")

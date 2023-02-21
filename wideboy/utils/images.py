@@ -30,7 +30,6 @@ def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:
 def tile_surface(surface: pygame.Surface, size: tuple[int, int]) -> pygame.Surface:
     x = y = 0
     tiled_surface = pygame.Surface(size)
-
     while y < size[1]:
         while x < size[0]:
             tiled_surface.blit(surface, (x, y))

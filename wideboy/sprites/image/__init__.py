@@ -13,7 +13,6 @@ logger = logging.getLogger("sprites.background")
 class ImageSprite(BaseSprite):
     def __init__(
         self,
-        filename: str,
         rect: pygame.Rect,
         tile_size: tuple[int, int],
         fill_size: tuple[int, int],

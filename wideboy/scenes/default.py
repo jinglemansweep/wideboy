@@ -18,7 +18,6 @@ class DefaultScene(BaseScene):
         super().__init__(surface, bg_color)
         # Setup background widget
         self.background_widget = ImageSprite(
-            "images/backgrounds/mandms.png",
             (
                 0,
                 surface.get_rect().height,
@@ -54,7 +53,7 @@ class DefaultScene(BaseScene):
 
     # Handle Events
 
-    def handle_events(self, events: list[pygame.event.Event]):
+    def handle_events(self, events: list[pygame.event.Event]) -> None:
         super().handle_events(events)
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
@@ -62,7 +61,7 @@ class DefaultScene(BaseScene):
 
     # Modes
 
-    def handle_modes(self):
+    def handle_modes(self) -> None:
         if self.mode_next != self.mode:
             self.mode = self.mode_next
             logger.info(f"scene:handle_modes mode={self.mode}")
@@ -71,7 +70,7 @@ class DefaultScene(BaseScene):
             elif self.mode == "blank":
                 self._mode_blank()
 
-    def _mode_default(self):
+    def _mode_default(self) -> None:
         self.act = Act(
             100,
             [
@@ -97,7 +96,7 @@ class DefaultScene(BaseScene):
         )
         self.act.start()
 
-    def _mode_blank(self):
+    def _mode_blank(self) -> None:
         self.act = Act(
             100,
             [

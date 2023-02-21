@@ -6,7 +6,9 @@ logger = logging.getLogger(__name__)
 
 
 class BaseScene:
-    def __init__(self, surface: pygame.surface.Surface, bg_color: pygame.color.Color):
+    def __init__(
+        self, surface: pygame.surface.Surface, bg_color: pygame.color.Color
+    ) -> None:
         self.surface = surface
         self.background = build_background(
             (surface.get_rect().width, surface.get_rect().height), bg_color
@@ -33,7 +35,7 @@ class BaseScene:
     def draw(self) -> list[pygame.rect.Rect]:
         return self.group.draw(self.surface)
 
-    def change_mode(self, mode: str, timeout: int = 0):
+    def change_mode(self, mode: str, timeout: int = 0) -> None:
         logger.info(f"scene:mode_change mode={mode} timeout={timeout}")
         self.mode_next = mode
         self.mode_timeout = timeout
@@ -42,7 +44,7 @@ class BaseScene:
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         pass
 
-    def handle_mode_timeout(self):
+    def handle_mode_timeout(self) -> None:
         # if mode timeout is set, and timeout has elapsed, reset to "default" mode
         if (
             self.mode_timeout > 0
@@ -51,7 +53,9 @@ class BaseScene:
             self.change_mode("default")
 
 
-def build_background(size: tuple[int, int], color: pygame.color.Color):
+def build_background(
+    size: tuple[int, int], color: pygame.color.Color
+) -> pygame.surface.Surface:
     background = pygame.surface.Surface(size)
     background.fill(color)
     return background
