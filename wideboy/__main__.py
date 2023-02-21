@@ -12,6 +12,7 @@ from wideboy.config import LOG_DEBUG, CANVAS_SIZE, MATRIX_ENABLED
 from wideboy.utils.display import setup_led_matrix, render_led_matrix
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
+from wideboy.utils.mqtt import setup_mqtt
 from wideboy.utils.pygame import (
     setup_pygame,
     process_events,
@@ -37,6 +38,10 @@ intro_debug()
 clock, screen = setup_pygame(CANVAS_SIZE)
 if MATRIX_ENABLED:
     matrix, matrix_buffer = setup_led_matrix()
+
+# MQTT
+
+mqtt = setup_mqtt()
 
 # Loop Setup
 
@@ -72,7 +77,7 @@ async def start_main_loop():
             clock,
             delta,
         )
-        await asyncio.sleep(0.015) # 0.01 - 0.03
+        await asyncio.sleep(0.015)  # 0.01 - 0.03
 
 
 # Entrypoint

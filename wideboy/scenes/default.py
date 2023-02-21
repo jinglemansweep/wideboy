@@ -4,7 +4,7 @@ import pygame
 from wideboy.sprites import Act, Animation
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
-from wideboy.scenes import BaseScene, build_background
+from wideboy.scenes import BaseScene
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 
 

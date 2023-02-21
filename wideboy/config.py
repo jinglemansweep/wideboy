@@ -20,6 +20,11 @@ MATRIX_PANEL_WIDTH = int(get_config_env_var("MATRIX_PANEL_WIDTH", 64))
 MATRIX_PANEL_HEIGHT = int(get_config_env_var("MATRIX_PANEL_HEIGHT", 64))
 MATRIX_PANEL_SIZE = (MATRIX_PANEL_WIDTH, MATRIX_PANEL_HEIGHT)
 
+MQTT_HOST = get_config_env_var("MQTT_HOST", "hass.local")
+MQTT_PORT = int(get_config_env_var("MQTT_PORT", 1883))
+MQTT_USER = get_config_env_var("MQTT_USER", None)
+MQTT_PASSWORD = get_config_env_var("MQTT_PASSWORD", None)
+
 DEBUG = get_config_env_var("DEBUG", "false") == "true"
 LOG_DEBUG = get_config_env_var("LOG_LEVEL", "info").lower() == "debug"
 PROFILING = get_config_env_var("PROFILING", "")
