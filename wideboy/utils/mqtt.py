@@ -4,6 +4,8 @@ import paho.mqtt.client as mqtt
 
 from wideboy.config import MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASSWORD
 
+MQTT_PREFIX = "wideboy"
+
 logger = logging.getLogger(__name__)
 
 
@@ -45,7 +47,7 @@ class MQTT:
         logger.info(
             f"mqtt:connect client={client} userdata={userdata} flags={flags} rc={str(rc)}"
         )
-        # self.client.subscribe("$SYS/#")
+        self.client.subscribe(f"{MQTT_PREFIX}/#")
 
     def _on_message(self, client, userdata, msg):
         topic, payload = str(msg.topic), str(msg.payload)
