@@ -9,6 +9,7 @@ from typing import Callable
 
 from wideboy import _APP_DESCRIPTION
 from wideboy.utils.helpers import EpochEmitter
+from wideboy.utils.mqtt import EVENT_MQTT_MESSAGE
 from wideboy.config import (
     PROFILING,
 )
@@ -54,6 +55,8 @@ def process_events(events: list[pygame.event.Event]) -> None:
 def handle_event(event: pygame.event.Event) -> None:
     if event.type == QUIT:
         sys.exit()
+    if event.type == EVENT_MQTT_MESSAGE:
+        logger.info(f"MQTT MESSAGE: Topic: {event.topic} Payload: {event.payload}")
 
 
 def main_entrypoint(main_func: Callable) -> None:

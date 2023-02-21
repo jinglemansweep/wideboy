@@ -1,10 +1,12 @@
 import logging
+import pygame
 from typing import Optional
 import paho.mqtt.client as mqtt
 
 from wideboy.config import MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASSWORD
 
 MQTT_PREFIX = "wideboy"
+EVENT_MQTT_MESSAGE = pygame.USEREVENT + 21
 
 logger = logging.getLogger(__name__)
 
@@ -51,4 +53,7 @@ class MQTT:
 
     def _on_message(self, client, userdata, msg):
         topic, payload = msg.topic, msg.payload.decode("utf-8")
-        logger.info(f"mqtt:message topic={topic} payload={payload}")
+        logger.debug(f"mqtt:message topic={topic} payload={payload}")
+        pygame.event.post(
+            pygame.event.Event(EVENT_MQTT_MESSAGE, dict(topic=topic, payload=payload))
+        )
