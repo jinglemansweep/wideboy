@@ -29,7 +29,6 @@ class MQTT:
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
         self.connect()
-        self.client.loop_start()
 
     def connect(self) -> None:
         logger.debug(
@@ -38,6 +37,9 @@ class MQTT:
         if self.user is not None:
             self.client.username_pw_set(self.user, self.password)
         self.client.connect(self.host, self.port, self.keepalive)
+
+    def loop(self, timeout: float = 0.1) -> None:
+        self.client.loop(timeout)
 
     def _on_connect(self, client, userdata, flags, rc):
         logger.info(

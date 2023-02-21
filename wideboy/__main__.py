@@ -77,6 +77,7 @@ async def start_main_loop():
             clock,
             delta,
         )
+        mqtt.loop()
         await asyncio.sleep(0.015)  # 0.01 - 0.03
 
 
