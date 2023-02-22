@@ -4,6 +4,7 @@ import pygame
 from wideboy.sprites import Act, Animation
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
+from wideboy.sprites.text import TextSprite
 from wideboy.scenes import BaseScene
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 
@@ -40,6 +41,10 @@ class DefaultScene(BaseScene):
             color_bg=(32, 0, 32, 192),
         )
         self.group.add(self.clock_widget)
+        # Setup text widget
+        self.text_widget = TextSprite((0, 0 - self.height, 512 - 8, 56))
+        self.group.add(self.text_widget)
+        # Set initial mode
         self.change_mode("default")
 
     def update(
@@ -72,24 +77,34 @@ class DefaultScene(BaseScene):
 
     def _mode_default(self) -> None:
         self.act = Act(
-            100,
+            128,
             [
                 (0, lambda: self.background_widget.set_random_image()),
-                (
-                    0,
-                    Animation(
-                        self.clock_widget,
-                        (self.width - 128, 0),
-                        100,
-                    ),
-                ),
+                (0, lambda: self.text_widget.set_random_content()),
                 (
                     0,
                     Animation(
                         self.background_widget,
                         (0, 0),
-                        100,
+                        64,
                         (0, self.height),
+                    ),
+                ),
+                (
+                    32,
+                    Animation(
+                        self.clock_widget,
+                        (self.width - 128, 0),
+                        32,
+                    ),
+                ),
+                (
+                    64,
+                    Animation(
+                        self.text_widget,
+                        (4, 4),
+                        64,
+                        (4, 0 - self.height),
                     ),
                 ),
             ],
@@ -98,18 +113,27 @@ class DefaultScene(BaseScene):
 
     def _mode_blank(self) -> None:
         self.act = Act(
-            100,
+            128,
             [
                 (
                     0,
                     Animation(
-                        self.clock_widget,
-                        (self.width, 0),
-                        64,
+                        self.text_widget,
+                        (0 - self.width, 4),
+                        32,
+                        (4, 4),
                     ),
                 ),
                 (
-                    0,
+                    32,
+                    Animation(
+                        self.clock_widget,
+                        (self.width, 0),
+                        32,
+                    ),
+                ),
+                (
+                    64,
                     Animation(
                         self.background_widget,
                         (0, self.height),
