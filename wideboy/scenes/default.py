@@ -33,7 +33,7 @@ class DefaultScene(BaseScene):
         # Setup clock widget
         self.clock_widget = ClockSprite(
             (
-                self.width,
+                0 - 128,
                 0,
                 128,
                 self.height,
@@ -42,7 +42,7 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.clock_widget)
         # Setup text widget
-        self.text_widget = TextSprite((0, 0 - self.height, 512 - 8, 56))
+        self.text_widget = TextSprite((128, 0 - self.height, 512 - 8, 56))
         self.group.add(self.text_widget)
         # Set initial mode
         self.change_mode("default")
@@ -94,7 +94,7 @@ class DefaultScene(BaseScene):
                     32,
                     Animation(
                         self.clock_widget,
-                        (self.width - 128, 0),
+                        (0, 0),
                         32,
                     ),
                 ),
@@ -102,9 +102,9 @@ class DefaultScene(BaseScene):
                     64,
                     Animation(
                         self.text_widget,
-                        (4, 4),
+                        (128 + 4, 4),
                         64,
-                        (4, 0 - self.height),
+                        (128 + 4, 0 - self.height),
                     ),
                 ),
             ],
@@ -119,17 +119,9 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.text_widget,
-                        (0 - self.width, 4),
+                        (128 + 4, self.height),
                         32,
-                        (4, 4),
-                    ),
-                ),
-                (
-                    32,
-                    Animation(
-                        self.clock_widget,
-                        (self.width, 0),
-                        32,
+                        (128 + 4, 4),
                     ),
                 ),
                 (
