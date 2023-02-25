@@ -5,6 +5,7 @@ from wideboy.sprites import Act, Animation
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.text import TextSprite
+from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes import BaseScene
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 
@@ -33,7 +34,7 @@ class DefaultScene(BaseScene):
         # Setup clock widget
         self.clock_widget = ClockSprite(
             (
-                0 - 128,
+                self.width,
                 0,
                 128,
                 self.height,
@@ -41,8 +42,14 @@ class DefaultScene(BaseScene):
             color_bg=(32, 0, 32, 192),
         )
         self.group.add(self.clock_widget)
+        # Setup weather widget
+        self.weather_widget = WeatherSprite(
+            (self.width - 256 + 4, self.height, 128 - 8, self.height - 8),
+            (0, 0, 0, 192),
+        )
+        self.group.add(self.weather_widget)
         # Setup text widget
-        self.text_widget = TextSprite((128, 0 - self.height, 512 - 8, 56))
+        self.text_widget = TextSprite((128 + 4, 0 - self.height, 512 - 8, 56))
         self.group.add(self.text_widget)
         # Set initial mode
         self.change_mode("default")
@@ -94,17 +101,26 @@ class DefaultScene(BaseScene):
                     32,
                     Animation(
                         self.clock_widget,
-                        (0, 0),
+                        (self.width - 128, 0),
                         32,
                     ),
                 ),
                 (
                     64,
                     Animation(
-                        self.text_widget,
-                        (128 + 4, 4),
+                        self.weather_widget,
+                        (self.width - 256 + 4, 4),
                         64,
-                        (128 + 4, 0 - self.height),
+                        (self.width - 256 + 4, self.height),
+                    ),
+                ),
+                (
+                    64,
+                    Animation(
+                        self.text_widget,
+                        (4, 4),
+                        64,
+                        (4, 0 - self.height),
                     ),
                 ),
             ],
@@ -119,9 +135,17 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.text_widget,
-                        (128 + 4, self.height),
+                        (4, self.height),
                         32,
-                        (128 + 4, 4),
+                        (4, 4),
+                    ),
+                ),
+                (
+                    0,
+                    Animation(
+                        self.weather_widget,
+                        (self.width - 256 + 4, 0 - self.height),
+                        32,
                     ),
                 ),
                 (
