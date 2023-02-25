@@ -15,12 +15,13 @@ def setup_led_matrix() -> tuple[RGBMatrix, Any]:
 
 
 def render_led_matrix(
-    matrix: RGBMatrix, surface: pygame.surface.Surface, buffer: Any
+    matrix: RGBMatrix, surface: pygame.surface.Surface, buffer: Any, brightness: int
 ) -> Any:
     wrapped = wrap_surface(surface, MATRIX_SIZE, MATRIX_PANEL_SIZE)
     pixels = pygame.surfarray.pixels3d(wrapped)
     image = Image.fromarray(pixels)
     buffer.SetImage(image)
+    matrix.SetBrightness(brightness)
     # Flip and return next buffer
     return matrix.SwapOnVSync(buffer)
 
