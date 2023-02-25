@@ -22,7 +22,7 @@ class DefaultScene(BaseScene):
         self.background_widget = ImageSprite(
             (
                 0,
-                self.height,
+                0 - self.height,
                 self.width,
                 self.height,
             ),
@@ -54,6 +54,8 @@ class DefaultScene(BaseScene):
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
+        self.act_weather_show = self.build_weather_show_act()
+        self.act_weather_show.start()
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
         self.act_ticker_change = self.build_ticker_change_act()
@@ -65,6 +67,8 @@ class DefaultScene(BaseScene):
         super().update(frame, delta, events)
         if self.act_clock_show is not None:
             self.act_clock_show.update()
+        if self.act_weather_show is not None:
+            self.act_weather_show.update()
         if self.act_background_change is not None:
             self.act_background_change.update()
         if self.act_ticker_change is not None:
@@ -100,6 +104,21 @@ class DefaultScene(BaseScene):
             ],
         )
 
+    def build_weather_show_act(self) -> Act:
+        return Act(
+            64,
+            [
+                (
+                    0,
+                    Animation(
+                        self.weather_widget,
+                        (self.width - 256 + 4, 4),
+                        64,
+                    ),
+                ),
+            ],
+        )
+
     def build_background_change_act(self) -> Act:
         return Act(
             128,
@@ -108,7 +127,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.background_widget,
-                        (0, self.height),
+                        (0, 0 - self.height),
                         64,
                     ),
                 ),
@@ -119,7 +138,7 @@ class DefaultScene(BaseScene):
                         self.background_widget,
                         (0, 0),
                         64,
-                        (0, self.height),
+                        (0, 0 - self.height),
                     ),
                 ),
             ],
@@ -132,29 +151,12 @@ class DefaultScene(BaseScene):
                 (
                     0,
                     Animation(
-                        self.weather_widget,
-                        (self.width - 256 + 4, 0 - self.height),
-                        64,
-                    ),
-                ),
-                (
-                    0,
-                    Animation(
                         self.text_widget,
                         (4, self.height),
                         64,
                     ),
                 ),
                 (64, lambda: self.text_widget.set_random_content()),
-                (
-                    96,
-                    Animation(
-                        self.weather_widget,
-                        (self.width - 256 + 4, 4),
-                        64,
-                        (self.width - 256 + 4, 0 - self.height),
-                    ),
-                ),
                 (
                     96,
                     Animation(self.text_widget, (4, 4), 64, (4, self.height)),
