@@ -60,7 +60,7 @@ mqtt.publish(switch_power_state_topic, {"state": "ON", "brightness": 255})
 
 
 def process_events(events: list[pygame.event.Event]):
-    global state
+    global state, matrix
     for event in events:
         if event.type == EVENT_HASS_COMMAND:
             logger.debug(f"hass:action name={event.name} payload={event.payload}")
@@ -68,6 +68,7 @@ def process_events(events: list[pygame.event.Event]):
                 state.power = event.payload.get("state") == "ON"
                 if "brightness" in event.payload:
                     state.brightness = int(event.payload.get("brightness"))
+                    matrix.brightness = state.brightness
                 mqtt.publish(switch_power_state_topic, event.payload)
                 logger.info(f"power:master state={event.payload}")
 
