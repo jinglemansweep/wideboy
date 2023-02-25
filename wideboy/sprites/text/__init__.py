@@ -34,29 +34,29 @@ DUMMY_CONTENT = [
         "depression in poultry who no longer want to be eaten",
     ],
     [
-        "LOST WALLET RETURNED WITH EXTRA CASH!",
+        "LOST WALLET RETURNED WITH EXTRA CASH",
         "A man's lost wallet was returned to him with extra cash",
-        "inside, leaving him pleasantly surprised and grateful.",
+        "inside, leaving him pleasantly surprised and grateful",
     ],
     [
-        "GOAT ELECTED MAYOR OF TOWN!",
+        "GOAT ELECTED MAYOR OF TOWN",
         "A small town elected a goat as their honorary mayor,",
-        "bringing humor and charm to local politics.",
+        "bringing humor and charm to local politics",
     ],
     [
-        "MAN BUYS COW, GETS SURPRISE DONKEY!",
+        "MAN BUYS COW, GETS SURPRISE DONKEY",
         "A man who bought a cow online received a surprise donkey in",
-        "the same shipment, leading to unexpected animal antics and laughter.",
+        "the same shipment, leading to unexpected animal antics",
     ],
     [
-        "CHILD'S DRAWING SELLS FOR MILLIONS!",
+        "CHILD'S DRAWING SELLS FOR MILLIONS",
         "A child's whimsical drawing sold for millions at an art auction,",
-        "proving that creativity and imagination know no bounds.",
+        "proving that creativity and imagination know no bounds",
     ],
     [
         "TOWN BUILD WORLD'S LARGEST SANDWICH!",
-        "A community came together to build the world's largest sandwich,",
-        "breaking a world record and having a delicious time in the process.",
+        "A town came together to build the world's largest sandwich,",
+        "breaking a world record and having a delicious time",
     ],
 ]
 
