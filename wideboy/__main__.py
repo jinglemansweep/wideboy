@@ -54,7 +54,7 @@ switch_power_state_topic = configure_entity(
     "light",
     dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
 )
-mqtt.publish(switch_power_state_topic, {"state": "ON", "brightness": 64})
+mqtt.publish(switch_power_state_topic, {"state": "ON", "brightness": 128})
 
 # Events
 
