@@ -9,7 +9,7 @@ load_dotenv(find_dotenv())
 
 from wideboy import _APP_NAME
 from wideboy.config import LOG_DEBUG, CANVAS_SIZE, MATRIX_ENABLED
-from wideboy.utils.display import setup_led_matrix, render_led_matrix
+from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.hass import setup_hass, configure_entity, EVENT_HASS_COMMAND
@@ -100,11 +100,10 @@ async def start_main_loop():
             # logger.debug(f"display:draw rects={len(updates)}")
             pygame.display.update(updates)
 
-        if not state.power:
-            screen = pygame.surface.Surface()
-
         if MATRIX_ENABLED:
-            matrix_buffer = render_led_matrix(matrix, screen, matrix_buffer)
+            matrix_buffer = render_led_matrix(
+                matrix, screen if state.power else blank_surface(), matrix_buffer
+            )
 
         loop_debug(frame, clock, delta, state)
         mqtt.loop(0.003)

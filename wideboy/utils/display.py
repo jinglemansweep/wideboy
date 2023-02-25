@@ -25,6 +25,12 @@ def render_led_matrix(
     return matrix.SwapOnVSync(buffer)
 
 
+def blank_surface(size: tuple[int, int]):
+    surface = pygame.surface.Surface(size)
+    surface.fill(0)
+    return surface
+
+
 def wrap_surface_array(
     array: np.ndarray,
     canvas_shape: tuple[int, int],
