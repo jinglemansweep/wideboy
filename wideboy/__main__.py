@@ -12,7 +12,7 @@ from wideboy.config import LOG_DEBUG, CANVAS_SIZE, MATRIX_ENABLED
 from wideboy.utils.display import setup_led_matrix, render_led_matrix
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
-from wideboy.utils.hass import setup_hass
+from wideboy.utils.hass import setup_hass, configure_entity
 from wideboy.utils.mqtt import setup_mqtt
 from wideboy.utils.pygame import (
     setup_pygame,
@@ -48,6 +48,13 @@ mqtt = setup_mqtt()
 
 hass = setup_hass()
 
+switch_power_state_topic = configure_entity(
+    mqtt,
+    "master_light",
+    "light",
+    dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
+)
+mqtt.publish(switch_power_state_topic, {"state": "ON", "brightness": 255})
 
 # Loop Setup
 

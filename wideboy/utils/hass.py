@@ -2,14 +2,14 @@ import json
 import logging
 import pygame
 from paho.mqtt.client import Client as MQTTClient
-from typing import Optional
+from typing import Any, Optional
 from homeassistant_api import Client
 
 from wideboy import _APP_NAME, _APP_VERSION, _APP_AUTHOR
 from wideboy.config import HASS_URL, HASS_API_TOKEN
 from wideboy.utils.helpers import get_device_id
 
-EVENT_HASS_TEST = pygame.USEREVENT + 31
+EVENT_HASS_COMMAND = pygame.USEREVENT + 31
 
 logger = logging.getLogger(__name__)
 
@@ -25,64 +25,46 @@ def setup_hass() -> Client:
     return hass
 
 
-class MQTTEntity:
-    def __init__(
-        self,
-        mqtt_client: MQTTClient,
-        name: str,
-        device_class: str,
-        options: Optional[dict] = None,
-        default_state: Optional[dict] = None,
-    ) -> None:
-        self.mqtt_client = mqtt_client
-        self.name = name
-        self.device_class = device_class
-        if options is None:
-            options = dict()
-        self.options = options
-        if default_state is None:
-            default_state = dict()
-        self.state = default_state
-        self.entity_id = build_entity_name(name)
-        self.topic_prefix = build_entity_topic_prefix(device_class, self.entity_id)
-        self.configure()
+def configure_entity(
+    mqtt_client: MQTTClient,
+    name: str,
+    device_class: str,
+    options: Optional[dict] = None,
+) -> str:
+    if options is None:
+        options = dict()
+    entity_id = build_entity_id(name)
+    topic_prefix = build_entity_topic_prefix(device_class, entity_id)
+    config_topic = f"{topic_prefix}/config"
+    command_topic = f"{topic_prefix}/set"
+    state_topic = f"{topic_prefix}/state"
+    config = dict(
+        name=name,
+        device_class=device_class,
+        object_id=entity_id,
+        unique_id=entity_id,
+        command_topic=command_topic,
+        state_topic=state_topic,
+        device=build_device_info(),
+        schema="json",
+    )
+    config.update(options)
+    mqtt_client.publish(config_topic, config)
+    mqtt_client.subscribe(command_topic, 1)
+    return state_topic
 
-    def advertise(self) -> None:
-        self._publish("config", self.config)
 
-    def subscribe(self) -> None:
-        self.mqtt_client.subscribe(f"{self.topic_prefix}/set", 1)
-
-    def update(self, new_state: dict = None) -> None:
-        if new_state is not None:
-            self.state.update(new_state)
-        self._publish("state", self.state)
-
-    def configure(self) -> None:
-        self.config = self._build_configuration()
-
-    def _publish(
-        self, topic: str, payload: dict, retain: bool = True, qos: int = 1
-    ) -> None:
-        full_topic = f"{self.topic_prefix}/{topic}"
-        json_payload = json.dumps(payload)
-        logger.debug(f"hass:mqtt:publish topic={full_topic} payload={json_payload}")
-        self.mqtt_client.publish(full_topic, json_payload, retain=retain, qos=qos)
-
-    def _build_configuration(self) -> dict:
-        auto_config = dict(
-            name=self.name,
-            device_class=self.device_class,
-            object_id=self.entity_id,
-            unique_id=self.entity_id,
-            command_topic=f"{self.topic_prefix}/set",
-            state_topic=f"{self.topic_prefix}/state",
-            device=build_device_info(),
-            schema="json",
-        )
-        config = auto_config.copy()
-        config.update(self.options)
-        return config
+def on_mqtt_message(topic: str, payload: Any) -> None:
+    if not topic.startswith(f"{DISCOVERY_PREFIX}"):
+        return
+    _, device_class, entity_id, _ = topic.split("/")
+    name = entity_id.replace(f"{_APP_NAME}_{DEVICE_ID}_", "")
+    logger.debug(
+        f"hass:mqtt:message device_class={device_class} entity_id={entity_id} name={name}"
+    )
+    pygame.event.post(
+        pygame.event.Event(EVENT_HASS_COMMAND, dict(name=name, payload=payload))
+    )
 
 
 def build_device_info() -> dict:
@@ -96,25 +78,9 @@ def build_device_info() -> dict:
     )
 
 
-def build_entity_name(name: str) -> str:
+def build_entity_id(name: str) -> str:
     return f"{_APP_NAME}_{DEVICE_ID}_{name}"
 
 
 def build_entity_topic_prefix(device_class: str, full_name) -> str:
     return f"{DISCOVERY_PREFIX}/{device_class}/{full_name}"
-
-
-def setup_hass_entities(mqtt_client: MQTTClient) -> list[MQTTEntity]:
-    entities = []
-    switch_power = MQTTEntity(
-        mqtt_client,
-        "master_light",
-        "light",
-        dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
-        dict(state="ON", brightness=255),
-    )
-    switch_power.advertise()
-    switch_power.update()
-    switch_power.subscribe()
-    entities.append(switch_power)
-    return entities

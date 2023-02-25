@@ -10,6 +10,7 @@ from typing import Callable
 from wideboy import _APP_DESCRIPTION
 from wideboy.utils.helpers import EpochEmitter
 from wideboy.utils.mqtt import EVENT_MQTT_MESSAGE
+from wideboy.utils.hass import EVENT_HASS_COMMAND
 from wideboy.config import (
     PROFILING,
 )
@@ -56,7 +57,10 @@ def handle_event(event: pygame.event.Event) -> None:
     if event.type == QUIT:
         sys.exit()
     if event.type == EVENT_MQTT_MESSAGE:
-        logger.info(f"MQTT MESSAGE: Topic: {event.topic} Payload: {event.payload}")
+        # logger.debug(f"MQTT MESSAGE: Topic: {event.topic} Payload: {event.payload}")
+        pass
+    elif event.type == EVENT_HASS_COMMAND:
+        logger.debug(f"hass:action name={event.name} payload={event.payload}")
 
 
 def main_entrypoint(main_func: Callable) -> None:
