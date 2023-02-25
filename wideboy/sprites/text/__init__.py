@@ -90,7 +90,7 @@ class TextSprite(BaseSprite):
         heading_font_size: int = 20,
         paragraph_font: str = "bitstreamverasans",
         paragraph_font_size: int = 16,
-        color_bg: pygame.color.Color = (0, 0, 0, 192),
+        color_bg: pygame.color.Color = (0, 0, 0, 128),
         color_fg: pygame.color.Color = (255, 255, 255, 255),
         color_outline: pygame.color.Color = (0, 0, 0, 255),
     ) -> None:
@@ -119,6 +119,9 @@ class TextSprite(BaseSprite):
 
     def render(self) -> None:
         self.image.fill(self.color_bg)
+        heading_bg = pygame.surface.Surface((self.rect.width, 21))
+        heading_bg.fill((0, 0, 0, 255))
+        self.image.blit(heading_bg, (0, 0))
         heading_surface = render_text(
             self.text_heading,
             self.heading_font,
@@ -126,7 +129,7 @@ class TextSprite(BaseSprite):
             self.color_fg,
             color_outline=self.color_outline,
         )
-        self.image.blit(heading_surface, (4, 0))
+        self.image.blit(heading_surface, (4, -2))
         para1_surface = render_text(
             self.text_p1,
             self.paragraph_font,

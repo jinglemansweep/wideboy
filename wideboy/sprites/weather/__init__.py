@@ -12,8 +12,8 @@ class WeatherSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        color_bg: pygame.color.Color = (0, 0, 0, 255),
-        color_fg: pygame.color.Color = (255, 255, 255),
+        color_bg: pygame.color.Color = (0, 0, 0, 128),
+        color_fg: pygame.color.Color = (255, 255, 255, 255),
     ) -> None:
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)

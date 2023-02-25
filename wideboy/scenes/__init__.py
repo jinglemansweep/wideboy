@@ -14,7 +14,6 @@ class BaseScene:
             (surface.get_rect().width, surface.get_rect().height), bg_color
         )
         self.group = pygame.sprite.LayeredDirty()
-        self.mode = None
 
     def render(
         self, frame: int, delta: float, events: list[pygame.event.Event]
@@ -35,22 +34,8 @@ class BaseScene:
     def draw(self) -> list[pygame.rect.Rect]:
         return self.group.draw(self.surface)
 
-    def change_mode(self, mode: str, timeout: int = 0) -> None:
-        logger.info(f"scene:mode_change mode={mode} timeout={timeout}")
-        self.mode_next = mode
-        self.mode_timeout = timeout
-        self.mode_changed = time.time()
-
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         pass
-
-    def handle_mode_timeout(self) -> None:
-        # if mode timeout is set, and timeout has elapsed, reset to "default" mode
-        if (
-            self.mode_timeout > 0
-            and time.time() > self.mode_changed + self.mode_timeout
-        ):
-            self.change_mode("default")
 
     @property
     def height(self):

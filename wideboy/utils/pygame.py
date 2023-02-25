@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 EVENT_EPOCH_SECOND = pygame.USEREVENT + 11
 EVENT_EPOCH_MINUTE = pygame.USEREVENT + 12
+EVENT_EPOCH_HOUR = pygame.USEREVENT + 12
 
 epoch_emitter = EpochEmitter()
 
@@ -48,10 +49,16 @@ def process_pygame_events(events: list[pygame.event.Event]) -> None:
         handle_event(event)
     # Post custom messages
     epochs = epoch_emitter.check()
-    if epochs.get("sec"):
-        pygame.event.post(pygame.event.Event(EVENT_EPOCH_SECOND))
-    if epochs.get("min"):
-        pygame.event.post(pygame.event.Event(EVENT_EPOCH_MINUTE))
+    if epochs.get("new_sec"):
+        pygame.event.post(
+            pygame.event.Event(EVENT_EPOCH_SECOND, unit=epochs.get("sec"))
+        )
+    if epochs.get("new_min"):
+        pygame.event.post(
+            pygame.event.Event(EVENT_EPOCH_MINUTE, unit=epochs.get("min"))
+        )
+    if epochs.get("new_hour"):
+        pygame.event.post(pygame.event.Event(EVENT_EPOCH_HOUR, unit=epochs.get("hour")))
 
 
 def handle_event(event: pygame.event.Event) -> None:

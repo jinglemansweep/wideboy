@@ -7,7 +7,7 @@ from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes import BaseScene
-from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
+from wideboy.utils.pygame import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
 
 
 logger = logging.getLogger(__name__)
@@ -49,47 +49,72 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.weather_widget)
         # Setup text widget
-        self.text_widget = TextSprite((128 + 4, 0 - self.height, 512 - 8, 56))
+        self.text_widget = TextSprite((4, self.height, 512 - 8, 56))
         self.group.add(self.text_widget)
-        # Set initial mode
-        self.change_mode("default")
+        # Run initial acts
+        self.act_clock_show = self.build_clock_show_act()
+        self.act_clock_show.start()
+        self.act_background_change = self.build_background_change_act()
+        self.act_background_change.start()
+        self.act_ticker_change = self.build_ticker_change_act()
+        self.act_ticker_change.start()
 
     def update(
         self, frame: int, delta: float, events: list[pygame.event.Event]
     ) -> None:
         super().update(frame, delta, events)
-        self.handle_mode_timeout()
-        self.handle_modes()
-        if self.act is not None:
-            self.act.update()
+        if self.act_clock_show is not None:
+            self.act_clock_show.update()
+        if self.act_background_change is not None:
+            self.act_background_change.update()
+        if self.act_ticker_change is not None:
+            self.act_ticker_change.update()
 
     # Handle Events
 
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         super().handle_events(events)
         for event in events:
+            if event.type == EVENT_EPOCH_SECOND:
+                if event.unit % 15 == 0:
+                    self.act_ticker_change = self.build_ticker_change_act()
+                    self.act_ticker_change.start()
             if event.type == EVENT_EPOCH_MINUTE:
-                self.change_mode("blank", 5)
+                self.act_background_change = self.build_background_change_act()
+                self.act_background_change.start()
 
-    # Modes
+    # Acts
 
-    def handle_modes(self) -> None:
-        if self.mode_next != self.mode:
-            self.mode = self.mode_next
-            logger.info(f"scene:handle_modes mode={self.mode}")
-            if self.mode == "default":
-                self._mode_default()
-            elif self.mode == "blank":
-                self._mode_blank()
-
-    def _mode_default(self) -> None:
-        self.act = Act(
-            128,
+    def build_clock_show_act(self) -> Act:
+        return Act(
+            64,
             [
-                (0, lambda: self.background_widget.set_random_image()),
-                (0, lambda: self.text_widget.set_random_content()),
                 (
                     0,
+                    Animation(
+                        self.clock_widget,
+                        (self.width - 128, 0),
+                        64,
+                    ),
+                ),
+            ],
+        )
+
+    def build_background_change_act(self) -> Act:
+        return Act(
+            128,
+            [
+                (
+                    0,
+                    Animation(
+                        self.background_widget,
+                        (0, self.height),
+                        64,
+                    ),
+                ),
+                (64, lambda: self.background_widget.set_random_image()),
+                (
+                    64,
                     Animation(
                         self.background_widget,
                         (0, 0),
@@ -97,66 +122,42 @@ class DefaultScene(BaseScene):
                         (0, self.height),
                     ),
                 ),
-                (
-                    32,
-                    Animation(
-                        self.clock_widget,
-                        (self.width - 128, 0),
-                        32,
-                    ),
-                ),
-                (
-                    64,
-                    Animation(
-                        self.weather_widget,
-                        (self.width - 256 + 4, 4),
-                        64,
-                        (self.width - 256 + 4, self.height),
-                    ),
-                ),
-                (
-                    64,
-                    Animation(
-                        self.text_widget,
-                        (4, 4),
-                        64,
-                        (4, 0 - self.height),
-                    ),
-                ),
             ],
         )
-        self.act.start()
 
-    def _mode_blank(self) -> None:
-        self.act = Act(
-            128,
+    def build_ticker_change_act(self) -> Act:
+        return Act(
+            176,
             [
-                (
-                    0,
-                    Animation(
-                        self.text_widget,
-                        (4, self.height),
-                        32,
-                        (4, 4),
-                    ),
-                ),
                 (
                     0,
                     Animation(
                         self.weather_widget,
                         (self.width - 256 + 4, 0 - self.height),
-                        32,
+                        64,
                     ),
                 ),
                 (
-                    64,
+                    0,
                     Animation(
-                        self.background_widget,
-                        (0, self.height),
+                        self.text_widget,
+                        (4, self.height),
                         64,
-                        (0, 0),
                     ),
+                ),
+                (64, lambda: self.text_widget.set_random_content()),
+                (
+                    96,
+                    Animation(
+                        self.weather_widget,
+                        (self.width - 256 + 4, 4),
+                        64,
+                        (self.width - 256 + 4, 0 - self.height),
+                    ),
+                ),
+                (
+                    96,
+                    Animation(self.text_widget, (4, 4), 64, (4, self.height)),
                 ),
             ],
         )
-        self.act.start()

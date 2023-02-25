@@ -47,7 +47,14 @@ class EpochEmitter:
         is_new_hour = now.tm_hour != self.then.tm_hour
         is_new_mday = now.tm_mday != self.then.tm_mday
         epochs = dict(
-            sec=is_new_sec, min=is_new_min, hour=is_new_hour, mday=is_new_mday
+            sec=now.tm_sec,
+            min=now.tm_min,
+            hour=now.tm_hour,
+            mday=now.tm_mday,
+            new_sec=is_new_sec,
+            new_min=is_new_min,
+            new_hour=is_new_hour,
+            new_mday=is_new_mday,
         )
         self._update()
         if unit is not None:
