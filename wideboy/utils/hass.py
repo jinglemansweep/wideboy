@@ -54,13 +54,14 @@ def configure_entity(
     return state_topic
 
 
-def on_mqtt_message(topic: str, payload: Any) -> None:
+def on_mqtt_message(topic: str, payload_json: str) -> None:
     if not topic.startswith(f"{DISCOVERY_PREFIX}"):
         return
     _, device_class, entity_id, _ = topic.split("/")
     name = entity_id.replace(f"{_APP_NAME}_{DEVICE_ID}_", "")
+    payload = json.loads(payload_json)
     logger.debug(
-        f"hass:mqtt:message device_class={device_class} entity_id={entity_id} name={name}"
+        f"hass:mqtt:message device_class={device_class} entity_id={entity_id} name={name} payload={payload_json}"
     )
     pygame.event.post(
         pygame.event.Event(EVENT_HASS_COMMAND, dict(name=name, payload=payload))

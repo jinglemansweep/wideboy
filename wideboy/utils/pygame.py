@@ -11,6 +11,7 @@ from wideboy import _APP_DESCRIPTION
 from wideboy.utils.helpers import EpochEmitter
 from wideboy.utils.mqtt import EVENT_MQTT_MESSAGE
 from wideboy.utils.hass import EVENT_HASS_COMMAND
+from wideboy.utils.state import state, StateStore
 from wideboy.config import (
     PROFILING,
 )
@@ -41,7 +42,7 @@ def setup_pygame(
     return clock, screen
 
 
-def process_events(events: list[pygame.event.Event]) -> None:
+def process_pygame_events(events: list[pygame.event.Event]) -> None:
     # Process received messages
     for event in events:
         handle_event(event)
@@ -59,8 +60,6 @@ def handle_event(event: pygame.event.Event) -> None:
     if event.type == EVENT_MQTT_MESSAGE:
         # logger.debug(f"MQTT MESSAGE: Topic: {event.topic} Payload: {event.payload}")
         pass
-    elif event.type == EVENT_HASS_COMMAND:
-        logger.debug(f"hass:action name={event.name} payload={event.payload}")
 
 
 def main_entrypoint(main_func: Callable) -> None:
@@ -82,10 +81,13 @@ def loop_debug(
     frame: int,
     clock: pygame.time.Clock,
     delta: float,
+    state: StateStore,
     every: int = 200,
 ) -> None:
     if frame % every == 0:
-        logger.info(f"loop:debug frame={frame} fps={clock.get_fps()} delta={delta}")
+        logger.info(
+            f"loop:debug frame={frame} fps={clock.get_fps()} delta={delta} state={state}"
+        )
 
 
 def clock_tick(clock: pygame.time.Clock) -> tuple[int, float]:

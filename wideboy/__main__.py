@@ -12,17 +12,17 @@ from wideboy.config import LOG_DEBUG, CANVAS_SIZE, MATRIX_ENABLED
 from wideboy.utils.display import setup_led_matrix, render_led_matrix
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
-from wideboy.utils.hass import setup_hass, configure_entity
+from wideboy.utils.hass import setup_hass, configure_entity, EVENT_HASS_COMMAND
 from wideboy.utils.mqtt import setup_mqtt
 from wideboy.utils.pygame import (
     setup_pygame,
-    process_events,
+    process_pygame_events,
     main_entrypoint,
     run_loop,
     loop_debug,
     clock_tick,
 )
-
+from wideboy.utils.state import state
 from wideboy.scenes.default import DefaultScene
 
 # Logging
@@ -56,6 +56,22 @@ switch_power_state_topic = configure_entity(
 )
 mqtt.publish(switch_power_state_topic, {"state": "ON", "brightness": 255})
 
+# Events
+
+
+def process_events(events: list[pygame.event.Event]):
+    global state
+    for event in events:
+        if event.type == EVENT_HASS_COMMAND:
+            logger.debug(f"hass:action name={event.name} payload={event.payload}")
+            if event.name == "master_light":
+                state.power = event.payload.get("state") == "ON"
+                if "brightness" in event.payload:
+                    state.brightness = int(event.payload.get("brightness"))
+                mqtt.publish(switch_power_state_topic, event.payload)
+                logger.info(f"power:master state={event.payload}")
+
+
 # Loop Setup
 
 running = True
@@ -73,6 +89,7 @@ async def start_main_loop():
 
     while running:
         events = pygame.event.get()
+        process_pygame_events(events)
         process_events(events)
         frame, delta = clock_tick(clock)
 
@@ -85,11 +102,7 @@ async def start_main_loop():
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(matrix, screen, matrix_buffer)
 
-        loop_debug(
-            frame,
-            clock,
-            delta,
-        )
+        loop_debug(frame, clock, delta, state)
         mqtt.loop(0.003)
         await asyncio.sleep(0)
 
