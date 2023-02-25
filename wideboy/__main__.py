@@ -100,7 +100,10 @@ async def start_main_loop():
             # logger.debug(f"display:draw rects={len(updates)}")
             pygame.display.update(updates)
 
-        if MATRIX_ENABLED and state.power:
+        if not state.power:
+            screen = pygame.surface.Surface()
+
+        if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(matrix, screen, matrix_buffer)
 
         loop_debug(frame, clock, delta, state)
