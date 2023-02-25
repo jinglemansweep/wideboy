@@ -37,6 +37,7 @@ intro_debug()
 # PyGame & Display
 
 clock, screen = setup_pygame(CANVAS_SIZE)
+blank_screen = blank_surface(CANVAS_SIZE)
 if MATRIX_ENABLED:
     matrix, matrix_buffer = setup_led_matrix()
 
@@ -102,7 +103,7 @@ async def start_main_loop():
 
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(
-                matrix, screen if state.power else blank_surface(), matrix_buffer
+                matrix, screen if state.power else blank_screen, matrix_buffer
             )
 
         loop_debug(frame, clock, delta, state)
