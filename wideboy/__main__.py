@@ -51,7 +51,7 @@ hass = setup_hass()
 
 switch_power_state_topic = configure_entity(
     mqtt,
-    "master_light",
+    "master",
     "light",
     dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
 )
@@ -65,7 +65,7 @@ def process_events(events: list[pygame.event.Event]):
     for event in events:
         if event.type == EVENT_HASS_COMMAND:
             logger.debug(f"hass:action name={event.name} payload={event.payload}")
-            if event.name == "master_light":
+            if event.name == "master":
                 state.power = event.payload.get("state") == "ON"
                 if "brightness" in event.payload:
                     state.brightness = int(event.payload.get("brightness"))
