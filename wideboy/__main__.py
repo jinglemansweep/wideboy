@@ -12,6 +12,7 @@ from wideboy.config import LOG_DEBUG, CANVAS_SIZE, MATRIX_ENABLED
 from wideboy.utils.display import setup_led_matrix, render_led_matrix
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
+from wideboy.utils.hass import setup_hass
 from wideboy.utils.mqtt import setup_mqtt
 from wideboy.utils.pygame import (
     setup_pygame,
@@ -43,10 +44,14 @@ if MATRIX_ENABLED:
 
 mqtt = setup_mqtt()
 
+# HASS
+
+hass = setup_hass()
+
+
 # Loop Setup
 
 running = True
-
 
 # Main Loop
 
@@ -62,7 +67,6 @@ async def start_main_loop():
     while running:
         events = pygame.event.get()
         process_events(events)
-
         frame, delta = clock_tick(clock)
 
         stage_updates = scene.render(frame, delta, events)
@@ -70,8 +74,10 @@ async def start_main_loop():
         if len(updates):
             # logger.debug(f"display:draw rects={len(updates)}")
             pygame.display.update(updates)
+
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(matrix, screen, matrix_buffer)
+
         loop_debug(
             frame,
             clock,

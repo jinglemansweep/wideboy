@@ -4,6 +4,7 @@ from typing import Optional
 import paho.mqtt.client as mqtt
 
 from wideboy.config import MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASSWORD
+from wideboy.utils.hass import setup_hass_entities
 
 MQTT_PREFIX = "wideboy"
 EVENT_MQTT_MESSAGE = pygame.USEREVENT + 21
@@ -12,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 
 def setup_mqtt():
-    return MQTT(MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASSWORD)
+    mqtt = MQTT(MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASSWORD)
+    setup_hass_entities(mqtt.client)
+    return mqtt
 
 
 class MQTT:

@@ -1,5 +1,6 @@
 import aiohttp
 import async_timeout
+import uuid
 import logging
 import pygame
 import random
@@ -29,6 +30,10 @@ async def async_fetch(session: aiohttp.ClientSession, url: str) -> str:
     with async_timeout.timeout(10):
         async with session.get(url) as response:
             return await response.text()
+
+
+def get_device_id() -> str:
+    return uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 
 class EpochEmitter:
