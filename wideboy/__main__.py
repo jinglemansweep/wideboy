@@ -68,7 +68,7 @@ def process_events(events: list[pygame.event.Event]):
                 state.power = event.payload.get("state") == "ON"
                 if "brightness" in event.payload:
                     state.brightness = int(event.payload.get("brightness"))
-                    matrix.brightness = state.brightness
+                    matrix.brightness = (state.brightness / 255) * 100
                 mqtt.publish(switch_power_state_topic, event.payload)
                 logger.info(f"power:master state={event.payload}")
 
