@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 # ['bitstreamverasansmono', 'bitstreamverasans', 'anonymousprominus', 'anonymouspro', 'bitstreamveraserif']
 
+# ChatGPT Prompt: "Write 5 funny positive news stories. Each headline should be no more than 6 words. Each summary should be no more than 15 words"
+
 DUMMY_CONTENT = [
     [
         "SHOULD HAVE GONE TO SPECSAVERS",
@@ -30,6 +32,31 @@ DUMMY_CONTENT = [
         "KEBAB SHOP RUNS OUT OF CHICKEN",
         "Global shortages in social workers has caused mass",
         "depression in poultry who no longer want to be eaten",
+    ],
+    [
+        "LOST WALLET RETURNED WITH EXTRA CASH!",
+        "A man's lost wallet was returned to him with extra cash",
+        "inside, leaving him pleasantly surprised and grateful.",
+    ],
+    [
+        "GOAT ELECTED MAYOR OF TOWN!",
+        "A small town elected a goat as their honorary mayor,",
+        "bringing humor and charm to local politics.",
+    ],
+    [
+        "MAN BUYS COW, GETS SURPRISE DONKEY!",
+        "A man who bought a cow online received a surprise donkey in",
+        "the same shipment, leading to unexpected animal antics and laughter.",
+    ],
+    [
+        "CHILD'S DRAWING SELLS FOR MILLIONS!",
+        "A child's whimsical drawing sold for millions at an art auction,",
+        "proving that creativity and imagination know no bounds.",
+    ],
+    [
+        "TOWN BUILD WORLD'S LARGEST SANDWICH!",
+        "A community came together to build the world's largest sandwich,",
+        "breaking a world record and having a delicious time in the process.",
     ],
 ]
 
