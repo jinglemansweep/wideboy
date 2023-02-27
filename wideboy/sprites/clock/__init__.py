@@ -3,6 +3,7 @@ import pygame
 from datetime import datetime
 from pygame import SRCALPHA
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND, EVENT_EPOCH_MINUTE
+from wideboy.utils.state import StateStore
 from wideboy.sprites import BaseSprite
 
 
@@ -34,9 +35,13 @@ class ClockSprite(BaseSprite):
         self.render()
 
     def update(
-        self, frame: str, delta: float, events: list[pygame.event.Event]
+        self,
+        frame: str,
+        delta: float,
+        events: list[pygame.event.Event],
+        state: StateStore,
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(frame, delta, events, state)
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
                 self.render()

@@ -14,6 +14,7 @@ from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.hass import setup_hass, configure_entity, EVENT_HASS_COMMAND
 from wideboy.utils.mqtt import setup_mqtt
+from wideboy.utils.tasks import fetch_weather
 from wideboy.utils.pygame import (
     setup_pygame,
     process_pygame_events,
@@ -83,9 +84,11 @@ running = True
 
 async def start_main_loop():
 
-    global matrix, matrix_buffer
+    global state, matrix, matrix_buffer
 
     loop = asyncio.get_event_loop()
+
+    asyncio.create_task(fetch_weather(loop, state))
 
     scene = DefaultScene(screen)
 
@@ -95,7 +98,7 @@ async def start_main_loop():
         process_events(events)
         frame, delta = clock_tick(clock)
 
-        stage_updates = scene.render(frame, delta, events)
+        stage_updates = scene.render(frame, delta, events, state)
         updates = [] + stage_updates
         if len(updates):
             # logger.debug(f"display:draw rects={len(updates)}")

@@ -2,7 +2,9 @@ import logging
 import pygame
 import random
 from pygame import SRCALPHA
+from wideboy.utils.images import render_text
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND, EVENT_EPOCH_MINUTE
+from wideboy.utils.state import StateStore
 from wideboy.sprites import BaseSprite
 
 
@@ -61,27 +63,6 @@ DUMMY_CONTENT = [
 ]
 
 
-def render_text(
-    text: str,
-    font: str,
-    font_size: int,
-    color_fg: pygame.color.Color,
-    color_outline: pygame.color.Color = (0, 0, 0, 255),
-    antialias: bool = True,
-) -> pygame.surface.Surface:
-    font = pygame.font.SysFont(font, font_size)
-    surface_orig = font.render(text, antialias, color_fg)
-    surface_dest = pygame.Surface(
-        (surface_orig.get_rect().width + 2, surface_orig.get_rect().height + 2),
-        SRCALPHA,
-    )
-    for offset in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
-        surface_outline = font.render(text, antialias, color_outline)
-        surface_dest.blit(surface_outline, (offset[0] + 1, offset[1] + 1))
-    surface_dest.blit(surface_orig, (1, 1))
-    return surface_dest
-
-
 class TextSprite(BaseSprite):
     def __init__(
         self,
@@ -110,9 +91,13 @@ class TextSprite(BaseSprite):
         self.render()
 
     def update(
-        self, frame: str, delta: float, events: list[pygame.event.Event]
+        self,
+        frame: str,
+        delta: float,
+        events: list[pygame.event.Event],
+        state: StateStore,
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(frame, delta, events, state)
         for event in events:
             if event.type == EVENT_EPOCH_SECOND:
                 self.render()

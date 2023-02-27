@@ -2,6 +2,8 @@ import logging
 import pygame
 import time
 
+from wideboy.utils.state import StateStore
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,9 +18,13 @@ class BaseScene:
         self.group = pygame.sprite.LayeredDirty()
 
     def render(
-        self, frame: int, delta: float, events: list[pygame.event.Event]
+        self,
+        frame: int,
+        delta: float,
+        events: list[pygame.event.Event],
+        state: StateStore,
     ) -> None:
-        self.update(frame, delta, events)
+        self.update(frame, delta, events, state)
         self.clear()
         return self.draw()
 
@@ -26,10 +32,14 @@ class BaseScene:
         self.group.clear(self.surface, self.background)
 
     def update(
-        self, frame: int, delta: float, events: list[pygame.event.Event]
+        self,
+        frame: int,
+        delta: float,
+        events: list[pygame.event.Event],
+        state: StateStore,
     ) -> None:
         self.handle_events(events)
-        self.group.update(frame, delta, events)
+        self.group.update(frame, delta, events, state)
 
     def draw(self) -> list[pygame.rect.Rect]:
         return self.group.draw(self.surface)

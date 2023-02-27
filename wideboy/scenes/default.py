@@ -8,6 +8,7 @@ from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes import BaseScene
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
+from wideboy.utils.state import StateStore
 
 
 logger = logging.getLogger(__name__)
@@ -45,7 +46,6 @@ class DefaultScene(BaseScene):
         # Setup weather widget
         self.weather_widget = WeatherSprite(
             (self.width - 256 + 4, self.height, 128 - 8, self.height - 8),
-            (0, 0, 0, 192),
         )
         self.group.add(self.weather_widget)
         # Setup text widget
@@ -62,9 +62,13 @@ class DefaultScene(BaseScene):
         self.act_ticker_change.start()
 
     def update(
-        self, frame: int, delta: float, events: list[pygame.event.Event]
+        self,
+        frame: int,
+        delta: float,
+        events: list[pygame.event.Event],
+        state: StateStore,
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(frame, delta, events, state)
         if self.act_clock_show is not None:
             self.act_clock_show.update()
         if self.act_weather_show is not None:

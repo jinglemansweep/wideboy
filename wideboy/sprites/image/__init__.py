@@ -5,6 +5,7 @@ from typing import Optional
 
 from wideboy.sprites import BaseSprite
 from wideboy.utils.images import glob_files, load_resize_image, tile_surface
+from wideboy.utils.state import StateStore
 
 
 logger = logging.getLogger("sprites.background")
@@ -52,6 +53,10 @@ class ImageSprite(BaseSprite):
         return tile_surface(image, fill_size)
 
     def update(
-        self, frame: int, delta: float, events: list[pygame.event.Event]
+        self,
+        frame: int,
+        delta: float,
+        events: list[pygame.event.Event],
+        state: StateStore,
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(frame, delta, events, state)
