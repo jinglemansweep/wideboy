@@ -1,6 +1,5 @@
 import logging
 import pygame
-from datetime import datetime
 from typing import Optional
 from pygame import SRCALPHA
 from wideboy.sprites import BaseSprite
@@ -24,7 +23,7 @@ class WeatherSprite(BaseSprite):
         self.color_bg = color_bg
         self.color_temp = color_temp
         self.color_rain_prob = color_rain_prob
-        self.icon_rain = load_resize_image("images/icons/rain_prob.png", (24, 24))
+        self.icon_rain = load_resize_image("images/icons/rain_prob.png", (16, 16))
         self.dirty = 2
         self.render()
 
@@ -41,19 +40,29 @@ class WeatherSprite(BaseSprite):
     def render(self, state: Optional[StateStore] = None) -> None:
         if state is None:
             return
-        temp = state.temperature
-        rain_prob = state.rain_probability
-        self.image.fill(self.color_bg)
-        temp_surface = render_text(
-            f"{temp}°C", "bitstreamverasans", 28, self.color_temp, (0, 0, 0, 255)
+        temp_str = (
+            f"{int(round(state.temperature, 0))}°C"
+            if state.temperature is not None
+            else "?"
         )
-        self.image.blit(temp_surface, (4, -2))
-        self.image.blit(self.icon_rain, (0, 28))
-        rain_prob_surface = render_text(
-            f"{rain_prob}%",
+        rain_prob_str = (
+            f"{state.rain_probability}%" if state.rain_probability is not None else "?"
+        )
+        self.image.fill(self.color_bg)
+        temperature_text = render_text(
+            temp_str,
             "bitstreamverasans",
             20,
+            self.color_temp,
+            (0, 0, 0, 255),
+        )
+        self.image.blit(temperature_text, (4, -1))
+        self.image.blit(self.icon_rain, (55, 2))
+        rain_prob_text = render_text(
+            rain_prob_str,
+            "bitstreamverasans",
+            16,
             self.color_rain_prob,
             (0, 0, 0, 255),
         )
-        self.image.blit(rain_prob_surface, (24, 28))
+        self.image.blit(rain_prob_text, (72, 1))
