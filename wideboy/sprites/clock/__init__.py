@@ -44,17 +44,16 @@ class ClockSprite(BaseSprite):
 
     def render(self) -> None:
         now = datetime.now()
-        dow_str = now.strftime("%A")[:2]
-        ddmm_str = now.strftime("%b%d").upper()
-        hhmm_str = now.strftime("%H:%M")
-        mm_str = now.strftime("%M")
-        date_str = f"{ddmm_str}"
+        dow_str = now.strftime("%A")[:3]
+        ddmm_str = now.strftime("%d %b")
+        date_str = f"{dow_str} {ddmm_str}"
         self.image.fill(self.color_bg)
         date_sprite = render_text(
-            date_str, self.font_date, 12, self.color_date, bold=True
+            date_str, self.font_date, 18, self.color_date, bold=True
         )
-        date_pos = (90, 40)
+        date_pos = ((self.rect[2] - date_sprite.get_rect()[2]) // 2, 40)
         self.image.blit(date_sprite, date_pos)
+        hhmm_str = now.strftime("%H:%M")
         hhmm_sprite = render_text(hhmm_str, self.font_time, 48, self.color_time)
         time_pos = ((self.rect[2] - hhmm_sprite.get_rect()[2]) // 2, -10)
         self.image.blit(hhmm_sprite, time_pos)
