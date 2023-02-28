@@ -53,7 +53,7 @@ class ClockSprite(BaseSprite):
         date_sprite = render_text(
             date_str, self.font_date, 12, self.color_date, bold=True
         )
-        date_sprite = pygame.transform.rotate(date_sprite, 270)
+        date_sprite = pygame.transform.rotate(date_sprite, 90)
         date_pos = (self.rect[2] - 16, 2)
         self.image.blit(date_sprite, date_pos)
         hh_sprite = render_text(hh_str, self.font_time, 42, self.color_time, bold=True)
