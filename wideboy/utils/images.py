@@ -47,8 +47,10 @@ def render_text(
     color_fg: pygame.color.Color,
     color_outline: pygame.color.Color = (0, 0, 0, 255),
     antialias: bool = True,
+    bold: bool = False,
+    italic: bool = False,
 ) -> pygame.surface.Surface:
-    font = pygame.font.SysFont(font, font_size)
+    font = pygame.font.SysFont(font, font_size, bold, italic)
     surface_orig = font.render(text, antialias, color_fg)
     surface_dest = pygame.Surface(
         (surface_orig.get_rect().width + 2, surface_orig.get_rect().height + 2),
