@@ -19,7 +19,7 @@ class ClockSprite(BaseSprite):
         rect: pygame.rect.Rect,
         color_bg: pygame.color.Color = (0, 0, 0),
         color_time: pygame.color.Color = (255, 255, 255, 255),
-        color_date: pygame.color.Color = (255, 0, 255, 255),
+        color_date: pygame.color.Color = (255, 255, 0, 255),
     ) -> None:
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -50,7 +50,9 @@ class ClockSprite(BaseSprite):
         mm_str = now.strftime("%M")
         date_str = f"{dow_str} {ddmm_str}"
         self.image.fill(self.color_bg)
-        date_sprite = render_text(date_str, self.font_date, 12, self.color_date)
+        date_sprite = render_text(
+            date_str, self.font_date, 12, self.color_date, bold=True
+        )
         date_sprite = pygame.transform.rotate(date_sprite, 270)
         date_pos = (self.rect[2] - 16, 2)
         self.image.blit(date_sprite, date_pos)
