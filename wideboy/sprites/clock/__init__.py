@@ -27,7 +27,7 @@ class ClockSprite(BaseSprite):
         self.color_time = color_time
         self.color_date = color_date
         self.font_date = "bitstreamverasansmono"
-        self.font_time = "bitstreamverasansmono"
+        self.font_time = "molot"
         self.render()
 
     def update(
@@ -46,21 +46,18 @@ class ClockSprite(BaseSprite):
         now = datetime.now()
         dow_str = now.strftime("%A")[:2]
         ddmm_str = now.strftime("%b%d").upper()
-        hh_str = now.strftime("%H")
+        hhmm_str = now.strftime("%H:%M")
         mm_str = now.strftime("%M")
         date_str = f"{ddmm_str}"
         self.image.fill(self.color_bg)
         date_sprite = render_text(
             date_str, self.font_date, 12, self.color_date, bold=True
         )
-        date_pos = (90, 43)
+        date_pos = (90, 40)
         self.image.blit(date_sprite, date_pos)
-        hh_sprite = render_text(hh_str, self.font_time, 50, self.color_time, bold=True)
-        sep_sprite = render_text(":", self.font_time, 50, self.color_time)
-        mm_sprite = render_text(mm_str, self.font_time, 50, self.color_time, bold=True)
-        self.image.blit(hh_sprite, (0, -8))
-        self.image.blit(sep_sprite, (48, -8))
-        self.image.blit(mm_sprite, (68, -8))
+        hhmm_sprite = render_text(hhmm_str, self.font_time, 50, self.color_time)
+        time_pos = ((self.rect[2] - hhmm_sprite.get_rect()[2]) // 2, -10)
+        self.image.blit(hhmm_sprite, time_pos)
         self.dirty = 1
 
     def poop(self) -> None:
