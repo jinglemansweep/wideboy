@@ -53,15 +53,14 @@ class ClockSprite(BaseSprite):
         date_sprite = render_text(
             date_str, self.font_date, 12, self.color_date, bold=True
         )
-        date_sprite = pygame.transform.rotate(date_sprite, 90)
-        date_pos = (self.rect[2] - 16, 3)
+        date_pos = (90, 43)
         self.image.blit(date_sprite, date_pos)
-        hh_sprite = render_text(hh_str, self.font_time, 44, self.color_time, bold=True)
-        sep_sprite = render_text(":", self.font_time, 44, self.color_time)
-        mm_sprite = render_text(mm_str, self.font_time, 44, self.color_time, bold=True)
-        self.image.blit(hh_sprite, (1, -4))
-        self.image.blit(sep_sprite, (45, -8))
-        self.image.blit(mm_sprite, (61, -4))
+        hh_sprite = render_text(hh_str, self.font_time, 50, self.color_time, bold=True)
+        sep_sprite = render_text(":", self.font_time, 50, self.color_time)
+        mm_sprite = render_text(mm_str, self.font_time, 50, self.color_time, bold=True)
+        self.image.blit(hh_sprite, (0, -8))
+        self.image.blit(sep_sprite, (48, -8))
+        self.image.blit(mm_sprite, (68, -8))
         self.dirty = 1
 
     def poop(self) -> None:
