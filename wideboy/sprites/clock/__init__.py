@@ -45,22 +45,22 @@ class ClockSprite(BaseSprite):
     def render(self) -> None:
         now = datetime.now()
         dow_str = now.strftime("%A")[:2]
-        ddmm_str = now.strftime("%d/%m")
+        ddmm_str = now.strftime("%b%d").upper()
         hh_str = now.strftime("%H")
         mm_str = now.strftime("%M")
-        date_str = f"{dow_str} {ddmm_str}"
+        date_str = f"{ddmm_str}"
         self.image.fill(self.color_bg)
         date_sprite = render_text(
             date_str, self.font_date, 12, self.color_date, bold=True
         )
         date_sprite = pygame.transform.rotate(date_sprite, 90)
-        date_pos = (self.rect[2] - 16, 2)
+        date_pos = (self.rect[2] - 16, 3)
         self.image.blit(date_sprite, date_pos)
-        hh_sprite = render_text(hh_str, self.font_time, 42, self.color_time, bold=True)
-        sep_sprite = render_text(":", self.font_time, 42, self.color_time)
-        mm_sprite = render_text(mm_str, self.font_time, 42, self.color_time, bold=True)
+        hh_sprite = render_text(hh_str, self.font_time, 44, self.color_time, bold=True)
+        sep_sprite = render_text(":", self.font_time, 44, self.color_time)
+        mm_sprite = render_text(mm_str, self.font_time, 44, self.color_time, bold=True)
         self.image.blit(hh_sprite, (1, -4))
-        self.image.blit(sep_sprite, (44, -8))
+        self.image.blit(sep_sprite, (45, -8))
         self.image.blit(mm_sprite, (61, -4))
         self.dirty = 1
 
