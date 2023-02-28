@@ -55,7 +55,7 @@ class ClockSprite(BaseSprite):
         )
         date_pos = (90, 40)
         self.image.blit(date_sprite, date_pos)
-        hhmm_sprite = render_text(hhmm_str, self.font_time, 50, self.color_time)
+        hhmm_sprite = render_text(hhmm_str, self.font_time, 48, self.color_time)
         time_pos = ((self.rect[2] - hhmm_sprite.get_rect()[2]) // 2, -10)
         self.image.blit(hhmm_sprite, time_pos)
         self.dirty = 1
