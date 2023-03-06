@@ -90,7 +90,7 @@ async def start_main_loop():
 
     asyncio.create_task(fetch_weather(loop, state))
 
-    scene = DefaultScene(screen)
+    scene = DefaultScene(screen, state)
 
     while running:
         events = pygame.event.get()
@@ -98,7 +98,7 @@ async def start_main_loop():
         process_events(events)
         frame, delta = clock_tick(clock)
 
-        stage_updates = scene.render(frame, delta, events, state)
+        stage_updates = scene.render(frame, delta, events)
         updates = [] + stage_updates
         if len(updates):
             # logger.debug(f"display:draw rects={len(updates)}")

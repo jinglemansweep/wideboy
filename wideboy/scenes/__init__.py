@@ -9,9 +9,13 @@ logger = logging.getLogger(__name__)
 
 class BaseScene:
     def __init__(
-        self, surface: pygame.surface.Surface, bg_color: pygame.color.Color
+        self,
+        surface: pygame.surface.Surface,
+        state: StateStore,
+        bg_color: pygame.color.Color,
     ) -> None:
         self.surface = surface
+        self.state = state
         self.background = build_background(
             (surface.get_rect().width, surface.get_rect().height), bg_color
         )
@@ -22,9 +26,8 @@ class BaseScene:
         frame: int,
         delta: float,
         events: list[pygame.event.Event],
-        state: StateStore,
     ) -> None:
-        self.update(frame, delta, events, state)
+        self.update(frame, delta, events)
         self.clear()
         return self.draw()
 
@@ -32,14 +35,10 @@ class BaseScene:
         self.group.clear(self.surface, self.background)
 
     def update(
-        self,
-        frame: int,
-        delta: float,
-        events: list[pygame.event.Event],
-        state: StateStore,
+        self, frame: int, delta: float, events: list[pygame.event.Event]
     ) -> None:
         self.handle_events(events)
-        self.group.update(frame, delta, events, state)
+        self.group.update(frame, delta, events)
 
     def draw(self) -> list[pygame.rect.Rect]:
         return self.group.draw(self.surface)

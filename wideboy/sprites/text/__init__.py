@@ -67,6 +67,7 @@ class TextSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
+        state: StateStore,
         heading_font: str = "fonts/bitstream-vera.ttf",
         heading_font_size: int = 20,
         paragraph_font: str = "fonts/bitstream-vera.ttf",
@@ -75,7 +76,7 @@ class TextSprite(BaseSprite):
         color_fg: pygame.color.Color = (255, 255, 255, 255),
         color_outline: pygame.color.Color = (0, 0, 0, 255),
     ) -> None:
-        super().__init__(rect)
+        super().__init__(rect, state)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.heading_font = heading_font
         self.heading_font_size = heading_font_size
@@ -91,13 +92,9 @@ class TextSprite(BaseSprite):
         self.render()
 
     def update(
-        self,
-        frame: str,
-        delta: float,
-        events: list[pygame.event.Event],
-        state: StateStore,
+        self, frame: str, delta: float, events: list[pygame.event.Event]
     ) -> None:
-        super().update(frame, delta, events, state)
+        super().update(frame, delta, events)
         for event in events:
             if event.type == EVENT_EPOCH_SECOND:
                 self.render()

@@ -3,7 +3,7 @@ import pygame
 from datetime import datetime
 from pygame import SRCALPHA
 from wideboy.utils.images import render_text
-from wideboy.utils.pygame import EVENT_EPOCH_SECOND, EVENT_EPOCH_MINUTE
+from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 from wideboy.utils.state import StateStore
 from wideboy.sprites import BaseSprite
 
@@ -17,11 +17,12 @@ class ClockSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
+        state: StateStore,
         color_bg: pygame.color.Color = (0, 0, 0, 255),
         color_time: pygame.color.Color = (0, 255, 0, 255),
         color_date: pygame.color.Color = (255, 255, 255, 255),
     ) -> None:
-        super().__init__(rect)
+        super().__init__(rect, state)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
         self.color_time = color_time
@@ -31,13 +32,9 @@ class ClockSprite(BaseSprite):
         self.render()
 
     def update(
-        self,
-        frame: str,
-        delta: float,
-        events: list[pygame.event.Event],
-        state: StateStore,
+        self, frame: str, delta: float, events: list[pygame.event.Event]
     ) -> None:
-        super().update(frame, delta, events, state)
+        super().update(frame, delta, events)
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
                 self.render()
@@ -56,6 +53,3 @@ class ClockSprite(BaseSprite):
         date_pos = ((self.rect[2] - date_sprite.get_rect()[2]) // 2, 38)
         self.image.blit(date_sprite, date_pos)
         self.dirty = 1
-
-    def poop(self) -> None:
-        logger.info("POOP")

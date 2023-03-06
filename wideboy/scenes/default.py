@@ -16,9 +16,12 @@ logger = logging.getLogger(__name__)
 
 class DefaultScene(BaseScene):
     def __init__(
-        self, surface: pygame.surface.Surface, bg_color: pygame.color.Color = (0, 0, 0)
+        self,
+        surface: pygame.surface.Surface,
+        state: StateStore,
+        bg_color: pygame.color.Color = (0, 0, 0),
     ) -> None:
-        super().__init__(surface, bg_color)
+        super().__init__(surface, state, bg_color)
         # Setup background widget
         self.background_widget = ImageSprite(
             (
@@ -27,6 +30,7 @@ class DefaultScene(BaseScene):
                 self.width,
                 self.height,
             ),
+            self.state,
             (self.height * 2, self.height * 2),
             (self.width, self.height),
             255,
@@ -40,16 +44,15 @@ class DefaultScene(BaseScene):
                 128,
                 self.height,
             ),
+            self.state,
             color_bg=(0, 0, 0, 255),
         )
         self.group.add(self.clock_widget)
         # Setup weather widget
-        self.weather_widget = WeatherSprite(
-            (self.width - 192, 32, 64, 64),
-        )
+        self.weather_widget = WeatherSprite((self.width - 192, 32, 64, 64), self.state)
         self.group.add(self.weather_widget)
         # Setup text widget
-        self.text_widget = TextSprite((4, self.height, 512 - 8, 56))
+        self.text_widget = TextSprite((4, self.height, 512 - 8, 56), self.state)
         self.group.add(self.text_widget)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
@@ -66,9 +69,8 @@ class DefaultScene(BaseScene):
         frame: int,
         delta: float,
         events: list[pygame.event.Event],
-        state: StateStore,
     ) -> None:
-        super().update(frame, delta, events, state)
+        super().update(frame, delta, events)
         if self.act_clock_show is not None:
             self.act_clock_show.update()
         if self.act_weather_show is not None:

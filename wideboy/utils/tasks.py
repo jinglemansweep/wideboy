@@ -26,7 +26,7 @@ async def fetch_weather(loop: asyncio.AbstractEventLoop, state: StateStore):
         async with aiohttp.ClientSession(loop=loop) as session:
             json_resp = await async_fetch(session, url)
         data = json.loads(json_resp)
-        logger.debug(data)
+        # logger.debug(data)
         now = datetime.now()
         next_hour_str = now.strftime("%Y-%m-%dT%H:00")
         idx = data["hourly"]["time"].index(next_hour_str)

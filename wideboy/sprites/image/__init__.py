@@ -15,11 +15,12 @@ class ImageSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.Rect,
+        state: StateStore,
         tile_size: tuple[int, int],
         fill_size: tuple[int, int],
         alpha: int = 255,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(rect, state)
         self.tile_size = tile_size
         self.fill_size = fill_size
         self.alpha = alpha
@@ -57,6 +58,5 @@ class ImageSprite(BaseSprite):
         frame: int,
         delta: float,
         events: list[pygame.event.Event],
-        state: StateStore,
     ) -> None:
-        super().update(frame, delta, events, state)
+        super().update(frame, delta, events)
