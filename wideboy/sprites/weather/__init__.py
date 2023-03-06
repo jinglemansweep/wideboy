@@ -8,6 +8,8 @@ from wideboy.utils.state import StateStore
 
 logger = logging.getLogger(__name__)
 
+RAIN_PROBABILITY_DISPLAY_THRESHOLD = 25
+
 
 class WeatherSprite(BaseSprite):
     def __init__(
@@ -61,11 +63,12 @@ class WeatherSprite(BaseSprite):
             (0, 0, 0, 255),
         )
         self.image.blit(temperature_text, (55 - temperature_text.get_width(), 26))
-        rain_prob_text = render_text(
-            rain_prob_str,
-            "bitstreamverasans",
-            10,
-            self.color_rain_prob,
-            (0, 0, 0, 255),
-        )
-        self.image.blit(rain_prob_text, (56 - rain_prob_text.get_width(), 0))
+        if state.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD:
+            rain_prob_text = render_text(
+                rain_prob_str,
+                "bitstreamverasans",
+                10,
+                self.color_rain_prob,
+                (0, 0, 0, 255),
+            )
+            self.image.blit(rain_prob_text, (56 - rain_prob_text.get_width(), 0))
