@@ -58,7 +58,7 @@ def weather_code_to_icon(code: int) -> str:
         icon = "fog"
     elif code in ([51, 53, 55, 61, 63, 65, 80, 81, 82]):
         icon = "drizzle"
-    elif code in ([56, 57, 66, 67]):
+    elif code in ([56, 57, 66, 67, 77]):
         icon = "sleet"
     elif code == 71:
         icon = "snow-flurries"
