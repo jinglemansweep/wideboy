@@ -52,7 +52,7 @@ def weather_code_to_icon(code: int) -> str:
     elif code == 2:
         icon = "cloudy"
     elif code == 3:
-        icon = "mostly-cloudly"
+        icon = "mostly-cloudy"
     elif code == 45 or code == 48:
         icon = "fog"
     elif code in ([51, 53, 55, 61, 63, 65, 80, 81, 82]):
