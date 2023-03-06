@@ -63,8 +63,8 @@ class DefaultScene(BaseScene):
         self.act_weather_show.start()
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
-        self.act_ticker_change = self.build_ticker_change_act()
-        self.act_ticker_change.start()
+        self.act_ticker_change = None  # self.build_ticker_change_act()
+        # self.act_ticker_change.start()
 
     def update(
         self,
