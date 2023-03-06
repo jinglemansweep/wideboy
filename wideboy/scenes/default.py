@@ -56,8 +56,8 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.weather_widget)
         # Setup text widget
-        self.text_widget = TextSprite((4, self.height, 512 - 8, 56), self.state)
-        self.group.add(self.text_widget)
+        # self.text_widget = TextSprite((4, self.height, 512 - 8, 56), self.state)
+        # self.group.add(self.text_widget)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
@@ -65,7 +65,7 @@ class DefaultScene(BaseScene):
         self.act_weather_show.start()
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
-        self.act_ticker_change = None  # self.build_ticker_change_act()
+        # self.act_ticker_change = None  # self.build_ticker_change_act()
         # self.act_ticker_change.start()
 
     def update(
@@ -81,8 +81,8 @@ class DefaultScene(BaseScene):
             self.act_weather_show.update()
         if self.act_background_change is not None:
             self.act_background_change.update()
-        if self.act_ticker_change is not None:
-            self.act_ticker_change.update()
+        # if self.act_ticker_change is not None:
+        #    self.act_ticker_change.update()
 
     # Handle Events
 
