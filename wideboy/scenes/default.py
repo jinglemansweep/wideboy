@@ -89,7 +89,7 @@ class DefaultScene(BaseScene):
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         super().handle_events(events)
         for event in events:
-            if event.type == EVENT_EPOCH_SECOND:
+            if event.type == EVENT_EPOCH_MINUTE and event.unit % 5 == 0:
                 if event.unit % 30 == 0:
                     self.act_background_change = self.build_background_change_act()
                     self.act_background_change.start()
