@@ -85,5 +85,5 @@ class WeatherSprite(BaseSprite):
                 self.color_rain_prob,
                 (0, 0, 0, 255),
             )
-            self.image.blit(rain_prob_text, (2, 0))
+            self.image.blit(rain_prob_text, (2, -1))
         self.dirty = 1
