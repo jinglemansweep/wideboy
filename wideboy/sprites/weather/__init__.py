@@ -63,7 +63,10 @@ class WeatherSprite(BaseSprite):
             (0, 0, 0, 255),
         )
         self.image.blit(temperature_text, (55 - temperature_text.get_width(), 26))
-        if state.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD:
+        if (
+            state.rain_probability is not None
+            and state.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD
+        ):
             rain_prob_text = render_text(
                 rain_prob_str,
                 "bitstreamverasans",
