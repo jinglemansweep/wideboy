@@ -62,7 +62,7 @@ class WeatherSprite(BaseSprite):
             self.color_temp,
             (0, 0, 0, 255),
         )
-        self.image.blit(temperature_text, (62 - temperature_text.get_width(), 30))
+        self.image.blit(temperature_text, (62 - temperature_text.get_width(), 33))
         if (
             state.rain_probability is not None
             and state.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD
