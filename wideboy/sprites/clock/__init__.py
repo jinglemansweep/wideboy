@@ -3,7 +3,7 @@ import pygame
 from datetime import datetime
 from pygame import SRCALPHA
 from wideboy.utils.images import render_text
-from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
+from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.utils.state import StateStore
 from wideboy.sprites import BaseSprite
 
@@ -36,7 +36,7 @@ class ClockSprite(BaseSprite):
     ) -> None:
         super().update(frame, delta, events)
         for event in events:
-            if event.type == EVENT_EPOCH_MINUTE:
+            if event.type == EVENT_EPOCH_SECOND:
                 self.render()
 
     def render(self) -> None:
@@ -45,7 +45,9 @@ class ClockSprite(BaseSprite):
         ddmm_str = now.strftime("%d %b")
         date_str = f"{dow_str} {ddmm_str}"
         self.image.fill(self.color_bg)
-        hhmm_str = now.strftime("%H:%M")
+        hh_str = now.strftime("%H")
+        mm_str = now.strftime("%M")
+        hhmm_str = f"{hh_str}:{mm_str}" if now.second % 2 == 0 else f"{hh_str} {mm_str}"
         hhmm_sprite = render_text(hhmm_str, self.font_time, 50, self.color_time)
         time_pos = (((self.rect[2] - hhmm_sprite.get_rect()[2]) // 2) + 2, 0)
         self.image.blit(hhmm_sprite, time_pos)
