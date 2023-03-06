@@ -45,7 +45,7 @@ class DefaultScene(BaseScene):
                 self.height,
             ),
             self.state,
-            color_bg=(0, 0, 0, 255),
+            color_bg=(0, 64, 0, 192),
         )
         self.group.add(self.clock_widget)
         # Setup weather widget

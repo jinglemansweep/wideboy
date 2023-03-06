@@ -42,7 +42,6 @@ class WeatherSprite(BaseSprite):
                 self.render()
 
     def render(self) -> None:
-        print("STATE", self.state)
         temp_str = (
             f"{int(round(self.state.temperature, 0))}"
             if self.state.temperature is not None
@@ -56,8 +55,8 @@ class WeatherSprite(BaseSprite):
         self.image.fill(self.color_bg)
         if self.state.weather_summary is not None:
             icon_filename = f"images/icons/weather/{self.state.weather_summary}.png"
-            self.icon_summary = load_resize_image(icon_filename, (64, 64))
-            self.image.blit(self.icon_summary, (0, -8))
+            self.icon_summary = load_resize_image(icon_filename, (96, 96))
+            self.image.blit(self.icon_summary, (-16, -24))
         temperature_text = render_text(
             temp_str,
             "fonts/bitstream-vera.ttf",
