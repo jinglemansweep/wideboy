@@ -45,28 +45,26 @@ async def fetch_weather(loop: asyncio.AbstractEventLoop, state: StateStore):
 
 def weather_code_to_icon(code: int) -> str:
     icon: str = None
-    logger.debug(code)
-    match code:
-        case 0:
-            icon = "sunny"
-        case 1:
-            icon = "clear-cloudy"
-        case 2:
-            icon = "cloudy"
-        case 3:
-            icon = "mostly-cloudly"
-        case 45 | 48:
-            icon = "fog"
-        case 51 | 53 | 55 | 61 | 63 | 65 | 80 | 81 | 82:
-            icon = "drizzle"
-        case 56 | 57 | 66 | 67:
-            icon = "sleet"
-        case 71:
-            icon = "snow-flurries"
-        case 73 | 75 | 85 | 86:
-            icon = "snow"
-        case 95 | 96:
-            icon = "thunderstorms"
+    if code == 0:
+        icon = "sunny"
+    elif code == 1:
+        icon = "clear-cloudy"
+    elif code == 2:
+        icon = "cloudy"
+    elif code == 3:
+        icon = "mostly-cloudly"
+    elif code == 45 or code == 48:
+        icon = "fog"
+    elif code in ([51, 53, 55, 61, 63, 65, 80, 81, 82]):
+        icon = "drizzle"
+    elif code in ([56, 57, 66, 67]):
+        icon = "sleet"
+    elif code == 71:
+        icon = "snow-flurries"
+    elif code in ([73, 75, 85, 86]):
+        icon = "snow"
+    elif code in ([95, 96]):
+        icon = "thunderstorms"
     return icon
 
 
