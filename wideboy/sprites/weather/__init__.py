@@ -42,41 +42,42 @@ class WeatherSprite(BaseSprite):
                 self.render()
 
     def render(self) -> None:
-        temp_str = (
-            f"{int(round(self.state.temperature, 0))}"
-            if self.state.temperature is not None
-            else "?"
-        )
-        rain_prob_str = (
-            f"{self.state.rain_probability}%"
-            if self.state.rain_probability is not None
-            else "?"
-        )
         self.image.fill(self.color_bg)
         if self.state.weather_summary is not None:
             icon_filename = f"images/icons/weather/{self.state.weather_summary}.png"
-            self.icon_summary = load_resize_image(icon_filename, (96, 96))
-            self.image.blit(self.icon_summary, (-16, -24))
-        temperature_text = render_text(
-            temp_str,
-            "fonts/bitstream-vera.ttf",
-            28,
-            self.color_temp,
-            (0, 0, 0, 255),
-        )
-        self.image.blit(temperature_text, (56 - temperature_text.get_width(), 33))
-        degree_text = render_text(
-            "°",
-            "fonts/bitstream-vera.ttf",
-            20,
-            self.color_temp,
-            (0, 0, 0, 255),
-        )
-        self.image.blit(degree_text, (64 - degree_text.get_width(), 34))
+            self.icon_summary = load_resize_image(icon_filename, (90, 90))
+            self.image.blit(self.icon_summary, (-12, -24))
+        if self.state.temperature is not None:
+            temp_str = (
+                f"{int(round(self.state.temperature, 0))}"
+                if self.state.temperature is not None
+                else "?"
+            )
+            temperature_text = render_text(
+                temp_str,
+                "fonts/bitstream-vera.ttf",
+                28,
+                self.color_temp,
+                (0, 0, 0, 255),
+            )
+            self.image.blit(temperature_text, (56 - temperature_text.get_width(), 33))
+            degree_text = render_text(
+                "°",
+                "fonts/bitstream-vera.ttf",
+                20,
+                self.color_temp,
+                (0, 0, 0, 255),
+            )
+            self.image.blit(degree_text, (64 - degree_text.get_width(), 34))
         if (
             self.state.rain_probability is not None
             and self.state.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD
         ):
+            rain_prob_str = (
+                f"{self.state.rain_probability}%"
+                if self.state.rain_probability is not None
+                else "?"
+            )
             rain_prob_text = render_text(
                 rain_prob_str,
                 "fonts/bitstream-vera.ttf",

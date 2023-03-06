@@ -49,7 +49,9 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.clock_widget)
         # Setup weather widget
-        self.weather_widget = WeatherSprite((self.width - 192, 32, 64, 64), self.state)
+        self.weather_widget = WeatherSprite(
+            (self.width - 192, 32, 64, 64), self.state, color_bg=(0, 0, 64, 192)
+        )
         self.group.add(self.weather_widget)
         # Setup text widget
         self.text_widget = TextSprite((4, self.height, 512 - 8, 56), self.state)
