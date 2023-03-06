@@ -50,7 +50,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            (self.width - 192, 0, 64 - 2, 64 - 4),
+            (self.width - 192, 2, 64 - 2, 64 - 4),
             self.state,
             color_bg=(0, 0, 0, 192),
         )
