@@ -137,7 +137,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.background_widget,
-                        (0, 0 - self.height),
+                        (0, 0),
                         64,
                     ),
                 ),
