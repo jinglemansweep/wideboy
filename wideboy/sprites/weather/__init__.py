@@ -57,7 +57,7 @@ class WeatherSprite(BaseSprite):
             self.image.blit(self.icon_summary, (-8, -14))
         temperature_text = render_text(
             temp_str,
-            "bitstreamverasans",
+            "fonts/bitstream-vera.ttf",
             28,
             self.color_temp,
             (0, 0, 0, 255),
@@ -69,7 +69,7 @@ class WeatherSprite(BaseSprite):
         ):
             rain_prob_text = render_text(
                 rain_prob_str,
-                "bitstreamverasans",
+                "fonts/bitstream-vera.ttf",
                 10,
                 self.color_rain_prob,
                 (0, 0, 0, 255),

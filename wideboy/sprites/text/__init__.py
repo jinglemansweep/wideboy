@@ -67,9 +67,9 @@ class TextSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        heading_font: str = "bitstreamverasans",
+        heading_font: str = "fonts/bitstream-vera.ttf",
         heading_font_size: int = 20,
-        paragraph_font: str = "bitstreamverasans",
+        paragraph_font: str = "fonts/bitstream-vera.ttf",
         paragraph_font_size: int = 16,
         color_bg: pygame.color.Color = (0, 0, 0, 128),
         color_fg: pygame.color.Color = (255, 255, 255, 255),

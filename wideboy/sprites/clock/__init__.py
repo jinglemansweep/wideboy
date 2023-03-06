@@ -17,8 +17,8 @@ class ClockSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        color_bg: pygame.color.Color = (0, 0, 0),
-        color_time: pygame.color.Color = (255, 255, 255, 255),
+        color_bg: pygame.color.Color = (0, 0, 0, 255),
+        color_time: pygame.color.Color = (0, 255, 0, 255),
         color_date: pygame.color.Color = (255, 255, 0, 255),
     ) -> None:
         super().__init__(rect)
@@ -26,8 +26,8 @@ class ClockSprite(BaseSprite):
         self.color_bg = color_bg
         self.color_time = color_time
         self.color_date = color_date
-        self.font_date = "bitstreamverasansmono"
-        self.font_time = "molot"
+        self.font_date = "fonts/digital.ttf"
+        self.font_time = "fonts/digital.ttf"
         self.render()
 
     def update(
@@ -48,15 +48,13 @@ class ClockSprite(BaseSprite):
         ddmm_str = now.strftime("%d %b")
         date_str = f"{dow_str} {ddmm_str}"
         self.image.fill(self.color_bg)
-        date_sprite = render_text(
-            date_str, self.font_date, 18, self.color_date, bold=True
-        )
-        date_pos = ((self.rect[2] - date_sprite.get_rect()[2]) // 2, 40)
-        self.image.blit(date_sprite, date_pos)
         hhmm_str = now.strftime("%H:%M")
-        hhmm_sprite = render_text(hhmm_str, self.font_time, 48, self.color_time)
-        time_pos = ((self.rect[2] - hhmm_sprite.get_rect()[2]) // 2, -10)
+        hhmm_sprite = render_text(hhmm_str, self.font_time, 54, self.color_time)
+        time_pos = ((self.rect[2] - hhmm_sprite.get_rect()[2]) // 2, -2)
         self.image.blit(hhmm_sprite, time_pos)
+        date_sprite = render_text(date_str, self.font_date, 18, self.color_date)
+        date_pos = ((self.rect[2] - date_sprite.get_rect()[2]) // 2, 44)
+        self.image.blit(date_sprite, date_pos)
         self.dirty = 1
 
     def poop(self) -> None:
