@@ -90,12 +90,9 @@ class DefaultScene(BaseScene):
         super().handle_events(events)
         for event in events:
             if event.type == EVENT_EPOCH_SECOND:
-                if event.unit % 15 == 0:
-                    self.act_ticker_change = self.build_ticker_change_act()
-                    self.act_ticker_change.start()
-            if event.type == EVENT_EPOCH_MINUTE:
-                self.act_background_change = self.build_background_change_act()
-                self.act_background_change.start()
+                if event.unit % 30 == 0:
+                    self.act_background_change = self.build_background_change_act()
+                    self.act_background_change.start()
 
     # Acts
 
@@ -137,7 +134,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.background_widget,
-                        (0, 0),
+                        (0, 0 - self.height),
                         64,
                     ),
                 ),
