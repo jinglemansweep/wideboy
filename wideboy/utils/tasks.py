@@ -29,12 +29,59 @@ async def fetch_weather(loop: asyncio.AbstractEventLoop, state: StateStore):
         now = datetime.now()
         next_hour_str = now.strftime("%Y-%m-%dT%H:00")
         idx = data["hourly"]["time"].index(next_hour_str)
+        state.weather_summary = weather_code_to_icon(
+            data["current_weather"]["weathercode"]
+        )
         state.temperature = data["hourly"]["temperature_2m"][idx]
         state.rain_probability = data["hourly"]["precipitation_probability"][idx]
         logger.info(
-            f"weather:summary temperature={state.temperature} rain_probability={state.rain_probability}"
+            f"weather:summary summary={state.weather_summary} temperature={state.temperature} rain_probability={state.rain_probability}"
         )
     except Exception as e:
         logger.error("task:fetch:weather:error", exc_info=e)
     await asyncio.sleep(WEATHER_FETCH_INTERVAL)
     asyncio.create_task(fetch_weather(loop, state))
+
+
+def weather_code_to_icon(code: int) -> str:
+    icon: str = None
+    logger.debug(code)
+    match code:
+        case 0:
+            icon = "sunny"
+        case 1:
+            icon = "clear-cloudy"
+        case 2:
+            icon = "cloudy"
+        case 3:
+            icon = "mostly-cloudly"
+        case 45 | 48:
+            icon = "fog"
+        case 51 | 53 | 55 | 61 | 63 | 65 | 80 | 81 | 82:
+            icon = "drizzle"
+        case 56 | 57 | 66 | 67:
+            icon = "sleet"
+        case 71:
+            icon = "snow-flurries"
+        case 73 | 75 | 85 | 86:
+            icon = "snow"
+        case 95 | 96:
+            icon = "thunderstorms"
+    return icon
+
+
+"""
+0	Clear sky
+1, 2, 3	Mainly clear, partly cloudy, and overcast
+45, 48	Fog and depositing rime fog
+51, 53, 55	Drizzle: Light, moderate, and dense intensity
+56, 57	Freezing Drizzle: Light and dense intensity
+61, 63, 65	Rain: Slight, moderate and heavy intensity
+66, 67	Freezing Rain: Light and heavy intensity
+71, 73, 75	Snow fall: Slight, moderate, and heavy intensity
+77	Snow grains
+80, 81, 82	Rain showers: Slight, moderate, and violent
+85, 86	Snow showers slight and heavy
+95 *	Thunderstorm: Slight or moderate
+96, 99 *	Thunderstorm with slight and heavy hail
+"""

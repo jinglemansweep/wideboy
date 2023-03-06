@@ -23,7 +23,7 @@ class WeatherSprite(BaseSprite):
         self.color_bg = color_bg
         self.color_temp = color_temp
         self.color_rain_prob = color_rain_prob
-        self.icon_rain = load_resize_image("images/icons/rain_prob.png", (16, 16))
+        self.icon_summary = None
         self.dirty = 2
         self.render()
 
@@ -41,7 +41,7 @@ class WeatherSprite(BaseSprite):
         if state is None:
             return
         temp_str = (
-            f"{int(round(state.temperature, 0))}°C"
+            f"{int(round(state.temperature, 0))}"
             if state.temperature is not None
             else "?"
         )
@@ -49,20 +49,23 @@ class WeatherSprite(BaseSprite):
             f"{state.rain_probability}%" if state.rain_probability is not None else "?"
         )
         self.image.fill(self.color_bg)
+        if state.weather_summary is not None:
+            icon_filename = f"images/icons/weather/{state.weather_summary}.png"
+            self.icon_summary = load_resize_image(icon_filename, (64, 64))
+            self.image.blit(self.icon_summary, (-8, -14))
         temperature_text = render_text(
             temp_str,
             "bitstreamverasans",
-            20,
+            28,
             self.color_temp,
             (0, 0, 0, 255),
         )
-        self.image.blit(temperature_text, (4, -1))
-        self.image.blit(self.icon_rain, (55, 2))
+        self.image.blit(temperature_text, (55 - temperature_text.get_width(), 26))
         rain_prob_text = render_text(
             rain_prob_str,
             "bitstreamverasans",
-            16,
+            10,
             self.color_rain_prob,
             (0, 0, 0, 255),
         )
-        self.image.blit(rain_prob_text, (72, 1))
+        self.image.blit(rain_prob_text, (56 - rain_prob_text.get_width(), 0))
