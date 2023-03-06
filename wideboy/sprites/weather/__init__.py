@@ -54,7 +54,7 @@ class WeatherSprite(BaseSprite):
         if state.weather_summary is not None:
             icon_filename = f"images/icons/weather/{state.weather_summary}.png"
             self.icon_summary = load_resize_image(icon_filename, (64, 64))
-            self.image.blit(self.icon_summary, (-8, -14))
+            self.image.blit(self.icon_summary, (0, -4))
         temperature_text = render_text(
             temp_str,
             "fonts/bitstream-vera.ttf",
@@ -62,7 +62,7 @@ class WeatherSprite(BaseSprite):
             self.color_temp,
             (0, 0, 0, 255),
         )
-        self.image.blit(temperature_text, (55 - temperature_text.get_width(), 26))
+        self.image.blit(temperature_text, (62 - temperature_text.get_width(), 30))
         if (
             state.rain_probability is not None
             and state.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD
@@ -74,4 +74,4 @@ class WeatherSprite(BaseSprite):
                 self.color_rain_prob,
                 (0, 0, 0, 255),
             )
-            self.image.blit(rain_prob_text, (56 - rain_prob_text.get_width(), 0))
+            self.image.blit(rain_prob_text, (2, 0))
