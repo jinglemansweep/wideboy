@@ -26,6 +26,7 @@ class ImageSprite(BaseSprite):
         self.alpha = alpha
         self.files = self.glob_images()
         self.set_random_image()
+        self.dirty = 2
         logger.debug(f"sprite:image files={len(self.files)}")
 
     def set_random_image(self):

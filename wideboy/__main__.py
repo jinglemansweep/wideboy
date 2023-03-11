@@ -24,7 +24,8 @@ from wideboy.utils.pygame import (
     clock_tick,
 )
 from wideboy.utils.state import state
-from wideboy.director import Director
+from wideboy.scenes.utils.manager import SceneManager
+from wideboy.scenes.blank import BlankScene
 from wideboy.scenes.default import DefaultScene
 
 # Logging
@@ -91,27 +92,32 @@ async def start_main_loop():
 
     asyncio.create_task(fetch_weather(loop, state))
 
-    director = Director()
-    director.add_scene("default", DefaultScene(screen, state))
-    director.change_scene("default")
+    scene_manager = SceneManager()
+    scene_manager.add(DefaultScene(screen, state))
+    scene_manager.add(BlankScene(screen, state))
+    # scene_manager.change_scene("default")
 
     while running:
         events = pygame.event.get()
         process_pygame_events(events)
         process_events(events)
-        frame, delta = clock_tick(clock)
+        delta = clock_tick(clock)
 
-        updates = director.render(frame, delta, events)
+        updates = scene_manager.render(delta, events)
         if len(updates):
             # logger.debug(f"display:draw rects={len(updates)}")
             pygame.display.update(updates)
+
+        if scene_manager.frame % 1000 == 0:
+            scene_manager.next()
 
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(
                 matrix, screen if state.power else blank_screen, matrix_buffer
             )
 
-        loop_debug(frame, clock, delta, state)
+        if scene_manager.frame % 200 == 0:
+            loop_debug(scene_manager.frame, clock, delta, state)
         mqtt.loop(0.003)
         await asyncio.sleep(0)
 

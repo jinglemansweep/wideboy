@@ -6,7 +6,7 @@ from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
-from wideboy.scenes import BaseScene
+from wideboy.scenes.utils.base import BaseScene
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
 from wideboy.utils.state import StateStore
 
@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class DefaultScene(BaseScene):
+    name = "default"
+
     def __init__(
         self,
         surface: pygame.surface.Surface,
@@ -22,6 +24,9 @@ class DefaultScene(BaseScene):
         bg_color: pygame.color.Color = (0, 0, 0),
     ) -> None:
         super().__init__(surface, state, bg_color)
+
+    def setup(self):
+        super().setup()
         # Setup background widget
         self.background_widget = ImageSprite(
             (
@@ -70,11 +75,10 @@ class DefaultScene(BaseScene):
 
     def update(
         self,
-        frame: int,
         delta: float,
         events: list[pygame.event.Event],
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(delta, events)
         if self.act_clock_show is not None:
             self.act_clock_show.update()
         if self.act_weather_show is not None:

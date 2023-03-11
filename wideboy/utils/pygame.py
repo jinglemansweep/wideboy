@@ -26,8 +26,6 @@ EVENT_EPOCH_HOUR = pygame.USEREVENT + 12
 
 epoch_emitter = EpochEmitter()
 
-frame = 0
-
 
 def setup_pygame(
     display_size: tuple[int, int]
@@ -89,16 +87,11 @@ def loop_debug(
     clock: pygame.time.Clock,
     delta: float,
     state: StateStore,
-    every: int = 200,
 ) -> None:
-    if frame % every == 0:
-        logger.info(
-            f"loop:debug frame={frame} fps={clock.get_fps()} delta={delta} state={state}"
-        )
+    logger.info(
+        f"loop:debug frame={frame} fps={clock.get_fps()} delta={delta} state={state}"
+    )
 
 
-def clock_tick(clock: pygame.time.Clock) -> tuple[int, float]:
-    global frame
-    delta = clock.tick() / 1000
-    frame += 1
-    return frame, delta
+def clock_tick(clock: pygame.time.Clock) -> float:
+    return clock.tick() / 1000
