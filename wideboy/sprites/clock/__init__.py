@@ -5,7 +5,7 @@ from pygame import SRCALPHA
 from wideboy.utils.images import render_text
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.utils.state import StateStore
-from wideboy.sprites import BaseSprite
+from wideboy.sprites._base import BaseSprite
 
 
 logger = logging.getLogger("sprites.clock")

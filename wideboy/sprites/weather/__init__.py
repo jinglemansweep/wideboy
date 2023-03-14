@@ -2,7 +2,7 @@ import logging
 import pygame
 from typing import Optional
 from pygame import SRCALPHA
-from wideboy.sprites import BaseSprite
+from wideboy.sprites._base import BaseSprite
 from wideboy.utils.images import render_text, load_resize_image
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.utils.state import StateStore

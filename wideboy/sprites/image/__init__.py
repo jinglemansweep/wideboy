@@ -3,7 +3,7 @@ import pygame
 import random
 from typing import Optional
 
-from wideboy.sprites import BaseSprite
+from wideboy.sprites._base import BaseSprite
 from wideboy.utils.images import glob_files, load_resize_image, tile_surface
 from wideboy.utils.state import StateStore
 

@@ -1,12 +1,12 @@
 import logging
 import pygame
 
-from wideboy.sprites import Act, Animation
+from wideboy.utils.animation import Act, Animation
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
-from wideboy.scenes.utils.base import BaseScene
+from wideboy.scenes._base import BaseScene
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
 from wideboy.utils.state import StateStore
 

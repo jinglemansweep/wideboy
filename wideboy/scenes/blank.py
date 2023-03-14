@@ -1,8 +1,8 @@
 import logging
 import pygame
 
-from wideboy.scenes.utils.base import BaseScene
-from wideboy.sprites import BaseSprite
+from wideboy.scenes._base import BaseScene
+from wideboy.sprites._base import BaseSprite
 from wideboy.utils.state import StateStore
 
 

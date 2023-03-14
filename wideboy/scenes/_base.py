@@ -1,7 +1,5 @@
 import logging
 import pygame
-import time
-from typing import Optional
 
 from wideboy.utils.state import StateStore
 
@@ -11,6 +9,7 @@ logger = logging.getLogger(__name__)
 class BaseScene:
     name: str = None
     frame: int = None
+    debug_every_frame: int = 200
 
     def __init__(
         self,
@@ -51,6 +50,14 @@ class BaseScene:
 
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         pass
+
+    def debug(
+        self, frame: int, clock: pygame.time.Clock, delta: float, state: StateStore
+    ) -> None:
+        if frame % self.debug_every_frame == 0:
+            logger.info(
+                f"scene:debug frame={frame} fps={clock.get_fps()} delta={delta} state={state}"
+            )
 
     @property
     def height(self):

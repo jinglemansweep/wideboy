@@ -1,5 +1,11 @@
+import logging
+import pygame
 from typing import Optional
-from wideboy.scenes.utils.base import BaseScene
+from wideboy.scenes._base import BaseScene
+from wideboy.utils.state import StateStore
+
+
+logger = logging.getLogger(__name__)
 
 
 class SceneManager:
@@ -48,3 +54,6 @@ class SceneManager:
 
     def render(self, *args, **kwargs):
         return self.scene.render(*args, **kwargs)
+
+    def debug(self, clock: pygame.time.Clock, delta: float, state: StateStore):
+        return self.scene.debug(self.frame, clock, delta, state)

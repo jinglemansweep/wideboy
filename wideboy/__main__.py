@@ -24,7 +24,7 @@ from wideboy.utils.pygame import (
     clock_tick,
 )
 from wideboy.utils.state import state
-from wideboy.scenes.utils.manager import SceneManager
+from wideboy.utils.scenes import SceneManager
 from wideboy.scenes.blank import BlankScene
 from wideboy.scenes.default import DefaultScene
 
@@ -95,7 +95,6 @@ async def start_main_loop():
     scene_manager = SceneManager()
     scene_manager.add(DefaultScene(screen, state))
     scene_manager.add(BlankScene(screen, state))
-    # scene_manager.change_scene("default")
 
     while running:
         events = pygame.event.get()
@@ -108,16 +107,15 @@ async def start_main_loop():
             # logger.debug(f"display:draw rects={len(updates)}")
             pygame.display.update(updates)
 
-        if scene_manager.frame % 1000 == 0:
-            scene_manager.next()
+        # if scene_manager.frame % 1000 == 0:
+        #    scene_manager.next()
 
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(
                 matrix, screen if state.power else blank_screen, matrix_buffer
             )
 
-        if scene_manager.frame % 200 == 0:
-            loop_debug(scene_manager.frame, clock, delta, state)
+        scene_manager.debug(clock, delta, state)
         mqtt.loop(0.003)
         await asyncio.sleep(0)
 
