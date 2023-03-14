@@ -22,8 +22,10 @@ class DefaultScene(BaseScene):
         surface: pygame.surface.Surface,
         state: StateStore,
         bg_color: pygame.color.Color = (0, 0, 0),
+        background_change_interval_mins: int = 5,
     ) -> None:
         super().__init__(surface, state, bg_color)
+        self.background_change_interval_mins = background_change_interval_mins
 
     def setup(self):
         super().setup()
@@ -93,10 +95,12 @@ class DefaultScene(BaseScene):
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         super().handle_events(events)
         for event in events:
-            if event.type == EVENT_EPOCH_MINUTE and event.unit % 5 == 0:
-                if event.unit % 30 == 0:
-                    self.act_background_change = self.build_background_change_act()
-                    self.act_background_change.start()
+            if (
+                event.type == EVENT_EPOCH_MINUTE
+                and event.unit % self.background_change_interval_mins == 0
+            ):
+                self.act_background_change = self.build_background_change_act()
+                self.act_background_change.start()
 
     # Acts
 

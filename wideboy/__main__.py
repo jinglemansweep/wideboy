@@ -8,7 +8,12 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 from wideboy import _APP_NAME
-from wideboy.config import LOG_DEBUG, CANVAS_SIZE, MATRIX_ENABLED
+from wideboy.config import (
+    LOG_DEBUG,
+    CANVAS_SIZE,
+    MATRIX_ENABLED,
+    BACKGROUND_CHANGE_INTERVAL_MINS,
+)
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
@@ -93,8 +98,15 @@ async def start_main_loop():
     asyncio.create_task(fetch_weather(loop, state))
 
     scene_manager = SceneManager()
-    scene_manager.add(DefaultScene(screen, state))
+    scene_manager.add(
+        DefaultScene(
+            screen,
+            state,
+            background_change_interval_mins=BACKGROUND_CHANGE_INTERVAL_MINS,
+        )
+    )
     scene_manager.add(BlankScene(screen, state))
+    scene_manager.run("default")
 
     while running:
         events = pygame.event.get()
@@ -104,11 +116,7 @@ async def start_main_loop():
 
         updates = scene_manager.render(delta, events)
         if len(updates):
-            # logger.debug(f"display:draw rects={len(updates)}")
             pygame.display.update(updates)
-
-        # if scene_manager.frame % 1000 == 0:
-        #    scene_manager.next()
 
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(

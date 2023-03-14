@@ -28,6 +28,10 @@ MQTT_PASSWORD = get_config_env_var("MQTT_PASSWORD", None)
 HASS_URL = get_config_env_var("HASS_URL", None)
 HASS_API_TOKEN = get_config_env_var("HASS_API_TOKEN", None)
 
+BACKGROUND_CHANGE_INTERVAL_MINS = int(
+    get_config_env_var("BACKGROUND_CHANGE_INTERVAL_MINS", 5)
+)
+
 WEATHER_FETCH_INTERVAL = int(get_config_env_var("WEATHER_FETCH_INTERVAL", 600))
 WEATHER_LATITUDE = float(get_config_env_var("WEATHER_LATITUDE", 52.0557))
 WEATHER_LONGITUDE = float(get_config_env_var("WEATHER_LONGITUDE", 1.1153))
