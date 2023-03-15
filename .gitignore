@@ -1,6 +1,6 @@
 venv
 __pycache__
-images/backgrounds
+images/backgrounds/*
 dietpi.txt
 .env
 *.token
