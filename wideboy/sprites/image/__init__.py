@@ -68,8 +68,7 @@ class ImageSprite(BaseSprite):
         )
         image = load_resize_image(filename, tile_size if is_tiled else fill_size)
         image.fill((255, 255, 255, alpha), special_flags=pygame.BLEND_RGBA_MULT)
-        if is_tiled:
-            image = tile_surface(image, fill_size)
+        image = tile_surface(image, fill_size)
         return image
 
     def update(
