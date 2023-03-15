@@ -9,9 +9,11 @@ load_dotenv(find_dotenv())
 
 from wideboy import _APP_NAME
 from wideboy.config import (
+    DEBUG,
     LOG_DEBUG,
     CANVAS_SIZE,
     MATRIX_ENABLED,
+    IMAGE_PATH,
     BACKGROUND_CHANGE_INTERVAL_MINS,
 )
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
@@ -102,6 +104,7 @@ async def start_main_loop():
         DefaultScene(
             screen,
             state,
+            image_path=IMAGE_PATH,
             background_change_interval_mins=BACKGROUND_CHANGE_INTERVAL_MINS,
         )
     )

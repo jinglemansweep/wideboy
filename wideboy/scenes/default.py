@@ -21,11 +21,14 @@ class DefaultScene(BaseScene):
         self,
         surface: pygame.surface.Surface,
         state: StateStore,
+        image_path: str,
         bg_color: pygame.color.Color = (0, 0, 0),
         background_change_interval_mins: int = 5,
     ) -> None:
-        super().__init__(surface, state, bg_color)
+
+        self.image_path = image_path
         self.background_change_interval_mins = background_change_interval_mins
+        super().__init__(surface, state, bg_color)
 
     def setup(self):
         super().setup()
@@ -38,6 +41,7 @@ class DefaultScene(BaseScene):
                 self.height,
             ),
             self.state,
+            self.image_path,
             (self.height * 2, self.height * 2),
             (self.width, self.height),
             255,
@@ -52,14 +56,15 @@ class DefaultScene(BaseScene):
                 self.height - 4,
             ),
             self.state,
-            color_bg=(0, 0, 0, 255 - 32),
+            color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
             (self.width - 192, 2, 64 - 2, 64 - 4),
             self.state,
-            color_bg=(0, 0, 0, 192),
+            image_path=self.image_path,
+            color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
         # Setup text widget
@@ -146,7 +151,7 @@ class DefaultScene(BaseScene):
                         64,
                     ),
                 ),
-                (64, lambda: self.background_widget.set_random_image()),
+                (64, lambda: self.background_widget.render_next_image()),
                 (
                     64,
                     Animation(

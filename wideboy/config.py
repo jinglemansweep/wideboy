@@ -28,6 +28,7 @@ MQTT_PASSWORD = get_config_env_var("MQTT_PASSWORD", None)
 HASS_URL = get_config_env_var("HASS_URL", None)
 HASS_API_TOKEN = get_config_env_var("HASS_API_TOKEN", None)
 
+IMAGE_PATH = get_config_env_var("IMAGE_PATH", "images")
 BACKGROUND_CHANGE_INTERVAL_MINS = int(
     get_config_env_var("BACKGROUND_CHANGE_INTERVAL_MINS", 5)
 )

@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class BaseScene:
     name: str = None
     frame: int = None
-    debug_every_frame: int = 200
+    debug_every_frame: int = 1000
 
     def __init__(
         self,
@@ -55,7 +55,7 @@ class BaseScene:
         self, frame: int, clock: pygame.time.Clock, delta: float, state: StateStore
     ) -> None:
         if frame % self.debug_every_frame == 0:
-            logger.info(
+            logger.debug(
                 f"scene:debug frame={frame} fps={clock.get_fps()} delta={delta} state={state}"
             )
 

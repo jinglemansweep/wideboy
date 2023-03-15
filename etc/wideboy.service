@@ -1,13 +1,10 @@
 [Unit]
 Description=WideBoy RGB Video Wall
-Requires=xvfb.service
-After=xvfb.service
 
 [Service]
 WorkingDirectory=/opt/wideboy
 ExecStart=/opt/wideboy/venv/bin/python3 -m wideboy
 Environment=PYTHONUNBUFFERED=1
-Environment=DISPLAY=:99
 Restart=always
 Type=simple
 StandardOutput=null
