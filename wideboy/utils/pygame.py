@@ -4,7 +4,7 @@ import logging
 import pygame
 import sys
 import traceback
-from pygame import QUIT, DOUBLEBUF, RESIZABLE, SCALED
+from pygame import QUIT, RESIZABLE, SCALED
 from typing import Callable
 
 from wideboy import _APP_DESCRIPTION
@@ -15,7 +15,7 @@ from wideboy.config import (
     PROFILING,
 )
 
-DISPLAY_FLAGS = RESIZABLE | SCALED | DOUBLEBUF
+DISPLAY_FLAGS = RESIZABLE | SCALED
 
 logger = logging.getLogger(__name__)
 
