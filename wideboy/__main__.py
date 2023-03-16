@@ -1,6 +1,6 @@
 import asyncio
+import json
 import logging
-import os
 import pygame
 import pygame.pkgdata
 from dotenv import load_dotenv, find_dotenv
@@ -13,12 +13,14 @@ from wideboy.config import (
     LOG_DEBUG,
     CANVAS_SIZE,
     MATRIX_ENABLED,
+    MQTT_TOPIC_PREFIX,
 )
+from wideboy.utils.device import DEVICE_ID
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
-from wideboy.utils.hass import setup_hass, configure_entity, EVENT_HASS_COMMAND
-from wideboy.utils.mqtt import MQTT
+from wideboy.utils.hass import setup_hass, advertise_entity
+from wideboy.utils.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.utils.pygame import (
     setup_pygame,
     process_pygame_events,
@@ -51,12 +53,15 @@ if MATRIX_ENABLED:
 
 hass = setup_hass()
 
-switch_power_state_topic = configure_entity(
+advertise_entity(
     "master",
     "light",
     dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
 )
-MQTT.publish(switch_power_state_topic, {"state": "ON", "brightness": 128})
+MQTT.publish(
+    "master/state",
+    {"state": "ON" if STATE.power else "OFF", "brightness": STATE.brightness},
+)
 
 # Events
 
@@ -64,15 +69,18 @@ MQTT.publish(switch_power_state_topic, {"state": "ON", "brightness": 128})
 def process_events(events: list[pygame.event.Event]):
     global STATE, matrix
     for event in events:
-        if event.type == EVENT_HASS_COMMAND:
-            logger.debug(f"hass:action name={event.name} payload={event.payload}")
-            if event.name == "master":
-                STATE.power = event.payload.get("state") == "ON"
-                if "brightness" in event.payload:
-                    STATE.brightness = int(event.payload.get("brightness"))
+        if event.type == EVENT_MQTT_MESSAGE:
+            payload = json.loads(event.payload)
+            logger.debug(f"event:mqtt topic={event.topic} payload={payload}")
+            if event.topic.endswith("master/set"):
+                STATE.power = payload.get("state") == "ON"
+                if "brightness" in payload:
+                    STATE.brightness = int(payload.get("brightness"))
                     matrix.brightness = (STATE.brightness / 255) * 100
-                MQTT.publish(switch_power_state_topic, event.payload)
-                logger.info(f"power:master state={event.payload}")
+                MQTT.publish("master/state", event.payload)
+                logger.info(
+                    f"control:master power={STATE.power} brightness={STATE.brightness}"
+                )
 
 
 # Loop Setup

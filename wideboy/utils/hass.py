@@ -26,18 +26,17 @@ def setup_hass() -> Client:
     return hass
 
 
-def configure_entity(
+def advertise_entity(
     name: str,
     device_class: str,
     options: Optional[dict] = None,
-) -> str:
+) -> None:
     if options is None:
         options = dict()
     entity_id = build_entity_id(name)
-    topic_prefix = build_entity_topic_prefix(device_class, entity_id)
     config_topic = f"{HASS_TOPIC_PREFIX}/{device_class}/{entity_id}/config"
-    command_topic = f"{MQTT_TOPIC_PREFIX}/{device_class}/{entity_id}/set"
-    state_topic = f"{MQTT_TOPIC_PREFIX}/{device_class}/{entity_id}/state"
+    command_topic = f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/{name}/set"
+    state_topic = f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/{name}/state"
     config = dict(
         name=name,
         device_class=device_class,
@@ -49,9 +48,7 @@ def configure_entity(
         schema="json",
     )
     config.update(options)
-    MQTT.publish(config_topic, config)
-    MQTT.subscribe(command_topic, 1)
-    return state_topic
+    MQTT.publish(config_topic, config, auto_prefix=False)
 
 
 def build_device_info() -> dict:

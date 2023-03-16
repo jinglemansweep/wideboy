@@ -3,7 +3,7 @@ from typing import Optional
 
 class StateStore:
     power: bool = True
-    brightness: int = 255
+    brightness: int = 128
     news_items: list[str] = ([],)
     weather_summary: Optional[str] = None
     temperature: Optional[float] = None

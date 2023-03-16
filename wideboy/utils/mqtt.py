@@ -4,7 +4,14 @@ import pygame
 from typing import Any, Optional
 import paho.mqtt.client as mqtt
 
-from wideboy.config import MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASSWORD
+from wideboy.config import (
+    MQTT_HOST,
+    MQTT_PORT,
+    MQTT_USER,
+    MQTT_PASSWORD,
+    MQTT_TOPIC_PREFIX,
+)
+from wideboy.utils.device import DEVICE_ID
 
 EVENT_MQTT_MESSAGE = pygame.USEREVENT + 21
 
@@ -47,13 +54,21 @@ class MQTTClient:
         self.client.loop(timeout)
 
     def publish(
-        self, topic: str, payload: dict, retain: bool = True, qos: int = 1
+        self,
+        topic: str,
+        payload: dict,
+        retain: bool = True,
+        qos: int = 1,
+        auto_prefix=True,
     ) -> mqtt.MQTTMessageInfo:
         json_payload = json.dumps(payload)
-        logger.debug(
-            f"mqtt:publish topic={topic} payload={json_payload} retain={retain} qos={qos}"
+        topic_full = (
+            f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/{topic}" if auto_prefix else topic
         )
-        return self.client.publish(topic, json_payload, retain=retain, qos=qos)
+        logger.debug(
+            f"mqtt:publish topic={topic_full} payload={json_payload} retain={retain} qos={qos}"
+        )
+        return self.client.publish(topic_full, json_payload, retain=retain, qos=qos)
 
     def subscribe(self, topic: str, args: Any) -> None:
         logger.debug(f"mqtt:subscribe topic={topic}")
@@ -63,6 +78,7 @@ class MQTTClient:
         logger.info(
             f"mqtt:connect client={client} userdata={userdata} flags={flags} rc={str(rc)}"
         )
+        self.subscribe(f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/#", 1)
 
     def _on_message(self, client, userdata, msg):
         topic, payload = str(msg.topic), msg.payload.decode("utf-8")
