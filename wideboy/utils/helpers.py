@@ -9,6 +9,7 @@ from datetime import datetime
 from typing import Any, Optional
 from wideboy import _APP_NAME, _APP_DESCRIPTION, _APP_VERSION
 from wideboy.config import DEBUG, LOG_DEBUG, CANVAS_SIZE
+from wideboy.utils.device import DEVICE_ID
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ def intro_debug() -> None:
     logger.info(f"Debug:       {DEBUG}")
     logger.info(f"Log Debug:   {LOG_DEBUG}")
     logger.info(f"Canvas Size: {CANVAS_SIZE[0]}x{CANVAS_SIZE[1]}")
+    logger.info(f"Device ID:   {DEVICE_ID}")
     logger.info("=" * 80)
 
 
@@ -31,10 +33,6 @@ async def async_fetch(session: aiohttp.ClientSession, url: str) -> str:
     with async_timeout.timeout(10):
         async with session.get(url) as response:
             return await response.text()
-
-
-def get_device_id() -> str:
-    return uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 
 class EpochEmitter:

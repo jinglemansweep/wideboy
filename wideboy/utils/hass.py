@@ -7,14 +7,15 @@ from homeassistant_api import Client
 
 from wideboy import _APP_NAME, _APP_VERSION, _APP_AUTHOR
 from wideboy.config import HASS_URL, HASS_API_TOKEN, MQTT_TOPIC_PREFIX
-from wideboy.utils.helpers import get_device_id
+from wideboy.utils.device import DEVICE_ID
 from wideboy.utils.mqtt import MQTT
-
-EVENT_HASS_COMMAND = pygame.USEREVENT + 31
 
 logger = logging.getLogger(__name__)
 
-DEVICE_ID = get_device_id()
+EVENT_HASS_COMMAND = pygame.USEREVENT + 31
+
+HASS_TOPIC_PREFIX = "homeassistant"
+
 MODEL_NAME = _APP_NAME
 MANUFACTURER_NAME = _APP_AUTHOR
 
@@ -34,9 +35,9 @@ def configure_entity(
         options = dict()
     entity_id = build_entity_id(name)
     topic_prefix = build_entity_topic_prefix(device_class, entity_id)
-    config_topic = f"{topic_prefix}/config"
-    command_topic = f"{topic_prefix}/set"
-    state_topic = f"{topic_prefix}/state"
+    config_topic = f"{HASS_TOPIC_PREFIX}/{device_class}/{entity_id}/config"
+    command_topic = f"{MQTT_TOPIC_PREFIX}/{device_class}/{entity_id}/set"
+    state_topic = f"{MQTT_TOPIC_PREFIX}/{device_class}/{entity_id}/state"
     config = dict(
         name=name,
         device_class=device_class,
