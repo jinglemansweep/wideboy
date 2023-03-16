@@ -6,7 +6,7 @@ from typing import Any, Optional
 from homeassistant_api import Client
 
 from wideboy import _APP_NAME, _APP_VERSION, _APP_AUTHOR
-from wideboy.config import HASS_URL, HASS_API_TOKEN, HASS_TOPIC_PREFIX
+from wideboy.config import HASS_URL, HASS_API_TOKEN, MQTT_TOPIC_PREFIX
 from wideboy.utils.helpers import get_device_id
 from wideboy.utils.mqtt import MQTT
 
@@ -69,4 +69,4 @@ def build_entity_id(name: str) -> str:
 
 
 def build_entity_topic_prefix(device_class: str, full_name) -> str:
-    return f"{HASS_TOPIC_PREFIX}/{device_class}/{full_name}"
+    return f"{MQTT_TOPIC_PREFIX}/{device_class}/{full_name}"
