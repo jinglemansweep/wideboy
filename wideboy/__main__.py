@@ -14,6 +14,7 @@ from wideboy.config import (
     CANVAS_SIZE,
     MATRIX_ENABLED,
     MQTT_TOPIC_PREFIX,
+    matrix_options,
 )
 from wideboy.utils.device import DEVICE_ID
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
@@ -29,6 +30,8 @@ from wideboy.utils.pygame import (
     clock_tick,
 )
 from wideboy.utils.state import STATE
+
+from wideboy.controller import Controller
 from wideboy.scenes._utils import SceneManager
 from wideboy.scenes.blank import BlankScene
 from wideboy.scenes.default import DefaultScene
@@ -41,6 +44,23 @@ logger = logging.getLogger(_APP_NAME)
 # Startup
 
 intro_debug()
+
+# Controller
+
+"""
+options = {
+    "display": {
+        "enabled": False,
+        "options": matrix_options,
+        "size": (64 * 12, 64 * 1),
+        "panel_size": (64, 64),
+    }
+}
+
+controller = Controller(options)
+print(controller.display.matrix)
+assert False
+"""
 
 # PyGame & Display
 
