@@ -67,7 +67,7 @@ class MQTTClient:
     def _on_message(self, client, userdata, msg):
         topic, payload = str(msg.topic), msg.payload.decode("utf-8")
         logger.debug(
-            f"mqtt:message topic={topic} payload={payload} client={client} userdata={userdata}"
+            f"mqtt:message topic={topic} payload={payload} userdata={userdata}"
         )
         pygame.event.post(
             pygame.event.Event(EVENT_MQTT_MESSAGE, dict(topic=topic, payload=payload))
