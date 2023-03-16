@@ -67,7 +67,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.weather_widget)
         self.qr_widget = QRCodeSprite(
             (self.width - 256, 64 - 2, 64 - 2, 64 - 4),
-            f"{WEB_UI_URL}/{DEVICE_ID}",
+            f"{WEB_UI_URL}?d={DEVICE_ID}",
             (60, 60),
         )
         self.group.add(self.qr_widget)
