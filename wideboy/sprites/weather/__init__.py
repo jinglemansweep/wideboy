@@ -7,6 +7,7 @@ from wideboy.sprites._base import BaseSprite
 from wideboy.utils.images import render_text, load_resize_image
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.utils.state import StateStore
+from wideboy.config import IMAGE_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,6 @@ class WeatherSprite(BaseSprite):
         self,
         rect: pygame.rect.Rect,
         state: StateStore,
-        image_path: str,
         color_bg: pygame.color.Color = (0, 0, 0, 192),
         color_temp: pygame.color.Color = (255, 255, 255, 255),
         color_rain_prob: pygame.color.Color = (255, 255, 0, 255),
@@ -26,7 +26,6 @@ class WeatherSprite(BaseSprite):
         super().__init__(rect, state)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.font_temp = pygame.font.SysFont("", 20)
-        self.image_path = image_path
         self.color_bg = color_bg
         self.color_temp = color_temp
         self.color_rain_prob = color_rain_prob
@@ -48,7 +47,7 @@ class WeatherSprite(BaseSprite):
         self.image.fill(self.color_bg)
         if self.state.weather_summary is not None:
             icon_filename = os.path.join(
-                self.image_path, "icons", "weather", f"{self.state.weather_summary}.png"
+                IMAGE_PATH, "icons", "weather", f"{self.state.weather_summary}.png"
             )
             self.icon_summary = load_resize_image(icon_filename, (72, 72))
             self.image.blit(self.icon_summary, (-4, -6))

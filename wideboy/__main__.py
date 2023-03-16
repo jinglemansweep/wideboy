@@ -13,21 +13,18 @@ from wideboy.config import (
     LOG_DEBUG,
     CANVAS_SIZE,
     MATRIX_ENABLED,
-    IMAGE_PATH,
-    BACKGROUND_CHANGE_INTERVAL_MINS,
 )
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.hass import setup_hass, configure_entity, EVENT_HASS_COMMAND
 from wideboy.utils.mqtt import setup_mqtt
-from wideboy.utils.tasks import fetch_weather
+from wideboy.scenes.default.tasks import fetch_weather
 from wideboy.utils.pygame import (
     setup_pygame,
     process_pygame_events,
     main_entrypoint,
     run_loop,
-    loop_debug,
     clock_tick,
 )
 from wideboy.utils.state import state
@@ -97,17 +94,8 @@ async def start_main_loop():
 
     loop = asyncio.get_event_loop()
 
-    asyncio.create_task(fetch_weather(loop, state))
-
     scene_manager = SceneManager()
-    scene_manager.add(
-        DefaultScene(
-            screen,
-            state,
-            image_path=IMAGE_PATH,
-            background_change_interval_mins=BACKGROUND_CHANGE_INTERVAL_MINS,
-        )
-    )
+    scene_manager.add(DefaultScene(screen, state))
     scene_manager.add(BlankScene(screen, state))
     scene_manager.run("default")
 

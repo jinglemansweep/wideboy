@@ -7,6 +7,7 @@ from typing import Optional
 from wideboy.sprites._base import BaseSprite
 from wideboy.utils.images import glob_files, load_resize_image, tile_surface
 from wideboy.utils.state import StateStore
+from wideboy.config import IMAGE_PATH
 
 logger = logging.getLogger("sprites.background")
 
@@ -16,13 +17,11 @@ class ImageSprite(BaseSprite):
         self,
         rect: pygame.Rect,
         state: StateStore,
-        image_path: str,
         tile_size: tuple[int, int],
         fill_size: tuple[int, int],
         alpha: int = 255,
     ) -> None:
         super().__init__(rect, state)
-        self.image_path = image_path
         self.tile_size = tile_size
         self.fill_size = fill_size
         self.alpha = alpha
@@ -44,9 +43,7 @@ class ImageSprite(BaseSprite):
             self.image_index = 0
 
     def glob_images(self, shuffle: bool = False):
-        self.image_files = glob_files(
-            os.path.join(self.image_path, "backgrounds"), "*.png"
-        )
+        self.image_files = glob_files(os.path.join(IMAGE_PATH, "backgrounds"), "*.png")
         if shuffle:
             random.shuffle(self.image_files)
         if self.image_index > len(self.image_files) - 1:

@@ -6,20 +6,27 @@ from datetime import datetime
 from pprint import pprint
 from wideboy.utils.state import StateStore
 from wideboy.utils.helpers import async_fetch
-from wideboy.config import (
-    WEATHER_FETCH_INTERVAL,
-    WEATHER_LATITUDE,
-    WEATHER_LONGITUDE,
+from wideboy.config import get_config_env_var
+
+SCENE_BACKGROUND_CHANGE_INTERVAL_MINS = int(
+    get_config_env_var("SCENE_BACKGROUND_CHANGE_INTERVAL_MINS", 5)
 )
+SCENE_WEATHER_FETCH_INTERVAL = int(
+    get_config_env_var("SCENE_WEATHER_FETCH_INTERVAL", 600)
+)
+SCENE_WEATHER_LATITUDE = float(get_config_env_var("SCENE_WEATHER_LATITUDE", 52.0557))
+SCENE_WEATHER_LONGITUDE = float(get_config_env_var("SCENE_WEATHER_LONGITUDE", 1.1153))
+
 
 logger = logging.getLogger(__name__)
 
 OPENMETEO_API_URL = "https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true&hourly=temperature_2m,precipitation_probability"
 
 
-async def fetch_weather(loop: asyncio.AbstractEventLoop, state: StateStore):
+async def fetch_weather(state: StateStore):
+    loop = asyncio.get_event_loop()
     url = OPENMETEO_API_URL.format(
-        latitude=WEATHER_LATITUDE, longitude=WEATHER_LONGITUDE
+        latitude=SCENE_WEATHER_LATITUDE, longitude=SCENE_WEATHER_LONGITUDE
     )
     logger.info(f"task:fetch:weather url={url}")
     try:
@@ -40,7 +47,7 @@ async def fetch_weather(loop: asyncio.AbstractEventLoop, state: StateStore):
         )
     except Exception as e:
         logger.error("task:fetch:weather:error", exc_info=e)
-    await asyncio.sleep(WEATHER_FETCH_INTERVAL)
+    await asyncio.sleep(SCENE_WEATHER_FETCH_INTERVAL)
     asyncio.create_task(fetch_weather(loop, state))
 
 

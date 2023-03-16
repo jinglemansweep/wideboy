@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import pygame
 
@@ -7,8 +8,10 @@ from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes._base import BaseScene
+from wideboy.scenes.default.tasks import fetch_weather
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
 from wideboy.utils.state import StateStore
+from wideboy.config import IMAGE_PATH, get_config_env_var
 
 
 logger = logging.getLogger(__name__)
@@ -21,14 +24,10 @@ class DefaultScene(BaseScene):
         self,
         surface: pygame.surface.Surface,
         state: StateStore,
-        image_path: str,
         bg_color: pygame.color.Color = (0, 0, 0),
-        background_change_interval_mins: int = 5,
     ) -> None:
-
-        self.image_path = image_path
-        self.background_change_interval_mins = background_change_interval_mins
         super().__init__(surface, state, bg_color)
+        asyncio.create_task(fetch_weather(state))
 
     def setup(self):
         super().setup()
@@ -41,7 +40,6 @@ class DefaultScene(BaseScene):
                 self.height,
             ),
             self.state,
-            self.image_path,
             (self.height * 2, self.height * 2),
             (self.width, self.height),
             255,
@@ -63,7 +61,6 @@ class DefaultScene(BaseScene):
         self.weather_widget = WeatherSprite(
             (self.width - 192, 2, 64 - 2, 64 - 4),
             self.state,
-            image_path=self.image_path,
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
