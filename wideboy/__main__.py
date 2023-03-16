@@ -18,8 +18,7 @@ from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_sur
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.hass import setup_hass, configure_entity, EVENT_HASS_COMMAND
-from wideboy.utils.mqtt import setup_mqtt
-from wideboy.scenes.default.tasks import fetch_weather
+from wideboy.utils.mqtt import MQTT
 from wideboy.utils.pygame import (
     setup_pygame,
     process_pygame_events,
@@ -48,21 +47,16 @@ blank_screen = blank_surface(CANVAS_SIZE)
 if MATRIX_ENABLED:
     matrix, matrix_buffer = setup_led_matrix()
 
-# MQTT
-
-mqtt = setup_mqtt()
-
 # HASS
 
 hass = setup_hass()
 
 switch_power_state_topic = configure_entity(
-    mqtt,
     "master",
     "light",
     dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
 )
-mqtt.publish(switch_power_state_topic, {"state": "ON", "brightness": 128})
+MQTT.publish(switch_power_state_topic, {"state": "ON", "brightness": 128})
 
 # Events
 
@@ -77,7 +71,7 @@ def process_events(events: list[pygame.event.Event]):
                 if "brightness" in event.payload:
                     STATE.brightness = int(event.payload.get("brightness"))
                     matrix.brightness = (STATE.brightness / 255) * 100
-                mqtt.publish(switch_power_state_topic, event.payload)
+                MQTT.publish(switch_power_state_topic, event.payload)
                 logger.info(f"power:master state={event.payload}")
 
 
@@ -115,7 +109,6 @@ async def start_main_loop():
             )
 
         scene_manager.debug(clock, delta)
-        mqtt.loop(0.003)
         await asyncio.sleep(0)
 
 

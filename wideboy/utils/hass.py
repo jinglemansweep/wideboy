@@ -6,14 +6,14 @@ from typing import Any, Optional
 from homeassistant_api import Client
 
 from wideboy import _APP_NAME, _APP_VERSION, _APP_AUTHOR
-from wideboy.config import HASS_URL, HASS_API_TOKEN
+from wideboy.config import HASS_URL, HASS_API_TOKEN, HASS_TOPIC_PREFIX
 from wideboy.utils.helpers import get_device_id
+from wideboy.utils.mqtt import MQTT
 
 EVENT_HASS_COMMAND = pygame.USEREVENT + 31
 
 logger = logging.getLogger(__name__)
 
-DISCOVERY_PREFIX = "homeassistant"
 DEVICE_ID = get_device_id()
 MODEL_NAME = _APP_NAME
 MANUFACTURER_NAME = _APP_AUTHOR
@@ -26,7 +26,6 @@ def setup_hass() -> Client:
 
 
 def configure_entity(
-    mqtt_client: MQTTClient,
     name: str,
     device_class: str,
     options: Optional[dict] = None,
@@ -49,23 +48,9 @@ def configure_entity(
         schema="json",
     )
     config.update(options)
-    mqtt_client.publish(config_topic, config)
-    mqtt_client.subscribe(command_topic, 1)
+    MQTT.publish(config_topic, config)
+    MQTT.subscribe(command_topic, 1)
     return state_topic
-
-
-def on_mqtt_message(topic: str, payload_json: str) -> None:
-    if not topic.startswith(f"{DISCOVERY_PREFIX}"):
-        return
-    _, device_class, entity_id, _ = topic.split("/")
-    name = entity_id.replace(f"{_APP_NAME}_{DEVICE_ID}_", "")
-    payload = json.loads(payload_json)
-    logger.debug(
-        f"hass:mqtt:message device_class={device_class} entity_id={entity_id} name={name} payload={payload_json}"
-    )
-    pygame.event.post(
-        pygame.event.Event(EVENT_HASS_COMMAND, dict(name=name, payload=payload))
-    )
 
 
 def build_device_info() -> dict:
@@ -84,4 +69,4 @@ def build_entity_id(name: str) -> str:
 
 
 def build_entity_topic_prefix(device_class: str, full_name) -> str:
-    return f"{DISCOVERY_PREFIX}/{device_class}/{full_name}"
+    return f"{HASS_TOPIC_PREFIX}/{device_class}/{full_name}"

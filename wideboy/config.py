@@ -25,6 +25,7 @@ MQTT_PORT = int(get_config_env_var("MQTT_PORT", 1883))
 MQTT_USER = get_config_env_var("MQTT_USER", None)
 MQTT_PASSWORD = get_config_env_var("MQTT_PASSWORD", None)
 
+HASS_TOPIC_PREFIX = get_config_env_var("HASS_TOPIC_PREFIX", "homeassistant")
 HASS_URL = get_config_env_var("HASS_URL", None)
 HASS_API_TOKEN = get_config_env_var("HASS_API_TOKEN", None)
 

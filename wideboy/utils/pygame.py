@@ -9,7 +9,7 @@ from typing import Callable
 
 from wideboy import _APP_DESCRIPTION
 from wideboy.utils.helpers import EpochEmitter
-from wideboy.utils.mqtt import EVENT_MQTT_MESSAGE
+from wideboy.utils.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.utils.hass import EVENT_HASS_COMMAND
 from wideboy.config import (
     PROFILING,
@@ -82,4 +82,5 @@ def run_loop(loop_func: Callable) -> None:
 
 
 def clock_tick(clock: pygame.time.Clock) -> float:
+    MQTT.loop(0.003)
     return clock.tick() / 1000
