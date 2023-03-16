@@ -19,6 +19,7 @@ schedule = "^1.1.0"
 paho-mqtt = "^1.6.1"
 simplejson = "^3.18.3"
 homeassistant_api = { git = "https://github.com/GrandMoff100/HomeAssistantAPI.git" }
+qrcode = {extras = ["pil"], version = "^7.4.2"}
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

@@ -30,6 +30,7 @@ HASS_URL = get_config_env_var("HASS_URL", None)
 HASS_API_TOKEN = get_config_env_var("HASS_API_TOKEN", None)
 
 IMAGE_PATH = get_config_env_var("IMAGE_PATH", "images")
+WEB_UI_URL = get_config_env_var("WEB_UI_URL", "http://wideboy.local")
 
 DEBUG = get_config_env_var("DEBUG", "false") == "true"
 LOG_DEBUG = get_config_env_var("LOG_LEVEL", "info").lower() == "debug"

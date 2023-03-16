@@ -5,13 +5,15 @@ import pygame
 from wideboy.utils.animation import Act, Animation
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
+from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes._base import BaseScene
 from wideboy.scenes.default.tasks import fetch_weather
+from wideboy.utils.device import DEVICE_ID
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
 
-from wideboy.config import get_config_env_var
+from wideboy.config import WEB_UI_URL, get_config_env_var
 
 SCENE_BACKGROUND_CHANGE_INTERVAL_MINS = int(
     get_config_env_var("SCENE_BACKGROUND_CHANGE_INTERVAL_MINS", 5)
@@ -63,6 +65,10 @@ class DefaultScene(BaseScene):
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
+        self.qr_widget = QRCodeSprite(
+            (0 - 64, 2, 60, 60), f"{WEB_UI_URL}/{DEVICE_ID}", (60, 60)
+        )
+        self.group.add(self.qr_widget)
         # Setup text widget
         # self.text_widget = TextSprite((4, self.height, 512 - 8, 56), self.state)
         # self.group.add(self.text_widget)
@@ -73,6 +79,8 @@ class DefaultScene(BaseScene):
         self.act_weather_show.start()
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
+        self.act_qrcode_show = self.build_qrcode_show_act()
+        self.act_qrcode_show.start()
         # self.act_ticker_change = None  # self.build_ticker_change_act()
         # self.act_ticker_change.start()
 
@@ -88,6 +96,8 @@ class DefaultScene(BaseScene):
             self.act_weather_show.update()
         if self.act_background_change is not None:
             self.act_background_change.update()
+        if self.act_qrcode_show is not None:
+            self.act_qrcode_show.update()
         # if self.act_ticker_change is not None:
         #    self.act_ticker_change.update()
 
@@ -114,6 +124,21 @@ class DefaultScene(BaseScene):
                     Animation(
                         self.clock_widget,
                         (self.width - 128, 2),
+                        64,
+                    ),
+                ),
+            ],
+        )
+
+    def build_qrcode_show_act(self) -> Act:
+        return Act(
+            64,
+            [
+                (
+                    0,
+                    Animation(
+                        self.qr_widget,
+                        (2, 2),
                         64,
                     ),
                 ),
