@@ -111,7 +111,7 @@ async def start_main_loop():
 
         if MATRIX_ENABLED:
             matrix_buffer = render_led_matrix(
-                matrix, screen if state.power else blank_screen, matrix_buffer
+                matrix, screen if STATE.power else blank_screen, matrix_buffer
             )
 
         scene_manager.debug(clock, delta)
