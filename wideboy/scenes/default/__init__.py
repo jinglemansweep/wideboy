@@ -10,9 +10,12 @@ from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes._base import BaseScene
 from wideboy.scenes.default.tasks import fetch_weather
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
-from wideboy.utils.state import StateStore
-from wideboy.config import IMAGE_PATH, get_config_env_var
 
+from wideboy.config import get_config_env_var
+
+SCENE_BACKGROUND_CHANGE_INTERVAL_MINS = int(
+    get_config_env_var("SCENE_BACKGROUND_CHANGE_INTERVAL_MINS", 5)
+)
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +26,10 @@ class DefaultScene(BaseScene):
     def __init__(
         self,
         surface: pygame.surface.Surface,
-        state: StateStore,
         bg_color: pygame.color.Color = (0, 0, 0),
     ) -> None:
-        super().__init__(surface, state, bg_color)
-        asyncio.create_task(fetch_weather(state))
+        super().__init__(surface, bg_color)
+        asyncio.create_task(fetch_weather())
 
     def setup(self):
         super().setup()
@@ -39,7 +41,6 @@ class DefaultScene(BaseScene):
                 self.width,
                 self.height,
             ),
-            self.state,
             (self.height * 2, self.height * 2),
             (self.width, self.height),
             255,
@@ -53,14 +54,12 @@ class DefaultScene(BaseScene):
                 128 - 2,
                 self.height - 4,
             ),
-            self.state,
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
             (self.width - 192, 2, 64 - 2, 64 - 4),
-            self.state,
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
@@ -99,7 +98,7 @@ class DefaultScene(BaseScene):
         for event in events:
             if (
                 event.type == EVENT_EPOCH_MINUTE
-                and event.unit % self.background_change_interval_mins == 0
+                and event.unit % SCENE_BACKGROUND_CHANGE_INTERVAL_MINS == 0
             ):
                 self.act_background_change = self.build_background_change_act()
                 self.act_background_change.start()

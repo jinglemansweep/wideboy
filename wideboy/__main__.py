@@ -27,8 +27,8 @@ from wideboy.utils.pygame import (
     run_loop,
     clock_tick,
 )
-from wideboy.utils.state import state
-from wideboy.utils.scenes import SceneManager
+from wideboy.utils.state import STATE
+from wideboy.scenes._utils import SceneManager
 from wideboy.scenes.blank import BlankScene
 from wideboy.scenes.default import DefaultScene
 
@@ -68,14 +68,14 @@ mqtt.publish(switch_power_state_topic, {"state": "ON", "brightness": 128})
 
 
 def process_events(events: list[pygame.event.Event]):
-    global state, matrix
+    global STATE, matrix
     for event in events:
         if event.type == EVENT_HASS_COMMAND:
             logger.debug(f"hass:action name={event.name} payload={event.payload}")
             if event.name == "master":
-                state.power = event.payload.get("state") == "ON"
+                STATE.power = event.payload.get("state") == "ON"
                 if "brightness" in event.payload:
-                    state.brightness = int(event.payload.get("brightness"))
+                    STATE.brightness = int(event.payload.get("brightness"))
                     matrix.brightness = (state.brightness / 255) * 100
                 mqtt.publish(switch_power_state_topic, event.payload)
                 logger.info(f"power:master state={event.payload}")
@@ -95,8 +95,8 @@ async def start_main_loop():
     loop = asyncio.get_event_loop()
 
     scene_manager = SceneManager()
-    scene_manager.add(DefaultScene(screen, state))
-    scene_manager.add(BlankScene(screen, state))
+    scene_manager.add(DefaultScene(screen))
+    scene_manager.add(BlankScene(screen))
     scene_manager.run("default")
 
     while running:
@@ -114,7 +114,7 @@ async def start_main_loop():
                 matrix, screen if state.power else blank_screen, matrix_buffer
             )
 
-        scene_manager.debug(clock, delta, state)
+        scene_manager.debug(clock, delta)
         mqtt.loop(0.003)
         await asyncio.sleep(0)
 

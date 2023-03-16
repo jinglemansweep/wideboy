@@ -11,12 +11,11 @@ from wideboy import _APP_DESCRIPTION
 from wideboy.utils.helpers import EpochEmitter
 from wideboy.utils.mqtt import EVENT_MQTT_MESSAGE
 from wideboy.utils.hass import EVENT_HASS_COMMAND
-from wideboy.utils.state import state, StateStore
 from wideboy.config import (
     PROFILING,
 )
 
-DISPLAY_FLAGS = RESIZABLE  # | SCALED | DOUBLEBUF
+DISPLAY_FLAGS = RESIZABLE | SCALED | DOUBLEBUF
 
 logger = logging.getLogger(__name__)
 
@@ -80,17 +79,6 @@ def run_loop(loop_func: Callable) -> None:
             asyncio.run(loop_func())
         except Exception as e:
             logging.error(traceback.format_exc())
-
-
-def loop_debug(
-    frame: int,
-    clock: pygame.time.Clock,
-    delta: float,
-    state: StateStore,
-) -> None:
-    logger.info(
-        f"loop:debug frame={frame} fps={clock.get_fps()} delta={delta} state={state}"
-    )
 
 
 def clock_tick(clock: pygame.time.Clock) -> float:

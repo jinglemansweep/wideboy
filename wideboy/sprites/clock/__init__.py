@@ -4,7 +4,6 @@ from datetime import datetime
 from pygame import SRCALPHA
 from wideboy.utils.images import render_text
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
-from wideboy.utils.state import StateStore
 from wideboy.sprites._base import BaseSprite
 
 
@@ -17,12 +16,11 @@ class ClockSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        state: StateStore,
         color_bg: pygame.color.Color = (0, 0, 0, 255),
         color_time: pygame.color.Color = (0, 255, 0, 255),
         color_date: pygame.color.Color = (255, 255, 255, 255),
     ) -> None:
-        super().__init__(rect, state)
+        super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
         self.color_time = color_time

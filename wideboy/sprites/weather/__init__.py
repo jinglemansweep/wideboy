@@ -6,7 +6,7 @@ from pygame import SRCALPHA
 from wideboy.sprites._base import BaseSprite
 from wideboy.utils.images import render_text, load_resize_image
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
-from wideboy.utils.state import StateStore
+from wideboy.utils.state import STATE
 from wideboy.config import IMAGE_PATH
 
 logger = logging.getLogger(__name__)
@@ -18,12 +18,11 @@ class WeatherSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        state: StateStore,
         color_bg: pygame.color.Color = (0, 0, 0, 192),
         color_temp: pygame.color.Color = (255, 255, 255, 255),
         color_rain_prob: pygame.color.Color = (255, 255, 0, 255),
     ) -> None:
-        super().__init__(rect, state)
+        super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.font_temp = pygame.font.SysFont("", 20)
         self.color_bg = color_bg
@@ -45,16 +44,16 @@ class WeatherSprite(BaseSprite):
 
     def render(self) -> None:
         self.image.fill(self.color_bg)
-        if self.state.weather_summary is not None:
+        if STATE.weather_summary is not None:
             icon_filename = os.path.join(
-                IMAGE_PATH, "icons", "weather", f"{self.state.weather_summary}.png"
+                IMAGE_PATH, "icons", "weather", f"{STATE.weather_summary}.png"
             )
             self.icon_summary = load_resize_image(icon_filename, (72, 72))
             self.image.blit(self.icon_summary, (-4, -6))
-        if self.state.temperature is not None:
+        if STATE.temperature is not None:
             temp_str = (
-                f"{int(round(self.state.temperature, 0))}"
-                if self.state.temperature is not None
+                f"{int(round(STATE.temperature, 0))}"
+                if STATE.temperature is not None
                 else "?"
             )
             temperature_text = render_text(
@@ -74,12 +73,12 @@ class WeatherSprite(BaseSprite):
             )
             self.image.blit(degree_text, (temperature_text.get_width() - 2, 29))
         if (
-            self.state.rain_probability is not None
-            and self.state.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD
+            STATE.rain_probability is not None
+            and STATE.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD
         ):
             rain_prob_str = (
-                f"{self.state.rain_probability}%"
-                if self.state.rain_probability is not None
+                f"{STATE.rain_probability}%"
+                if STATE.rain_probability is not None
                 else "?"
             )
             rain_prob_text = render_text(

@@ -1,8 +1,6 @@
-import asyncio
 import logging
 import pygame
-
-from wideboy.utils.state import StateStore
+from wideboy.utils.state import STATE
 
 logger = logging.getLogger(__name__)
 
@@ -15,11 +13,9 @@ class BaseScene:
     def __init__(
         self,
         surface: pygame.surface.Surface,
-        state: StateStore,
         bg_color: pygame.color.Color,
     ) -> None:
         self.surface = surface
-        self.state = state
         self.background = build_background(
             (surface.get_rect().width, surface.get_rect().height), bg_color
         )
@@ -52,12 +48,11 @@ class BaseScene:
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         pass
 
-    def debug(
-        self, frame: int, clock: pygame.time.Clock, delta: float, state: StateStore
-    ) -> None:
+    def debug(self, frame: int, clock: pygame.time.Clock, delta: float) -> None:
+        state = dict()  # TODO
         if frame % self.debug_every_frame == 0:
             logger.debug(
-                f"scene:debug frame={frame} fps={clock.get_fps()} delta={delta} state={state}"
+                f"scene:debug frame={frame} fps={clock.get_fps()} delta={delta} state={STATE}"
             )
 
     @property

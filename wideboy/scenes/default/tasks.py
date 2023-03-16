@@ -4,7 +4,7 @@ import json
 import logging
 from datetime import datetime
 from pprint import pprint
-from wideboy.utils.state import StateStore
+from wideboy.utils.state import STATE
 from wideboy.utils.helpers import async_fetch
 from wideboy.config import get_config_env_var
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 OPENMETEO_API_URL = "https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true&hourly=temperature_2m,precipitation_probability"
 
 
-async def fetch_weather(state: StateStore):
+async def fetch_weather():
     loop = asyncio.get_event_loop()
     url = OPENMETEO_API_URL.format(
         latitude=SCENE_WEATHER_LATITUDE, longitude=SCENE_WEATHER_LONGITUDE
@@ -37,18 +37,18 @@ async def fetch_weather(state: StateStore):
         now = datetime.now()
         next_hour_str = now.strftime("%Y-%m-%dT%H:00")
         idx = data["hourly"]["time"].index(next_hour_str)
-        state.weather_summary = weather_code_to_icon(
+        STATE.weather_summary = weather_code_to_icon(
             data["current_weather"]["weathercode"]
         )
-        state.temperature = data["hourly"]["temperature_2m"][idx]
-        state.rain_probability = data["hourly"]["precipitation_probability"][idx]
+        STATE.temperature = data["hourly"]["temperature_2m"][idx]
+        STATE.rain_probability = data["hourly"]["precipitation_probability"][idx]
         logger.info(
-            f"weather:summary summary={state.weather_summary} temperature={state.temperature} rain_probability={state.rain_probability}"
+            f"weather:summary summary={STATE.weather_summary} temperature={STATE.temperature} rain_probability={STATE.rain_probability}"
         )
     except Exception as e:
         logger.error("task:fetch:weather:error", exc_info=e)
     await asyncio.sleep(SCENE_WEATHER_FETCH_INTERVAL)
-    asyncio.create_task(fetch_weather(loop, state))
+    asyncio.create_task(fetch_weather(loop))
 
 
 def weather_code_to_icon(code: int) -> str:

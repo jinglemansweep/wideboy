@@ -4,7 +4,6 @@ import random
 from pygame import SRCALPHA
 from wideboy.utils.images import render_text
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND, EVENT_EPOCH_MINUTE
-from wideboy.utils.state import StateStore
 from wideboy.sprites._base import BaseSprite
 
 
@@ -67,7 +66,6 @@ class TextSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        state: StateStore,
         heading_font: str = "fonts/bitstream-vera.ttf",
         heading_font_size: int = 20,
         paragraph_font: str = "fonts/bitstream-vera.ttf",
@@ -76,7 +74,7 @@ class TextSprite(BaseSprite):
         color_fg: pygame.color.Color = (255, 255, 255, 255),
         color_outline: pygame.color.Color = (0, 0, 0, 255),
     ) -> None:
-        super().__init__(rect, state)
+        super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.heading_font = heading_font
         self.heading_font_size = heading_font_size

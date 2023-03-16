@@ -13,4 +13,4 @@ class StateStore:
         return f"State(power={self.power} brightness={self.brightness} weather_summary={self.weather_summary} temp={self.temperature} rain_prob={self.rain_probability} news_items={self.news_items})"
 
 
-state = StateStore()
+STATE = StateStore()

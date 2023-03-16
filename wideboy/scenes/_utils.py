@@ -55,5 +55,5 @@ class SceneManager:
     def render(self, *args, **kwargs):
         return self.scene.render(*args, **kwargs)
 
-    def debug(self, clock: pygame.time.Clock, delta: float, state: StateStore):
-        return self.scene.debug(self.frame, clock, delta, state)
+    def debug(self, clock: pygame.time.Clock, delta: float):
+        return self.scene.debug(self.frame, clock, delta)
