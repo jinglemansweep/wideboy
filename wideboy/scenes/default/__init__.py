@@ -108,12 +108,12 @@ class DefaultScene(BaseScene):
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         super().handle_events(events)
         for event in events:
-            if (
-                event.type == EVENT_EPOCH_MINUTE
-                and event.unit % SCENE_BACKGROUND_CHANGE_INTERVAL_MINS == 0
-            ):
-                self.act_background_change = self.build_background_change_act()
-                self.act_background_change.start()
+            if event.type == EVENT_EPOCH_MINUTE:
+                if event.unit % 5 == 0:
+                    self.background_widget.glob_images()
+                if event.unit % SCENE_BACKGROUND_CHANGE_INTERVAL_MINS == 0:
+                    self.act_background_change = self.build_background_change_act()
+                    self.act_background_change.start()
 
     # Acts
 

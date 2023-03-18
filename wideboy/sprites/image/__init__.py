@@ -24,7 +24,7 @@ class ImageSprite(BaseSprite):
         self.fill_size = fill_size
         self.alpha = alpha
         self.image_index = 0
-        self.glob_images(True)
+        self.glob_images()
         self.render_next_image()
         self.dirty = 2
         logger.debug(f"sprite:image files={len(self.image_files)}")
