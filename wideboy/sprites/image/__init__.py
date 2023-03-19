@@ -5,7 +5,12 @@ import random
 from typing import Optional
 
 from wideboy.sprites._base import BaseSprite
-from wideboy.utils.images import glob_files, load_resize_image, tile_surface
+from wideboy.utils.images import (
+    glob_files,
+    load_resize_image,
+    tile_surface,
+    render_text,
+)
 from wideboy.config import IMAGE_PATH
 
 logger = logging.getLogger("sprites.background")
@@ -35,7 +40,13 @@ class ImageSprite(BaseSprite):
         logger.debug(
             f"sprite:image:next index={self.image_index} filename={filename} tile_size={tile_size}"
         )
-        self.image = self.load_image(filename, tile_size=(tile_size, tile_size))
+        file_image = self.load_image(filename, tile_size=(tile_size, tile_size))
+        label_text = (
+            os.path.splitext(os.path.basename(filename))[0].replace("t_", "").upper()
+        )
+        label = render_text(label_text, "fonts/bitstream-vera.ttf", 10, (255, 255, 0))
+        file_image.blit(label, (0, self.rect.height - 14))
+        self.image = file_image
         self.image_index += 1
         if self.image_index > len(self.image_files) - 1:
             self.image_index = 0
