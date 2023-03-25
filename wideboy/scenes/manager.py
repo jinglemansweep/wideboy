@@ -11,14 +11,9 @@ logger = logging.getLogger(__name__)
 class SceneManager:
     scenes: set[BaseScene]
 
-    def __init__(self) -> None:
-        self.scenes = set()
-        self.scene_index: Optional[int] = None
-
-    def add(self, scene: BaseScene) -> None:
-        if not len(self.scenes):
-            self.scene_index = 0
-        self.scenes.add(scene)
+    def __init__(self, scenes: set[BaseScene]) -> None:
+        self.scenes: set[BaseScene] = scenes
+        self.scene_index: int = 0
 
     def run(self, name: str) -> None:
         idx = self._find_scene(name)
@@ -26,8 +21,6 @@ class SceneManager:
             self.scene_index = idx
 
     def next(self) -> None:
-        if not self.scene_index:
-            return
         next_idx: int = self.scene_index + 1
         if next_idx + 1 > len(self.scenes):
             next_idx = 0
@@ -46,7 +39,7 @@ class SceneManager:
 
     @property
     def scene(self) -> BaseScene:
-        return list(self.scenes)[self.scene_index or 0]
+        return list(self.scenes)[self.scene_index]
 
     @property
     def frame(self) -> Optional[int]:

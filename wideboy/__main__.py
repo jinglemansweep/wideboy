@@ -100,9 +100,7 @@ async def start_main_loop():
 
     loop = asyncio.get_event_loop()
 
-    scene_manager = SceneManager()
-    scene_manager.add(DefaultScene(screen))
-    scene_manager.add(BlankScene(screen))
+    scene_manager = SceneManager(set([DefaultScene(screen), BlankScene(screen)]))
     scene_manager.run("default")
 
     while running:
