@@ -48,7 +48,7 @@ async def fetch_weather():
     except Exception as e:
         logger.error("task:fetch:weather:error", exc_info=e)
     await asyncio.sleep(SCENE_WEATHER_FETCH_INTERVAL)
-    asyncio.create_task(fetch_weather(loop))
+    asyncio.create_task(fetch_weather())
 
 
 def weather_code_to_icon(code: int) -> str:
