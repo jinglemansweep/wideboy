@@ -4,8 +4,8 @@ import pygame
 import random
 from typing import Optional
 
-from wideboy.sprites._base import BaseSprite
-from wideboy.utils.images import (
+from wideboy.sprites.base import BaseSprite
+from wideboy.sprites.images import (
     glob_files,
     load_resize_image,
     tile_surface,
@@ -44,7 +44,9 @@ class ImageSprite(BaseSprite):
         label_text = (
             os.path.splitext(os.path.basename(filename))[0].replace("t_", "").upper()
         )
-        label = render_text(label_text, "fonts/bitstream-vera.ttf", 10, (255, 255, 0))
+        label = render_text(
+            label_text, "fonts/bitstream-vera.ttf", 10, pygame.Color(255, 255, 0)
+        )
         file_image.blit(label, (0, self.rect.height - 14))
         self.image = file_image
         self.image_index += 1

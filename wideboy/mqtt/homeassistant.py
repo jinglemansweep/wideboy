@@ -7,8 +7,8 @@ from homeassistant_api import Client
 
 from wideboy import _APP_NAME, _APP_VERSION, _APP_AUTHOR
 from wideboy.config import HASS_URL, HASS_API_TOKEN, MQTT_TOPIC_PREFIX
-from wideboy.utils.device import DEVICE_ID
-from wideboy.utils.mqtt import MQTT
+from wideboy.constants import DEVICE_ID
+from wideboy.mqtt import MQTT
 
 logger = logging.getLogger(__name__)
 

@@ -2,16 +2,16 @@ import asyncio
 import logging
 import pygame
 
-from wideboy.utils.animation import Act, Animation
+from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
-from wideboy.scenes._base import BaseScene
+from wideboy.scenes.base import BaseScene
 from wideboy.scenes.default.tasks import fetch_weather
-from wideboy.utils.device import DEVICE_ID
-from wideboy.utils.pygame import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
+from wideboy.constants import DEVICE_ID
+from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 
 from wideboy.config import WEB_UI_URL, get_config_env_var
 
@@ -37,7 +37,7 @@ class DefaultScene(BaseScene):
         super().setup()
         # Setup background widget
         self.background_widget = ImageSprite(
-            (
+            pygame.Rect(
                 0,
                 0 - self.height,
                 self.width,
@@ -50,7 +50,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.background_widget)
         # Setup clock widget
         self.clock_widget = ClockSprite(
-            (
+            pygame.Rect(
                 self.width - 128,
                 2,
                 128 - 2,
@@ -61,12 +61,12 @@ class DefaultScene(BaseScene):
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            (self.width - 192, 2, 64 - 2, 64 - 4),
+            pygame.Rect(self.width - 192, 2, 64 - 2, 64 - 4),
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
         self.qr_widget = QRCodeSprite(
-            (self.width - 256, 64 - 2, 64 - 2, 64 - 4),
+            pygame.Rect(self.width - 256, 64 - 2, 64 - 2, 64 - 4),
             f"{WEB_UI_URL}?d={DEVICE_ID}",
             (60, 60),
         )

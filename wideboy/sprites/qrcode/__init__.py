@@ -1,9 +1,8 @@
 import logging
 import pygame
 import qrcode
-from datetime import datetime
 from pygame import SRCALPHA
-from wideboy.sprites._base import BaseSprite
+from wideboy.sprites.base import BaseSprite
 
 
 logger = logging.getLogger("sprites.qrcode")

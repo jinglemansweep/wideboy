@@ -3,10 +3,10 @@ import os
 import pygame
 from typing import Optional
 from pygame import SRCALPHA
-from wideboy.sprites._base import BaseSprite
-from wideboy.utils.images import render_text, load_resize_image
+from wideboy.sprites.base import BaseSprite
+from wideboy.sprites.images import render_text, load_resize_image
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
-from wideboy.utils.state import STATE
+from wideboy.state import STATE
 from wideboy.config import IMAGE_PATH
 
 logger = logging.getLogger(__name__)

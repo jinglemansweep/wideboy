@@ -1,8 +1,8 @@
 import logging
 import pygame
 
-from wideboy.scenes._base import BaseScene
-from wideboy.sprites._base import BaseSprite
+from wideboy.scenes.base import BaseScene
+from wideboy.sprites.base import BaseSprite
 
 
 logger = logging.getLogger(__name__)
@@ -28,4 +28,4 @@ class BlankScene(BaseScene):
         bg_color: pygame.color.Color = (0, 0, 0),
     ) -> None:
         super().__init__(surface, bg_color)
-        self.group.add(FillSprite((0, 0, self.width, self.height)))
+        self.group.add(FillSprite(pygame.Rect(0, 0, self.width, self.height)))

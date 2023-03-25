@@ -9,8 +9,8 @@ from typing import Callable
 
 from wideboy import _APP_DESCRIPTION
 from wideboy.utils.helpers import EpochEmitter
-from wideboy.utils.mqtt import MQTT, EVENT_MQTT_MESSAGE
-from wideboy.utils.hass import EVENT_HASS_COMMAND
+from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
+from wideboy.mqtt.homeassistant import EVENT_HASS_COMMAND
 from wideboy.config import (
     PROFILING,
 )
@@ -26,6 +26,7 @@ EVENT_EPOCH_HOUR = pygame.USEREVENT + 12
 FPS = 50
 
 epoch_emitter = EpochEmitter()
+
 
 def setup_pygame(
     display_size: tuple[int, int]

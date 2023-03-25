@@ -1,14 +1,16 @@
 import logging
 import pygame
 from typing import Optional
-from wideboy.scenes._base import BaseScene
-from wideboy.utils.state import StateStore
+from .base import BaseScene
+from wideboy.state import StateStore
 
 
 logger = logging.getLogger(__name__)
 
 
 class SceneManager:
+    scenes: set[BaseScene]
+
     def __init__(self) -> None:
         self.scenes = set()
         self.scene_index: Optional[int] = None
@@ -47,13 +49,19 @@ class SceneManager:
 
     @property
     def frame(self) -> int:
+        if not self.scene:
+            return
         return self.scene.frame
 
     def update(self, *args, **kwargs):
         self.scene.update(*args, **kwargs)
 
     def render(self, *args, **kwargs):
+        if not self.scene:
+            return
         return self.scene.render(*args, **kwargs)
 
     def debug(self, clock: pygame.time.Clock, delta: float):
+        if not self.scene:
+            return
         return self.scene.debug(self.frame, clock, delta)

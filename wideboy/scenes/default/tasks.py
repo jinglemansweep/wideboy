@@ -3,8 +3,7 @@ import asyncio
 import json
 import logging
 from datetime import datetime
-from pprint import pprint
-from wideboy.utils.state import STATE
+from wideboy.state import STATE
 from wideboy.utils.helpers import async_fetch
 from wideboy.config import get_config_env_var
 

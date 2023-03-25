@@ -42,10 +42,10 @@ def tile_surface(surface: pygame.Surface, size: tuple[int, int]) -> pygame.Surfa
 
 def render_text(
     text: str,
-    font_filename: pygame.font.Font,
+    font_filename: str,
     font_size: int,
     color_fg: pygame.color.Color,
-    color_outline: pygame.color.Color = (0, 0, 0, 255),
+    color_outline: pygame.color.Color = pygame.color.Color(0, 0, 0, 255),
     antialias: bool = True,
 ) -> pygame.surface.Surface:
     font = pygame.font.Font(font_filename, font_size)

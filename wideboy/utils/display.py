@@ -31,7 +31,7 @@ def blank_surface(size: tuple[int, int]):
     return surface
 
 
-def wrap_surface_array(array: np.ndarray, new_shape: tuple[int, int]) -> np.array:
+def wrap_surface_array(array: Any, new_shape: tuple[int, int]) -> Any:
     row_size = array.shape[1]
     cols = new_shape[0]
     rows = new_shape[1] // row_size

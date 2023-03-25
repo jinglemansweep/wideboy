@@ -2,9 +2,9 @@ import logging
 import pygame
 import random
 from pygame import SRCALPHA
-from wideboy.utils.images import render_text
-from wideboy.utils.pygame import EVENT_EPOCH_SECOND, EVENT_EPOCH_MINUTE
-from wideboy.sprites._base import BaseSprite
+from wideboy.sprites.images import render_text
+from wideboy.utils.pygame import EVENT_EPOCH_SECOND
+from wideboy.sprites.base import BaseSprite
 
 
 logger = logging.getLogger(__name__)

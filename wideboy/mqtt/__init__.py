@@ -11,7 +11,7 @@ from wideboy.config import (
     MQTT_PASSWORD,
     MQTT_TOPIC_PREFIX,
 )
-from wideboy.utils.device import DEVICE_ID
+from wideboy.constants import DEVICE_ID
 
 EVENT_MQTT_MESSAGE = pygame.USEREVENT + 21
 

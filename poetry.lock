@@ -1562,6 +1562,18 @@ files = [
 ]
 
 [[package]]
+name = "types-paho-mqtt"
+version = "1.6.0.5"
+description = "Typing stubs for paho-mqtt"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-paho-mqtt-1.6.0.5.tar.gz", hash = "sha256:d4cb3b4b1cc78f2ac07ed767f636983af3730abe5bb3191d4bd95f2936ac96b6"},
+    {file = "types_paho_mqtt-1.6.0.5-py3-none-any.whl", hash = "sha256:c67d777b6780d62ff5c83f0b75c4d4b73a4121499bdfe48a2bb0553e495fa1b2"},
+]
+
+[[package]]
 name = "types-pillow"
 version = "9.4.0.10"
 description = "Typing stubs for Pillow"
@@ -1708,4 +1720,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "a51ad59177942d22bc2d7545284c249774b8700d22e5ac9b144698f64d6a941d"
+content-hash = "adbd97cbfbb310d3016bae28097c96eb269608b985d7feb7711e4745f4deef44"

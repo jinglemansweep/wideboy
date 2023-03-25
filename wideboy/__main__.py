@@ -16,12 +16,11 @@ from wideboy.config import (
     MQTT_TOPIC_PREFIX,
     matrix_options,
 )
-from wideboy.utils.device import DEVICE_ID
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
-from wideboy.utils.hass import setup_hass, advertise_entity
-from wideboy.utils.mqtt import MQTT, EVENT_MQTT_MESSAGE
+from wideboy.mqtt.homeassistant import setup_hass, advertise_entity
+from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.utils.pygame import (
     setup_pygame,
     process_pygame_events,
@@ -29,10 +28,11 @@ from wideboy.utils.pygame import (
     run_loop,
     clock_tick,
 )
-from wideboy.utils.state import STATE
+from wideboy.constants import DEVICE_ID
+from wideboy.state import STATE
 
 from wideboy.controller import Controller
-from wideboy.scenes._utils import SceneManager
+from wideboy.scenes.manager import SceneManager
 from wideboy.scenes.blank import BlankScene
 from wideboy.scenes.default import DefaultScene
 
@@ -43,7 +43,7 @@ logger = logging.getLogger(_APP_NAME)
 
 # Startup
 
-intro_debug()
+intro_debug(device_id=DEVICE_ID)
 
 # Controller
 

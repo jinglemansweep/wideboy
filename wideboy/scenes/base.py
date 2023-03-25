@@ -1,13 +1,14 @@
 import logging
 import pygame
-from wideboy.utils.state import STATE
+from typing import Optional
+from wideboy.state import STATE
 
 logger = logging.getLogger(__name__)
 
 
 class BaseScene:
-    name: str = None
-    frame: int = None
+    name: str
+    frame: int
     debug_every_frame: int = 1000
 
     def __init__(
@@ -29,7 +30,7 @@ class BaseScene:
         self,
         delta: float,
         events: list[pygame.event.Event],
-    ) -> None:
+    ) -> list[pygame.rect.Rect]:
         self.update(delta, events)
         self.clear()
         return self.draw()
@@ -49,7 +50,6 @@ class BaseScene:
         pass
 
     def debug(self, frame: int, clock: pygame.time.Clock, delta: float) -> None:
-        state = dict()  # TODO
         if frame % self.debug_every_frame == 0:
             logger.debug(
                 f"scene:debug frame={frame} fps={clock.get_fps()} delta={delta} state={STATE}"

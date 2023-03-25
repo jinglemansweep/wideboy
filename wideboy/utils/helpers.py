@@ -2,31 +2,35 @@ import aiohttp
 import async_timeout
 import uuid
 import logging
-import os
 import pygame
 import random
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 from wideboy import _APP_NAME, _APP_DESCRIPTION, _APP_VERSION
 from wideboy.config import DEBUG, LOG_DEBUG, CANVAS_SIZE
-from wideboy.utils.device import DEVICE_ID
 
 logger = logging.getLogger(__name__)
 
 
-def intro_debug() -> None:
+def intro_debug(device_id: str) -> None:
     logger.info("=" * 80)
     logger.info(f"{_APP_DESCRIPTION} [{_APP_NAME}] v{_APP_VERSION}")
     logger.info("=" * 80)
+    logger.info(f"Device ID:   {device_id}")
     logger.info(f"Debug:       {DEBUG}")
     logger.info(f"Log Debug:   {LOG_DEBUG}")
     logger.info(f"Canvas Size: {CANVAS_SIZE[0]}x{CANVAS_SIZE[1]}")
-    logger.info(f"Device ID:   {DEVICE_ID}")
     logger.info("=" * 80)
 
 
 def random_color() -> pygame.color.Color:
-    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    return pygame.color.Color(
+        random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
+    )
+
+
+def get_device_id() -> str:
+    return uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 
 async def async_fetch(session: aiohttp.ClientSession, url: str) -> str:
