@@ -22,13 +22,14 @@ def render_led_matrix(
     buffer.SetImage(image)
     return matrix.SwapOnVSync(buffer)
 
-def blank_surface(size: tuple[int, int]):
+
+def blank_surface(size: pygame.math.Vector2):
     surface = pygame.surface.Surface(size)
     surface.fill(0)
     return surface
 
 
-def wrap_surface_nparray(array: Any, new_shape: tuple[int, int]) -> Any:
+def wrap_surface_nparray(array: Any, new_shape: pygame.math.Vector2) -> Any:
     row_size = array.shape[1]
     cols = new_shape[0]
     rows = new_shape[1] // row_size
@@ -44,8 +45,8 @@ def wrap_surface_nparray(array: Any, new_shape: tuple[int, int]) -> Any:
 
 def wrap_surface_blit(
     surface: pygame.surface.Surface,
-    new_shape: tuple[int, int],
-    tile_size: tuple[int, int],
+    new_shape: pygame.math.Vector2,
+    tile_size: pygame.math.Vector2,
 ) -> pygame.surface.Surface:
     temp_surface = pygame.Surface(new_shape)
     surface_width = surface.get_rect().width

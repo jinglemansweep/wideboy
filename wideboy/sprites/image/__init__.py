@@ -20,8 +20,8 @@ class ImageSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.Rect,
-        tile_size: tuple[int, int],
-        fill_size: tuple[int, int],
+        tile_size: pygame.math.Vector2,
+        fill_size: pygame.math.Vector2,
         alpha: int = 255,
     ) -> None:
         super().__init__(rect)
@@ -63,8 +63,8 @@ class ImageSprite(BaseSprite):
     def load_image(
         self,
         filename: str,
-        tile_size: Optional[tuple[int, int]] = None,
-        fill_size: Optional[tuple[int, int]] = None,
+        tile_size: Optional[pygame.math.Vector2] = None,
+        fill_size: Optional[pygame.math.Vector2] = None,
         alpha: Optional[int] = None,
     ):
         is_tiled = os.path.basename(filename).startswith("t_")

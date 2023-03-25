@@ -13,7 +13,7 @@ class QRCodeSprite(BaseSprite):
         self,
         rect: pygame.rect.Rect,
         data: str,
-        size: tuple[int, int] = (64, 64),
+        size: pygame.math.Vector2 = (64, 64),
         color_bg: pygame.color.Color = (255, 255, 255),
         color_fg: pygame.color.Color = (0, 0, 0),
         border: int = 2,

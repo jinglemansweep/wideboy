@@ -28,8 +28,8 @@ class Display:
     def wrap_surface(
         self,
         surface: pygame.surface.Surface,
-        new_shape: tuple[int, int],
-        tile_size: tuple[int, int],
+        new_shape: pygame.math.Vector2,
+        tile_size: pygame.math.Vector2,
     ) -> pygame.surface.Surface:
         temp_surface = pygame.Surface(new_shape)
         surface_width = surface.get_rect().width

@@ -15,7 +15,7 @@ def load_image(filename: str) -> Image.Image:
 
 
 def load_resize_image(
-    filename: str, size: Optional[tuple[int, int]] = None
+    filename: str, size: Optional[pygame.math.Vector2] = None
 ) -> pygame.surface.Surface:
     im = load_image(filename)
     if size is not None:
@@ -28,7 +28,7 @@ def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:
     return glob.glob(os.path.join(path, pattern))
 
 
-def tile_surface(surface: pygame.Surface, size: tuple[int, int]) -> pygame.Surface:
+def tile_surface(surface: pygame.Surface, size: pygame.math.Vector2) -> pygame.Surface:
     x = y = 0
     tiled_surface = pygame.Surface(size)
     while y < size[1]:

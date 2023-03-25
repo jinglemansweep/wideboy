@@ -28,7 +28,7 @@ epoch_emitter = EpochEmitter()
 
 
 def setup_pygame(
-    display_size: tuple[int, int]
+    display_size: pygame.math.Vector2,
 ) -> tuple[pygame.time.Clock, pygame.surface.Surface]:
 
     pygame.init()

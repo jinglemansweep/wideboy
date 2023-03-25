@@ -66,7 +66,7 @@ class BaseScene:
 
 
 def build_background(
-    size: tuple[int, int], color: pygame.color.Color
+    size: pygame.math.Vector2, color: pygame.color.Color
 ) -> pygame.surface.Surface:
     background = pygame.surface.Surface(size)
     background.fill(color)

@@ -50,22 +50,22 @@ class Animation:
     def __init__(
         self,
         sprite: BaseSprite,
-        target: pygame.Vector2,
+        target: pygame.math.Vector2,
         duration: int,
-        origin: Optional[pygame.Vector2] = None,
+        origin: Optional[pygame.math.Vector2] = None,
         tweener=easeInOutSine,
     ) -> None:
         self.sprite: BaseSprite = sprite
         self.tweener = tweener
-        self.target: pygame.Vector2 = target
+        self.target: pygame.math.Vector2 = target
         self.duration: int = duration
-        self.current: pygame.Vector2
+        self.current: pygame.math.Vector2
         assert self.sprite.rect is not None
-        self.current = origin or pygame.Vector2(
+        self.current = origin or pygame.math.Vector2(
             self.sprite.rect.x,
             self.sprite.rect.y,
         )
-        self.origin: pygame.Vector2 = self.current
+        self.origin: pygame.math.Vector2 = self.current
         self.distances = (
             (self.target[0] - self.origin[0]),
             (self.target[1] - self.origin[1]),
@@ -90,7 +90,7 @@ class Animation:
         x = self.origin[0] + (self.distances[0] * tween_val)
         y = self.origin[1] + (self.distances[1] * tween_val)
         if self.index < self.duration - 1:
-            self.current = pygame.Vector2(x, y)
+            self.current = pygame.math.Vector2(x, y)
         else:
             self.current = self.target
         assert self.sprite.rect is not None
