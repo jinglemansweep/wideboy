@@ -17,7 +17,7 @@ def render_led_matrix(
     matrix: RGBMatrix, surface: pygame.surface.Surface, buffer: Any
 ) -> Any:
     pixels = pygame.surfarray.pixels3d(surface)
-    wrapped = wrap_surface_array(pixels, MATRIX_SIZE)
+    wrapped = wrap_surface_nparray(pixels, MATRIX_SIZE)
     image = Image.fromarray(wrapped).convert("RGB")
     buffer.SetImage(image)
     return matrix.SwapOnVSync(buffer)
