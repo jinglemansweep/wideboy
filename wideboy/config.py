@@ -241,10 +241,6 @@ settings = Dynaconf(
 )
 
 
-def get_config_env_var(key, default=None):
-    return os.environ.get(key, default)
-
-
 # RPI-RGB-LED-MATRIX
 
 sys.path.append(
@@ -256,44 +252,9 @@ sys.path.append(
 )
 from rgbmatrix import RGBMatrixOptions  # type: ignore
 
-LED_ENABLED = get_config_env_var("LED_ENABLED", "true").lower() == "true"
-LED_GPIO_MAPPING = get_config_env_var(
-    "LED_GPIO_MAPPING"
-)  # regular, adafruit, adafruit-pwm
-LED_ROWS = int(get_config_env_var("LED_ROWS", 64))  # 64
-LED_COLS = int(get_config_env_var("LED_COLS", 64))  # 64
-LED_CHAIN = int(get_config_env_var("LED_CHAIN", 4))  # 4
-LED_PARALLEL = int(get_config_env_var("LED_PARALLEL", 3))  # 3
-LED_MULTIPLEXING = int(get_config_env_var("LED_MULTIPLEXING", 0))  # 0-18
-LED_PIXEL_MAPPER = get_config_env_var(
-    "LED_PIXEL_MAPPER", "Rotate:270;Mirror:H"
-)  # U-mapper;V-mapper;Rotate:90
-LED_PWM_BITS = int(get_config_env_var("LED_PWM_BITS", 7))  # 1-11
-LED_BRIGHTNESS = int(get_config_env_var("LED_BRIGHTNESS", 50))  # 0-100
-LED_SCAN_MODE = int(get_config_env_var("LED_SCAN_MODE", 0))  # 0,1
-LED_ROW_ADDR_TYPE = int(get_config_env_var("LED_ROW_ADDR_TYPE", 0))  # 0-4
-LED_SHOW_REFRESH = (
-    get_config_env_var("LED_SHOW_REFRESH", "false").lower() == "true"
-)  # true/false
-LED_LIMIT_REFRESH = int(get_config_env_var("LED_LIMIT_REFRESH", 0))  # 0
-LED_INVERSE = get_config_env_var("LED_INVERSE", "false").lower() == "true"  # true/false
-LED_RGB_SEQUENCE = get_config_env_var("LED_RGB_SEQUENCE", "RGB")  # RGB, RBG
-LED_PWM_LSB_NANOSECONDS = int(get_config_env_var("LED_PWM_LSB_NANOSECONDS", 200))  # 130
-LED_PWM_DITHER_BITS = int(get_config_env_var("LED_PWM_DITHER_BITS", 0))  # 0-2
-LED_NO_HARDWARE_PULSE = (
-    get_config_env_var("LED_NO_HARDWARE_PULSE", "false").lower() == "true"
-)  # true/false
-LED_PANEL_TYPE = get_config_env_var("LED_PANEL_TYPE")  # FM6126A, FM6127
-LED_SLOWDOWN_GPIO = int(get_config_env_var("LED_SLOWDOWN_GPIO", 4))  # 0-4
-LED_DAEMON = get_config_env_var("LED_DAEMON", "false").lower() == "true"  # true/false
-LED_NO_DROP_PRIVS = (
-    get_config_env_var("LED_NO_DROP_PRIVS", "false").lower() == "true"
-)  # true/false
-
-
 matrix_options = RGBMatrixOptions()
 driver_settings = settings.display.matrix.driver
-print(driver_settings)
+
 if driver_settings.rows:
     matrix_options.rows = driver_settings.rows
 if driver_settings.cols:

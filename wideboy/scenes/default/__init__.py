@@ -12,10 +12,8 @@ from wideboy.scenes.base import BaseScene
 from wideboy.scenes.default.tasks import fetch_weather
 from wideboy.state import DEVICE_ID
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
+from wideboy.config import settings
 
-from wideboy.config import settings, get_config_env_var
-
-BACKGROUND_CHANGE_INTERVAL_MINS = settings.backgrounds.change_interval_mins
 
 logger = logging.getLogger(__name__)
 
@@ -109,7 +107,7 @@ class DefaultScene(BaseScene):
             if event.type == EVENT_EPOCH_MINUTE:
                 if event.unit % 5 == 0:
                     self.background_widget.glob_images()
-                if event.unit % BACKGROUND_CHANGE_INTERVAL_MINS == 0:
+                if event.unit % settings.backgrounds.change_interval_mins == 0:
                     self.act_background_change = self.build_background_change_act()
                     self.act_background_change.start()
 
