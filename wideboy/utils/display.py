@@ -17,8 +17,9 @@ def setup_led_matrix() -> tuple[RGBMatrix, Any]:
 def render_led_matrix(
     matrix: RGBMatrix, surface: pygame.surface.Surface, buffer: Any
 ) -> Any:
-    pixels = wrap_surface_array(pygame.surfarray.pixels3d(surface), MATRIX_SIZE)
-    image = Image.fromarray(pixels)
+    pixels = pygame.surfarray.array3d(surface)
+    wrapped = wrap_surface_array(pixels, MATRIX_SIZE)
+    image = Image.fromarray(wrapped)
     buffer.SetImage(image)
     # Flip and return next buffer
     return matrix.SwapOnVSync(buffer)
@@ -32,10 +33,18 @@ def blank_surface(size: tuple[int, int]):
 
 def wrap_surface_array(
     array: np.ndarray,
-    canvas_shape: tuple[int, int],
+    new_shape: tuple[int, int]
 ) -> np.array:
-    return np.reshape(array, (canvas_shape[0], canvas_shape[1], -1), order="F")
-
+    row_size = array.shape[1]
+    cols = new_shape[0]
+    rows = new_shape[1] // row_size
+    print(f"rows={rows} cols={cols} row_size={row_size}")
+    reshaped = np.full((cols, rows * row_size, 3), 0, dtype=np.uint8)
+    for ri in range(rows):
+        row_offset = ri * row_size
+        col_offset = ri * cols
+        reshaped[0:cols, row_offset:row_offset+row_size] = array[col_offset:col_offset+cols, 0:row_size]
+    return reshaped
 
 def wrap_surface(
     surface: pygame.surface.Surface,
