@@ -214,7 +214,6 @@ validators = [
     Validator(
         "DISPLAY__MATRIX__DRIVER__PANEL_TYPE",
         default=None,
-        cast=str,
     ),
     Validator(
         "DISPLAY__MATRIX__DRIVER__SLOWDOWN_GPIO",

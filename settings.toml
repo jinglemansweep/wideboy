@@ -57,5 +57,5 @@
   # longitude = 1.0
 
 [backgrounds]
-  change_interval_mins = 5
+  # change_interval_mins = 5
   
