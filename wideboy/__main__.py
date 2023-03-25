@@ -9,18 +9,18 @@ load_dotenv(find_dotenv())
 
 from wideboy import _APP_NAME
 from wideboy.config import (
-    DEBUG,
     LOG_DEBUG,
     CANVAS_SIZE,
     MATRIX_ENABLED,
-    MQTT_TOPIC_PREFIX,
-    matrix_options,
 )
+from wideboy.constants import DEVICE_ID
+from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
+from wideboy.mqtt.homeassistant import setup_hass, advertise_entity
+from wideboy.scenes.manager import SceneManager
+from wideboy.state import STATE
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
-from wideboy.mqtt.homeassistant import setup_hass, advertise_entity
-from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.utils.pygame import (
     setup_pygame,
     process_pygame_events,
@@ -28,11 +28,7 @@ from wideboy.utils.pygame import (
     run_loop,
     clock_tick,
 )
-from wideboy.constants import DEVICE_ID
-from wideboy.state import STATE
 
-from wideboy.controller import Controller
-from wideboy.scenes.manager import SceneManager
 from wideboy.scenes.blank import BlankScene
 from wideboy.scenes.default import DefaultScene
 
@@ -44,23 +40,6 @@ logger = logging.getLogger(_APP_NAME)
 # Startup
 
 intro_debug(device_id=DEVICE_ID)
-
-# Controller
-
-"""
-options = {
-    "display": {
-        "enabled": False,
-        "options": matrix_options,
-        "size": (64 * 12, 64 * 1),
-        "panel_size": (64, 64),
-    }
-}
-
-controller = Controller(options)
-print(controller.display.matrix)
-assert False
-"""
 
 # PyGame & Display
 

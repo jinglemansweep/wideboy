@@ -8,12 +8,11 @@ from pygame import QUIT, RESIZABLE, SCALED
 from typing import Callable
 
 from wideboy import _APP_DESCRIPTION
-from wideboy.utils.helpers import EpochEmitter
-from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
-from wideboy.mqtt.homeassistant import EVENT_HASS_COMMAND
 from wideboy.config import (
     PROFILING,
 )
+from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
+from wideboy.utils.helpers import EpochEmitter
 
 DISPLAY_FLAGS = RESIZABLE | SCALED
 
