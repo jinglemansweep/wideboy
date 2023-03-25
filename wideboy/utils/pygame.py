@@ -23,7 +23,7 @@ EVENT_EPOCH_SECOND = pygame.USEREVENT + 11
 EVENT_EPOCH_MINUTE = pygame.USEREVENT + 12
 EVENT_EPOCH_HOUR = pygame.USEREVENT + 12
 
-FPS = 30
+FPS = 50
 
 epoch_emitter = EpochEmitter()
 
