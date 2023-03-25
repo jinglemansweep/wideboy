@@ -30,7 +30,7 @@ class MQTTClient:
         port: int,
         user: Optional[str] = None,
         password: Optional[str] = None,
-        keepalive: Optional[int] = 60,
+        keepalive: int = 60,
     ) -> None:
         self.host = host
         self.port = port

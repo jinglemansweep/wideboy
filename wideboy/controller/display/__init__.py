@@ -10,7 +10,7 @@ class Display:
     matrix: Optional[RGBMatrix] = None
     buffer: Optional[Any] = None
 
-    def __init__(self, options: dict):
+    def __init__(self, options: Optional[dict]):
         self.options = options
         if self.options.get("enabled"):
             self.matrix = RGBMatrix(options=self.options.get("options"))

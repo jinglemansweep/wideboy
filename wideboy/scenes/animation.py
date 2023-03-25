@@ -3,6 +3,8 @@ import pygame
 from pytweening import easeInOutSine
 from typing import Optional, Any
 
+from wideboy.sprites.base import BaseSprite
+
 logger = logging.getLogger(__name__)
 
 
@@ -47,21 +49,23 @@ class Act:
 class Animation:
     def __init__(
         self,
-        sprite: pygame.sprite.Sprite,
-        target: tuple[int, int],
+        sprite: BaseSprite,
+        target: pygame.Vector2,
         duration: int,
-        origin: Optional[tuple[int, int]] = None,
+        origin: Optional[pygame.Vector2] = None,
         tweener=easeInOutSine,
     ) -> None:
-        self.sprite: pygame.sprite.Sprite = sprite
+        self.sprite: BaseSprite = sprite
         self.tweener = tweener
-        self.target: tuple[int, int] = target
+        self.target: pygame.Vector2 = target
         self.duration: int = duration
-        if origin is not None:
-            self.current = origin
-        else:
-            self.current: tuple[int, int] = self.sprite.rect.x, self.sprite.rect.y
-        self.origin = self.current
+        self.current: pygame.Vector2
+        assert self.sprite.rect is not None
+        self.current = origin or pygame.Vector2(
+            self.sprite.rect.x,
+            self.sprite.rect.y,
+        )
+        self.origin: pygame.Vector2 = self.current
         self.distances = (
             (self.target[0] - self.origin[0]),
             (self.target[1] - self.origin[1]),
@@ -78,16 +82,19 @@ class Animation:
         return self.index is not None and self.index < self.duration
 
     def update(self) -> None:
-        if not self.is_moving():
-            return
+        if not self.is_moving() or self.index is None:
+            return None
         self.index += 1
         ri = self.index / self.duration
         tween_val = self.tweener(ri)
         x = self.origin[0] + (self.distances[0] * tween_val)
         y = self.origin[1] + (self.distances[1] * tween_val)
         if self.index < self.duration - 1:
-            self.current = (x, y)
+            self.current = pygame.Vector2(x, y)
         else:
             self.current = self.target
-        self.sprite.rect.x, self.sprite.rect.y = self.current
+        assert self.sprite.rect is not None
+        self.sprite.rect.x, self.sprite.rect.y = int(self.current[0]), int(
+            self.current[1]
+        )
         self.sprite.dirty = 1

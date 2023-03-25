@@ -49,7 +49,8 @@ class BaseScene:
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         pass
 
-    def debug(self, frame: int, clock: pygame.time.Clock, delta: float) -> None:
+    def debug(self, clock: pygame.time.Clock, delta: float) -> None:
+        frame = self.frame
         if frame % self.debug_every_frame == 0:
             logger.debug(
                 f"scene:debug frame={frame} fps={clock.get_fps()} delta={delta} state={STATE}"

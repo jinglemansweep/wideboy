@@ -26,11 +26,14 @@ class SceneManager:
             self.scene_index = idx
 
     def next(self) -> None:
-        next_idx = self.scene_index + 1
+        if not self.scene_index:
+            return
+        next_idx: int = self.scene_index + 1
         if next_idx + 1 > len(self.scenes):
             next_idx = 0
         self._change_scene(next_idx)
-        self.scene.setup()
+        if self.scene:
+            self.scene.setup()
 
     def _change_scene(self, idx: int):
         self.scene_index = idx
@@ -43,14 +46,14 @@ class SceneManager:
 
     @property
     def scene(self) -> Optional[BaseScene]:
-        if not len(self.scenes):
+        if not len(self.scenes) or not self.scene_index:
             return None
         return list(self.scenes)[self.scene_index]
 
     @property
-    def frame(self) -> int:
+    def frame(self) -> Optional[int]:
         if not self.scene:
-            return
+            return None
         return self.scene.frame
 
     def update(self, *args, **kwargs):
@@ -64,4 +67,4 @@ class SceneManager:
     def debug(self, clock: pygame.time.Clock, delta: float):
         if not self.scene:
             return
-        return self.scene.debug(self.frame, clock, delta)
+        return self.scene.debug(clock, delta)
