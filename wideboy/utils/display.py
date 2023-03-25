@@ -36,7 +36,7 @@ def blank_surface(size: pygame.math.Vector2):
 def wrap_surface_nparray(array: Any, new_shape: pygame.math.Vector2) -> Any:
     row_size = array.shape[1]
     cols = int(new_shape[0])
-    rows = new_shape[1] // row_size
+    rows = int(new_shape[1]) // row_size
     reshaped = np.full((cols, rows * row_size, 3), 0, dtype=np.uint8)
     for ri in range(rows):
         row_offset = ri * row_size
