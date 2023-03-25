@@ -203,7 +203,7 @@ validators = [
     ),
     Validator(
         "DISPLAY__MATRIX__DRIVER__PWM_DITHER_BITS",
-        default=7,
+        default=0,
         cast=int,
     ),
     Validator(
@@ -293,6 +293,7 @@ LED_NO_DROP_PRIVS = (
 
 matrix_options = RGBMatrixOptions()
 driver_settings = settings.display.matrix.driver
+print(driver_settings)
 if driver_settings.rows:
     matrix_options.rows = driver_settings.rows
 if driver_settings.cols:
@@ -327,8 +328,8 @@ if driver_settings.pwm_dither_bits:
     matrix_options.pwm_dither_bits = driver_settings.pwm_dither_bits
 if driver_settings.no_hardware_pulse:
     matrix_options.disable_hardware_pulsing = driver_settings.no_hardware_pulse
-if driver_settings.panel_type:
-    matrix_options.panel_type = driver_settings.panel_type
+#if driver_settings.panel_type:
+#    matrix_options.panel_type = driver_settings.panel_type
 if driver_settings.slowdown_gpio:
     matrix_options.gpio_slowdown = driver_settings.slowdown_gpio
 if driver_settings.daemon:
