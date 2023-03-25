@@ -328,8 +328,8 @@ if driver_settings.pwm_dither_bits:
     matrix_options.pwm_dither_bits = driver_settings.pwm_dither_bits
 if driver_settings.no_hardware_pulse:
     matrix_options.disable_hardware_pulsing = driver_settings.no_hardware_pulse
-#if driver_settings.panel_type:
-#    matrix_options.panel_type = driver_settings.panel_type
+if driver_settings.panel_type:
+    matrix_options.panel_type = driver_settings.panel_type
 if driver_settings.slowdown_gpio:
     matrix_options.gpio_slowdown = driver_settings.slowdown_gpio
 if driver_settings.daemon:
