@@ -5,7 +5,7 @@ from typing import Any
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
-from wideboy.config import CANVAS_SIZE, MATRIX_SIZE, MATRIX_PANEL_SIZE, matrix_options
+from wideboy.config import MATRIX_SIZE, matrix_options
 
 
 def setup_led_matrix() -> tuple[RGBMatrix, Any]:
