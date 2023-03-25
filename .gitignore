@@ -3,5 +3,6 @@ __pycache__
 images/backgrounds/*
 dietpi.txt
 .env
+secrets.*
 *.token
 *.log

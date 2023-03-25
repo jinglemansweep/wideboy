@@ -1,40 +1,228 @@
 import os
 import sys
 
+from dynaconf import Dynaconf, Validator
+from pathlib import Path
+
+from wideboy.constants import DYNACONF_ENVVAR_PREFIX
+
+validators = [
+    # General
+    Validator(
+        "GENERAL__REMOTE_URL",
+        default="http://wideboy.local",
+        cast=str,
+    ),
+    Validator("GENERAL__DEBUG", default=False, cast=bool),
+    Validator(
+        "GENERAL__LOG_LEVEL",
+        default="info",
+        cast=str,
+    ),
+    Validator(
+        "GENERAL__PROFILING",
+        default="",
+        cast=str,
+    ),
+    # Display
+    Validator(
+        "DISPLAY__CANVAS__WIDTH",
+        default=768,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__CANVAS__HEIGHT",
+        default=64,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__ENABLED",
+        default=False,
+        cast=bool,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__WIDTH",
+        default=256,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__HEIGHT",
+        default=192,
+        cast=int,
+    ),
+    # MQTT
+    Validator(
+        "MQTT__HOST",
+        required=True,
+        cast=str,
+    ),
+    Validator(
+        "MQTT__PORT",
+        default=1883,
+        cast=int,
+    ),
+    Validator(
+        "MQTT__TOPIC_PREFIX",
+        default="wideboy",
+        cast=str,
+    ),
+    Validator(
+        "MQTT__USER",
+        default=None,
+        cast=str,
+    ),
+    Validator(
+        "MQTT__PASSWORD",
+        default=None,
+        cast=str,
+    ),
+    # HOME ASSISTANT
+    Validator(
+        "HOMEASSISTANT__URL",
+        default="http://homeassistant.local:8123",
+        cast=str,
+    ),
+    Validator(
+        "HOMEASSISTANT__API_TOKEN",
+        default=None,
+        cast=str,
+    ),
+    # PATHS
+    Validator(
+        "PATHS__IMAGES_ICONS",
+        default="images/icons",
+        cast=Path,
+    ),
+    Validator(
+        "PATHS__IMAGES_BACKGROUNDS",
+        default="images/backgrounds",
+        cast=Path,
+    ),
+    # LED DRIVER
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__GPIO_MAPPING",
+        default="regular",
+        cast=str,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__ROWS",
+        default=64,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__COLS",
+        default=64,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__CHAIN",
+        default=4,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__PARALLEL",
+        default=3,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__MULTIPLEXING",
+        default=0,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__PIXEL_MAPPER",
+        default="Rotate:270;Mirror:H",
+        cast=str,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__PWM_BITS",
+        default=7,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__BRIGHTNESS",
+        default=50,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__SCAN_MODE",
+        default=0,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__ROW_ADDR_TYPE",
+        default=0,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__SHOW_REFRESH",
+        default=False,
+        cast=bool,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__LIMIT_REFRESH",
+        default=None,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__INVERSE",
+        default=False,
+        cast=bool,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__RGB_SEQUENCE",
+        default="RGB",
+        cast=str,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__PWM_LSB_NANOSECONDS",
+        default=200,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__PWM_DITHER_BITS",
+        default=7,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__NO_HARDWARE_PULSE",
+        default=False,
+        cast=bool,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__PANEL_TYPE",
+        default=None,
+        cast=str,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__SLOWDOWN_GPIO",
+        default=4,
+        cast=int,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__DAEMON",
+        default=False,
+        cast=bool,
+    ),
+    Validator(
+        "DISPLAY__MATRIX__DRIVER__NO_DROP_PRIVS",
+        default=False,
+        cast=bool,
+    ),
+]
+
+
+settings = Dynaconf(
+    envvar_prefix=DYNACONF_ENVVAR_PREFIX,
+    settings_files=["settings.toml", "secrets.toml"],
+    validators=validators,
+)
+
+print("DYNACONF", settings.as_dict())
+
 
 def get_config_env_var(key, default=None):
     return os.environ.get(key, default)
 
-
-CANVAS_WIDTH = int(get_config_env_var("CANVAS_WIDTH", 64 * 12))
-CANVAS_HEIGHT = int(get_config_env_var("CANVAS_HEIGHT", 64 * 1))
-CANVAS_SIZE = (CANVAS_WIDTH, CANVAS_HEIGHT)
-
-MATRIX_ENABLED = get_config_env_var("MATRIX_ENABLED", "true") == "true"
-
-MATRIX_WIDTH = int(get_config_env_var("MATRIX_WIDTH", 64 * 4))
-MATRIX_HEIGHT = int(get_config_env_var("MATRIX_HEIGHT", 64 * 3))
-MATRIX_SIZE = (MATRIX_WIDTH, MATRIX_HEIGHT)
-
-MATRIX_PANEL_WIDTH = int(get_config_env_var("MATRIX_PANEL_WIDTH", 64))
-MATRIX_PANEL_HEIGHT = int(get_config_env_var("MATRIX_PANEL_HEIGHT", 64))
-MATRIX_PANEL_SIZE = (MATRIX_PANEL_WIDTH, MATRIX_PANEL_HEIGHT)
-
-MQTT_HOST = get_config_env_var("MQTT_HOST", "hass.local")
-MQTT_PORT = int(get_config_env_var("MQTT_PORT", 1883))
-MQTT_USER = get_config_env_var("MQTT_USER", None)
-MQTT_PASSWORD = get_config_env_var("MQTT_PASSWORD", None)
-MQTT_TOPIC_PREFIX = get_config_env_var("HASS_TOPIC_PREFIX", "wideboy")
-
-HASS_URL = get_config_env_var("HASS_URL", None)
-HASS_API_TOKEN = get_config_env_var("HASS_API_TOKEN", None)
-
-IMAGE_PATH = get_config_env_var("IMAGE_PATH", "images")
-WEB_UI_URL = get_config_env_var("WEB_UI_URL", "http://wideboy.local")
-
-DEBUG = get_config_env_var("DEBUG", "false") == "true"
-LOG_DEBUG = get_config_env_var("LOG_LEVEL", "info").lower() == "debug"
-PROFILING = get_config_env_var("PROFILING", "")
 
 # RPI-RGB-LED-MATRIX
 

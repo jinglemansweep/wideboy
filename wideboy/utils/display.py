@@ -4,7 +4,11 @@ from typing import Any
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
-from wideboy.config import MATRIX_SIZE, matrix_options
+from wideboy.config import settings, matrix_options
+
+MATRIX_SIZE = pygame.math.Vector2(
+    settings.display.matrix.width, settings.display.matrix.height
+)
 
 
 def setup_led_matrix() -> tuple[RGBMatrix, Any]:
@@ -31,7 +35,7 @@ def blank_surface(size: pygame.math.Vector2):
 
 def wrap_surface_nparray(array: Any, new_shape: pygame.math.Vector2) -> Any:
     row_size = array.shape[1]
-    cols = new_shape[0]
+    cols = int(new_shape[0])
     rows = new_shape[1] // row_size
     reshaped = np.full((cols, rows * row_size, 3), 0, dtype=np.uint8)
     for ri in range(rows):
@@ -60,7 +64,7 @@ def wrap_surface_blit(
         temp_surface.blit(
             surface,
             (0, y),
-            (x, 0, x + wrapped_width, surface_height),
+            pygame.rect.Rect(x, 0, x + wrapped_width, surface_height),
         )
         row += 1
     return temp_surface

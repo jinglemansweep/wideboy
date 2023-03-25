@@ -6,15 +6,20 @@ from typing import Any, Optional
 from homeassistant_api import Client
 
 from wideboy import _APP_NAME, _APP_VERSION, _APP_AUTHOR
-from wideboy.config import HASS_URL, HASS_API_TOKEN, MQTT_TOPIC_PREFIX
-from wideboy.constants import DEVICE_ID
+from wideboy.config import settings
 from wideboy.mqtt import MQTT
+from wideboy.state import DEVICE_ID
+
 
 logger = logging.getLogger(__name__)
 
 EVENT_HASS_COMMAND = pygame.USEREVENT + 31
 
+MQTT_TOPIC_PREFIX = settings.mqtt.topic_prefix
+HASS_URL = settings.homeassistant.url
+HASS_API_TOKEN = settings.homeassistant.api_token
 HASS_TOPIC_PREFIX = "homeassistant"
+
 
 MODEL_NAME = _APP_NAME
 MANUFACTURER_NAME = _APP_AUTHOR

@@ -11,7 +11,7 @@ from wideboy.sprites.images import (
     tile_surface,
     render_text,
 )
-from wideboy.config import IMAGE_PATH
+from wideboy.config import settings
 
 logger = logging.getLogger("sprites.background")
 
@@ -54,7 +54,9 @@ class ImageSprite(BaseSprite):
             self.image_index = 0
 
     def glob_images(self, shuffle: bool = False):
-        self.image_files = glob_files(os.path.join(IMAGE_PATH, "backgrounds"), "*.png")
+        self.image_files = glob_files(
+            os.path.join(settings.paths.images_backgrounds), "*.png"
+        )
         if shuffle:
             random.shuffle(self.image_files)
         if self.image_index > len(self.image_files) - 1:

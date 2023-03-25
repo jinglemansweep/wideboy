@@ -1,0 +1,52 @@
+[general]
+  # remote_url = "http://wideboy.local"
+  # debug = false
+  # log_level = "debug" # info, debug
+  # profiling = ""
+
+[display]
+  [display.canvas]
+    # width = 768 # 64 * 12
+    # height = 64
+  [display.matrix]
+    # enabled = true
+    # width = 256 # 64 * 4
+    # height = 192 # 64 * 3
+  [display.matrix.driver]
+    # gpio_mapping = "regular"
+    # rows = 64
+    # cols = 64
+    # chain = 4
+    # parallel = 3
+    # multiplexing = 0
+    # pixel_mapper = "Rotate:270;Mirror:H"
+    # pwm_bits = 7
+    # brightness = 50
+    # scan_mode = 0
+    # row_addr_type = 0
+    # show_refresh = false
+    # limit_refresh = false
+    # inverse = false
+    # rgb_sequence = "RGB"
+    # pwm_lsb_nanoseconds = 200
+    # pwm_dither_bits = 0
+    # no_hardware_pulse = false
+    # panel_type = "FM6126A"
+    # slowdown_gpio = 4
+    # daemon = false
+    # no_drop_privs = false
+
+[mqtt]
+  # host = "hass.local"
+  # port = 1883
+  # topic_prefix = "wideboy"
+  # user = "user"
+  # password = "password"
+  
+[homeassistant]
+  # url = "http://homeassistant.local:8123"
+  # api_token = "my-long-lived-token"
+  
+[paths]
+  # images_background = "images/background"
+

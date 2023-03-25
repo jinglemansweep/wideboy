@@ -8,9 +8,7 @@ from pygame import QUIT, RESIZABLE, SCALED
 from typing import Callable
 
 from wideboy import _APP_DESCRIPTION
-from wideboy.config import (
-    PROFILING,
-)
+from wideboy.config import settings
 from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.utils.helpers import EpochEmitter
 
@@ -68,8 +66,8 @@ def handle_event(event: pygame.event.Event) -> None:
 
 
 def main_entrypoint(main_func: Callable) -> None:
-    if PROFILING in ["ncalls", "tottime"]:
-        cProfile.run("main_func()", None, sort=PROFILING)
+    if settings.general.profiling in ["ncalls", "tottime"]:
+        cProfile.run("main_func()", None, sort=settings.general.profiling)
     else:
         main_func()
 

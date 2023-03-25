@@ -10,10 +10,10 @@ from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes.base import BaseScene
 from wideboy.scenes.default.tasks import fetch_weather
-from wideboy.constants import DEVICE_ID
+from wideboy.state import DEVICE_ID
 from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 
-from wideboy.config import WEB_UI_URL, get_config_env_var
+from wideboy.config import settings, get_config_env_var
 
 SCENE_BACKGROUND_CHANGE_INTERVAL_MINS = int(
     get_config_env_var("SCENE_BACKGROUND_CHANGE_INTERVAL_MINS", 5)
@@ -67,7 +67,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.weather_widget)
         self.qr_widget = QRCodeSprite(
             pygame.Rect(self.width - 256, 64 - 2, 64 - 2, 64 - 4),
-            f"{WEB_UI_URL}?d={DEVICE_ID}",
+            f"{settings.general.remote_url}?d={DEVICE_ID}",
             (60, 60),
         )
         self.group.add(self.qr_widget)

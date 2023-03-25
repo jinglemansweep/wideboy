@@ -7,7 +7,7 @@ import random
 from datetime import datetime
 from typing import Any
 from wideboy import _APP_NAME, _APP_DESCRIPTION, _APP_VERSION
-from wideboy.config import DEBUG, LOG_DEBUG, CANVAS_SIZE
+from wideboy.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -17,9 +17,11 @@ def intro_debug(device_id: str) -> None:
     logger.info(f"{_APP_DESCRIPTION} [{_APP_NAME}] v{_APP_VERSION}")
     logger.info("=" * 80)
     logger.info(f"Device ID:   {device_id}")
-    logger.info(f"Debug:       {DEBUG}")
-    logger.info(f"Log Debug:   {LOG_DEBUG}")
-    logger.info(f"Canvas Size: {CANVAS_SIZE[0]}x{CANVAS_SIZE[1]}")
+    logger.info(f"Debug:       {settings.general.debug}")
+    logger.info(f"Log Level:   {settings.general.log_level}")
+    logger.info(
+        f"Canvas Size: {settings.display.canvas.width}x{settings.display.canvas.height}"
+    )
     logger.info("=" * 80)
 
 

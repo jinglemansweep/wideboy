@@ -18,7 +18,8 @@ class BaseScene:
     ) -> None:
         self.surface = surface
         self.background = build_background(
-            (surface.get_rect().width, surface.get_rect().height), bg_color
+            pygame.math.Vector2(surface.get_rect().width, surface.get_rect().height),
+            bg_color,
         )
         self.group = pygame.sprite.LayeredDirty()
         self.setup()

@@ -9,15 +9,12 @@ load_dotenv(find_dotenv())
 
 from wideboy import _APP_NAME
 from wideboy.config import (
-    LOG_DEBUG,
-    CANVAS_SIZE,
-    MATRIX_ENABLED,
+    settings,
 )
-from wideboy.constants import DEVICE_ID
 from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.mqtt.homeassistant import setup_hass, advertise_entity
 from wideboy.scenes.manager import SceneManager
-from wideboy.state import STATE
+from wideboy.state import STATE, DEVICE_ID
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
@@ -32,9 +29,11 @@ from wideboy.utils.pygame import (
 from wideboy.scenes.blank import BlankScene
 from wideboy.scenes.default import DefaultScene
 
+CANVAS_SIZE = (settings.display.canvas.width, settings.display.canvas.height)
+
 # Logging
 
-setup_logger(debug=LOG_DEBUG)
+setup_logger(level=settings.general.log_level)
 logger = logging.getLogger(_APP_NAME)
 
 # Startup
@@ -45,7 +44,7 @@ intro_debug(device_id=DEVICE_ID)
 
 clock, screen = setup_pygame(CANVAS_SIZE)
 blank_screen = blank_surface(CANVAS_SIZE)
-if MATRIX_ENABLED:
+if settings.display.matrix.enabled:
     matrix, matrix_buffer = setup_led_matrix()
 
 # HASS
@@ -116,7 +115,7 @@ async def start_main_loop():
         if len(updates):
             pygame.display.update(updates)
 
-        if MATRIX_ENABLED:
+        if settings.display.matrix.enabled:
             matrix_buffer = render_led_matrix(
                 matrix, screen if STATE.power else blank_screen, matrix_buffer
             )

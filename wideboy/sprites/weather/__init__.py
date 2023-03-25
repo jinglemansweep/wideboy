@@ -7,7 +7,7 @@ from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.images import render_text, load_resize_image
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.state import STATE
-from wideboy.config import IMAGE_PATH
+from wideboy.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ class WeatherSprite(BaseSprite):
         self.image.fill(self.color_bg)
         if STATE.weather_summary is not None:
             icon_filename = os.path.join(
-                IMAGE_PATH, "icons", "weather", f"{STATE.weather_summary}.png"
+                settings.paths.images_icons, "weather", f"{STATE.weather_summary}.png"
             )
             self.icon_summary = load_resize_image(icon_filename, (72, 72))
             self.image.blit(self.icon_summary, (-4, -6))

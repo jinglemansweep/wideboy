@@ -19,7 +19,7 @@ def load_resize_image(
 ) -> pygame.surface.Surface:
     im = load_image(filename)
     if size is not None:
-        im.thumbnail(size, Image.Resampling.LANCZOS)
+        im.thumbnail((int(size[0]), int(size[1])), Image.Resampling.LANCZOS)
     image = pygame.image.fromstring(im.tobytes(), im.size, im.mode).convert_alpha()  # type: ignore
     return image
 

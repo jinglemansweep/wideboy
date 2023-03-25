@@ -59,9 +59,9 @@ class SceneManager:
     def update(self, *args, **kwargs):
         self.scene.update(*args, **kwargs)
 
-    def render(self, *args, **kwargs):
+    def render(self, *args, **kwargs) -> Optional[list[pygame.rect.Rect]]:
         if not self.scene:
-            return
+            return []
         return self.scene.render(*args, **kwargs)
 
     def debug(self, clock: pygame.time.Clock, delta: float):
