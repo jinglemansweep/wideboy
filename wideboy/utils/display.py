@@ -1,11 +1,10 @@
 import numpy as np
 import pygame
-import sys
 from typing import Any
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
-from wideboy.config import CANVAS_SIZE, MATRIX_SIZE, MATRIX_PANEL_SIZE, matrix_options
+from wideboy.config import MATRIX_SIZE, matrix_options
 
 
 def setup_led_matrix() -> tuple[RGBMatrix, Any]:
@@ -29,7 +28,7 @@ def blank_surface(size: tuple[int, int]):
     return surface
 
 
-def wrap_surface_array(array: Any, new_shape: tuple[int, int]) -> Any:
+def wrap_surface_nparray(array: Any, new_shape: tuple[int, int]) -> Any:
     row_size = array.shape[1]
     cols = new_shape[0]
     rows = new_shape[1] // row_size
@@ -43,7 +42,7 @@ def wrap_surface_array(array: Any, new_shape: tuple[int, int]) -> Any:
     return reshaped
 
 
-def wrap_surface(
+def wrap_surface_blit(
     surface: pygame.surface.Surface,
     new_shape: tuple[int, int],
     tile_size: tuple[int, int],
@@ -61,27 +60,6 @@ def wrap_surface(
             surface,
             (0, y),
             (x, 0, x + wrapped_width, surface_height),
-        )
-        row += 1
-    return temp_surface
-
-
-def wrap_surface_orig(
-    surface: pygame.surface.Surface,
-    shape: tuple[int, int],
-    tile_size: tuple[int, int],
-) -> pygame.surface.Surface:
-    temp_surface = pygame.Surface(shape)
-    x_tiles = shape[0] // tile_size[0]
-    y_tiles = shape[1] // tile_size[1]
-    row = 0
-    while row <= y_tiles:
-        y = row * tile_size[1]
-        x = tile_size[0] * (x_tiles * row)
-        temp_surface.blit(
-            surface,
-            (0, y),
-            (x, 0, tile_size[0] * x_tiles, tile_size[1] * 1),
         )
         row += 1
     return temp_surface
