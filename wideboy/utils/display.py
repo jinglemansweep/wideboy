@@ -17,7 +17,7 @@ def setup_led_matrix() -> tuple[RGBMatrix, Any]:
 def render_led_matrix(
     matrix: RGBMatrix, surface: pygame.surface.Surface, buffer: Any
 ) -> Any:
-    wrapped = wrap_surface(surface, MATRIX_SIZE, MATRIX_PANEL_SIZE)
+    wrapped = wrap_surface_array(surface, MATRIX_SIZE)
     pixels = pygame.surfarray.pixels3d(wrapped)
     image = Image.fromarray(pixels)
     buffer.SetImage(image)
@@ -35,32 +35,7 @@ def wrap_surface_array(
     array: np.ndarray,
     canvas_shape: tuple[int, int],
 ) -> np.array:
-    # FIXME: VERY BROKEN
-    wrapped = np.ndarray((canvas_shape[0], canvas_shape[1], 3), dtype=np.uint8)
-    print(f"array={array.shape} wrapped={wrapped.shape}")
-
-    wrapped = np.append(wrapped, array[0:256, 0:64, 0:3], axis=1)
-    # wrapped[64:0, 128:256] = array[0:256, 64:512]
-    # wrapped[128:0, 128:256] = array[0:256, 64:768]
-    return wrapped
-    """
-    width = array.shape[0] // canvas_shape[0]
-    row_height = array.shape[1]
-    print(f"width={width} row_height={row_height}")
-    row = 0
-    while row < width:
-        xa = row * canvas_shape[0]
-        ya = 0
-        xb = xa + canvas_shape[0]
-        yb = row_height
-        slice = array[ya:xa, yb:xb]
-        print(row, "SLICE", slice.shape, wrapped.shape)
-        # print(f"row={row}: slice={xa}:{ya} -> {xb}:{yb}")
-        wrapped = np.append(wrapped, slice)
-        row += 1
-    print(wrapped.shape)
-    return array
-    """
+    return np.reshape(array, (canvas_shape[0], canvas_shape[1], -1), order="F")
 
 
 def wrap_surface(
