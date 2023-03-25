@@ -45,10 +45,8 @@ class SceneManager:
         return None
 
     @property
-    def scene(self) -> Optional[BaseScene]:
-        if not len(self.scenes) or not self.scene_index:
-            return None
-        return list(self.scenes)[self.scene_index]
+    def scene(self) -> BaseScene:
+        return list(self.scenes)[self.scene_index or 0]
 
     @property
     def frame(self) -> Optional[int]:
