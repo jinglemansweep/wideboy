@@ -3,6 +3,7 @@ import sys
 
 from dynaconf import Dynaconf, Validator
 from pathlib import Path
+from pprint import pprint
 
 from wideboy.constants import DYNACONF_ENVVAR_PREFIX
 
@@ -239,8 +240,6 @@ settings = Dynaconf(
     validators=validators,
 )
 
-print("DYNACONF", settings.as_dict())
-
 
 def get_config_env_var(key, default=None):
     return os.environ.get(key, default)
@@ -293,47 +292,46 @@ LED_NO_DROP_PRIVS = (
 
 
 matrix_options = RGBMatrixOptions()
-if LED_ROWS:
-    matrix_options.rows = LED_ROWS
-if LED_COLS:
-    matrix_options.cols = LED_COLS
-if LED_CHAIN:
-    matrix_options.chain_length = LED_CHAIN
-if LED_PARALLEL:
-    matrix_options.parallel = LED_PARALLEL
-if LED_ROW_ADDR_TYPE:
-    matrix_options.row_address_type = LED_ROW_ADDR_TYPE
-if LED_MULTIPLEXING:
-    matrix_options.multiplexing = LED_MULTIPLEXING
-if LED_PIXEL_MAPPER:
-    matrix_options.pixel_mapper_config = LED_PIXEL_MAPPER
-if LED_PWM_BITS:
-    matrix_options.pwm_bits = LED_PWM_BITS
-if LED_BRIGHTNESS:
-    matrix_options.brightness = LED_BRIGHTNESS
-if LED_SCAN_MODE:
-    matrix_options.scan_mode = LED_SCAN_MODE
-if LED_ROW_ADDR_TYPE:
-    matrix_options.row_addr_type = LED_ROW_ADDR_TYPE
-if LED_SHOW_REFRESH:
-    matrix_options.show_refresh_rate = LED_SHOW_REFRESH
-if LED_LIMIT_REFRESH:
-    matrix_options.limit_refresh_rate_hz = LED_LIMIT_REFRESH
-if LED_INVERSE:
-    matrix_options.inverse = LED_INVERSE
-if LED_RGB_SEQUENCE:
-    matrix_options.led_rgb_sequence = LED_RGB_SEQUENCE
-if LED_PWM_LSB_NANOSECONDS:
-    matrix_options.pwm_lsb_nanoseconds = LED_PWM_LSB_NANOSECONDS
-if LED_PWM_DITHER_BITS:
-    matrix_options.pwm_dither_bits = LED_PWM_DITHER_BITS
-if LED_NO_HARDWARE_PULSE:
-    matrix_options.disable_hardware_pulsing = 1
-if LED_PANEL_TYPE:
-    matrix_options.panel_type = LED_PANEL_TYPE
-if LED_SLOWDOWN_GPIO:
-    matrix_options.gpio_slowdown = LED_SLOWDOWN_GPIO
-if LED_DAEMON:
-    matrix_options.daemon = LED_DAEMON
-if LED_NO_DROP_PRIVS:
+driver_settings = settings.display.matrix.driver
+if driver_settings.rows:
+    matrix_options.rows = driver_settings.rows
+if driver_settings.cols:
+    matrix_options.cols = driver_settings.cols
+if driver_settings.chain:
+    matrix_options.chain_length = driver_settings.chain
+if driver_settings.parallel:
+    matrix_options.parallel = driver_settings.parallel
+if driver_settings.row_addr_type:
+    matrix_options.row_address_type = driver_settings.row_addr_type
+if driver_settings.multiplexing:
+    matrix_options.multiplexing = driver_settings.multiplexing
+if driver_settings.pixel_mapper:
+    matrix_options.pixel_mapper_config = driver_settings.pixel_mapper
+if driver_settings.pwm_bits:
+    matrix_options.pwm_bits = driver_settings.pwm_bits
+if driver_settings.brightness:
+    matrix_options.brightness = driver_settings.brightness
+if driver_settings.scan_mode:
+    matrix_options.scan_mode = driver_settings.scan_mode
+if driver_settings.show_refresh:
+    matrix_options.show_refresh_rate = driver_settings.show_refresh
+if driver_settings.limit_refresh:
+    matrix_options.limit_refresh_rate_hz = driver_settings.limit_refresh
+if driver_settings.inverse:
+    matrix_options.inverse = driver_settings.inverse
+if driver_settings.rgb_sequence:
+    matrix_options.led_rgb_sequence = driver_settings.rgb_sequence
+if driver_settings.pwm_lsb_nanoseconds:
+    matrix_options.pwm_lsb_nanoseconds = driver_settings.pwm_lsb_nanoseconds
+if driver_settings.pwm_dither_bits:
+    matrix_options.pwm_dither_bits = driver_settings.pwm_dither_bits
+if driver_settings.no_hardware_pulse:
+    matrix_options.disable_hardware_pulsing = driver_settings.no_hardware_pulse
+if driver_settings.panel_type:
+    matrix_options.panel_type = driver_settings.panel_type
+if driver_settings.slowdown_gpio:
+    matrix_options.gpio_slowdown = driver_settings.slowdown_gpio
+if driver_settings.daemon:
+    matrix_options.daemon = driver_settings.daemon
+if driver_settings.no_drop_privs:
     matrix_options.drop_privileges = 1
