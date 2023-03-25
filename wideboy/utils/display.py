@@ -1,6 +1,5 @@
 import numpy as np
 import pygame
-import sys
 from typing import Any
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
