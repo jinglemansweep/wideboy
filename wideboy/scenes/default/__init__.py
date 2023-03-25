@@ -15,9 +15,7 @@ from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 
 from wideboy.config import settings, get_config_env_var
 
-SCENE_BACKGROUND_CHANGE_INTERVAL_MINS = int(
-    get_config_env_var("SCENE_BACKGROUND_CHANGE_INTERVAL_MINS", 5)
-)
+BACKGROUND_CHANGE_INTERVAL_MINS = settings.backgrounds.change_interval_mins
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +109,7 @@ class DefaultScene(BaseScene):
             if event.type == EVENT_EPOCH_MINUTE:
                 if event.unit % 5 == 0:
                     self.background_widget.glob_images()
-                if event.unit % SCENE_BACKGROUND_CHANGE_INTERVAL_MINS == 0:
+                if event.unit % BACKGROUND_CHANGE_INTERVAL_MINS == 0:
                     self.act_background_change = self.build_background_change_act()
                     self.act_background_change.start()
 

@@ -5,17 +5,11 @@ import logging
 from datetime import datetime
 from wideboy.state import STATE
 from wideboy.utils.helpers import async_fetch
-from wideboy.config import get_config_env_var
+from wideboy.config import settings
 
-SCENE_BACKGROUND_CHANGE_INTERVAL_MINS = int(
-    get_config_env_var("SCENE_BACKGROUND_CHANGE_INTERVAL_MINS", 5)
-)
-SCENE_WEATHER_FETCH_INTERVAL = int(
-    get_config_env_var("SCENE_WEATHER_FETCH_INTERVAL", 600)
-)
-SCENE_WEATHER_LATITUDE = float(get_config_env_var("SCENE_WEATHER_LATITUDE", 52.0557))
-SCENE_WEATHER_LONGITUDE = float(get_config_env_var("SCENE_WEATHER_LONGITUDE", 1.1153))
-
+WEATHER_FETCH_INTERVAL_MINS = settings.weather.fetch_interval_mins
+WEATHER_LATITUDE = settings.weather.latitude
+WEATHER_LONGITUDE = settings.weather.longitude
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +19,7 @@ OPENMETEO_API_URL = "https://api.open-meteo.com/v1/forecast?latitude={latitude}&
 async def fetch_weather():
     loop = asyncio.get_event_loop()
     url = OPENMETEO_API_URL.format(
-        latitude=SCENE_WEATHER_LATITUDE, longitude=SCENE_WEATHER_LONGITUDE
+        latitude=WEATHER_LATITUDE, longitude=WEATHER_LONGITUDE
     )
     logger.info(f"task:fetch:weather url={url}")
     try:
@@ -46,7 +40,7 @@ async def fetch_weather():
         )
     except Exception as e:
         logger.error("task:fetch:weather:error", exc_info=e)
-    await asyncio.sleep(SCENE_WEATHER_FETCH_INTERVAL)
+    await asyncio.sleep(WEATHER_FETCH_INTERVAL_MINS * 60)
     asyncio.create_task(fetch_weather())
 
 
