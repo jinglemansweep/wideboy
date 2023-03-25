@@ -23,8 +23,9 @@ EVENT_EPOCH_SECOND = pygame.USEREVENT + 11
 EVENT_EPOCH_MINUTE = pygame.USEREVENT + 12
 EVENT_EPOCH_HOUR = pygame.USEREVENT + 12
 
-epoch_emitter = EpochEmitter()
+FPS = 30
 
+epoch_emitter = EpochEmitter()
 
 def setup_pygame(
     display_size: tuple[int, int]
@@ -82,5 +83,5 @@ def run_loop(loop_func: Callable) -> None:
 
 
 def clock_tick(clock: pygame.time.Clock) -> float:
-    MQTT.loop(0.01)
-    return clock.tick() / 1000
+    MQTT.loop(0.0001)
+    return clock.tick(FPS) / 1000
