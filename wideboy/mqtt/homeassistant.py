@@ -88,16 +88,18 @@ def process_hass_mqtt_events(events: list[pygame.event.Event]):
                     logger.debug(f"master/set payload={payload}")
                 except Exception as e:
                     logger.warn("hass:mqtt:event error={e}")
-                pygame.event.post(
-                    pygame.event.Event(
-                        EVENT_MASTER_POWER, value=payload["state"] == "ON"
+                if "state" in payload:
+                    pygame.event.post(
+                        pygame.event.Event(
+                            EVENT_MASTER_POWER, value=payload["state"] == "ON"
+                        )
                     )
-                )
-                pygame.event.post(
-                    pygame.event.Event(
-                        EVENT_MASTER_BRIGHTNESS, value=payload["brightness"]
+                if "brightness" in payload:
+                    pygame.event.post(
+                        pygame.event.Event(
+                            EVENT_MASTER_BRIGHTNESS, value=payload["brightness"]
+                        )
                     )
-                )
             if event.topic.endswith("select_scene/set"):
                 pass
 
