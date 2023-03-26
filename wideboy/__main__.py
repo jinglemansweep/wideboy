@@ -97,6 +97,7 @@ async def start_main_loop():
                     "master/state",
                     dict(
                         state="ON" if STATE.power else "OFF",
+                        brightness=STATE.brightness,
                     ),
                 )
             if event.type == EVENT_MASTER_BRIGHTNESS:
@@ -105,7 +106,10 @@ async def start_main_loop():
                     matrix.brightness = (STATE.brightness / 255) * 100
                 MQTT.publish(
                     "master/state",
-                    dict(brightness=STATE.brightness),
+                    dict(
+                        state="ON" if STATE.power else "OFF",
+                        brightness=STATE.brightness,
+                    ),
                 )
             if event.type == EVENT_SCENE_NEXT:
                 scene_manager.next_scene()
