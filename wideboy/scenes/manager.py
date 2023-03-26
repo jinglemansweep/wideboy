@@ -19,9 +19,7 @@ class SceneManager:
         scene_id = self.get_scene_id_by_name(name)
         self.set_scene(scene_id)
 
-    def set_scene(self, idx: Optional[int]):
-        if not idx:
-            return
+    def set_scene(self, idx: int):
         logger.info(f"scene:set index={idx}")
         self.scene_index = idx
         self.scene.setup()
