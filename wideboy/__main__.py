@@ -7,12 +7,13 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-from wideboy import _APP_NAME
+from wideboy.constants import AppMetadata
 from wideboy.config import (
     settings,
 )
 from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
-from wideboy.mqtt.homeassistant import setup_hass, advertise_entity
+from wideboy.mqtt.entities import HASS_MASTER, HASS_ACTION_SCENE_NEXT
+from wideboy.mqtt.homeassistant import setup_hass
 from wideboy.scenes.manager import SceneManager
 from wideboy.state import STATE, DEVICE_ID
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
@@ -34,7 +35,7 @@ CANVAS_SIZE = (settings.display.canvas.width, settings.display.canvas.height)
 # Logging
 
 setup_logger(level=settings.general.log_level)
-logger = logging.getLogger(_APP_NAME)
+logger = logging.getLogger(AppMetadata.NAME)
 
 # Startup
 
@@ -44,6 +45,8 @@ intro_debug(device_id=DEVICE_ID)
 
 clock, screen = setup_pygame(CANVAS_SIZE)
 blank_screen = blank_surface(CANVAS_SIZE)
+
+matrix, matrix_buffer = None, None
 if settings.display.matrix.enabled:
     matrix, matrix_buffer = setup_led_matrix()
 
@@ -51,15 +54,6 @@ if settings.display.matrix.enabled:
 
 hass = setup_hass()
 
-advertise_entity(
-    "master",
-    "light",
-    dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
-)
-MQTT.publish(
-    "master/state",
-    {"state": "ON" if STATE.power else "OFF", "brightness": STATE.brightness},
-)
 
 # Events
 
@@ -71,20 +65,8 @@ def process_events(events: list[pygame.event.Event]):
             payload = json.loads(event.payload)
             logger.debug(f"event:mqtt topic={event.topic} payload={payload}")
             if event.topic.endswith("master/set"):
-                STATE.power = payload.get("state") == "ON"
-                if "brightness" in payload:
-                    STATE.brightness = int(payload.get("brightness"))
-                    matrix.brightness = (STATE.brightness / 255) * 100
-                MQTT.publish(
-                    "master/state",
-                    {
-                        "state": "ON" if STATE.power else "OFF",
-                        "brightness": STATE.brightness,
-                    },
-                )
-                logger.info(
-                    f"control:master power={STATE.power} brightness={STATE.brightness}"
-                )
+                HASS_MASTER.update(payload)
+                logger.info(f"entity:debug entity={HASS_MASTER.state}")
 
 
 # Loop Setup
@@ -96,7 +78,7 @@ running = True
 
 async def start_main_loop():
 
-    global state, matrix, matrix_buffer
+    global matrix, matrix_buffer
 
     loop = asyncio.get_event_loop()
 
@@ -115,7 +97,10 @@ async def start_main_loop():
 
         if settings.display.matrix.enabled:
             matrix_buffer = render_led_matrix(
-                matrix, screen if STATE.power else blank_screen, matrix_buffer
+                matrix,
+                screen if HASS_MASTER.state["state"] == "ON" else blank_screen,
+                matrix_buffer,
+                (HASS_MASTER.state["brightness"] / 255) * 100,
             )
 
         scene_manager.debug(clock, delta)

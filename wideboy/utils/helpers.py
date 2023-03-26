@@ -6,7 +6,7 @@ import pygame
 import random
 from datetime import datetime
 from typing import Any
-from wideboy import _APP_NAME, _APP_DESCRIPTION, _APP_VERSION
+from wideboy.constants import AppMetadata
 from wideboy.config import settings
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 
 def intro_debug(device_id: str) -> None:
     logger.info("=" * 80)
-    logger.info(f"{_APP_DESCRIPTION} [{_APP_NAME}] v{_APP_VERSION}")
+    logger.info(
+        f"{AppMetadata.DESCRIPTION} [{AppMetadata.NAME}] v{AppMetadata.VERSION}"
+    )
     logger.info("=" * 80)
     logger.info(f"Device ID:   {device_id}")
     logger.info(f"Debug:       {settings.general.debug}")

@@ -7,7 +7,7 @@ import traceback
 from pygame import QUIT, RESIZABLE, SCALED
 from typing import Callable
 
-from wideboy import _APP_DESCRIPTION
+from wideboy.constants import AppMetadata
 from wideboy.config import settings
 from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.utils.helpers import EpochEmitter
@@ -34,7 +34,7 @@ def setup_pygame(
     pygame.event.set_allowed(None)
     pygame.event.set_allowed(QUIT)
     clock = pygame.time.Clock()
-    pygame.display.set_caption(_APP_DESCRIPTION)
+    pygame.display.set_caption(AppMetadata.DESCRIPTION)
     screen = pygame.display.set_mode(display_size, DISPLAY_FLAGS)
     return clock, screen
 
