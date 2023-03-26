@@ -2,6 +2,10 @@
 
 ![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
 
+## Media
+
+![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-1.png)
+
 ## Installation
 
 Fetch dependencies submodules:
