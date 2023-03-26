@@ -1,15 +1,14 @@
 import json
 import logging
 import pygame
-from paho.mqtt.client import Client as MQTTClient
-from typing import Any, Optional, Union
+from typing import Optional
 from homeassistant_api import Client
 
 from wideboy.constants import AppMetadata
 from wideboy.config import settings
-from wideboy.mqtt import MQTT
+from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.state import DEVICE_ID
-
+from wideboy.utils.pygame import EVENT_MASTER_POWER, EVENT_MASTER_BRIGHTNESS
 
 logger = logging.getLogger(__name__)
 
@@ -32,49 +31,33 @@ def setup_hass() -> Client:
     return hass
 
 
-class HASSEntity:
-    def __init__(
-        self,
-        name: str,
-        device_class: str = "switch",
-        options: Optional[dict] = None,
-        initial_state: Optional[dict] = None,
-    ):
-        self.name = name
-        self.device_class = device_class
-        self.entity_id = build_entity_id(name)
-        self.config_topic = (
-            f"{HASS_TOPIC_PREFIX}/{device_class}/{self.entity_id}/config"
-        )
-        self.command_topic = f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/{name}/set"
-        self.state_topic = f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/{name}/state"
-        self.config = dict(
-            name=name,
-            device_class=device_class,
-            object_id=self.entity_id,
-            unique_id=self.entity_id,
-            command_topic=self.command_topic,
-            state_topic=self.state_topic,
-            device=build_device_info(),
-            schema="json",
-        )
-        if options:
-            self.config.update(options)
-        self.state = initial_state or dict()
-        MQTT.publish(self.config_topic, self.config, auto_prefix=False)
-        self.update(self.state)
-
-    def update(self, new_state: Optional[Union[dict, str]] = None):
-        if new_state:
-            if isinstance(new_state, str):
-                self.state.update(dict(state=new_state))
-            else:
-                self.state.update(new_state)
-            MQTT.publish(
-                self.state_topic,
-                self.state,
-                auto_prefix=False,
-            )
+def advertise_entity(
+    name: str,
+    device_class: str,
+    options: Optional[dict] = None,
+    initial_state: Optional[dict] = None,
+) -> None:
+    if options is None:
+        options = dict()
+    entity_id = build_entity_id(name)
+    config_topic = f"{HASS_TOPIC_PREFIX}/{device_class}/{entity_id}/config"
+    command_topic = f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/{name}/set"
+    state_topic = f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/{name}/state"
+    config = dict(
+        name=name,
+        device_class=device_class,
+        object_id=entity_id,
+        unique_id=entity_id,
+        command_topic=command_topic,
+        state_topic=state_topic,
+        device=build_device_info(),
+        schema="json",
+    )
+    config.update(options)
+    if initial_state is None:
+        initial_state = dict()
+    MQTT.publish(config_topic, config, auto_prefix=False)
+    MQTT.publish(state_topic, initial_state, auto_prefix=False)
 
 
 def build_device_info() -> dict:
@@ -94,3 +77,34 @@ def build_entity_id(name: str) -> str:
 
 def build_entity_topic_prefix(device_class: str, full_name) -> str:
     return f"{MQTT_TOPIC_PREFIX}/{device_class}/{full_name}"
+
+
+def process_hass_mqtt_events(events: list[pygame.event.Event]):
+    for event in events:
+        if event.type == EVENT_MQTT_MESSAGE:
+            if event.topic.endswith("master/set"):
+                try:
+                    payload = json.loads(event.payload)
+                    logger.debug(f"master/set payload={payload}")
+                except Exception as e:
+                    logger.warn("hass:mqtt:event error={e}")
+                pygame.event.post(
+                    pygame.event.Event(
+                        EVENT_MASTER_POWER, value=payload["state"] == "ON"
+                    )
+                )
+                pygame.event.post(
+                    pygame.event.Event(
+                        EVENT_MASTER_BRIGHTNESS, value=payload["brightness"]
+                    )
+                )
+            if event.topic.endswith("select_scene/set"):
+                pass
+
+
+advertise_entity(
+    "master",
+    "light",
+    dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
+    dict(state="ON", brightness=128),
+)

@@ -20,6 +20,9 @@ EVENT_EPOCH_SECOND = pygame.USEREVENT + 11
 EVENT_EPOCH_MINUTE = pygame.USEREVENT + 12
 EVENT_EPOCH_HOUR = pygame.USEREVENT + 12
 
+EVENT_MASTER_POWER = pygame.USEREVENT + 15
+EVENT_MASTER_BRIGHTNESS = pygame.USEREVENT + 16
+
 FPS = 50
 
 epoch_emitter = EpochEmitter()
@@ -42,7 +45,8 @@ def setup_pygame(
 def process_pygame_events(events: list[pygame.event.Event]) -> None:
     # Process received messages
     for event in events:
-        handle_event(event)
+        if event.type == QUIT:
+            sys.exit()
     # Post custom messages
     epochs = epoch_emitter.check()
     if epochs.get("new_sec"):
@@ -55,14 +59,6 @@ def process_pygame_events(events: list[pygame.event.Event]) -> None:
         )
     if epochs.get("new_hour"):
         pygame.event.post(pygame.event.Event(EVENT_EPOCH_HOUR, unit=epochs.get("hour")))
-
-
-def handle_event(event: pygame.event.Event) -> None:
-    if event.type == QUIT:
-        sys.exit()
-    if event.type == EVENT_MQTT_MESSAGE:
-        # logger.debug(f"MQTT MESSAGE: Topic: {event.topic} Payload: {event.payload}")
-        pass
 
 
 def main_entrypoint(main_func: Callable) -> None:

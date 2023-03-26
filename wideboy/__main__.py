@@ -11,13 +11,10 @@ from wideboy.constants import AppMetadata
 from wideboy.config import (
     settings,
 )
-from wideboy.mqtt.entities import (
-    HASS_MASTER,
-    handle_entity_events,
-)
-from wideboy.mqtt.homeassistant import setup_hass
+from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
+from wideboy.mqtt.homeassistant import setup_hass, process_hass_mqtt_events
 from wideboy.scenes.manager import SceneManager
-from wideboy.state import DEVICE_ID
+from wideboy.state import STATE, DEVICE_ID
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
@@ -27,6 +24,8 @@ from wideboy.utils.pygame import (
     main_entrypoint,
     run_loop,
     clock_tick,
+    EVENT_MASTER_POWER,
+    EVENT_MASTER_BRIGHTNESS,
 )
 
 from wideboy.scenes.blank import BlankScene
@@ -57,6 +56,30 @@ if settings.display.matrix.enabled:
 hass = setup_hass()
 
 
+# Events
+
+
+def process_events(events: list[pygame.event.Event]):
+    global STATE, matrix
+    for event in events:
+        if event.type == EVENT_MASTER_POWER:
+            STATE.power = event.value
+            MQTT.publish(
+                "master/state",
+                dict(
+                    state="ON" if STATE.power else "OFF",
+                ),
+            )
+        if event.type == EVENT_MASTER_BRIGHTNESS:
+            STATE.brightness = event.value
+            if matrix:
+                matrix.brightness = (STATE.brightness / 255) * 188
+            MQTT.publish(
+                "master/state",
+                dict(brightness=STATE.brightness),
+            )
+
+
 # Loop Setup
 
 running = True
@@ -66,7 +89,7 @@ running = True
 
 async def start_main_loop():
 
-    global matrix, matrix_buffer
+    global state, matrix, matrix_buffer
 
     loop = asyncio.get_event_loop()
 
@@ -75,7 +98,9 @@ async def start_main_loop():
     while running:
         events = pygame.event.get()
         process_pygame_events(events)
-        handle_entity_events(events, scene_manager)
+        process_hass_mqtt_events(events)
+        process_events(events)
+
         delta = clock_tick(clock)
 
         updates = scene_manager.render(delta, events)
@@ -84,10 +109,7 @@ async def start_main_loop():
 
         if settings.display.matrix.enabled:
             matrix_buffer = render_led_matrix(
-                matrix,
-                screen if HASS_MASTER.state["state"] == "ON" else blank_screen,
-                matrix_buffer,
-                (HASS_MASTER.state["brightness"] / 255) * 100,
+                matrix, screen if STATE.power else blank_screen, matrix_buffer
             )
 
         scene_manager.debug(clock, delta)
