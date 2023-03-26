@@ -2,9 +2,11 @@
 
 ![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
 
-## Media
+## Photos & Screenshots
 
 ![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
+
+![Background Slideshow: Chocolate](./docs/images/screenshot-background-chocolate.jpg) ![Background Slideshow: Alan Sugar](./docs/images/screenshot-background-alan-sugar.jpg)
 
 ## Features
 
