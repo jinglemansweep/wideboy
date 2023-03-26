@@ -81,6 +81,8 @@ To run the project:
 
 The actual PyGame "Game Surface" is comprised of 12 LED panels (64px x 64px each) in a 12 x 1 layout, with a total resolution of 768 pixels wide by 64 pixels high. To achieve reasonable frame rates, it is neccesary to drive the panels in three parallel chains. Each of the three chains consists of 4 panels each (256px x 64px).
 
-However, the RGB Matrix library expects to render each chain on a different row (e.g. 4 panels wide by 3 panels high). In order to workaround this, it is necessary to reshape the game surface on every frame before sending the pixel array to the LED panels. This is performed by converting the PyGame game surface into a Numpy nparray, and then transposing slices of the 2D pixel array into the required layout. The following diagram helps explain the process:
+However, the RGB Matrix library expects to render each chain on a different row (e.g. 4 panels wide by 3 panels high). In order to workaround this, it is necessary to reshape the game surface on every frame before sending the pixel array to the LED panels. This is performed by converting the PyGame game surface into a Numpy `nparray`, and then transposing slices of the 2D pixel array into the required layout. The following diagram helps explain the process:
 
 ![Diagram showing remapping of PyGame game surface into required 2D pixel array](./docs/images/technical-surface-reshape.png)
+
+Two implementations were attempted, the first utilised standard PyGame blitting techniques by creating a temporary surface and effectively blitting segments of the PyGame game surface onto the temporary surface in the correct geometry and then rendering the temporary surface. The latest and current implementation used array manipulation using Numpy and provided some performance gains.
