@@ -4,9 +4,17 @@
 
 ## Photos & Screenshots
 
+Main installation on living room shelf, accompanied by WLED controlled NeoPixel lighting strips:
+
 ![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
 
-![Background Slideshow: Chocolate](./docs/images/screenshot-background-chocolate.jpg) ![Background Slideshow: Alan Sugar](./docs/images/screenshot-background-alan-sugar.jpg)
+Idle background slideshow and clock displaying AI generated tiled chocolate bar imagery:
+
+![Background Slideshow: Chocolate](./docs/images/screenshot-background-chocolate.jpg)
+
+Another AI generated background slideshow example:
+
+![Background Slideshow: Alan Sugar](./docs/images/screenshot-background-alan-sugar.jpg)
 
 ## Features
 
