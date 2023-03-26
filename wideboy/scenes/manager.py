@@ -16,12 +16,23 @@ class SceneManager:
         self.scene_index: int = 0
 
     def change_scene(self, name: str):
-        scene_id = self.find_scene(name)
-        if scene_id:
-            self.scene_index = scene_id
-            self.scene.setup()
+        scene_id = self.get_scene_id_by_name(name)
+        self.set_scene(scene_id)
 
-    def find_scene(self, name: str) -> Optional[int]:
+    def set_scene(self, idx: Optional[int]):
+        if not idx:
+            return
+        logger.info(f"scene:set index={idx}")
+        self.scene_index = idx
+        self.scene.setup()
+
+    def next_scene(self) -> None:
+        next_index = self.scene_index + 1
+        if next_index >= len(self.scenes):
+            next_index = 0
+        self.set_scene(next_index)
+
+    def get_scene_id_by_name(self, name: str) -> Optional[int]:
         for i, scene in enumerate(self.scenes):
             if name == scene.name:
                 return i

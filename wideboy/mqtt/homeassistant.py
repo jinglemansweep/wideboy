@@ -8,7 +8,11 @@ from wideboy.constants import AppMetadata
 from wideboy.config import settings
 from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
 from wideboy.state import DEVICE_ID
-from wideboy.utils.pygame import EVENT_MASTER_POWER, EVENT_MASTER_BRIGHTNESS
+from wideboy.utils.pygame import (
+    EVENT_MASTER_POWER,
+    EVENT_MASTER_BRIGHTNESS,
+    EVENT_SCENE_NEXT,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -45,19 +49,24 @@ def advertise_entity(
     state_topic = f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/{name}/state"
     config = dict(
         name=name,
-        device_class=device_class,
         object_id=entity_id,
         unique_id=entity_id,
         command_topic=command_topic,
-        state_topic=state_topic,
         device=build_device_info(),
-        schema="json",
     )
+    if device_class in ["switch", "light"]:
+        config["device_class"] = device_class
+        config["state_topic"] = state_topic
+        config["schema"] = "json"
+    if device_class in ["button"]:
+        config["entity_category"] = "config"
     config.update(options)
     if initial_state is None:
         initial_state = dict()
+    logger.debug(f"hass:mqtt:config name={name} config={config}")
     MQTT.publish(config_topic, config, auto_prefix=False)
-    MQTT.publish(state_topic, initial_state, auto_prefix=False)
+    if device_class in ["switch", "light"]:
+        MQTT.publish(state_topic, initial_state, auto_prefix=False)
 
 
 def build_device_info() -> dict:
@@ -100,13 +109,7 @@ def process_hass_mqtt_events(events: list[pygame.event.Event]):
                             EVENT_MASTER_BRIGHTNESS, value=payload["brightness"]
                         )
                     )
+            if event.topic.endswith("scene_next/set"):
+                pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
             if event.topic.endswith("select_scene/set"):
                 pass
-
-
-advertise_entity(
-    "master",
-    "light",
-    dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
-    dict(state="ON", brightness=128),
-)

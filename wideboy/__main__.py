@@ -11,8 +11,12 @@ from wideboy.constants import AppMetadata
 from wideboy.config import (
     settings,
 )
-from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
-from wideboy.mqtt.homeassistant import setup_hass, process_hass_mqtt_events
+from wideboy.mqtt import MQTT
+from wideboy.mqtt.homeassistant import (
+    setup_hass,
+    advertise_entity,
+    process_hass_mqtt_events,
+)
 from wideboy.scenes.manager import SceneManager
 from wideboy.state import STATE, DEVICE_ID
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
@@ -26,6 +30,7 @@ from wideboy.utils.pygame import (
     clock_tick,
     EVENT_MASTER_POWER,
     EVENT_MASTER_BRIGHTNESS,
+    EVENT_SCENE_NEXT,
 )
 
 from wideboy.scenes.blank import BlankScene
@@ -51,38 +56,18 @@ matrix, matrix_buffer = None, None
 if settings.display.matrix.enabled:
     matrix, matrix_buffer = setup_led_matrix()
 
-# HASS
+# Home Assistant
 
 hass = setup_hass()
 
+advertise_entity(
+    "master",
+    "light",
+    dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
+    dict(state="ON", brightness=128),
+)
 
-# Events
-
-
-def process_events(events: list[pygame.event.Event]):
-    global STATE, matrix
-    for event in events:
-        if event.type == EVENT_MASTER_POWER:
-            STATE.power = event.value
-            MQTT.publish(
-                "master/state",
-                dict(
-                    state="ON" if STATE.power else "OFF",
-                ),
-            )
-        if event.type == EVENT_MASTER_BRIGHTNESS:
-            STATE.brightness = event.value
-            if matrix:
-                matrix.brightness = (STATE.brightness / 255) * 188
-            MQTT.publish(
-                "master/state",
-                dict(brightness=STATE.brightness),
-            )
-
-
-# Loop Setup
-
-running = True
+advertise_entity("scene_next", "button")
 
 # Main Loop
 
@@ -94,23 +79,49 @@ async def start_main_loop():
     loop = asyncio.get_event_loop()
 
     scene_manager = SceneManager(set([DefaultScene(screen), BlankScene(screen)]))
+    scene_manager.change_scene("default")
+
+    running = True
 
     while running:
+
+        # Events Processing
+
         events = pygame.event.get()
         process_pygame_events(events)
         process_hass_mqtt_events(events)
-        process_events(events)
+        for event in events:
+            if event.type == EVENT_MASTER_POWER:
+                STATE.power = event.value
+                MQTT.publish(
+                    "master/state",
+                    dict(
+                        state="ON" if STATE.power else "OFF",
+                    ),
+                )
+            if event.type == EVENT_MASTER_BRIGHTNESS:
+                STATE.brightness = event.value
+                if matrix:
+                    matrix.brightness = (STATE.brightness / 255) * 188
+                MQTT.publish(
+                    "master/state",
+                    dict(brightness=STATE.brightness),
+                )
+            if event.type == EVENT_SCENE_NEXT:
+                scene_manager.next_scene()
+
+        # Clock, Blitting, Display
 
         delta = clock_tick(clock)
-
         updates = scene_manager.render(delta, events)
-        if len(updates):
-            pygame.display.update(updates)
+        pygame.display.update(updates)
 
         if settings.display.matrix.enabled:
             matrix_buffer = render_led_matrix(
                 matrix, screen if STATE.power else blank_screen, matrix_buffer
             )
+
+        # Debugging
 
         scene_manager.debug(clock, delta)
         await asyncio.sleep(0)

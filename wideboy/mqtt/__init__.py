@@ -81,7 +81,7 @@ class MQTTClient:
         logger.info(
             f"mqtt:connect client={client} userdata={userdata} flags={flags} rc={str(rc)}"
         )
-        self.subscribe(f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/#", 1)
+        self.subscribe(f"{MQTT_TOPIC_PREFIX}/{DEVICE_ID}/#", 0)
 
     def _on_message(self, client, userdata, msg):
         topic, payload = str(msg.topic), msg.payload.decode("utf-8")
