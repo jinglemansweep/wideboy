@@ -6,6 +6,16 @@
 
 ![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
 
+## Features
+
+- :alarm_clock: Clock (NTP managed)
+- :calendar: Basic calendar (reminders coming soon)
+- :sunny: Weather summary and next hour forecast
+- :camera: Background image slideshow (great with [ArtyFarty](https://github.com/jinglemansweep/artyfarty) AI art generator)
+- :incoming_envelope: Announcements and notifications via [MQTT](https://en.wikipedia.org/wiki/MQTT)
+- :satellite: Remote control via MQTT and [Home Assistant](https://www.home-assistant.io/)
+- :strawberry: Optimised for [DietPi](https://dietpi.com/) running on a Raspberry Pi 4
+
 ## Installation
 
 Fetch dependencies submodules:
