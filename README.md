@@ -1,5 +1,7 @@
 # WideBoy
 
+![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
+
 ## Installation
 
 Fetch dependencies submodules:
