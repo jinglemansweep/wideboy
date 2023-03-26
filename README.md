@@ -8,7 +8,7 @@ This project is perfect for delivering dynamic visual content that can entertain
 
 ## Photos & Screenshots
 
-Main installation on living room shelf, accompanied by WLED controlled NeoPixel lighting strips:
+Main installation on living room shelf, accompanied by [WLED](https://kno.wled.ge/) controlled NeoPixel lighting strips:
 
 ![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
 
@@ -35,7 +35,7 @@ Another AI generated background slideshow example:
 
 ### Hardware
 
-- :strawberry: Raspberry Pi 4 (2GB RAM or higher) (see [RPi Locator](https://rpilocator.com/) for availablity)
+- :strawberry: Raspberry Pi 4 (2GB RAM or higher) (see [RPi Locator](https://rpilocator.com/) for availability)
 - :tophat: Active HUB75 Raspberry Pi Hat (e.g. [Electrodragon RGB Matrix Panel Driver Board](https://www.electrodragon.com/product/rgb-matrix-panel-drive-board-raspberry-pi/))
 - :black_medium_square: 12 x 64x64 or 6 x 128x64 HUB75e LED matrix panels (e.g. [P2 P2.5 Indoor SMD2121 Full Color LED Display Module 1/32 Scan 320x160mm](https://www.aliexpress.com/item/32845686589.html))
 - :zap: 5v power supply with support for 24A+ (e.g. [5v 40A Power Supply](https://www.amazon.co.uk/inShareplus-Universal-Regulated-Switching-Transformer/dp/B08QRCSTG4))
@@ -47,6 +47,16 @@ Another AI generated background slideshow example:
 - :electric_plug: Custom adaptor to reshape and convert PyGame RGB surface to LED matrix compatible pixel array (see [./wideboy/utils/display.py](./wideboy/utils/display.py))
 - :penguin: [DietPi](https://dietpi.com/), a minimal lightweight Linux distribution designed for Raspberry Pi devices
 - :snake: Python 3.x, [Paho MQTT Client](https://pypi.org/project/paho-mqtt/), [HomeAssistantAPI](https://github.com/GrandMoff100/HomeAssistantAPI)
+
+## Technical Details
+
+### Surface Reshaping
+
+The actual PyGame "Game Surface" is comprised of 12 LED panels (64px x 64px each) in a 12 x 1 layout, with a total resolution of 768 pixels wide by 64 pixels high. To achieve reasonable frame rates, it is neccesary to drive the panels in three parallel chains. Each of the three chains consists of 4 panels each (256px x 64px).
+
+However, the RGB Matrix library expects to render each chain on a different row (e.g. 4 panels wide by 3 panels high). In order to workaround this, it is necessary to reshape the game surface on every frame before sending the pixel array to the LED panels. This is performed by converting the PyGame game surface into a Numpy nparray, and then transposing slices of the 2D pixel array into the required layout. The following diagram helps explain the process:
+
+![Diagram showing remapping of PyGame game surface into required 2D pixel array](./docs/images/technical-surface-reshape.png)
 
 ## Installation
 
