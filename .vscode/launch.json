@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "WideBoy Local",
+      "type": "python",
+      "request": "launch",
+      "module": "wideboy",
+      "justMyCode": true
+    }
+  ]
+}
