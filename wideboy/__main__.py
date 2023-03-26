@@ -102,7 +102,7 @@ async def start_main_loop():
             if event.type == EVENT_MASTER_BRIGHTNESS:
                 STATE.brightness = event.value
                 if matrix:
-                    matrix.brightness = (STATE.brightness / 255) * 188
+                    matrix.brightness = (STATE.brightness / 255) * 100
                 MQTT.publish(
                     "master/state",
                     dict(brightness=STATE.brightness),
