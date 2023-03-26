@@ -103,8 +103,6 @@ async def start_main_loop():
     scene_manager = SceneManager(set([DefaultScene(screen), BlankScene(screen)]))
     scene_manager.run("default")
 
-    i = 0
-
     while running:
         events = pygame.event.get()
         process_pygame_events(events)
@@ -115,8 +113,6 @@ async def start_main_loop():
         if len(updates):
             pygame.display.update(updates)
 
-        pygame.image.save(screen, f"screenshot.jpg")
-        i += 1
         if settings.display.matrix.enabled:
             matrix_buffer = render_led_matrix(
                 matrix, screen if STATE.power else blank_screen, matrix_buffer
