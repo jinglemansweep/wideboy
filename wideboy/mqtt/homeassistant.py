@@ -2,7 +2,7 @@ import json
 import logging
 import pygame
 from paho.mqtt.client import Client as MQTTClient
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from homeassistant_api import Client
 
 from wideboy.constants import AppMetadata
@@ -64,9 +64,12 @@ class HASSEntity:
         MQTT.publish(self.config_topic, self.config, auto_prefix=False)
         self.update(self.state)
 
-    def update(self, new_state: Optional[dict] = None):
+    def update(self, new_state: Optional[Union[dict, str]] = None):
         if new_state:
-            self.state.update(new_state)
+            if isinstance(new_state, str):
+                self.state.update(dict(state=new_state))
+            else:
+                self.state.update(new_state)
             MQTT.publish(
                 self.state_topic,
                 self.state,
