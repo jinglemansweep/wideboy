@@ -1,4 +1,4 @@
-# WideBoy
+# WideBoy: Ultra Wide Display System
 
 ![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
 
