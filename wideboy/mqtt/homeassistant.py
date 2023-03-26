@@ -4,19 +4,20 @@ import pygame
 from typing import Optional
 from homeassistant_api import Client
 
-from wideboy.constants import AppMetadata
-from wideboy.config import settings
-from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
-from wideboy.state import DEVICE_ID
-from wideboy.utils.pygame import (
+from wideboy.constants import (
+    AppMetadata,
+    EVENT_MQTT_MESSAGE,
     EVENT_MASTER_POWER,
     EVENT_MASTER_BRIGHTNESS,
     EVENT_SCENE_NEXT,
 )
+from wideboy.config import settings
+from wideboy.mqtt import MQTT
+from wideboy.state import DEVICE_ID
+
 
 logger = logging.getLogger(__name__)
 
-EVENT_HASS_COMMAND = pygame.USEREVENT + 31
 
 MQTT_TOPIC_PREFIX = settings.mqtt.topic_prefix
 HASS_URL = settings.homeassistant.url
@@ -94,7 +95,6 @@ def process_hass_mqtt_events(events: list[pygame.event.Event]):
             if event.topic.endswith("master/set"):
                 try:
                     payload = json.loads(event.payload)
-                    logger.debug(f"master/set payload={payload}")
                 except Exception as e:
                     logger.warn("hass:mqtt:event error={e}")
                 if "state" in payload:
@@ -111,5 +111,3 @@ def process_hass_mqtt_events(events: list[pygame.event.Event]):
                     )
             if event.topic.endswith("scene_next/set"):
                 pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
-            if event.topic.endswith("select_scene/set"):
-                pass

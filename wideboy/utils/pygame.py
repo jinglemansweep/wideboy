@@ -7,23 +7,20 @@ import traceback
 from pygame import QUIT, RESIZABLE, SCALED
 from typing import Callable
 
-from wideboy.constants import AppMetadata
+from wideboy.constants import (
+    AppMetadata,
+    EVENT_EPOCH_SECOND,
+    EVENT_EPOCH_MINUTE,
+    EVENT_EPOCH_HOUR,
+)
 from wideboy.config import settings
-from wideboy.mqtt import MQTT, EVENT_MQTT_MESSAGE
+from wideboy.mqtt import MQTT
 from wideboy.utils.helpers import EpochEmitter
 
 DISPLAY_FLAGS = RESIZABLE | SCALED
 
 logger = logging.getLogger(__name__)
 
-EVENT_EPOCH_SECOND = pygame.USEREVENT + 11
-EVENT_EPOCH_MINUTE = pygame.USEREVENT + 12
-EVENT_EPOCH_HOUR = pygame.USEREVENT + 12
-
-EVENT_MASTER_POWER = pygame.USEREVENT + 15
-EVENT_MASTER_BRIGHTNESS = pygame.USEREVENT + 16
-
-EVENT_SCENE_NEXT = pygame.USEREVENT + 18
 
 FPS = 50
 

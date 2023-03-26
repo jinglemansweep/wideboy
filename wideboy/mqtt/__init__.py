@@ -7,10 +7,10 @@ import paho.mqtt.client as mqtt
 from wideboy.config import (
     settings,
 )
+from wideboy.constants import EVENT_MQTT_MESSAGE
 from wideboy.state import DEVICE_ID
 
 
-EVENT_MQTT_MESSAGE = pygame.USEREVENT + 21
 MQTT_TOPIC_PREFIX = settings.mqtt.topic_prefix
 
 logger = logging.getLogger(__name__)

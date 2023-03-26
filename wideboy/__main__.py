@@ -7,7 +7,12 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-from wideboy.constants import AppMetadata
+from wideboy.constants import (
+    AppMetadata,
+    EVENT_MASTER_POWER,
+    EVENT_MASTER_BRIGHTNESS,
+    EVENT_SCENE_NEXT,
+)
 from wideboy.config import (
     settings,
 )
@@ -28,9 +33,6 @@ from wideboy.utils.pygame import (
     main_entrypoint,
     run_loop,
     clock_tick,
-    EVENT_MASTER_POWER,
-    EVENT_MASTER_BRIGHTNESS,
-    EVENT_SCENE_NEXT,
 )
 
 from wideboy.scenes.blank import BlankScene
