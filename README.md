@@ -4,7 +4,7 @@
 
 ## Media
 
-![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-1.png)
+![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
 
 ## Installation
 
