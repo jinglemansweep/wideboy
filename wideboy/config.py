@@ -235,7 +235,7 @@ validators = [
 
 settings = Dynaconf(
     envvar_prefix=DYNACONF_ENVVAR_PREFIX,
-    settings_files=["settings.toml", "secrets.toml"],
+    settings_files=["settings.toml", "settings.local.toml", "secrets.toml"],
     validators=validators,
 )
 
