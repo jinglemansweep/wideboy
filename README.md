@@ -2,9 +2,9 @@
 
 ![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
 
-Wideboy is an experimental project that provides an ultra wide video wall display notice board. It uses Python and PyGame, providing smooth and fast animations, and runs on a Raspberry Pi single board computer for an energy-efficient and cost-effective operation.
+Wideboy is an experimental project that provides an ultra wide video wall display, serving dashboards, art/image slideshows and notification alerts. It is developed using Python and PyGame, providing smooth and fast animations, and is designed to run on Raspberry Pi single board computers for both energy-efficient and cost-effective operation.
 
-This project is perfect for delivering dynamic visual content that engages your audience, whether you want to convey important information, display beautiful visuals, or create an immersive experience.
+This project is perfect for delivering dynamic visual content that can entertain and keep your home or office informed, whether you want to convey important information, display beautiful visuals, or create an immersive experience.
 
 ## Photos & Screenshots
 
