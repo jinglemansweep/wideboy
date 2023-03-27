@@ -29,7 +29,7 @@ class CreditsScene(BaseScene):
         # Setup background widget
         self.logo = ImageSprite(
             pygame.Rect(
-                self.width - 263,
+                self.width - 235,
                 4,
                 self.width,
                 self.height,
@@ -46,9 +46,10 @@ class CreditsScene(BaseScene):
         )
         self.group.add(self.qr_widget)
         self.text_version = TextSprite(
-            pygame.Rect(self.width - 30, 9, 32, 12),
+            pygame.Rect(self.width - 20, self.height - 11, 32, 12),
             AppMetadata.VERSION,
-            font_size=9,
+            font_size=7,
+            color_fg=pygame.Color(128, 128, 128),
         )
         self.group.add(self.text_version)
         self.text_repo_url = TextSprite(
