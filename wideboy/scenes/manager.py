@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class SceneManager:
-    scenes: set[BaseScene]
+    scenes: list[BaseScene] = list()
+    scene: Optional[BaseScene] = None
     index: int = 0
 
     def __init__(self, scenes: list[BaseScene]) -> None:
@@ -22,9 +23,11 @@ class SceneManager:
 
     def set_scene(self, index: int):
         logger.info(f"scene:set index={index}")
+        if self.scene:
+            self.scene.destroy()
         self.index = index
         self.scene = self.scenes[self.index]
-        self.scene.reset()
+        self.scene.setup()
 
     def next_scene(self) -> None:
         next_index = self.index + 1

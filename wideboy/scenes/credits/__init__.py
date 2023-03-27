@@ -1,12 +1,13 @@
-import asyncio
 import logging
 import pygame
 
+from wideboy.constants import AppMetadata
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.image import ImageSprite
+from wideboy.sprites.qrcode import QRCodeSprite
+from wideboy.sprites.text import TextSprite
 from wideboy.scenes.base import BaseScene
 from wideboy.state import DEVICE_ID
-from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 from wideboy.config import settings
 
 
@@ -28,7 +29,7 @@ class CreditsScene(BaseScene):
         # Setup background widget
         self.logo = ImageSprite(
             pygame.Rect(
-                self.width - 235,
+                self.width - 263,
                 4,
                 self.width,
                 self.height,
@@ -38,6 +39,25 @@ class CreditsScene(BaseScene):
             255,
         )
         self.group.add(self.logo)
+        self.qr_widget = QRCodeSprite(
+            pygame.Rect(2, 2, 64 - 2, 64 - 2),
+            AppMetadata.REPO_URL,
+            (60, 60),
+        )
+        self.group.add(self.qr_widget)
+        self.text_version = TextSprite(
+            pygame.Rect(self.width - 30, 9, 32, 12),
+            AppMetadata.VERSION,
+            font_size=9,
+        )
+        self.group.add(self.text_version)
+        self.text_repo_url = TextSprite(
+            pygame.Rect(66, self.height - 20, 400, 36),
+            AppMetadata.REPO_URL,
+            font_size=14,
+            color_fg=pygame.Color(255, 255, 0),
+        )
+        self.group.add(self.text_repo_url)
 
     def update(
         self,

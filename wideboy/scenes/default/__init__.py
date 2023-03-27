@@ -61,12 +61,6 @@ class DefaultScene(BaseScene):
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
-        self.qr_widget = QRCodeSprite(
-            pygame.Rect(self.width - 256, 64 - 2, 64 - 2, 64 - 4),
-            f"{settings.general.remote_url}?d={DEVICE_ID}",
-            (60, 60),
-        )
-        self.group.add(self.qr_widget)
         # Setup text widget
         # self.text_widget = TextSprite((4, self.height, 512 - 8, 56), self.state)
         # self.group.add(self.text_widget)
@@ -77,10 +71,6 @@ class DefaultScene(BaseScene):
         self.act_weather_show.start()
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
-        self.act_qrcode_show = self.build_qrcode_show_act()
-        self.act_qrcode_show.start()
-        # self.act_ticker_change = None  # self.build_ticker_change_act()
-        # self.act_ticker_change.start()
 
     def update(
         self,
@@ -94,8 +84,6 @@ class DefaultScene(BaseScene):
             self.act_weather_show.update()
         if self.act_background_change is not None:
             self.act_background_change.update()
-        if self.act_qrcode_show is not None:
-            self.act_qrcode_show.update()
         # if self.act_ticker_change is not None:
         #    self.act_ticker_change.update()
 
@@ -122,21 +110,6 @@ class DefaultScene(BaseScene):
                     Animation(
                         self.clock_widget,
                         (self.width - 128, 2),
-                        64,
-                    ),
-                ),
-            ],
-        )
-
-    def build_qrcode_show_act(self) -> Act:
-        return Act(
-            64,
-            [
-                (
-                    0,
-                    Animation(
-                        self.qr_widget,
-                        (self.width - 256, 2),
                         64,
                     ),
                 ),

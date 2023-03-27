@@ -82,9 +82,11 @@ async def start_main_loop():
     loop = asyncio.get_event_loop()
 
     scene_manager = SceneManager(
-        [CreditsScene(screen), DefaultScene(screen), BlankScene(screen)]
+        [
+            DefaultScene(screen),
+            CreditsScene(screen),
+        ]
     )
-    scene_manager.change_scene("credits")
 
     running = True
 
