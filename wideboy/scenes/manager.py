@@ -10,23 +10,24 @@ logger = logging.getLogger(__name__)
 
 class SceneManager:
     scenes: set[BaseScene]
+    index: int = 0
 
     def __init__(self, scenes: list[BaseScene]) -> None:
         self.scenes: list[BaseScene] = scenes
         self.set_scene(0)
 
     def change_scene(self, name: str):
-        scene_id = self.get_scene_id_by_name(name)
-        self.set_scene(scene_id)
+        index = self.get_scene_id_by_name(name)
+        self.set_scene(index)
 
-    def set_scene(self, idx: int):
-        logger.info(f"scene:set index={idx}")
-        self.scene = self.scenes[idx]
+    def set_scene(self, index: int):
+        logger.info(f"scene:set index={index}")
+        self.index = index
+        self.scene = self.scenes[self.index]
         self.scene.reset()
-        self.scene.start()
 
     def next_scene(self) -> None:
-        next_index = self.scene_index + 1
+        next_index = self.index + 1
         if next_index >= len(self.scenes):
             next_index = 0
         self.set_scene(next_index)

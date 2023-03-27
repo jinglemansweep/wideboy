@@ -7,13 +7,6 @@ from wideboy.state import STATE
 logger = logging.getLogger(__name__)
 
 
-class SceneState(Enum):
-    stopped = 0
-    starting = 1
-    started = 2
-    stopping = 3
-
-
 class BaseScene:
     name: str
     frame: int
@@ -30,27 +23,20 @@ class BaseScene:
             bg_color,
         )
         self.group = pygame.sprite.LayeredDirty()
-        self.state = SceneState.stopped
         self.setup()
 
     def reset(self) -> None:
-        self.stop()
+        self.destroy()
         self.setup()
 
     def setup(self) -> None:
         self.frame = 0
 
-    def start(self) -> None:
-        logger.debug(f"scene:state name={self.name} state=starting")
-        self.state = SceneState.starting
-
-    def stop(self) -> None:
-        logger.debug(f"scene:state name={self.name} state=stopping")
-        self.state = SceneState.stopping
-
     def destroy(self) -> None:
         logger.debug(f"scene:destroy name={self.name}")
+        self.clear()
         self.group.empty()
+        self.surface.blit(self.background, (0, 0))
 
     def render(
         self,
@@ -65,7 +51,6 @@ class BaseScene:
         self.group.clear(self.surface, self.background)
 
     def update(self, delta: float, events: list[pygame.event.Event]) -> None:
-        self.handle_state_change()
         self.handle_events(events)
         self.group.update(self.frame, delta, events)
         self.frame += 1
@@ -75,14 +60,6 @@ class BaseScene:
 
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         pass
-
-    def handle_state_change(self) -> None:
-        if self.state == SceneState.starting:
-            self.state = SceneState.started
-        if self.state == SceneState.stopping:
-            self.state = SceneState.stopped
-        if self.state == SceneState.stopped:
-            self.destroy()
 
     def debug(self, clock: pygame.time.Clock, delta: float) -> None:
         frame = self.frame
