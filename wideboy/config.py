@@ -9,6 +9,7 @@ from wideboy.constants import DYNACONF_ENVVAR_PREFIX
 
 validators = [
     # General
+    Validator("GENERAL__DEVICE_ID", default=None),
     Validator(
         "GENERAL__REMOTE_URL",
         default="http://wideboy.local",

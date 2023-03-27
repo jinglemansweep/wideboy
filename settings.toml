@@ -1,4 +1,5 @@
 [general]
+  # device_id = "lounge"
   # remote_url = "http://wideboy.local"
   # debug = false
   # log_level = "debug" # info, debug

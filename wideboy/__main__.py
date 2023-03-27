@@ -36,6 +36,7 @@ from wideboy.utils.pygame import (
 )
 
 from wideboy.scenes.blank import BlankScene
+from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
 
 CANVAS_SIZE = (settings.display.canvas.width, settings.display.canvas.height)
@@ -80,8 +81,10 @@ async def start_main_loop():
 
     loop = asyncio.get_event_loop()
 
-    scene_manager = SceneManager(set([DefaultScene(screen), BlankScene(screen)]))
-    scene_manager.change_scene("default")
+    scene_manager = SceneManager(
+        [CreditsScene(screen), DefaultScene(screen), BlankScene(screen)]
+    )
+    scene_manager.change_scene("credits")
 
     running = True
 

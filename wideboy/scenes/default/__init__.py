@@ -3,7 +3,7 @@ import logging
 import pygame
 
 from wideboy.scenes.animation import Act, Animation
-from wideboy.sprites.image import ImageSprite
+from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
@@ -32,7 +32,7 @@ class DefaultScene(BaseScene):
     def setup(self):
         super().setup()
         # Setup background widget
-        self.background_widget = ImageSprite(
+        self.background_widget = BackgroundSprite(
             pygame.Rect(
                 0,
                 0 - self.height,
