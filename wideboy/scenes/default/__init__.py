@@ -42,6 +42,7 @@ class DefaultScene(BaseScene):
             ),
             (self.width, self.height),
             255,
+            shuffle=True,
         )
         self.group.add(self.background_widget)
         # Setup clock widget

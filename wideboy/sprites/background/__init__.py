@@ -26,12 +26,13 @@ class BackgroundSprite(BaseSprite):
         rect: pygame.Rect,
         size: pygame.math.Vector2,
         alpha: int = 255,
+        shuffle: bool = False,
     ) -> None:
         super().__init__(rect)
         self.size = size
         self.alpha = alpha
         self.image_index = 0
-        self.glob_images()
+        self.glob_images(shuffle)
         self.render_next_image()
         logger.debug(f"sprite:image files={len(self.image_files)}")
 
