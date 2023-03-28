@@ -5,6 +5,7 @@ import pygame
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import ClockSprite
+from wideboy.sprites.placeholder import PlaceholderSprite
 from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
@@ -54,20 +55,21 @@ class DefaultScene(BaseScene):
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.clock_widget)
+        # Setup placeholder widget
+        self.placeholder_widget = PlaceholderSprite(
+            pygame.Rect(self.width - 256, 2, 64 - 2, 64 - 4),
+            color_bg=(0, 0, 0, 255 - 64),
+        )
+        self.group.add(self.placeholder_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
             pygame.Rect(self.width - 192, 2, 64 - 2, 64 - 4),
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
-        # Setup text widget
-        # self.text_widget = TextSprite((4, self.height, 512 - 8, 56), self.state)
-        # self.group.add(self.text_widget)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
-        self.act_weather_show = self.build_weather_show_act()
-        self.act_weather_show.start()
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
 
@@ -79,12 +81,8 @@ class DefaultScene(BaseScene):
         super().update(delta, events)
         if self.act_clock_show is not None:
             self.act_clock_show.update()
-        if self.act_weather_show is not None:
-            self.act_weather_show.update()
         if self.act_background_change is not None:
             self.act_background_change.update()
-        # if self.act_ticker_change is not None:
-        #    self.act_ticker_change.update()
 
     # Handle Events
 
@@ -115,21 +113,6 @@ class DefaultScene(BaseScene):
             ],
         )
 
-    def build_weather_show_act(self) -> Act:
-        return Act(
-            64,
-            [
-                (
-                    0,
-                    Animation(
-                        self.weather_widget,
-                        (self.width - 192, 2),
-                        64,
-                    ),
-                ),
-            ],
-        )
-
     def build_background_change_act(self) -> Act:
         return Act(
             128,
@@ -151,26 +134,6 @@ class DefaultScene(BaseScene):
                         64,
                         (0, 0 - self.height),
                     ),
-                ),
-            ],
-        )
-
-    def build_ticker_change_act(self) -> Act:
-        return Act(
-            176,
-            [
-                (
-                    0,
-                    Animation(
-                        self.text_widget,
-                        (4, self.height),
-                        64,
-                    ),
-                ),
-                (64, lambda: self.text_widget.set_random_content()),
-                (
-                    96,
-                    Animation(self.text_widget, (4, 4), 64, (4, self.height)),
                 ),
             ],
         )

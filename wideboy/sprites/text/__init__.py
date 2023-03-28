@@ -2,7 +2,7 @@ import logging
 import pygame
 import random
 from pygame import SRCALPHA
-from wideboy.sprites.images import render_text
+from wideboy.sprites.image_helpers import render_text
 from wideboy.sprites.base import BaseSprite
 
 

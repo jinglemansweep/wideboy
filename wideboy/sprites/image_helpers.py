@@ -2,7 +2,7 @@ import glob
 import logging
 import os
 import pygame
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageEnhance
 from pygame import SRCALPHA
 from typing import Optional
 
@@ -25,20 +25,24 @@ def surface_to_pil(surface: pygame.surface.Surface) -> Image.Image:
     )
 
 
-def load_transform_image(
-    filename: str, size: Optional[pygame.math.Vector2] = None, blur: bool = False
-) -> pygame.surface.Surface:
-    im = load_image(filename)
-    if size is not None:
-        im.thumbnail((int(size[0]), int(size[1])), Image.Resampling.LANCZOS)
-    surface = pil_to_surface(im)
-    return surface
+def scale_image(image: Image.Image, size: pygame.math.Vector2) -> Image.Image:
+    image = image.resize((int(size[0]), int(size[1])), Image.Resampling.LANCZOS)
+    return image
 
 
-def apply_surface_filter(surface: pygame.surface.Surface, filter: ImageFilter.Filter):
-    image = surface_to_pil(surface)
-    image = image.filter(filter)
-    return pil_to_surface(image)
+def apply_filters(
+    image: Image.Image,
+    alpha: int = 255,
+    filters: Optional[list[ImageFilter.Filter]] = None,
+):
+    if filters is None:
+        filters = []
+    print(image, alpha, filters)
+    for filter in filters:
+        image = image.filter(filter)
+    brightness_ctrl = ImageEnhance.Brightness(image)
+    image = brightness_ctrl.enhance(alpha / 255)
+    return image
 
 
 def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:
@@ -76,3 +80,11 @@ def render_text(
         surface_dest.blit(surface_outline, (offset[0] + 1, offset[1] + 1))
     surface_dest.blit(surface_orig, (1, 1))
     return surface_dest
+
+
+def build_background(
+    size: pygame.math.Vector2, color: pygame.color.Color
+) -> pygame.surface.Surface:
+    background = pygame.surface.Surface(size)
+    background.fill(color)
+    return background

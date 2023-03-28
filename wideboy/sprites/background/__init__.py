@@ -6,11 +6,13 @@ import random
 from PIL import ImageFilter
 from typing import Optional
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.images import (
+from wideboy.sprites.image_helpers import (
     glob_files,
-    load_transform_image,
-    apply_surface_filter,
+    load_image,
+    scale_image,
+    apply_filters,
     render_text,
+    pil_to_surface,
 )
 from wideboy.config import settings
 
@@ -36,12 +38,15 @@ class BackgroundSprite(BaseSprite):
         filename = self.image_files[self.image_index]
         logger.debug(f"image:next index={self.image_index} filename={filename}")
         surface = pygame.surface.Surface(self.size)
-        file_image = self.load_image(filename, self.size)
-        file_image_blurred = apply_surface_filter(
-            pygame.transform.scale(file_image, self.size), ImageFilter.BLUR
+        orig_image = scale_image(load_image(filename), (512, 64))
+        blurred_image = apply_filters(
+            scale_image(orig_image.copy(), self.size),
+            alpha=128,
+            filters=[ImageFilter.BLUR],
         )
-        surface.blit(file_image_blurred, (0, 0))
-        surface.blit(file_image, (0, 0))
+
+        surface.blit(pil_to_surface(blurred_image), (0, 0))
+        surface.blit(pil_to_surface(orig_image), (0, 0))
         label_text = (
             os.path.splitext(os.path.basename(filename))[0].replace("t_", "").upper()
         )
@@ -63,20 +68,6 @@ class BackgroundSprite(BaseSprite):
             random.shuffle(self.image_files)
         if self.image_index > len(self.image_files) - 1:
             self.image_index = 0
-
-    def load_image(
-        self,
-        filename: str,
-        size: Optional[pygame.math.Vector2] = None,
-        alpha: Optional[int] = 255,
-        blur: Optional[bool] = False,
-    ):
-        logger.debug(
-            f"image:load filename={filename} size={size} alpha={alpha} blur={blur}"
-        )
-        image = load_transform_image(filename, size, blur)
-        image.fill((255, 255, 255, alpha), special_flags=pygame.BLEND_RGBA_MULT)
-        return image
 
     def update(
         self,

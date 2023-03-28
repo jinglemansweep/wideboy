@@ -2,6 +2,8 @@ import logging
 import pygame
 from enum import Enum
 from typing import Optional
+
+from wideboy.sprites.image_helpers import build_background
 from wideboy.state import STATE
 
 logger = logging.getLogger(__name__)
@@ -75,11 +77,3 @@ class BaseScene:
     @property
     def width(self):
         return self.surface.get_rect().width
-
-
-def build_background(
-    size: pygame.math.Vector2, color: pygame.color.Color
-) -> pygame.surface.Surface:
-    background = pygame.surface.Surface(size)
-    background.fill(color)
-    return background

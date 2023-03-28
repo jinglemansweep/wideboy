@@ -2,7 +2,7 @@ import logging
 import pygame
 from datetime import datetime
 from pygame import SRCALPHA
-from wideboy.sprites.images import render_text
+from wideboy.sprites.image_helpers import render_text
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.sprites.base import BaseSprite
 
