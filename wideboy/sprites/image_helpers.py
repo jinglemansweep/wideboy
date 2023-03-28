@@ -66,19 +66,21 @@ def render_text(
     font_filename: str,
     font_size: int,
     color_fg: pygame.color.Color,
+    color_bg: pygame.color.Color = pygame.color.Color(0, 0, 0, 0),
     color_outline: pygame.color.Color = pygame.color.Color(0, 0, 0, 255),
     antialias: bool = True,
 ) -> pygame.surface.Surface:
     font = pygame.font.Font(font_filename, font_size)
     surface_orig = font.render(text, antialias, color_fg)
     surface_dest = pygame.Surface(
-        (surface_orig.get_rect().width + 2, surface_orig.get_rect().height + 2),
+        (surface_orig.get_rect().width + 4, surface_orig.get_rect().height + 2),
         SRCALPHA,
     )
+    surface_dest.fill(color_bg)
     for offset in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
         surface_outline = font.render(text, antialias, color_outline)
-        surface_dest.blit(surface_outline, (offset[0] + 1, offset[1] + 1))
-    surface_dest.blit(surface_orig, (1, 1))
+        surface_dest.blit(surface_outline, (offset[0] + 2, offset[1] + 1))
+    surface_dest.blit(surface_orig, (2, 1))
     return surface_dest
 
 

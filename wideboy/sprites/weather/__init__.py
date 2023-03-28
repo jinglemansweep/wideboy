@@ -66,7 +66,8 @@ class WeatherSprite(BaseSprite):
                 "fonts/bitstream-vera.ttf",
                 28,
                 self.color_temp,
-                (0, 0, 0, 255),
+                (0, 0, 0, 0),
+                (0, 0, 0, 0),
             )
             self.image.blit(temperature_text, (2, 29))
             degree_text = render_text(
@@ -74,7 +75,8 @@ class WeatherSprite(BaseSprite):
                 "fonts/bitstream-vera.ttf",
                 20,
                 self.color_temp,
-                (0, 0, 0, 255),
+                (0, 0, 0, 0),
+                (0, 0, 0, 0),
             )
             self.image.blit(degree_text, (temperature_text.get_width() - 2, 29))
         if (

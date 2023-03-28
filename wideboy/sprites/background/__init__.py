@@ -41,18 +41,25 @@ class BackgroundSprite(BaseSprite):
         orig_image = scale_image(load_image(filename), (512, 64))
         blurred_image = apply_filters(
             scale_image(orig_image.copy(), self.size),
-            alpha=128,
+            alpha=192,
             filters=[ImageFilter.BLUR],
         )
         surface.blit(pil_to_surface(blurred_image), (0, 0))
-        surface.blit(pil_to_surface(orig_image), (256, 0))
+        surface.blit(pil_to_surface(orig_image), (128, 0))
         label_text = (
-            os.path.splitext(os.path.basename(filename))[0].replace("t_", "").upper()
+            os.path.splitext(os.path.basename(filename))[0].replace("_", " ").lower()
         )
         label = render_text(
-            label_text, "fonts/bitstream-vera.ttf", 10, pygame.Color(255, 255, 0)
+            label_text,
+            "fonts/bitstream-vera.ttf",
+            10,
+            pygame.Color(255, 255, 0),
+            pygame.Color(0, 0, 0, 255),
+            pygame.Color(0, 0, 0, 0),
         )
-        surface.blit(label, (0, self.rect.height - 14))
+        surface.blit(
+            label, (128 + (256 - (label.get_width() / 2)), self.rect.height - 16)
+        )
         self.image = surface
         self.image_index += 1
         if self.image_index > len(self.image_files) - 1:
