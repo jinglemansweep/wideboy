@@ -2,6 +2,7 @@ import logging
 import os
 import pygame
 import random
+import yaml
 
 from PIL import ImageFilter
 from typing import Optional
@@ -46,9 +47,16 @@ class BackgroundSprite(BaseSprite):
         )
         surface.blit(pil_to_surface(blurred_image), (0, 0))
         surface.blit(pil_to_surface(orig_image), (128, 0))
-        label_text = (
-            os.path.splitext(os.path.basename(filename))[0].replace("_", " ").lower()
-        )
+        metadata = self.load_metadata(filename)
+        print(metadata)
+        if metadata:
+            label_text = metadata["inputs"]["prompt"].strip()
+        else:
+            label_text = (
+                os.path.splitext(os.path.basename(filename))[0]
+                .replace("_", " ")
+                .lower()
+            )
         label = render_text(
             label_text,
             "fonts/bitstream-vera.ttf",
@@ -72,6 +80,15 @@ class BackgroundSprite(BaseSprite):
             random.shuffle(self.image_files)
         if self.image_index > len(self.image_files) - 1:
             self.image_index = 0
+
+    def load_metadata(self, filename: str) -> dict:
+        basename, _ = os.path.splitext(filename)
+        try:
+            with open(f"{basename}.yml", "r") as yaml_file:
+                return yaml.safe_load(yaml_file)
+        except Exception as e:
+            logger.warn(f"metadata:load error={e}")
+        return None
 
     def update(
         self,

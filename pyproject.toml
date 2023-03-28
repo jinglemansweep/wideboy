@@ -22,6 +22,7 @@ homeassistant_api = { git = "https://github.com/GrandMoff100/HomeAssistantAPI.gi
 qrcode = {extras = ["pil"], version = "^7.4.2"}
 types-paho-mqtt = "^1.6.0.5"
 dynaconf = "^3.1.12"
+pyyaml = "^6.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
