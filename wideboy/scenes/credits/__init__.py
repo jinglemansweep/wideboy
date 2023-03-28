@@ -34,7 +34,7 @@ class CreditsScene(BaseScene):
                 self.width,
                 self.height,
             ),
-            (self.width, self.height - 8),
+            (230, 54),
             "images/logo.png",
             255,
         )

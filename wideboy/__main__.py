@@ -83,8 +83,8 @@ async def start_main_loop():
 
     scene_manager = SceneManager(
         [
-            DefaultScene(screen),
             CreditsScene(screen),
+            DefaultScene(screen),
         ]
     )
 
