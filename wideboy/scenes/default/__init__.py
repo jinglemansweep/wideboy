@@ -49,22 +49,22 @@ class DefaultScene(BaseScene):
         self.clock_widget = ClockSprite(
             pygame.Rect(
                 self.width - 128,
-                2,
-                128 - 2,
-                self.height - 4,
+                0,
+                128,
+                self.height,
             ),
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            pygame.Rect(2, 2, 64 - 2, 64 - 4),
+            pygame.Rect(0, 0, 64, 64),
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
         # Setup placeholder widget
         self.placeholder_widget = PlaceholderSprite(
-            pygame.Rect(64 + 2, 2, 64 - 2, 64 - 4),
+            pygame.Rect(64, 0, 64, 64),
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.placeholder_widget)
@@ -107,7 +107,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.clock_widget,
-                        (self.width - 128, 2),
+                        (self.width - 128, 0),
                         64,
                     ),
                 ),
