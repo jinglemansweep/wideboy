@@ -56,7 +56,7 @@ class BackgroundSprite(BaseSprite):
                 "fonts/bitstream-vera.ttf",
                 11,
                 pygame.Color(255, 255, 0),
-                pygame.Color(0, 0, 0, 255),
+                pygame.Color(0, 0, 0, 192),
                 pygame.Color(0, 0, 0, 0),
             )
             surface.blit(label, (640 - label.get_width(), self.rect.height - 15))
