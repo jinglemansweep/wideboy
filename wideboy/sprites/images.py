@@ -2,7 +2,7 @@ import glob
 import logging
 import os
 import pygame
-from PIL import Image
+from PIL import Image, ImageFilter
 from pygame import SRCALPHA
 from typing import Optional
 
@@ -14,14 +14,31 @@ def load_image(filename: str) -> Image.Image:
     return Image.open(filename)
 
 
-def load_resize_image(
-    filename: str, size: Optional[pygame.math.Vector2] = None
+def pil_to_surface(image: Image.Image) -> pygame.surface.Surface:
+    return pygame.image.fromstring(image.tobytes(), image.size, image.mode).convert_alpha()  # type: ignore
+
+
+def surface_to_pil(surface: pygame.surface.Surface) -> Image.Image:
+    image_bytes = pygame.image.tostring(surface, "RGBA")
+    return Image.frombytes(
+        "RGBA", (surface.get_width(), surface.get_height()), image_bytes
+    )
+
+
+def load_transform_image(
+    filename: str, size: Optional[pygame.math.Vector2] = None, blur: bool = False
 ) -> pygame.surface.Surface:
     im = load_image(filename)
     if size is not None:
         im.thumbnail((int(size[0]), int(size[1])), Image.Resampling.LANCZOS)
-    image = pygame.image.fromstring(im.tobytes(), im.size, im.mode).convert_alpha()  # type: ignore
-    return image
+    surface = pil_to_surface(im)
+    return surface
+
+
+def apply_surface_filter(surface: pygame.surface.Surface, filter: ImageFilter.Filter):
+    image = surface_to_pil(surface)
+    image = image.filter(filter)
+    return pil_to_surface(image)
 
 
 def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:

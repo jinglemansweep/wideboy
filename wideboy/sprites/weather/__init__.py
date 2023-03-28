@@ -4,7 +4,7 @@ import pygame
 from typing import Optional
 from pygame import SRCALPHA
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.images import render_text, load_resize_image
+from wideboy.sprites.images import render_text, load_transform_image
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.state import STATE
 from wideboy.config import settings
@@ -48,7 +48,7 @@ class WeatherSprite(BaseSprite):
             icon_filename = os.path.join(
                 settings.paths.images_icons, "weather", f"{STATE.weather_summary}.png"
             )
-            self.icon_summary = load_resize_image(icon_filename, (72, 72))
+            self.icon_summary = load_transform_image(icon_filename, (72, 72))
             self.image.blit(self.icon_summary, (-4, -6))
         if STATE.temperature is not None:
             temp_str = (

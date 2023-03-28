@@ -2,7 +2,7 @@ import logging
 import pygame
 from typing import Optional
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.images import load_resize_image
+from wideboy.sprites.images import load_transform_image
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +23,7 @@ class ImageSprite(BaseSprite):
         self.render()
 
     def render(self) -> None:
-        image = load_resize_image(self.filename, self.size)
+        image = load_transform_image(self.filename, self.size)
         image.fill((255, 255, 255, self.alpha), special_flags=pygame.BLEND_RGBA_MULT)
         self.image = image
+        self.dirty = 1

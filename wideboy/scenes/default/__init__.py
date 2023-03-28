@@ -39,7 +39,6 @@ class DefaultScene(BaseScene):
                 self.width,
                 self.height,
             ),
-            (self.height * 2, self.height * 2),
             (self.width, self.height),
             255,
         )
