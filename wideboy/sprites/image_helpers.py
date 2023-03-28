@@ -37,7 +37,6 @@ def apply_filters(
 ):
     if filters is None:
         filters = []
-    print(image, alpha, filters)
     for filter in filters:
         image = image.filter(filter)
     brightness_ctrl = ImageEnhance.Brightness(image)
