@@ -52,14 +52,12 @@ class BackgroundSprite(BaseSprite):
         label = render_text(
             label_text,
             "fonts/bitstream-vera.ttf",
-            10,
+            12,
             pygame.Color(255, 255, 0),
             pygame.Color(0, 0, 0, 255),
             pygame.Color(0, 0, 0, 0),
         )
-        surface.blit(
-            label, (128 + (256 - (label.get_width() / 2)), self.rect.height - 16)
-        )
+        surface.blit(label, (638 - label.get_width(), self.rect.height - 19))
         self.image = surface
         self.image_index += 1
         if self.image_index > len(self.image_files) - 1:
