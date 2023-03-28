@@ -55,18 +55,18 @@ class DefaultScene(BaseScene):
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.clock_widget)
-        # Setup placeholder widget
-        self.placeholder_widget = PlaceholderSprite(
-            pygame.Rect(self.width - 256, 2, 64 - 2, 64 - 4),
-            color_bg=(0, 0, 0, 255 - 64),
-        )
-        self.group.add(self.placeholder_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            pygame.Rect(self.width - 192, 2, 64 - 2, 64 - 4),
+            pygame.Rect(2, 2, 64 - 2, 64 - 4),
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
+        # Setup placeholder widget
+        self.placeholder_widget = PlaceholderSprite(
+            pygame.Rect(64 + 2, 2, 64 - 2, 64 - 4),
+            color_bg=(0, 0, 0, 255 - 64),
+        )
+        self.group.add(self.placeholder_widget)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()

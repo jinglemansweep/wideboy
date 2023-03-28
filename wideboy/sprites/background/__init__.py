@@ -44,9 +44,8 @@ class BackgroundSprite(BaseSprite):
             alpha=128,
             filters=[ImageFilter.BLUR],
         )
-
         surface.blit(pil_to_surface(blurred_image), (0, 0))
-        surface.blit(pil_to_surface(orig_image), (0, 0))
+        surface.blit(pil_to_surface(orig_image), (256, 0))
         label_text = (
             os.path.splitext(os.path.basename(filename))[0].replace("t_", "").upper()
         )
