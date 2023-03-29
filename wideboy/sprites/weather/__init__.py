@@ -7,7 +7,6 @@ from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     render_text,
     load_image,
-    scale_image,
     pil_to_surface,
 )
 from wideboy.utils.pygame import EVENT_EPOCH_SECOND
@@ -53,8 +52,10 @@ class WeatherSprite(BaseSprite):
             icon_filename = os.path.join(
                 settings.paths.images_icons, "weather", f"{STATE.weather_summary}.png"
             )
-            self.icon_summary = scale_image(load_image(icon_filename), (72, 72))
-            self.image.blit(pil_to_surface(self.icon_summary), (-4, -6))
+            self.icon_summary = pygame.transform.scale(
+                load_image(icon_filename), (72, 72)
+            )
+            self.image.blit(self.icon_summary, (-4, -6))
         if STATE.temperature is not None:
             temp_str = (
                 f"{int(round(STATE.temperature, 0))}"

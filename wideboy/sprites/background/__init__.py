@@ -10,7 +10,6 @@ from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     glob_files,
     load_image,
-    scale_image,
     apply_filters,
     render_text,
     pil_to_surface,
@@ -40,14 +39,15 @@ class BackgroundSprite(BaseSprite):
         filename = self.image_files[self.image_index]
         logger.debug(f"image:next index={self.image_index} filename={filename}")
         surface = pygame.surface.Surface(self.size)
-        orig_image = scale_image(load_image(filename), (512, 64))
+        orig_image = load_image(filename)
+        orig_image = pygame.transform.scale(orig_image, (512, 64))
         blurred_image = apply_filters(
-            scale_image(orig_image.copy(), self.size),
+            pygame.transform.scale(orig_image.copy(), self.size),
             alpha=192,
             filters=[ImageFilter.BLUR],
         )
-        surface.blit(pil_to_surface(blurred_image), (0, 0))
-        surface.blit(pil_to_surface(orig_image), (128, 0))
+        surface.blit(blurred_image, (0, 0))
+        surface.blit(orig_image, (128, 0))
         metadata = self.load_metadata(filename)
         if metadata:
             label_text = metadata["inputs"]["prompt"].strip()

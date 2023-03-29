@@ -10,8 +10,8 @@ logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
 logger = logging.getLogger("sprites.utils.images")
 
 
-def load_image(filename: str) -> Image.Image:
-    return Image.open(filename)
+def load_image(filename: str) -> pygame.surface.Surface:
+    return pygame.image.load(filename)
 
 
 def pil_to_surface(image: Image.Image) -> pygame.surface.Surface:
@@ -25,23 +25,19 @@ def surface_to_pil(surface: pygame.surface.Surface) -> Image.Image:
     )
 
 
-def scale_image(image: Image.Image, size: pygame.math.Vector2) -> Image.Image:
-    image = image.resize((int(size[0]), int(size[1])), Image.Resampling.LANCZOS)
-    return image
-
-
 def apply_filters(
-    image: Image.Image,
+    surface: pygame.surface.Surface,
     alpha: int = 255,
     filters: Optional[list[ImageFilter.Filter]] = None,
 ):
+    image = surface_to_pil(surface)
     if filters is None:
         filters = []
     for filter in filters:
         image = image.filter(filter)
     brightness_ctrl = ImageEnhance.Brightness(image)
     image = brightness_ctrl.enhance(alpha / 255)
-    return image
+    return pil_to_surface(image)
 
 
 def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:
