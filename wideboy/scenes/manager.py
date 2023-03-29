@@ -2,7 +2,6 @@ import logging
 import pygame
 from typing import Optional
 from .base import BaseScene
-from wideboy.state import StateStore
 
 
 logger = logging.getLogger("scenes.manager")

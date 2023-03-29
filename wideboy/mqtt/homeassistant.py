@@ -4,6 +4,7 @@ import pygame
 from typing import Optional
 from homeassistant_api import Client
 
+
 from wideboy.constants import (
     AppMetadata,
 )
@@ -48,13 +49,14 @@ def advertise_entity(
         name=name,
         object_id=entity_id,
         unique_id=entity_id,
-        command_topic=command_topic,
         device=build_device_info(),
     )
-    if device_class in ["switch", "light"]:
+    if device_class in ["sensor", "switch", "light"]:
         config["device_class"] = device_class
         config["state_topic"] = state_topic
         config["schema"] = "json"
+    if device_class in ["switch", "light", "button"]:
+        config["command_topic"] = command_topic
     if device_class in ["button"]:
         config["entity_category"] = "config"
     config.update(options)
@@ -62,8 +64,13 @@ def advertise_entity(
         initial_state = dict()
     logger.debug(f"hass:mqtt:config name={name} config={config}")
     MQTT.publish(config_topic, config, auto_prefix=False)
-    if device_class in ["switch", "light"]:
+    if device_class in ["sensor", "switch", "light"]:
         MQTT.publish(state_topic, initial_state, auto_prefix=False)
+
+
+def update_sensors(clock: pygame.time.Clock, every_tick: int = 1000):
+    if pygame.time.get_ticks() % every_tick == 0:
+        MQTT.publish("fps/state", dict(value=int(clock.get_fps())))
 
 
 def build_device_info() -> dict:

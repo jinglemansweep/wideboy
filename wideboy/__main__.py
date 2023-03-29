@@ -14,10 +14,7 @@ from wideboy.config import (
     settings,
 )
 from wideboy.mqtt import MQTT
-from wideboy.mqtt.homeassistant import (
-    setup_hass,
-    advertise_entity,
-)
+from wideboy.mqtt.homeassistant import setup_hass, advertise_entity, update_sensors
 from wideboy.scenes.manager import SceneManager
 from wideboy.state import STATE, DEVICE_ID
 from wideboy.utils.events import handle_events
@@ -62,6 +59,17 @@ advertise_entity(
 )
 
 advertise_entity("scene_next", "button")
+advertise_entity(
+    "fps",
+    "sensor",
+    dict(
+        device_class="frequency",
+        suggested_display_precision=1,
+        unit_of_measurement="fps",
+        value_template="{{ value_json.value }}",
+    ),
+    initial_state=dict(value=0),
+)
 
 # Main Loop
 async def start_main_loop():
@@ -88,6 +96,7 @@ async def start_main_loop():
         delta = clock_tick(clock)
         updates = scene_manager.render(delta, events)
         pygame.display.update(updates)
+        update_sensors(clock)
 
         if settings.display.matrix.enabled:
             matrix_buffer = render_led_matrix(
