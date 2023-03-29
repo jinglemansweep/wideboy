@@ -41,25 +41,6 @@ def setup_pygame(
     return clock, screen
 
 
-def process_pygame_events(events: list[pygame.event.Event]) -> None:
-    # Process received messages
-    for event in events:
-        if event.type == QUIT:
-            sys.exit()
-    # Post custom messages
-    epochs = epoch_emitter.check()
-    if epochs.get("new_sec"):
-        pygame.event.post(
-            pygame.event.Event(EVENT_EPOCH_SECOND, unit=epochs.get("sec"))
-        )
-    if epochs.get("new_min"):
-        pygame.event.post(
-            pygame.event.Event(EVENT_EPOCH_MINUTE, unit=epochs.get("min"))
-        )
-    if epochs.get("new_hour"):
-        pygame.event.post(pygame.event.Event(EVENT_EPOCH_HOUR, unit=epochs.get("hour")))
-
-
 def main_entrypoint(main_func: Callable) -> None:
     if settings.general.profiling in ["ncalls", "tottime"]:
         cProfile.run("main_func()", None, sort=settings.general.profiling)

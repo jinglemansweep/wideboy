@@ -71,18 +71,3 @@ class EpochEmitter:
 
     def _update(self) -> None:
         self.then = datetime.timetuple(datetime.now())
-
-
-class JoyPad:
-    def __init__(self, device_index: int) -> None:
-        pygame.joystick.init()
-        self.joypad = pygame.joystick.Joystick(device_index)
-        self.joypad.init()
-        self.button = None
-        self.direction = (0, 0)
-
-    def process_event(self, event: pygame.event.Event) -> None:
-        if event.type == pygame.JOYBUTTONDOWN:
-            self.button = event.dict["button"]
-        if event.type == pygame.JOYHATMOTION:
-            self.direction = event.dict["value"]

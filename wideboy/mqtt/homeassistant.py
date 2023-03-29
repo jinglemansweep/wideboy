@@ -6,10 +6,6 @@ from homeassistant_api import Client
 
 from wideboy.constants import (
     AppMetadata,
-    EVENT_MQTT_MESSAGE,
-    EVENT_MASTER_POWER,
-    EVENT_MASTER_BRIGHTNESS,
-    EVENT_SCENE_NEXT,
 )
 from wideboy.config import settings
 from wideboy.mqtt import MQTT
@@ -87,27 +83,3 @@ def build_entity_id(name: str) -> str:
 
 def build_entity_topic_prefix(device_class: str, full_name) -> str:
     return f"{MQTT_TOPIC_PREFIX}/{device_class}/{full_name}"
-
-
-def process_hass_mqtt_events(events: list[pygame.event.Event]):
-    for event in events:
-        if event.type == EVENT_MQTT_MESSAGE:
-            if event.topic.endswith("master/set"):
-                try:
-                    payload = json.loads(event.payload)
-                except Exception as e:
-                    logger.warn("hass:mqtt:event error={e}")
-                if "state" in payload:
-                    pygame.event.post(
-                        pygame.event.Event(
-                            EVENT_MASTER_POWER, value=payload["state"] == "ON"
-                        )
-                    )
-                if "brightness" in payload:
-                    pygame.event.post(
-                        pygame.event.Event(
-                            EVENT_MASTER_BRIGHTNESS, value=payload["brightness"]
-                        )
-                    )
-            if event.topic.endswith("scene_next/set"):
-                pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
