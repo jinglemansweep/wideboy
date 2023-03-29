@@ -60,6 +60,20 @@ class CreditsScene(BaseScene):
             color_fg=pygame.Color(255, 255, 0),
         )
         self.group.add(self.text_repo_url)
+        self.text_frame = TextSprite(
+            pygame.Rect(66, 2, 400, 36),
+            "FRAME: 00000000",
+            font_size=10,
+            color_fg=pygame.Color(255, 0, 255),
+        )
+        self.group.add(self.text_frame)
+        self.text_fps = TextSprite(
+            pygame.Rect(66, 14, 400, 36),
+            "FPS: 00.0",
+            font_size=10,
+            color_fg=pygame.Color(255, 0, 255),
+        )
+        self.group.add(self.text_fps)
         self.alpha_test = AlphaSprite(
             pygame.Rect(self.width - 47, 19, 8, 8), pygame.Color(255, 255, 255, 255)
         )
@@ -67,10 +81,13 @@ class CreditsScene(BaseScene):
 
     def update(
         self,
+        clock: pygame.time.Clock,
         delta: float,
         events: list[pygame.event.Event],
     ) -> None:
-        super().update(delta, events)
+        super().update(clock, delta, events)
+        self.text_frame.set_text(f"FRAME: {self.frame}")
+        self.text_fps.set_text(f"FPS: {int(clock.get_fps())}")
 
     # Handle Events
 

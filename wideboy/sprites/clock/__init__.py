@@ -27,17 +27,21 @@ class ClockSprite(BaseSprite):
         self.color_date = color_date
         self.font_date = "fonts/digital.ttf"
         self.font_time = "fonts/digital.ttf"
-        self.render()
+        self.draw()
 
     def update(
-        self, frame: str, delta: float, events: list[pygame.event.Event]
+        self,
+        frame: str,
+        clock: pygame.time.Clock,
+        delta: float,
+        events: list[pygame.event.Event],
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(frame, clock, delta, events)
         for event in events:
             if event.type == EVENT_EPOCH_SECOND:
-                self.render()
+                self.draw()
 
-    def render(self) -> None:
+    def draw(self) -> None:
         now = datetime.now()
         dow_str = now.strftime("%A")[:3]
         ddmm_str = now.strftime("%d %b")

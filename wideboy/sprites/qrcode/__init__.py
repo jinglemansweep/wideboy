@@ -25,9 +25,9 @@ class QRCodeSprite(BaseSprite):
         self.color_bg = color_bg
         self.color_fg = color_fg
         self.border = border
-        self.render()
+        self.draw()
 
-    def render(self) -> None:
+    def draw(self) -> None:
         qr = qrcode.QRCode(border=self.border)
         qr.add_data(self.data)
         qr.make(fit=True)

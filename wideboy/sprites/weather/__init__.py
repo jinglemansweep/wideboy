@@ -33,20 +33,21 @@ class WeatherSprite(BaseSprite):
         self.color_temp = color_temp
         self.color_rain_prob = color_rain_prob
         self.icon_summary = None
-        self.render()
+        self.draw()
 
     def update(
         self,
         frame: str,
+        clock: pygame.time.Clock,
         delta: float,
         events: list[pygame.event.Event],
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(frame, clock, delta, events)
         for event in events:
             if event.type == EVENT_EPOCH_SECOND and event.unit % 10 == 0:
-                self.render()
+                self.draw()
 
-    def render(self) -> None:
+    def draw(self) -> None:
         self.image.fill(self.color_bg)
         if STATE.weather_summary is not None:
             icon_filename = os.path.join(

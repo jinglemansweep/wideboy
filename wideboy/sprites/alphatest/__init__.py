@@ -18,17 +18,21 @@ class AlphaSprite(BaseSprite):
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
         self.alpha = alpha
-        self.render()
+        self.draw()
 
     def update(
-        self, frame: str, delta: float, events: list[pygame.event.Event]
+        self,
+        frame: str,
+        clock: pygame.time.Clock,
+        delta: float,
+        events: list[pygame.event.Event],
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(frame, clock, delta, events)
         val = frame % 64
         self.alpha = val * 4
-        self.render()
+        self.draw()
 
-    def render(self) -> None:
+    def draw(self) -> None:
         self.image.fill(self.color_bg)
         self.image.set_alpha(self.alpha)
         self.dirty = 1

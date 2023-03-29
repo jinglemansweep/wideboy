@@ -76,10 +76,11 @@ class DefaultScene(BaseScene):
 
     def update(
         self,
+        clock: pygame.time.Clock,
         delta: float,
         events: list[pygame.event.Event],
     ) -> None:
-        super().update(delta, events)
+        super().update(clock, delta, events)
         if self.act_clock_show is not None:
             self.act_clock_show.update()
         if self.act_background_change is not None:

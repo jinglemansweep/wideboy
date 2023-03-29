@@ -17,6 +17,7 @@ class TextSprite(BaseSprite):
         font_name: str = "fonts/bitstream-vera.ttf",
         font_size: int = 20,
         color_fg: pygame.color.Color = (255, 255, 255, 255),
+        color_bg: pygame.color.Color = (0, 0, 0, 255),
         color_outline: pygame.color.Color = (0, 0, 0, 255),
     ) -> None:
         super().__init__(rect)
@@ -25,10 +26,15 @@ class TextSprite(BaseSprite):
         self.font_name = font_name
         self.font_size = font_size
         self.color_fg = color_fg
+        self.color_bg = color_bg
         self.color_outline = color_outline
-        self.render()
+        self.draw()
 
-    def render(self) -> None:
+    def set_text(self, text: str) -> None:
+        self.text = text
+        self.draw()
+
+    def draw(self) -> None:
         text_surface = render_text(
             self.text,
             self.font_name,
@@ -36,5 +42,6 @@ class TextSprite(BaseSprite):
             self.color_fg,
             color_outline=self.color_outline,
         )
+        self.image.fill(self.color_bg)
         self.image.blit(text_surface, (0, 0))
         self.dirty = 1

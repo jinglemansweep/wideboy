@@ -85,7 +85,8 @@ class BackgroundSprite(BaseSprite):
     def update(
         self,
         frame: int,
+        clock: pygame.time.Clock,
         delta: float,
         events: list[pygame.event.Event],
     ) -> None:
-        super().update(frame, delta, events)
+        super().update(frame, clock, delta, events)

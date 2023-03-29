@@ -94,7 +94,8 @@ async def start_main_loop():
 
         # Clock, Blitting, Display
         delta = clock_tick(clock)
-        updates = scene_manager.render(delta, events)
+        scene_manager.update(clock, delta, events)
+        updates = scene_manager.draw()
         pygame.display.update(updates)
         update_sensors(clock)
 
