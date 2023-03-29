@@ -10,9 +10,9 @@ from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     glob_files,
     load_image,
-    apply_filters,
+    filter_surface,
+    scale_surface,
     render_text,
-    pil_to_surface,
 )
 from wideboy.config import settings
 
@@ -41,8 +41,8 @@ class BackgroundSprite(BaseSprite):
         surface = pygame.surface.Surface(self.size)
         orig_image = load_image(filename)
         orig_image = pygame.transform.scale(orig_image, (512, 64))
-        blurred_image = apply_filters(
-            pygame.transform.scale(orig_image.copy(), self.size),
+        blurred_image = filter_surface(
+            scale_surface(orig_image.copy(), self.size),
             alpha=192,
             filters=[ImageFilter.BLUR],
         )

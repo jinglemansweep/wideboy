@@ -25,11 +25,17 @@ def surface_to_pil(surface: pygame.surface.Surface) -> Image.Image:
     )
 
 
-def apply_filters(
+def scale_surface(
+    surface: pygame.surface.Surface, size: pygame.math.Vector2
+) -> pygame.surface.Surface:
+    return pygame.transform.smoothscale(surface, size)
+
+
+def filter_surface(
     surface: pygame.surface.Surface,
     alpha: int = 255,
     filters: Optional[list[ImageFilter.Filter]] = None,
-):
+) -> pygame.surface.Surface:
     image = surface_to_pil(surface)
     if filters is None:
         filters = []
@@ -44,7 +50,9 @@ def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:
     return glob.glob(os.path.join(path, pattern))
 
 
-def tile_surface(surface: pygame.Surface, size: pygame.math.Vector2) -> pygame.Surface:
+def tile_surface(
+    surface: pygame.Surface, size: pygame.math.Vector2
+) -> pygame.surface.Surface:
     x = y = 0
     tiled_surface = pygame.Surface(size)
     while y < size[1]:

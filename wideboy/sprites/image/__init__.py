@@ -4,7 +4,8 @@ from typing import Optional
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     load_image,
-    apply_filters,
+    filter_surface,
+    scale_surface,
 )
 
 
@@ -30,7 +31,7 @@ class ImageSprite(BaseSprite):
         self.rect = pygame.rect.Rect(
             self.rect[0], self.rect[1], surface.get_rect()[2], surface.get_rect()[3]
         )
-        surface = pygame.transform.smoothscale(surface, self.size)
-        surface = apply_filters(surface, alpha=self.alpha)
+        surface = scale_surface(surface, self.size)
+        surface = filter_surface(surface, alpha=self.alpha)
         self.image = surface
         self.dirty = 1
