@@ -30,7 +30,7 @@ class ImageSprite(BaseSprite):
         self.rect = pygame.rect.Rect(
             self.rect[0], self.rect[1], surface.get_rect()[2], surface.get_rect()[3]
         )
-        surface = pygame.transform.scale(surface, self.size)
+        surface = pygame.transform.smoothscale(surface, self.size)
         surface = apply_filters(surface, alpha=self.alpha)
         self.image = surface
         self.dirty = 1
