@@ -24,8 +24,8 @@ class AlphaSprite(BaseSprite):
         self, frame: str, delta: float, events: list[pygame.event.Event]
     ) -> None:
         super().update(frame, delta, events)
-        val = frame % 255
-        self.alpha = val if val < 128 else 255 - val
+        val = frame % 64
+        self.alpha = val * 4
         self.render()
 
     def render(self) -> None:

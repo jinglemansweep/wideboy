@@ -61,7 +61,7 @@ class CreditsScene(BaseScene):
         )
         self.group.add(self.text_repo_url)
         self.alpha_test = AlphaSprite(
-            pygame.Rect(self.width - 235, 5, 50, 54), pygame.Color(128, 0, 128, 255)
+            pygame.Rect(self.width - 47, 19, 8, 8), pygame.Color(255, 255, 255, 255)
         )
         self.group.add(self.alpha_test)
 
