@@ -27,6 +27,7 @@ class ImageSprite(BaseSprite):
 
     def render(self) -> None:
         surface = load_image(self.filename)
+        self.rect = surface.get_rect()
         surface = pygame.transform.scale(surface, self.size)
         surface = apply_filters(surface, alpha=self.alpha)
         self.image = surface
