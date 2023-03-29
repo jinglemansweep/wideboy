@@ -61,14 +61,14 @@ class CreditsScene(BaseScene):
         )
         self.group.add(self.text_repo_url)
         self.text_frame = TextSprite(
-            pygame.Rect(66, 2, 400, 36),
+            pygame.Rect(66, 2, 400, 14),
             "FRAME: 00000000",
             font_size=10,
             color_fg=pygame.Color(255, 0, 255),
         )
         self.group.add(self.text_frame)
         self.text_fps = TextSprite(
-            pygame.Rect(66, 14, 400, 36),
+            pygame.Rect(66, 14, 400, 14),
             "FPS: 00.0",
             font_size=10,
             color_fg=pygame.Color(255, 0, 255),
