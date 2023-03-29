@@ -59,6 +59,12 @@ Build `rpi-rgb-led-matrix` Python bindings:
     cd lib/rpi-rgb-led-matrix
     make build-python
 
+## Configuration
+
+Project configuration is provided using [Dynaconf](https://www.dynaconf.com/), meaning that configuration can be specified using one or more TOML files, but any configuration value can be overridden at runtime using environment variables. For more information, see [`./wideboy/config.py`](./wideboy/config.py).
+
+The provided [`settings.toml`](./settings.toml) details all the available options, but they are all commented out. The preferred method of configuration is to override any settings by creating a [`settings.local.toml`] and/or a [`secrets.toml`] (for sensitive values). Both of these files, if they exist, will be used, but should not be stored in source control and are therefore ignored using `.gitignore`.
+
 ## Development
 
 Create a Python 3.x virtual environment, and install project dependencies:
