@@ -9,7 +9,7 @@ from typing import Any
 from wideboy.constants import AppMetadata
 from wideboy.config import settings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("utils.helpers")
 
 
 def intro_debug(device_id: str) -> None:

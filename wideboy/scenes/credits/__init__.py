@@ -11,7 +11,7 @@ from wideboy.state import DEVICE_ID
 from wideboy.config import settings
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("scenes.scene.credits")
 
 
 class CreditsScene(BaseScene):

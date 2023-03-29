@@ -7,7 +7,7 @@ from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.sprites.base import BaseSprite
 
 
-logger = logging.getLogger("sprites.clock")
+logger = logging.getLogger("sprite.clock")
 
 # ['bitstreamverasansmono', 'bitstreamverasans', 'anonymousprominus', 'anonymouspro', 'bitstreamveraserif']
 

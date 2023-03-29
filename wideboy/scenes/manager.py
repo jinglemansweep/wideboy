@@ -5,7 +5,7 @@ from .base import BaseScene
 from wideboy.state import StateStore
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("scenes.manager")
 
 
 class SceneManager:

@@ -4,7 +4,7 @@ from pygame import SRCALPHA
 from wideboy.sprites.base import BaseSprite
 
 
-logger = logging.getLogger("sprites.placeholder")
+logger = logging.getLogger("sprite.placeholder")
 
 
 class PlaceholderSprite(BaseSprite):

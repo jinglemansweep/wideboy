@@ -16,7 +16,7 @@ from wideboy.utils.pygame import EVENT_EPOCH_MINUTE
 from wideboy.config import settings
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("scenes.scene.default")
 
 
 class DefaultScene(BaseScene):

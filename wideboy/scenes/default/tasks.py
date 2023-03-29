@@ -11,7 +11,7 @@ WEATHER_FETCH_INTERVAL_MINS = settings.weather.fetch_interval_mins
 WEATHER_LATITUDE = settings.weather.latitude
 WEATHER_LONGITUDE = settings.weather.longitude
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("scene.default.tasks")
 
 OPENMETEO_API_URL = "https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true&hourly=temperature_2m,precipitation_probability"
 

@@ -5,7 +5,7 @@ from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("scenes.scene.blank")
 
 
 class FillSprite(BaseSprite):

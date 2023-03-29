@@ -13,7 +13,7 @@ from wideboy.utils.pygame import EVENT_EPOCH_SECOND
 from wideboy.state import STATE
 from wideboy.config import settings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("sprite.weather")
 
 RAIN_PROBABILITY_DISPLAY_THRESHOLD = 25
 

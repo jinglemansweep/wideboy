@@ -16,7 +16,7 @@ from wideboy.sprites.image_helpers import (
 )
 from wideboy.config import settings
 
-logger = logging.getLogger("sprites.background")
+logger = logging.getLogger("sprite.background")
 
 
 class BackgroundSprite(BaseSprite):

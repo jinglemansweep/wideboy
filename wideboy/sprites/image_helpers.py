@@ -7,7 +7,7 @@ from pygame import SRCALPHA
 from typing import Optional
 
 logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
-logger = logging.getLogger("sprites.utils.images")
+logger = logging.getLogger("sprites.image_helpers")
 
 
 def load_image(filename: str) -> pygame.surface.Surface:

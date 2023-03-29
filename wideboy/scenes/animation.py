@@ -5,7 +5,7 @@ from typing import Optional, Any
 
 from wideboy.sprites.base import BaseSprite
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("scenes.animation")
 
 
 class Act:

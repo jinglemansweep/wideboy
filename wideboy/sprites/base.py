@@ -1,7 +1,7 @@
 import logging
 import pygame
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("sprites.base")
 
 
 class BaseSprite(pygame.sprite.DirtySprite):

@@ -19,7 +19,7 @@ from wideboy.utils.helpers import EpochEmitter
 
 DISPLAY_FLAGS = RESIZABLE | SCALED
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("utils.pygame")
 
 
 FPS = 50

@@ -1,6 +1,6 @@
 import logging
 
-LOG_FORMAT = "%(message)s"
+LOG_FORMAT = "%(name)-20s %(levelname)-7s %(message)s"
 
 
 def setup_logger(level: int = logging.INFO) -> None:

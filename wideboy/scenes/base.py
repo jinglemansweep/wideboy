@@ -1,12 +1,10 @@
 import logging
 import pygame
-from enum import Enum
-from typing import Optional
 
 from wideboy.sprites.image_helpers import build_background
 from wideboy.state import STATE
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("scenes.base")
 
 
 class BaseScene:

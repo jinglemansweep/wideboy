@@ -16,7 +16,7 @@ from wideboy.mqtt import MQTT
 from wideboy.state import DEVICE_ID
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("mqtt.homeassistant")
 
 
 MQTT_TOPIC_PREFIX = settings.mqtt.topic_prefix

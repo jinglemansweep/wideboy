@@ -8,7 +8,7 @@ from wideboy.sprites.image_helpers import (
 )
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("sprite.image")
 
 
 class ImageSprite(BaseSprite):

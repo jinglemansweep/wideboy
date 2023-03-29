@@ -6,7 +6,7 @@ from wideboy.sprites.image_helpers import render_text
 from wideboy.sprites.base import BaseSprite
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("sprite.text")
 
 
 class TextSprite(BaseSprite):
