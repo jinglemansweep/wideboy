@@ -1,7 +1,7 @@
 import logging
 import pygame
 
-from wideboy.constants import AppMetadata
+from wideboy.constants import AppMetadata, EVENT_EPOCH_SECOND
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.alphatest import AlphaSprite
 from wideboy.sprites.image import ImageSprite
@@ -86,8 +86,10 @@ class CreditsScene(BaseScene):
         events: list[pygame.event.Event],
     ) -> None:
         super().update(clock, delta, events)
-        self.text_frame.set_text(f"FRAME: {self.frame}")
-        self.text_fps.set_text(f"FPS: {int(clock.get_fps())}")
+        for event in events:
+            if event.type == EVENT_EPOCH_SECOND:
+                self.text_frame.set_text(f"FRAME: {self.frame}")
+                self.text_fps.set_text(f"FPS: {int(clock.get_fps())}")
 
     # Handle Events
 
