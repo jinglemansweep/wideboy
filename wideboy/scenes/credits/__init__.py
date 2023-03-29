@@ -3,6 +3,7 @@ import pygame
 
 from wideboy.constants import AppMetadata
 from wideboy.scenes.animation import Act, Animation
+from wideboy.sprites.alphatest import AlphaSprite
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
@@ -59,6 +60,10 @@ class CreditsScene(BaseScene):
             color_fg=pygame.Color(255, 255, 0),
         )
         self.group.add(self.text_repo_url)
+        self.alpha_test = AlphaSprite(
+            pygame.Rect(self.width - 235, 5, 50, 54), pygame.Color(128, 0, 128, 255)
+        )
+        self.group.add(self.alpha_test)
 
     def update(
         self,
