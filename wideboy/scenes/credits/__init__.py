@@ -74,10 +74,6 @@ class CreditsScene(BaseScene):
             color_fg=pygame.Color(255, 0, 255),
         )
         self.group.add(self.text_fps)
-        self.alpha_test = AlphaSprite(
-            pygame.Rect(self.width - 47, 19, 8, 8), pygame.Color(255, 255, 255, 255)
-        )
-        self.group.add(self.alpha_test)
 
     def update(
         self,
