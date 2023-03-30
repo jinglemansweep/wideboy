@@ -58,6 +58,7 @@ class BaseScene:
         self.frame += 1
 
     def draw(self) -> list[pygame.rect.Rect]:
+        self.clear()
         return self.group.draw(self.surface)
 
     def handle_events(self, events: list[pygame.event.Event]) -> None:
