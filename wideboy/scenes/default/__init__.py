@@ -73,7 +73,7 @@ class DefaultScene(BaseScene):
         # Setup notification widget
         self.notification_widget = NotificationSprite(
             pygame.Rect(64, 4, 768 - 128, 56),
-            color_bg=(192, 0, 0, 255),
+            color_bg=(0, 0, 0, 192),
             color_fg=(255, 255, 255, 255),
         )
         self.group.add(self.notification_widget)
