@@ -55,7 +55,7 @@ def advertise_entity(
         config["device_class"] = device_class
         config["state_topic"] = state_topic
         config["schema"] = "json"
-    if device_class in ["switch", "light", "button"]:
+    if device_class in ["switch", "light", "button", "text"]:
         config["command_topic"] = command_topic
     if device_class in ["button"]:
         config["entity_category"] = "config"

@@ -11,6 +11,9 @@ from wideboy.constants import (
     EVENT_MASTER_POWER,
     EVENT_MASTER_BRIGHTNESS,
     EVENT_SCENE_NEXT,
+    EVENT_ACTION_A,
+    EVENT_ACTION_B,
+    EVENT_MESSAGE,
 )
 from wideboy.mqtt import MQTT
 from wideboy.state import STATE
@@ -25,10 +28,10 @@ epoch_emitter = EpochEmitter()
 def handle_events(
     events: list[pygame.event.Event], matrix: any, scene_manager: SceneManager
 ) -> None:
-    handle_state_events(events, matrix, scene_manager)
-    handle_mqtt_events(events)
     handle_pygame_events(events)
     handle_epoch_events(events)
+    handle_mqtt_events(events)
+    handle_state_events(events, matrix, scene_manager)
 
 
 def handle_state_events(
@@ -57,6 +60,13 @@ def handle_state_events(
             )
         if event.type == EVENT_SCENE_NEXT:
             scene_manager.next_scene()
+        if event.type == EVENT_ACTION_A:
+            logger.debug("action: a")
+        if event.type == EVENT_ACTION_B:
+            logger.debug("action: b")
+        if event.type == EVENT_MESSAGE:
+            print("WTF")
+            logger.debug(f"message: {event.message}")
 
 
 def handle_mqtt_events(events: list[pygame.event.Event]):
@@ -81,6 +91,14 @@ def handle_mqtt_events(events: list[pygame.event.Event]):
                     )
             if event.topic.endswith("scene_next/set"):
                 pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
+            if event.topic.endswith("action_a/set"):
+                pygame.event.post(pygame.event.Event(EVENT_ACTION_A))
+            if event.topic.endswith("action_b/set"):
+                pygame.event.post(pygame.event.Event(EVENT_ACTION_B))
+            if event.topic.endswith("message/set"):
+                pygame.event.post(
+                    pygame.event.Event(EVENT_MESSAGE, message=event.payload)
+                )
 
 
 def handle_epoch_events(events: list[pygame.event.Event]) -> None:

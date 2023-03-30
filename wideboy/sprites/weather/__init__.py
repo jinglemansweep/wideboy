@@ -9,7 +9,7 @@ from wideboy.sprites.image_helpers import (
     load_image,
     pil_to_surface,
 )
-from wideboy.utils.pygame import EVENT_EPOCH_SECOND
+from wideboy.constants import EVENT_EPOCH_SECOND
 from wideboy.state import STATE
 from wideboy.config import settings
 

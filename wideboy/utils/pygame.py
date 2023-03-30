@@ -9,9 +9,6 @@ from typing import Callable
 
 from wideboy.constants import (
     AppMetadata,
-    EVENT_EPOCH_SECOND,
-    EVENT_EPOCH_MINUTE,
-    EVENT_EPOCH_HOUR,
 )
 from wideboy.config import settings
 from wideboy.mqtt import MQTT

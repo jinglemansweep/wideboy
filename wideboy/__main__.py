@@ -70,6 +70,9 @@ advertise_entity(
     ),
     initial_state=dict(value=0),
 )
+advertise_entity("action_a", "button")
+advertise_entity("action_b", "button")
+advertise_entity("message", "text", dict(min=1))
 
 # Main Loop
 async def start_main_loop():
