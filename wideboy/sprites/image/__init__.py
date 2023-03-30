@@ -24,9 +24,9 @@ class ImageSprite(BaseSprite):
         self.filename = filename
         self.size = size
         self.alpha = alpha
-        self.draw()
+        self.render()
 
-    def draw(self) -> None:
+    def render(self) -> None:
         surface = load_image(self.filename)
         self.rect = pygame.rect.Rect(
             self.rect[0], self.rect[1], surface.get_rect()[2], surface.get_rect()[3]

@@ -68,7 +68,7 @@ def advertise_entity(
         MQTT.publish(state_topic, initial_state, auto_prefix=False)
 
 
-def update_sensors(clock: pygame.time.Clock, every_tick: int = 1000):
+def update_sensors(clock: pygame.time.Clock, every_tick: int = 10000):
     if pygame.time.get_ticks() % every_tick == 0:
         MQTT.publish("fps/state", dict(value=int(clock.get_fps())))
 

@@ -30,6 +30,8 @@ class BaseScene:
         self.setup()
 
     def setup(self) -> None:
+        self.clear()
+        self.empty_group()
         self.frame = 0
 
     def destroy(self) -> None:
@@ -38,17 +40,21 @@ class BaseScene:
         self.group.empty()
         self.surface.blit(self.background, (0, 0))
 
-    def draw(
+    def render(
         self,
         clock: pygame.time.Clock,
         delta: float,
         events: list[pygame.event.Event],
     ) -> list[pygame.rect.Rect]:
+        self.update(clock, delta, events)
         self.clear()
         return self.draw()
 
     def clear(self) -> None:
         self.group.clear(self.surface, self.background)
+
+    def empty_group(self) -> None:
+        self.group.empty()
 
     def update(
         self, clock: pygame.time.Clock, delta: float, events: list[pygame.event.Event]
@@ -58,7 +64,6 @@ class BaseScene:
         self.frame += 1
 
     def draw(self) -> list[pygame.rect.Rect]:
-        self.clear()
         return self.group.draw(self.surface)
 
     def handle_events(self, events: list[pygame.event.Event]) -> None:

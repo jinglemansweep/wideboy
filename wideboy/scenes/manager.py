@@ -46,17 +46,10 @@ class SceneManager:
             return None
         return self.scene.frame
 
-    def update(
-        self, clock: pygame.time.Clock, delta: float, events: list[pygame.event.Event]
-    ) -> None:
-        if not self.scene:
-            return None
-        self.scene.update(clock, delta, events)
-
-    def draw(self, *args, **kwargs) -> Optional[list[pygame.rect.Rect]]:
+    def render(self, *args, **kwargs) -> Optional[list[pygame.rect.Rect]]:
         if not self.scene:
             return []
-        return self.scene.draw(*args, **kwargs)
+        return self.scene.render(*args, **kwargs)
 
     def debug(self, clock: pygame.time.Clock, delta: float):
         if not self.scene:

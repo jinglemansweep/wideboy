@@ -27,7 +27,7 @@ class ClockSprite(BaseSprite):
         self.color_date = color_date
         self.font_date = "fonts/digital.ttf"
         self.font_time = "fonts/digital.ttf"
-        self.draw()
+        self.render()
 
     def update(
         self,
@@ -39,9 +39,9 @@ class ClockSprite(BaseSprite):
         super().update(frame, clock, delta, events)
         for event in events:
             if event.type == EVENT_EPOCH_SECOND:
-                self.draw()
+                self.render()
 
-    def draw(self) -> None:
+    def render(self) -> None:
         now = datetime.now()
         dow_str = now.strftime("%A")[:3]
         ddmm_str = now.strftime("%d %b")

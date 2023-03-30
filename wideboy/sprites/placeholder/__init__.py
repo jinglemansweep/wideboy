@@ -16,8 +16,8 @@ class PlaceholderSprite(BaseSprite):
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
-        self.draw()
+        self.render()
 
-    def draw(self) -> None:
+    def render(self) -> None:
         self.image.fill(self.color_bg)
         self.dirty = 1

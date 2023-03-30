@@ -6,6 +6,7 @@ from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, EVENT_ACTION_B
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import ClockSprite
+from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.placeholder import PlaceholderSprite
 from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
@@ -26,7 +27,7 @@ class DefaultScene(BaseScene):
     def __init__(
         self,
         surface: pygame.surface.Surface,
-        bg_color: pygame.color.Color = (0, 0, 0),
+        bg_color: pygame.color.Color = (0, 0, 0, 255),
     ) -> None:
         super().__init__(surface, bg_color)
         asyncio.create_task(fetch_weather())
@@ -69,6 +70,13 @@ class DefaultScene(BaseScene):
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.placeholder_widget)
+        # Setup notification widget
+        self.notification_widget = NotificationSprite(
+            pygame.Rect(64, 4, 768 - 128, 56),
+            color_bg=(192, 0, 0, 255),
+            color_fg=(255, 255, 255, 255),
+        )
+        self.group.add(self.notification_widget)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()

@@ -28,13 +28,13 @@ class TextSprite(BaseSprite):
         self.color_fg = color_fg
         self.color_bg = color_bg
         self.color_outline = color_outline
-        self.draw()
+        self.render()
 
     def set_text(self, text: str) -> None:
         self.text = text
-        self.draw()
+        self.render()
 
-    def draw(self) -> None:
+    def render(self) -> None:
         text_surface = render_text(
             self.text,
             self.font_name,

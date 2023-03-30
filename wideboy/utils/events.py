@@ -13,7 +13,7 @@ from wideboy.constants import (
     EVENT_SCENE_NEXT,
     EVENT_ACTION_A,
     EVENT_ACTION_B,
-    EVENT_MESSAGE,
+    EVENT_NOTIFICATION_RECEIVED,
 )
 from wideboy.mqtt import MQTT
 from wideboy.state import STATE
@@ -64,9 +64,9 @@ def handle_state_events(
             logger.debug("action: a")
         if event.type == EVENT_ACTION_B:
             logger.debug("action: b")
-        if event.type == EVENT_MESSAGE:
-            print("WTF")
+        if event.type == EVENT_NOTIFICATION_RECEIVED:
             logger.debug(f"message: {event.message}")
+            STATE.notifications.append(event.message)
 
 
 def handle_mqtt_events(events: list[pygame.event.Event]):
@@ -97,7 +97,9 @@ def handle_mqtt_events(events: list[pygame.event.Event]):
                 pygame.event.post(pygame.event.Event(EVENT_ACTION_B))
             if event.topic.endswith("message/set"):
                 pygame.event.post(
-                    pygame.event.Event(EVENT_MESSAGE, message=event.payload)
+                    pygame.event.Event(
+                        EVENT_NOTIFICATION_RECEIVED, message=event.payload
+                    )
                 )
 
 

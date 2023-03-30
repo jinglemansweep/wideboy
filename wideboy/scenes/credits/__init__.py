@@ -3,7 +3,6 @@ import pygame
 
 from wideboy.constants import AppMetadata, EVENT_EPOCH_SECOND
 from wideboy.scenes.animation import Act, Animation
-from wideboy.sprites.alphatest import AlphaSprite
 from wideboy.sprites.image import ImageSprite
 from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
