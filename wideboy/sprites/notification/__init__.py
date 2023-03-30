@@ -13,7 +13,7 @@ class NotificationSprite(BaseSprite):
         self,
         rect: pygame.rect.Rect,
         font_name: str = "fonts/bitstream-vera.ttf",
-        font_size: int = 20,
+        font_size: int = 32,
         color_fg: pygame.color.Color = (0, 0, 0, 255),
         color_bg: pygame.color.Color = (255, 255, 255, 255),
         color_outline: pygame.color.Color = (0, 0, 0, 255),
@@ -55,11 +55,26 @@ class NotificationSprite(BaseSprite):
         self.image.fill(self.color_bg if self.timeout > 0 else (0, 0, 0, 0))
         if self.message:
             text_surface = render_text(
-                f"{self.message} {self.timeout}",
+                f"{self.message}",
                 self.font_name,
                 self.font_size,
                 self.color_fg,
                 color_outline=self.color_outline,
             )
-            self.image.blit(text_surface, (0, 0))
+
+            self.image.blit(
+                text_surface, ((self.rect.width - text_surface.get_width()) / 2, 8)
+            )
+            timeout_surface = render_text(
+                f"{self.timeout}",
+                self.font_name,
+                14,
+                (255, 255, 255, 32),
+                color_outline=self.color_outline,
+            )
+            self.image.blit(
+                timeout_surface,
+                (self.rect.width - timeout_surface.get_width() - 5, 36),
+            )
+
         self.dirty = 1
