@@ -50,8 +50,9 @@
   
 [paths]
   # images_backgrounds = "images/background"
+  # images_weather = "images/icons"
   # images_icons = "images/icons"
-
+  
 [weather]
   # fetch_interval_mins = 15
   # latitude = 50.0

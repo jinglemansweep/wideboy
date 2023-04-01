@@ -35,7 +35,7 @@ class CreditsScene(BaseScene):
                 self.height,
             ),
             (230, 54),
-            "images/logo.png",
+            "images/wideboy/logo.png",
             255,
         )
         self.group.add(self.logo)

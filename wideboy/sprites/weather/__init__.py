@@ -51,7 +51,7 @@ class WeatherSprite(BaseSprite):
         self.image.fill(self.color_bg)
         if STATE.weather_summary is not None:
             icon_filename = os.path.join(
-                settings.paths.images_icons, "weather", f"{STATE.weather_summary}.png"
+                settings.paths.images_weather, f"{STATE.weather_summary}.png"
             )
             self.icon_summary = pygame.transform.scale(
                 load_image(icon_filename), (72, 72)

@@ -100,6 +100,11 @@ validators = [
         default="images/backgrounds",
         cast=Path,
     ),
+    Validator(
+        "PATHS__IMAGES_WEATHER",
+        default="images/weather",
+        cast=Path,
+    ),
     # WEATHER
     Validator(
         "WEATHER__FETCH_INTERVAL_MINS",
