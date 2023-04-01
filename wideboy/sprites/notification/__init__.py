@@ -54,7 +54,13 @@ class NotificationSprite(BaseSprite):
         self.render()
 
     def render(self) -> None:
-        self.image.fill(self.color_bg if self.timeout > 0 else (0, 0, 0, 0))
+        if 0 < (self.timeout_frames - self.timeout) <= 10:
+            color_bg = (255, 255, 255, 255) if self.timeout % 2 == 0 else (0, 0, 0, 255)
+        elif (self.timeout_frames - self.timeout) > 10:
+            color_bg = self.color_bg
+        else:
+            color_bg = (0, 0, 0, 0)
+        self.image.fill(color_bg)
         if self.message:
             text_surface = render_text(
                 f"{self.message}",
