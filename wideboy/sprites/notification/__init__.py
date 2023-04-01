@@ -18,7 +18,7 @@ class NotificationSprite(BaseSprite):
         color_bg: pygame.color.Color = (255, 255, 255, 255),
         color_outline: pygame.color.Color = (0, 0, 0, 255),
         alpha: int = 255,
-        timeout_frames: int = 900,
+        timeout_frames: int = 500,
         fadeout_frames: int = 25,
     ) -> None:
         super().__init__(rect)
