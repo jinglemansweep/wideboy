@@ -19,6 +19,7 @@ class NotificationSprite(BaseSprite):
         color_outline: pygame.color.Color = (0, 0, 0, 255),
         alpha: int = 255,
         timeout_frames: int = 300,
+        fadeout_frames: int = 25,
     ) -> None:
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -29,6 +30,7 @@ class NotificationSprite(BaseSprite):
         self.color_outline = color_outline
         self.alpha = alpha
         self.timeout_frames = timeout_frames
+        self.fadeout_frames = fadeout_frames
         self.message = None
         self.timeout = 0
         self.render()
@@ -65,16 +67,18 @@ class NotificationSprite(BaseSprite):
             self.image.blit(
                 text_surface, ((self.rect.width - text_surface.get_width()) / 2, 8)
             )
-            timeout_surface = render_text(
-                f"{self.timeout}",
-                self.font_name,
-                14,
-                (255, 255, 255, 32),
-                color_outline=self.color_outline,
+            progress_width = (self.timeout_frames - self.timeout) / self.timeout_frames
+            pygame.draw.rect(
+                self.image,
+                (0, 255, 0),
+                (
+                    0,
+                    self.rect.height - 2,
+                    self.rect.width * progress_width,
+                    2,
+                ),
             )
-            self.image.blit(
-                timeout_surface,
-                (self.rect.width - timeout_surface.get_width() - 5, 36),
-            )
+            if self.timeout < self.fadeout_frames:
+                self.image.set_alpha(self.timeout * (255 // self.fadeout_frames))
 
         self.dirty = 1
