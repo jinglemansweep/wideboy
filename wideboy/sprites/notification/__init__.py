@@ -78,7 +78,10 @@ class NotificationSprite(BaseSprite):
                     2,
                 ),
             )
-            if self.timeout < self.fadeout_frames:
-                self.image.set_alpha(self.timeout * (255 // self.fadeout_frames))
+            self.image.set_alpha(
+                self.timeout * (255 // self.fadeout_frames)
+                if self.timeout < self.fadeout_frames
+                else 255
+            )
 
         self.dirty = 1
