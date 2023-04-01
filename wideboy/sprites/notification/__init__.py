@@ -55,7 +55,11 @@ class NotificationSprite(BaseSprite):
 
     def render(self) -> None:
         if 0 < (self.timeout_frames - self.timeout) <= 10:
-            color_bg = (255, 255, 255, 255) if self.timeout % 2 == 0 else (0, 0, 0, 255)
+            color_bg = (
+                (255, 255, 255, 255)
+                if self.timeout > 0 and self.timeout % 2 == 0
+                else (0, 0, 0, 255)
+            )
         elif (self.timeout_frames - self.timeout) > 10:
             color_bg = self.color_bg
         else:
