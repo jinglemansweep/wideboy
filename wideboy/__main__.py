@@ -43,6 +43,10 @@ intro_debug(device_id=DEVICE_ID)
 
 # Gamepads
 pygame.joystick.init()
+for i in range(pygame.joystick.get_count()):
+    joystick = pygame.joystick.Joystick(i)
+    joystick.init()
+
 
 # PyGame & Display
 clock, screen = setup_pygame(CANVAS_SIZE)
