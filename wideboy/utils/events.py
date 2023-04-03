@@ -72,7 +72,7 @@ def handle_joystick_events(events: list[pygame.event.Event]) -> None:
     for event in events:
         if event.type == pygame.JOYBUTTONUP:
             logger.debug(f"Joystick BUTTONUP: {event.button}")
-            if event.button in [GAMEPAD.L, GAMEPAD.R]:
+            if event.button in [GAMEPAD.BUTTON_L, GAMEPAD.BUTTON_R]:
                 pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
         if event.type == pygame.JOYHATMOTION:
             logger.debug(f"Joystick HATMOTION: {event.hat} {event.value}")
