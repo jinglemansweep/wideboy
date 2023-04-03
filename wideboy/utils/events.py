@@ -78,6 +78,8 @@ def handle_joystick_events(events: list[pygame.event.Event]) -> None:
             logger.debug(f"Joystick BUTTONDOWN: {event.button}")
         if event.type == pygame.JOYAXISMOTION:
             logger.debug(f"Joystick AXISMOTION: {event.axis} {event.value}")
+        if event.type == pygame.JOYHATMOTION:
+            logger.debug(f"Joystick HATMOTION: {event.hat} {event.value}")
 
 
 def handle_mqtt_events(events: list[pygame.event.Event]):
