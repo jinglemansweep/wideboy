@@ -17,7 +17,7 @@ from wideboy.mqtt import MQTT
 from wideboy.mqtt.homeassistant import HASS, advertise_entity, update_sensors
 from wideboy.scenes.manager import SceneManager
 from wideboy.state import STATE, DEVICE_ID
-from wideboy.utils.events import handle_events
+from wideboy.utils.events import JOYSTICKS, handle_events
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
@@ -45,6 +45,7 @@ intro_debug(device_id=DEVICE_ID)
 pygame.joystick.init()
 for i in range(pygame.joystick.get_count()):
     joystick = pygame.joystick.Joystick(i)
+    JOYSTICKS.append(joystick)
     joystick.init()
 
 
@@ -113,6 +114,7 @@ async def start_main_loop():
 
         # Debugging
         scene_manager.debug(clock, delta)
+        print(JOYSTICKS)
         await asyncio.sleep(0)
 
 
