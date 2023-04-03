@@ -71,11 +71,13 @@ def handle_state_events(
 def handle_joystick_events(events: list[pygame.event.Event]) -> None:
     for event in events:
         if event.type == pygame.JOYBUTTONUP:
-            logger.debug(f"Joystick BUTTONUP: {event.button}")
+            logger.debug(f"joystick action=BUTTONUP button={event.button}")
             if event.button in [GAMEPAD["BUTTON_L"], GAMEPAD["BUTTON_R"]]:
                 pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
         if event.type == pygame.JOYHATMOTION:
-            logger.debug(f"Joystick HATMOTION: {event.hat} {event.value}")
+            logger.debug(
+                f"Joystick action=HATMOTION hat={event.hat} value={event.value}"
+            )
 
 
 def handle_mqtt_events(events: list[pygame.event.Event]):
