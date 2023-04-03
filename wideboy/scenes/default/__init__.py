@@ -100,7 +100,7 @@ class DefaultScene(BaseScene):
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         super().handle_events(events)
         for event in events:
-            print(event)
+            print(event == pygame.JOYBUTTONUP, event.button)
             if event.type == EVENT_EPOCH_MINUTE:
                 if event.unit % 5 == 0:
                     self.background_widget.glob_images()
