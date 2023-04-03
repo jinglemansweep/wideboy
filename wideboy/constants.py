@@ -35,9 +35,9 @@ EVENT_HASS_COMMAND = pygame.USEREVENT + 62
 
 
 class GAMEPAD(Enum):
-    A = 0
-    B = 1
-    X = 2
-    Y = 3
-    L = 4
-    R = 5
+    BUTTON_A = 0
+    BUTTON_B = 1
+    BUTTON_X = 2
+    BUTTON_Y = 3
+    BUTTON_L = 4
+    BUTTON_R = 5

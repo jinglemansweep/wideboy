@@ -106,7 +106,7 @@ class DefaultScene(BaseScene):
                 if event.unit % settings.backgrounds.change_interval_mins == 0:
                     self.run_background_change_act()
             if event.type == EVENT_ACTION_A or (event.type == pygame.JOYBUTTONUP):
-                print(event.button, GAMEPAD["A"], event.button == GAMEPAD.A)
+                print(event.button, GAMEPAD.BUTTON_A, event.button == GAMEPAD.BUTTON_A)
                 self.run_background_change_act()
 
     def run_background_change_act(self) -> None:
