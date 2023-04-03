@@ -38,6 +38,7 @@ def handle_state_events(
     events: list[pygame.event.Event], matrix: any, scene_manager: SceneManager
 ) -> None:
     for event in events:
+        print(event)
         if event.type == EVENT_MASTER_POWER:
             STATE.power = event.value
             MQTT.publish(

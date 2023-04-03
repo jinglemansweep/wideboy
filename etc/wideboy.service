@@ -6,6 +6,7 @@ WorkingDirectory=/opt/wideboy
 ExecStart=/opt/wideboy/venv/bin/python3 -m wideboy
 Environment=PYTHONUNBUFFERED=1
 Environment=SDL_VIDEODRIVER=dummy
+Environment=SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1
 Restart=always
 Type=simple
 
