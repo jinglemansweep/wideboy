@@ -43,10 +43,10 @@ intro_debug(device_id=DEVICE_ID)
 
 # Gamepads
 pygame.joystick.init()
-for i in range(pygame.joystick.get_count()):
-    joystick = pygame.joystick.Joystick(i)
-    JOYSTICKS.append(joystick)
-    joystick.init()
+# for i in range(pygame.joystick.get_count()):
+#    joystick = pygame.joystick.Joystick(i)
+#    JOYSTICKS.append(joystick)
+#    joystick.init()
 
 
 # PyGame & Display
