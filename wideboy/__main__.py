@@ -41,21 +41,21 @@ logger = logging.getLogger(AppMetadata.NAME)
 # Startup
 intro_debug(device_id=DEVICE_ID)
 
+# Gamepads
+pygame.joystick.init()
+joystick_id = settings.general.joystick_id
+if pygame.joystick.get_count() > 0 and joystick_id >= 0:
+    logger.info(f"Enabling Joystick #{joystick_id}")
+    joystick = pygame.joystick.Joystick(joystick_id)
+    joystick.init()
+
+
 # PyGame & Display
 clock, screen = setup_pygame(CANVAS_SIZE)
 blank_screen = blank_surface(CANVAS_SIZE)
 matrix, matrix_buffer = None, None
 if settings.display.matrix.enabled:
     matrix, matrix_buffer = setup_led_matrix()
-
-# Gamepads
-joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-joystick_id = settings.general.joystick_id
-if len(joysticks) > 0 and joystick_id >= 0:
-    logger.info(f"Enabling Joystick #{joystick_id}")
-    pygame.joystick.init()
-    joystick = pygame.joystick.Joystick(joystick_id)
-    joystick.init()
 
 # Home Assistant
 hass = setup_hass()
