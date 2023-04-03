@@ -48,6 +48,13 @@ matrix, matrix_buffer = None, None
 if settings.display.matrix.enabled:
     matrix, matrix_buffer = setup_led_matrix()
 
+# Gamepads
+joystick_id = settings.general.joystick_id
+if joystick_id >= 0:
+    pygame.joystick.init()
+    joystick = pygame.joystick.Joystick(joystick_id)
+    joystick.init()
+
 # Home Assistant
 hass = setup_hass()
 

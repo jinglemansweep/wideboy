@@ -26,6 +26,7 @@ validators = [
         default="",
         cast=str,
     ),
+    Validator("GENERAL__JOYSTICK_ID", default=-1, cast=int),
     # Display
     Validator(
         "DISPLAY__CANVAS__WIDTH",

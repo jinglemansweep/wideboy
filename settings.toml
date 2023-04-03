@@ -1,6 +1,7 @@
 [general]
   # device_id = "lounge"
   # remote_url = "http://wideboy.local"
+  # joystick_id = -1
   # debug = false
   # log_level = "debug" # info, debug
   # profiling = ""
