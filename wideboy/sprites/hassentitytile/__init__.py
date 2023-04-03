@@ -7,7 +7,11 @@ from typing import Optional
 from wideboy.constants import EVENT_EPOCH_MINUTE
 from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.image_helpers import load_image, render_text
+from wideboy.sprites.image_helpers import (
+    load_image,
+    render_text,
+    material_icon_to_unicode,
+)
 from wideboy.config import settings
 
 logger = logging.getLogger("sprite.hassentitytile")
@@ -51,7 +55,7 @@ class HassEntityTileSprite(BaseSprite):
         )
         if active:
             icon_text = render_text(
-                html.unescape(f"&#x{self.icon}"),
+                html.unescape(f"&#x{self.icon};"),
                 "fonts/material-icons.ttf",
                 32,
                 self.color,

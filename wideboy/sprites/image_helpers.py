@@ -2,6 +2,7 @@ import glob
 import logging
 import os
 import pygame
+from unidecode import unidecode
 from PIL import Image, ImageFilter, ImageEnhance
 from pygame import SRCALPHA
 from typing import Optional
@@ -93,3 +94,15 @@ def build_background(
     background = pygame.surface.Surface(size)
     background.fill(color)
     return background
+
+
+def material_icon_to_unicode(icon_name: str) -> str:
+    # Use the ord() function to get the Unicode code point for the given icon name
+    unicode_value = ord(icon_name)
+    # Convert the code point to the corresponding hexadecimal string
+    hex_string = hex(unicode_value)
+    # Prepend "&#x" and append ";" to the hexadecimal string
+    html_entity = f"&#{hex_string[2:]};"
+    # Convert the HTML entity to a Unicode character
+    unicode_character = bytes(html_entity, "utf-8").decode("unicode_escape")
+    return unicode_character
