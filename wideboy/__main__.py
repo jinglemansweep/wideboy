@@ -43,12 +43,6 @@ intro_debug(device_id=DEVICE_ID)
 
 # Gamepads
 pygame.joystick.init()
-joystick_id = settings.general.joystick_id
-if pygame.joystick.get_count() > 0 and joystick_id >= 0:
-    logger.info(f"Enabling Joystick #{joystick_id}")
-    joystick = pygame.joystick.Joystick(joystick_id)
-    joystick.init()
-
 
 # PyGame & Display
 clock, screen = setup_pygame(CANVAS_SIZE)
