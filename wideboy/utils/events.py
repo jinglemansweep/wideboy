@@ -31,6 +31,7 @@ def handle_events(
     handle_pygame_events(events)
     handle_epoch_events(events)
     handle_mqtt_events(events)
+    handle_joystick_events(events)
     handle_state_events(events, matrix, scene_manager)
 
 
@@ -68,6 +69,16 @@ def handle_state_events(
         if event.type == EVENT_NOTIFICATION_RECEIVED:
             logger.debug(f"message: {event.message}")
             STATE.notifications.append(event.message)
+
+
+def handle_joystick_events(events: list[pygame.event.Event]) -> None:
+    for event in events:
+        if event.type == pygame.JOYBUTTONDOWN:
+            logger.debug(f"Joystick BUTTONDOWN: {event.button}")
+        if event.type == pygame.JOYBUTTONUP:
+            logger.debug(f"Joystick BUTTONDOWN: {event.button}")
+        if event.type == pygame.JOYAXISMOTION:
+            logger.debug(f"Joystick AXISMOTION: {event.axis} {event.value}")
 
 
 def handle_mqtt_events(events: list[pygame.event.Event]):
