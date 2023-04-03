@@ -10,7 +10,6 @@ from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     load_image,
     render_text,
-    material_icon_to_unicode,
 )
 from wideboy.config import settings
 
