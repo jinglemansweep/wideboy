@@ -2,7 +2,7 @@ import asyncio
 import logging
 import pygame
 
-from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, EVENT_ACTION_B
+from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_BUTTON_A
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import ClockSprite
@@ -105,7 +105,7 @@ class DefaultScene(BaseScene):
                     self.background_widget.glob_images()
                 if event.unit % settings.backgrounds.change_interval_mins == 0:
                     self.run_background_change_act()
-            if event.type == EVENT_ACTION_A:
+            if event.type == EVENT_BUTTON_A:
                 self.run_background_change_act()
 
     def run_background_change_act(self) -> None:
