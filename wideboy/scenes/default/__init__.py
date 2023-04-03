@@ -100,15 +100,13 @@ class DefaultScene(BaseScene):
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         super().handle_events(events)
         for event in events:
-            print(int(event.type), int(pygame.JOYBUTTONUP))
             if event.type == EVENT_EPOCH_MINUTE:
                 if event.unit % 5 == 0:
                     self.background_widget.glob_images()
                 if event.unit % settings.backgrounds.change_interval_mins == 0:
                     self.run_background_change_act()
-            if event.type == EVENT_ACTION_A or (
-                event.type == pygame.JOYBUTTONUP and event.button == GAMEPAD.A
-            ):
+            if event.type == EVENT_ACTION_A or (event.type == pygame.JOYBUTTONUP):
+                print(event.button)
                 self.run_background_change_act()
 
     def run_background_change_act(self) -> None:
