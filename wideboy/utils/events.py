@@ -11,8 +11,16 @@ from wideboy.constants import (
     EVENT_MASTER_POWER,
     EVENT_MASTER_BRIGHTNESS,
     EVENT_SCENE_NEXT,
-    EVENT_ACTION_A,
-    EVENT_ACTION_B,
+    EVENT_BUTTON_A,
+    EVENT_BUTTON_B,
+    EVENT_BUTTON_X,
+    EVENT_BUTTON_Y,
+    EVENT_BUTTON_L,
+    EVENT_BUTTON_R,
+    EVENT_BUTTON_DPAD_LEFT,
+    EVENT_BUTTON_DPAD_RIGHT,
+    EVENT_BUTTON_DPAD_UP,
+    EVENT_BUTTON_DPAD_DOWN,
     EVENT_NOTIFICATION_RECEIVED,
 )
 from wideboy.mqtt import MQTT
@@ -21,6 +29,25 @@ from wideboy.scenes.manager import SceneManager
 from wideboy.utils.helpers import EpochEmitter
 
 logger = logging.getLogger("utils.events")
+
+# Stadia Controller
+# 0: A, 1: B, 2: X, 3: Y, 4: LB, 5: RB, 6: LT, 7: RT, 8: Back, 9: Start, 10: L3, 11: R3, 12: Dpad Up, 13: Dpad Down, 14: Dpad Left, 15: Dpad Right
+
+GAMEPAD_BUTTONS = {
+    0: EVENT_BUTTON_A,
+    1: EVENT_BUTTON_B,
+    2: EVENT_BUTTON_X,
+    3: EVENT_BUTTON_Y,
+    4: EVENT_BUTTON_L,
+    5: EVENT_BUTTON_R,
+}
+
+GAMEPAD_DPAD = {
+    (0, 1): EVENT_BUTTON_DPAD_UP,
+    (0, -1): EVENT_BUTTON_DPAD_DOWN,
+    (-1, 0): EVENT_BUTTON_DPAD_LEFT,
+    (1, 0): EVENT_BUTTON_DPAD_RIGHT,
+}
 
 epoch_emitter = EpochEmitter()
 
@@ -61,29 +88,25 @@ def handle_state_events(
             )
         if event.type == EVENT_SCENE_NEXT:
             scene_manager.next_scene()
-        if event.type == EVENT_ACTION_A:
-            logger.debug("action: a")
-        if event.type == EVENT_ACTION_B:
-            logger.debug("action: b")
         if event.type == EVENT_NOTIFICATION_RECEIVED:
             logger.debug(f"message: {event.message}")
             STATE.notifications.append(event.message)
 
 
 def handle_joystick_events(events: list[pygame.event.Event]) -> None:
-    # Stadia Controller
-    # 0: A, 1: B, 2: X, 3: Y, 4: LB, 5: RB, 6: LT, 7: RT, 8: Back, 9: Start, 10: L3, 11: R3, 12: Dpad Up, 13: Dpad Down, 14: Dpad Left, 15: Dpad Right
     for event in events:
         if event.type == pygame.JOYBUTTONDOWN:
-            logger.debug(f"Joystick BUTTONDOWN: {event.button}")
+            # logger.debug(f"Joystick BUTTONDOWN: {event.button}")
+            pygame.event.post(pygame.event.Event(GAMEPAD_BUTTONS[event.button]))
         if event.type == pygame.JOYBUTTONUP:
-            logger.debug(f"Joystick BUTTONUP: {event.button}")
-            if event.button == 5:
-                pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
+            # logger.debug(f"Joystick BUTTONUP: {event.button}")
+            pygame.event.post(pygame.event.Event(GAMEPAD_BUTTONS[event.button]))
         if event.type == pygame.JOYAXISMOTION:
-            logger.debug(f"Joystick AXISMOTION: {event.axis} {event.value}")
+            # logger.debug(f"Joystick AXISMOTION: {event.axis} {event.value}")
+            pass
         if event.type == pygame.JOYHATMOTION:
-            logger.debug(f"Joystick HATMOTION: {event.hat} {event.value}")
+            # logger.debug(f"Joystick HATMOTION: {event.hat} {event.value}")
+            pygame.event.post(pygame.event.Event(GAMEPAD_DPAD[event.value]))
 
 
 def handle_mqtt_events(events: list[pygame.event.Event]):
@@ -109,9 +132,9 @@ def handle_mqtt_events(events: list[pygame.event.Event]):
             if event.topic.endswith("scene_next/set"):
                 pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
             if event.topic.endswith("action_a/set"):
-                pygame.event.post(pygame.event.Event(EVENT_ACTION_A))
+                pygame.event.post(pygame.event.Event(EVENT_BUTTON_A))
             if event.topic.endswith("action_b/set"):
-                pygame.event.post(pygame.event.Event(EVENT_ACTION_B))
+                pygame.event.post(pygame.event.Event(EVENT_BUTTON_B))
             if event.topic.endswith("message/set"):
                 pygame.event.post(
                     pygame.event.Event(
