@@ -71,11 +71,15 @@ def handle_state_events(
 
 
 def handle_joystick_events(events: list[pygame.event.Event]) -> None:
+    # Stadia Controller
+    # 0: A, 1: B, 2: X, 3: Y, 4: LB, 5: RB, 6: LT, 7: RT, 8: Back, 9: Start, 10: L3, 11: R3, 12: Dpad Up, 13: Dpad Down, 14: Dpad Left, 15: Dpad Right
     for event in events:
         if event.type == pygame.JOYBUTTONDOWN:
             logger.debug(f"Joystick BUTTONDOWN: {event.button}")
         if event.type == pygame.JOYBUTTONUP:
-            logger.debug(f"Joystick BUTTONDOWN: {event.button}")
+            logger.debug(f"Joystick BUTTONUP: {event.button}")
+            if event.button == 5:
+                pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
         if event.type == pygame.JOYAXISMOTION:
             logger.debug(f"Joystick AXISMOTION: {event.axis} {event.value}")
         if event.type == pygame.JOYHATMOTION:
