@@ -80,10 +80,22 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.notification_widget)
         # HASS Entity Tile Widgets
-        self.hass_entity_test = HassEntityTileSprite(
-            Rect(0, 0, 64, 64), "sensor.black_bin", "trash"
+        self.hass_bin_black = HassEntityTileSprite(
+            Rect(96, 0, 32, 32),
+            "sensor.black_bin",
+            HassEntityTileSprite.MDI_DELETE,
+            lambda entity: entity.state.attributes["days"] < 5,
+            (128, 128, 128, 255),
         )
-        self.group.add(self.hass_entity_test)
+        self.group.add(self.hass_bin_black)
+        self.hass_bin_blue = HassEntityTileSprite(
+            Rect(96, 0, 32, 32),
+            "sensor.blue_bin",
+            HassEntityTileSprite.MDI_DELETE,
+            lambda entity: entity.state.attributes["days"] < 5,
+            (64, 64, 255, 255),
+        )
+        self.group.add(self.hass_bin_blue)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
