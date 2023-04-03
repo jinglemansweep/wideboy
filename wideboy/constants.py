@@ -34,7 +34,7 @@ EVENT_HASS_COMMAND = pygame.USEREVENT + 62
 # 0: A, 1: B, 2: X, 3: Y, 4: LB, 5: RB, 6: LT, 7: RT, 8: Back, 9: Start, 10: L3, 11: R3, 12: Dpad Up, 13: Dpad Down, 14: Dpad Left, 15: Dpad Right
 
 
-class Gamepad(Enum):
+class GAMEPAD(Enum):
     A = 0
     B = 1
     X = 2
