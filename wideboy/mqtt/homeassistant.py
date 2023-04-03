@@ -33,6 +33,9 @@ def setup_hass() -> Client:
     return hass
 
 
+HASS = setup_hass()
+
+
 def advertise_entity(
     name: str,
     device_class: str,

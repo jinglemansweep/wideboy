@@ -14,7 +14,7 @@ from wideboy.config import (
     settings,
 )
 from wideboy.mqtt import MQTT
-from wideboy.mqtt.homeassistant import setup_hass, advertise_entity, update_sensors
+from wideboy.mqtt.homeassistant import HASS, advertise_entity, update_sensors
 from wideboy.scenes.manager import SceneManager
 from wideboy.state import STATE, DEVICE_ID
 from wideboy.utils.events import handle_events
@@ -57,8 +57,6 @@ matrix, matrix_buffer = None, None
 if settings.display.matrix.enabled:
     matrix, matrix_buffer = setup_led_matrix()
 
-# Home Assistant
-hass = setup_hass()
 
 advertise_entity(
     "master",

@@ -1,11 +1,13 @@
 import asyncio
 import logging
 import pygame
+from pygame import Rect
 
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import ClockSprite
+from wideboy.sprites.hassentitytile import HassEntityTileSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.placeholder import PlaceholderSprite
 from wideboy.sprites.qrcode import QRCodeSprite
@@ -36,7 +38,7 @@ class DefaultScene(BaseScene):
         super().setup()
         # Setup background widget
         self.background_widget = BackgroundSprite(
-            pygame.Rect(
+            Rect(
                 0,
                 0 - self.height,
                 self.width,
@@ -49,7 +51,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.background_widget)
         # Setup clock widget
         self.clock_widget = ClockSprite(
-            pygame.Rect(
+            Rect(
                 self.width - 128,
                 0,
                 128,
@@ -60,23 +62,28 @@ class DefaultScene(BaseScene):
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            pygame.Rect(0, 0, 64, 64),
+            Rect(0, 0, 64, 64),
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.weather_widget)
         # Setup placeholder widget
         self.placeholder_widget = PlaceholderSprite(
-            pygame.Rect(64, 0, 64, 64),
+            Rect(64, 0, 64, 64),
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.placeholder_widget)
         # Setup notification widget
         self.notification_widget = NotificationSprite(
-            pygame.Rect(160, 4, 768 - 320, 56),
+            Rect(160, 4, 768 - 320, 56),
             color_bg=(0, 0, 0, 192),
             color_fg=(255, 255, 255, 255),
         )
         self.group.add(self.notification_widget)
+        # HASS Entity Tile Widgets
+        self.hass_entity_test = HassEntityTileSprite(
+            Rect(0, 0, 64, 64), "sensor.black_bin", "trash"
+        )
+        self.group.add(self.hass_entity_test)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
