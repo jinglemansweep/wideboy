@@ -29,12 +29,12 @@ class CreditsScene(BaseScene):
         # Setup background widget
         self.logo = ImageSprite(
             pygame.Rect(
-                self.width - 235,
+                self.width - 256,
                 4,
                 self.width,
                 self.height,
             ),
-            (230, 54),
+            (250, 58),
             "images/wideboy/logo.png",
             255,
         )
