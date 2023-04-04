@@ -24,7 +24,7 @@ from wideboy.utils.helpers import EpochEmitter
 logger = logging.getLogger("utils.events")
 
 
-JOYSTICKS = []
+JOYSTICKS = dict()
 
 epoch_emitter = EpochEmitter()
 
@@ -73,16 +73,14 @@ def handle_state_events(
 def handle_joystick_events(events: list[pygame.event.Event]) -> None:
     for event in events:
         if event.type == pygame.JOYDEVICEADDED:
-            logger.debug(f"joystick:added joy={event.joy}")
-            joystick = pygame.joystick.Joystick(event.joy)
-            joystick.init()
-            JOYSTICKS.append(joystick)
+            joystick = pygame.joystick.Joystick(event.device_index)
+            logger.debug(
+                f"joystick:added device_index={event.device_index} instance_id={joystick.get_instance_id()}"
+            )
+            JOYSTICKS[joystick.get_instance_id()] = joystick
         elif event.type == pygame.JOYDEVICEREMOVED:
-            logger.debug(f"joystick:removed joy={event.joy}")
-            for joystick in JOYSTICKS:
-                if joystick.get_id() == event.joy:
-                    JOYSTICKS.remove(joystick)
-                    joystick.quit()
+            del JOYSTICKS[event.instance_id]
+            logger.debug(f"joystick:removed instance_id={event.instance_id}")
         if event.type == pygame.JOYBUTTONUP:
             logger.debug(f"joystick action=BUTTONUP button={event.button}")
             if event.button in [GAMEPAD["BUTTON_L"], GAMEPAD["BUTTON_R"]]:

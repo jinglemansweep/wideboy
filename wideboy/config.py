@@ -233,7 +233,7 @@ validators = [
     ),
     Validator(
         "DISPLAY__MATRIX__DRIVER__NO_DROP_PRIVS",
-        default=False,
+        default=True,
         cast=bool,
     ),
 ]
@@ -301,4 +301,4 @@ if driver_settings.slowdown_gpio:
 if driver_settings.daemon:
     matrix_options.daemon = driver_settings.daemon
 if driver_settings.no_drop_privs:
-    matrix_options.drop_privileges = 1
+    matrix_options.drop_privileges = 0
