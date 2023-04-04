@@ -114,7 +114,6 @@ async def start_main_loop():
 
         # Debugging
         scene_manager.debug(clock, delta)
-        print(JOYSTICKS)
         await asyncio.sleep(0)
 
 
