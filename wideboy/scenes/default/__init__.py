@@ -9,7 +9,7 @@ from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.hassentitytile import HassEntityTileSprite
 from wideboy.sprites.notification import NotificationSprite
-from wideboy.sprites.placeholder import PlaceholderSprite
+from wideboy.sprites.rect import RectSprite
 from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
@@ -49,6 +49,12 @@ class DefaultScene(BaseScene):
             shuffle=True,
         )
         self.group.add(self.background_widget)
+        # Setup faded foreground layer widget
+        self.layer_faded = RectSprite(
+            Rect(self.width - 256, 0, 256, 64),
+            color_bg=(0, 0, 0, 255 - 64),
+        )
+        self.group.add(self.layer_faded)
         # Setup clock widget
         self.clock_widget = ClockSprite(
             Rect(
@@ -57,21 +63,13 @@ class DefaultScene(BaseScene):
                 128,
                 self.height,
             ),
-            color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            Rect(0, 0, 64, 64),
-            color_bg=(0, 0, 0, 255 - 64),
+            Rect(self.width - 256, 0, 64, 64),
         )
         self.group.add(self.weather_widget)
-        # Setup placeholder widget
-        self.placeholder_widget = PlaceholderSprite(
-            Rect(64, 0, 64, 64),
-            color_bg=(0, 0, 0, 255 - 64),
-        )
-        self.group.add(self.placeholder_widget)
         # Setup notification widget
         self.notification_widget = NotificationSprite(
             Rect(160, 4, 768 - 320, 56),

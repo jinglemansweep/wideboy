@@ -23,7 +23,7 @@ class BackgroundSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.Rect,
-        size: pygame.math.Vector2,
+        size: pygame.Vector2,
         alpha: int = 255,
         shuffle: bool = False,
     ) -> None:
@@ -38,7 +38,7 @@ class BackgroundSprite(BaseSprite):
     def render_next_image(self):
         filename = self.image_files[self.image_index]
         logger.debug(f"image:next index={self.image_index} filename={filename}")
-        surface = pygame.surface.Surface(self.size)
+        surface = pygame.Surface(self.size)
         orig_image = load_image(filename)
         orig_image = pygame.transform.scale(orig_image, (512, 64))
         blurred_image = filter_surface(
@@ -47,7 +47,7 @@ class BackgroundSprite(BaseSprite):
             filters=[ImageFilter.BLUR],
         )
         surface.blit(blurred_image, (0, 0))
-        surface.blit(orig_image, (128, 0))
+        surface.blit(orig_image, (0, 0))
         metadata = self.load_metadata(filename)
         if metadata:
             label_text = metadata["inputs"]["prompt"].strip()
@@ -59,7 +59,7 @@ class BackgroundSprite(BaseSprite):
                 pygame.Color(0, 0, 0, 192),
                 pygame.Color(0, 0, 0, 0),
             )
-            surface.blit(label, (640 - label.get_width(), self.rect.height - 15))
+            surface.blit(label, (512 - label.get_width(), self.rect.height - 15))
         self.image = surface
         self.image_index += 1
         if self.image_index > len(self.image_files) - 1:

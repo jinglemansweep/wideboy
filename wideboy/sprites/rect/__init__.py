@@ -7,7 +7,7 @@ from wideboy.sprites.base import BaseSprite
 logger = logging.getLogger("sprite.placeholder")
 
 
-class PlaceholderSprite(BaseSprite):
+class RectSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,

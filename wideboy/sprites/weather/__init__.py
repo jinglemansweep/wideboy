@@ -22,7 +22,7 @@ class WeatherSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        color_bg: pygame.color.Color = (0, 0, 0, 192),
+        color_bg: pygame.color.Color = (0, 0, 0, 0),
         color_temp: pygame.color.Color = (255, 255, 255, 255),
         color_rain_prob: pygame.color.Color = (255, 255, 0, 255),
     ) -> None:
