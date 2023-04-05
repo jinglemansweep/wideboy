@@ -54,9 +54,9 @@ class WeatherSprite(BaseSprite):
                 settings.paths.images_weather, f"{STATE.weather_summary}.png"
             )
             self.icon_summary = pygame.transform.scale(
-                load_image(icon_filename), (72, 72)
+                load_image(icon_filename), (48, 48)
             )
-            self.image.blit(self.icon_summary, (-4, -6))
+            self.image.blit(self.icon_summary, (-4, -8))
         if STATE.temperature is not None:
             temp_str = (
                 f"{int(round(STATE.temperature, 0))}"
@@ -66,21 +66,21 @@ class WeatherSprite(BaseSprite):
             temperature_text = render_text(
                 temp_str,
                 "fonts/bitstream-vera.ttf",
-                28,
+                16,
                 self.color_temp,
                 (0, 0, 0, 0),
                 (0, 0, 0, 0),
             )
-            self.image.blit(temperature_text, (2, 29))
+            self.image.blit(temperature_text, (36, 0))
             degree_text = render_text(
                 "°",
                 "fonts/bitstream-vera.ttf",
-                20,
+                16,
                 self.color_temp,
                 (0, 0, 0, 0),
                 (0, 0, 0, 0),
             )
-            self.image.blit(degree_text, (temperature_text.get_width() - 2, 29))
+            self.image.blit(degree_text, (32 + temperature_text.get_width(), -1))
         if (
             STATE.rain_probability is not None
             and STATE.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD
@@ -95,7 +95,6 @@ class WeatherSprite(BaseSprite):
                 "fonts/bitstream-vera.ttf",
                 10,
                 self.color_rain_prob,
-                (0, 0, 0, 255),
             )
-            self.image.blit(rain_prob_text, (62 - rain_prob_text.get_width(), -1))
+            self.image.blit(rain_prob_text, (63 - rain_prob_text.get_width(), 15))
         self.dirty = 1

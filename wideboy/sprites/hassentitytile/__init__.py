@@ -26,11 +26,13 @@ class HassEntityTileSprite(BaseSprite):
         icon: str,
         state_callback: Optional[callable] = None,
         color: pygame.color.Color = pygame.color.Color(255, 255, 255, 255),
+        font_size: int = 24,
     ) -> None:
         super().__init__(rect)
         self.entity_id = entity_id
         self.icon = icon
         self.color = color
+        self.font_size = font_size
         self.state_callback = state_callback
         self.render()
 
@@ -56,7 +58,7 @@ class HassEntityTileSprite(BaseSprite):
             icon_text = render_text(
                 html.unescape(f"&#x{self.icon};"),
                 "fonts/material-icons.ttf",
-                32,
+                self.font_size,
                 self.color,
                 color_outline=pygame.color.Color(0, 0, 0, 255),
             )

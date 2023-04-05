@@ -67,7 +67,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            Rect(self.width - 256, 0, 64, 64),
+            Rect(576, 0, 64, 64),
         )
         self.group.add(self.weather_widget)
         # Setup notification widget
@@ -78,19 +78,20 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.notification_widget)
         # HASS Entity Tile Widgets
+        bin_rect = Rect(572, 38, 32, 32)
         self.hass_bin_black = HassEntityTileSprite(
-            Rect(96, 0, 32, 32),
+            bin_rect,
             "sensor.black_bin",
             HassEntityTileSprite.MDI_DELETE,
-            lambda entity: entity.state.attributes["days"] < 5,
+            lambda entity: entity.state.attributes["days"] < 3,
             (128, 128, 128, 255),
         )
         self.group.add(self.hass_bin_black)
         self.hass_bin_blue = HassEntityTileSprite(
-            Rect(96, 0, 32, 32),
+            bin_rect,
             "sensor.blue_bin",
             HassEntityTileSprite.MDI_DELETE,
-            lambda entity: entity.state.attributes["days"] < 5,
+            lambda entity: entity.state.attributes["days"] < 3,
             (64, 64, 255, 255),
         )
         self.group.add(self.hass_bin_blue)

@@ -16,7 +16,7 @@ class ClockSprite(BaseSprite):
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        color_bg: pygame.color.Color = (0, 0, 0, 255),
+        color_bg: pygame.color.Color = (0, 0, 0, 0),
         color_time: pygame.color.Color = (0, 255, 0, 255),
         color_date: pygame.color.Color = (255, 255, 255, 255),
     ) -> None:
@@ -50,10 +50,10 @@ class ClockSprite(BaseSprite):
         hh_str = now.strftime("%H")
         mm_str = now.strftime("%M")
         hhmm_str = f"{hh_str}:{mm_str}" if now.second % 2 == 0 else f"{hh_str} {mm_str}"
-        hhmm_sprite = render_text(hhmm_str, self.font_time, 50, self.color_time)
+        hhmm_sprite = render_text(hhmm_str, self.font_time, 52, self.color_time)
         time_pos = ((self.rect[2] - hhmm_sprite.get_rect()[2]) // 2, -2)
         self.image.blit(hhmm_sprite, time_pos)
-        date_sprite = render_text(date_str, self.font_date, 24, self.color_date)
-        date_pos = ((self.rect[2] - date_sprite.get_rect()[2]) // 2, 38)
+        date_sprite = render_text(date_str, self.font_date, 26, self.color_date)
+        date_pos = ((self.rect[2] - date_sprite.get_rect()[2]) // 2, 40)
         self.image.blit(date_sprite, date_pos)
         self.dirty = 1
