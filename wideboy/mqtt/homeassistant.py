@@ -10,7 +10,6 @@ from wideboy.constants import (
     EVENT_MQTT_MESSAGE_SEND,
 )
 from wideboy.config import settings
-from wideboy.mqtt import MQTT
 from wideboy.state import DEVICE_ID
 
 

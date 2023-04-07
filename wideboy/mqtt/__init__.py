@@ -5,7 +5,6 @@ from typing import Any, Optional
 import paho.mqtt.client as mqtt
 
 from wideboy.config import settings
-
 from wideboy.constants import (
     EVENT_MQTT_MESSAGE_RECEIVED,
     EVENT_MQTT_MESSAGE_SEND,
@@ -19,9 +18,9 @@ from wideboy.constants import (
 from wideboy.state import DEVICE_ID
 
 
-MQTT_TOPIC_PREFIX = settings.mqtt.topic_prefix
-
 logger = logging.getLogger("mqtt")
+
+MQTT_TOPIC_PREFIX = settings.mqtt.topic_prefix
 
 
 def setup_mqtt():
