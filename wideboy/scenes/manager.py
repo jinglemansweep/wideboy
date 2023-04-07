@@ -1,7 +1,8 @@
 import logging
 import pygame
 from typing import Optional
-from .base import BaseScene
+from wideboy.constants import EVENT_SCENE_MANAGER_NEXT
+from wideboy.scenes.base import BaseScene
 
 
 logger = logging.getLogger("scenes.manager")
@@ -55,3 +56,7 @@ class SceneManager:
         if not self.scene:
             return
         return self.scene.debug(clock, delta)
+
+    def handle_event(self, event: pygame.event.Event):
+        if event.type == EVENT_SCENE_MANAGER_NEXT:
+            self.next_scene()

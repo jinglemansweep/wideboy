@@ -7,7 +7,15 @@ import paho.mqtt.client as mqtt
 from wideboy.config import (
     settings,
 )
-from wideboy.constants import EVENT_MQTT_MESSAGE
+from wideboy.constants import (
+    EVENT_MQTT_MESSAGE_RECEIVED,
+    EVENT_MQTT_MESSAGE_SEND,
+    EVENT_ACTION_A,
+    EVENT_ACTION_B,
+    EVENT_NOTIFICATION_RECEIVED,
+    EVENT_MASTER_BRIGHTNESS,
+    EVENT_MASTER_POWER,
+)
 from wideboy.state import DEVICE_ID
 
 
@@ -89,8 +97,49 @@ class MQTTClient:
             f"mqtt:message topic={topic} payload={payload} userdata={userdata}"
         )
         pygame.event.post(
-            pygame.event.Event(EVENT_MQTT_MESSAGE, dict(topic=topic, payload=payload))
+            pygame.event.Event(
+                EVENT_MQTT_MESSAGE_RECEIVED, dict(topic=topic, payload=payload)
+            )
         )
 
 
 MQTT = setup_mqtt()
+
+
+def handle_mqtt_event(event: pygame.event.Event):
+    # Outgoing Message
+    if event.type == EVENT_MQTT_MESSAGE_SEND:
+        MQTT.publish(
+            event.topic,
+            event.payload,
+            auto_prefix=event.auto_prefix if hasattr(event, "auto_prefix") else True,
+        )
+    # Incoming Message
+    if event.type == EVENT_MQTT_MESSAGE_RECEIVED:
+        if event.topic.endswith("master/set"):
+            try:
+                payload = json.loads(event.payload)
+            except Exception as e:
+                logger.warn("hass:mqtt:event error={e}")
+            if "state" in payload:
+                pygame.event.post(
+                    pygame.event.Event(
+                        EVENT_MASTER_POWER, value=payload["state"] == "ON"
+                    )
+                )
+            if "brightness" in payload:
+                pygame.event.post(
+                    pygame.event.Event(
+                        EVENT_MASTER_BRIGHTNESS, value=payload["brightness"]
+                    )
+                )
+        if event.topic.endswith("scene_next/set"):
+            pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
+        if event.topic.endswith("action_a/set"):
+            pygame.event.post(pygame.event.Event(EVENT_ACTION_A))
+        if event.topic.endswith("action_b/set"):
+            pygame.event.post(pygame.event.Event(EVENT_ACTION_B))
+        if event.topic.endswith("message/set"):
+            pygame.event.post(
+                pygame.event.Event(EVENT_NOTIFICATION_RECEIVED, message=event.payload)
+            )
