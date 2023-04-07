@@ -18,8 +18,6 @@ from wideboy.constants import (
 from wideboy.config import settings
 from wideboy.mqtt import MQTT
 from wideboy.mqtt import handle_mqtt_event
-from wideboy.state import handle_state_event
-from wideboy.scenes.manager import SceneManager
 from wideboy.utils.helpers import EpochEmitter
 
 logger = logging.getLogger("utils.pygame")
@@ -45,19 +43,13 @@ def setup_pygame(
     return clock, screen
 
 
-def handle_events(
-    events: list[pygame.event.Event], matrix: any, scene_manager: SceneManager
-) -> None:
-    pump_epoch_events()
-    for event in events:
-        handle_internal_event(event)
-        handle_mqtt_event(event)
-        handle_joystick_event(event)
-        handle_state_event(event, matrix)
-        scene_manager.handle_event(event)
+def dispatch_event(event: pygame.event.Event) -> None:
+    handle_internal_event(event)
+    handle_mqtt_event(event)
+    handle_joystick_event(event)
 
 
-def pump_epoch_events() -> None:
+def pump_events() -> None:
     epochs = epoch_emitter.check()
     if epochs.get("new_sec"):
         pygame.event.post(

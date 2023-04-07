@@ -1,6 +1,5 @@
 import aiohttp
 import async_timeout
-import uuid
 import logging
 import pygame
 import random
@@ -31,10 +30,6 @@ def random_color() -> pygame.color.Color:
     return pygame.color.Color(
         random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
     )
-
-
-def get_device_id() -> str:
-    return uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 
 async def async_fetch(session: aiohttp.ClientSession, url: str) -> str:

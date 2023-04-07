@@ -15,7 +15,7 @@ from wideboy.constants import (
     EVENT_MASTER_POWER,
     EVENT_SCENE_MANAGER_NEXT,
 )
-from wideboy.state import DEVICE_ID
+from wideboy.config import DEVICE_ID
 
 
 logger = logging.getLogger("mqtt")

@@ -10,20 +10,30 @@ load_dotenv(find_dotenv())
 from wideboy.constants import (
     AppMetadata,
 )
-from wideboy.config import (
-    settings,
-)
+from wideboy.config import settings, DEVICE_ID
 
 # from wideboy.mqtt import MQTT
-from wideboy.mqtt.homeassistant import advertise_entity, update_sensors
+from wideboy.constants import (
+    DEFAULT_POWER,
+    DEFAULT_BRIGHTNESS,
+    EVENT_MASTER_POWER,
+    EVENT_MASTER_BRIGHTNESS,
+    EVENT_SCENE_MANAGER_NEXT,
+)
+from wideboy.mqtt.homeassistant import (
+    advertise_entity,
+    update_entity,
+    update_sensors,
+    hass_bool,
+)
 from wideboy.scenes.manager import SceneManager
-from wideboy.state import STATE, DEVICE_ID
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.pygame import (
     setup_pygame,
-    handle_events,
+    dispatch_event,
+    pump_events,
     main_entrypoint,
     run_loop,
     clock_tick,
@@ -86,11 +96,28 @@ async def start_main_loop():
 
     running = True
 
+    power = DEFAULT_POWER
+    brightness = DEFAULT_BRIGHTNESS
+
     while running:
 
         # Events Processing
+        pump_events()
         events = pygame.event.get()
-        handle_events(events, matrix, scene_manager)
+        for event in events:
+            dispatch_event(event)
+            if event.type == EVENT_MASTER_POWER:
+                power = event.value
+                update_entity("master/state", dict(state=hass_bool(power)))
+            if event.type == EVENT_MASTER_BRIGHTNESS:
+                brightness = event.value
+                if matrix:
+                    matrix.brightness = (brightness / 255) * 100
+                update_entity(
+                    "master/state", dict(state=hass_bool(power), brightness=brightness)
+                )
+            if event.type == EVENT_SCENE_MANAGER_NEXT:
+                scene_manager.next_scene()
 
         # Clock, Blitting, Display
         delta = clock_tick(clock)
@@ -100,7 +127,7 @@ async def start_main_loop():
 
         if settings.display.matrix.enabled:
             matrix_buffer = render_led_matrix(
-                matrix, screen if STATE.power else blank_screen, matrix_buffer
+                matrix, screen if power else blank_screen, matrix_buffer
             )
 
         # Debugging

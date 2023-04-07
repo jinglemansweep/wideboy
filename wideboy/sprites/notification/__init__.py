@@ -1,9 +1,10 @@
 import logging
 import pygame
 from pygame import SRCALPHA
+from wideboy.constants import EVENT_NOTIFICATION_RECEIVED
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import render_text
-from wideboy.state import STATE
+
 
 logger = logging.getLogger("sprite.notification")
 
@@ -33,6 +34,7 @@ class NotificationSprite(BaseSprite):
         self.fadeout_frames = fadeout_frames
         self.message = None
         self.timeout = 0
+        self.notifications = []
         self.render()
 
     def update(
@@ -43,15 +45,22 @@ class NotificationSprite(BaseSprite):
         events: list[pygame.event.Event],
     ) -> None:
         super().update(frame, clock, delta, events)
+        self.handle_events(events)
         if self.timeout > 0:
             self.timeout -= 1
         else:
-            if len(STATE.notifications) > 0:
-                self.message = STATE.notifications.pop(0)
+            if len(self.notifications) > 0:
+                self.message = self.notifications.pop(0)
                 self.timeout = self.timeout_frames
             else:
                 self.message = None
         self.render()
+
+    def handle_events(self, events: list[pygame.event.Event]) -> None:
+        for event in events:
+            if event.type == EVENT_NOTIFICATION_RECEIVED:
+                logger.debug(f"received: message={event.message}")
+                self.notifications.append(event.message)
 
     def render(self) -> None:
         self.image.fill(self.color_bg if self.timeout > 0 else (0, 0, 0, 0))

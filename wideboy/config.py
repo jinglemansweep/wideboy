@@ -1,11 +1,13 @@
 import os
 import sys
+import uuid
 
 from dynaconf import Dynaconf, Validator
 from pathlib import Path
 from pprint import pprint
 
 from wideboy.constants import DYNACONF_ENVVAR_PREFIX
+
 
 validators = [
     # General
@@ -229,6 +231,7 @@ settings = Dynaconf(
     validators=validators,
 )
 
+DEVICE_ID = settings.general.device_id or uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 # RPI-RGB-LED-MATRIX
 

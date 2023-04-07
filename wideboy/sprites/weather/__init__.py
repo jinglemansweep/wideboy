@@ -11,7 +11,6 @@ from wideboy.sprites.image_helpers import (
     pil_to_surface,
 )
 from wideboy.constants import EVENT_EPOCH_MINUTE
-from wideboy.state import STATE
 from wideboy.config import settings
 
 logger = logging.getLogger("sprite.weather")

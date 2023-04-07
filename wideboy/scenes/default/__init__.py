@@ -14,7 +14,6 @@ from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes.base import BaseScene
-from wideboy.state import DEVICE_ID
 
 from wideboy.config import settings
 

@@ -2,7 +2,7 @@ import logging
 import pygame
 
 from wideboy.sprites.image_helpers import build_background
-from wideboy.state import STATE
+
 
 logger = logging.getLogger("scenes.base")
 
@@ -73,7 +73,7 @@ class BaseScene:
         frame = self.frame
         if frame % self.debug_every_frame == 0:
             logger.debug(
-                f"scene:debug frame={frame} fps={clock.get_fps()} delta={delta} state={STATE}"
+                f"scene:debug frame={frame} fps={clock.get_fps()} delta={delta}"
             )
 
     @property

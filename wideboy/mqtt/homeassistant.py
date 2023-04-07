@@ -9,8 +9,7 @@ from wideboy.constants import (
     AppMetadata,
     EVENT_MQTT_MESSAGE_SEND,
 )
-from wideboy.config import settings
-from wideboy.state import DEVICE_ID
+from wideboy.config import DEVICE_ID, settings
 
 
 logger = logging.getLogger("mqtt.homeassistant")
@@ -85,15 +84,23 @@ def advertise_entity(
         )
 
 
+def update_entity(topic: str, payload: dict):
+    pygame.event.post(
+        pygame.event.Event(
+            EVENT_MQTT_MESSAGE_SEND,
+            topic=topic,
+            payload=payload,
+        ),
+    )
+
+
 def update_sensors(clock: pygame.time.Clock, every_tick: int = 5000):
     if pygame.time.get_ticks() % every_tick == 0:
-        pygame.event.post(
-            pygame.event.Event(
-                EVENT_MQTT_MESSAGE_SEND,
-                topic="fps/state",
-                payload=dict(value=clock.get_fps()),
-            )
-        )
+        update_entity("fps/state", dict(value=clock.get_fps()))
+
+
+def hass_bool(value: bool) -> str:
+    return "ON" if value else "OFF"
 
 
 def build_device_info() -> dict:
