@@ -15,6 +15,7 @@ from wideboy.constants import (
     EVENT_NOTIFICATION_RECEIVED,
     EVENT_MASTER_BRIGHTNESS,
     EVENT_MASTER_POWER,
+    EVENT_SCENE_MANAGER_NEXT,
 )
 from wideboy.state import DEVICE_ID
 
@@ -134,7 +135,7 @@ def handle_mqtt_event(event: pygame.event.Event):
                     )
                 )
         if event.topic.endswith("scene_next/set"):
-            pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
+            pygame.event.post(pygame.event.Event(EVENT_SCENE_MANAGER_NEXT))
         if event.topic.endswith("action_a/set"):
             pygame.event.post(pygame.event.Event(EVENT_ACTION_A))
         if event.topic.endswith("action_b/set"):
