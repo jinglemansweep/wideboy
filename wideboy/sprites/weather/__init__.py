@@ -67,12 +67,14 @@ class WeatherSprite(BaseSprite):
                 temp=float(temp.state.state),
                 forecast_precipitation=float(forecast_precipitation.state.state),
             )
+            logger.debug(
+                f"updated: condition={self.weather['condition']} temp={self.weather['temp']} forecast_precipitation={self.weather['forecast_precipitation']}"
+            )
             self.render()
         except Exception as e:
             logger.warn(f"Error updating weather: {e}")
 
     def render(self) -> None:
-        logger.info(self.weather)
         self.image.fill(self.color_bg)
         if self.weather is not None:
             # Icon
