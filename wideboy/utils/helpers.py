@@ -1,8 +1,4 @@
-import aiohttp
-import async_timeout
 import logging
-import pygame
-import random
 from datetime import datetime
 from typing import Any
 from wideboy.constants import AppMetadata
@@ -24,18 +20,6 @@ def intro_debug(device_id: str) -> None:
         f"Canvas Size: {settings.display.canvas.width}x{settings.display.canvas.height}"
     )
     logger.info("=" * 80)
-
-
-def random_color() -> pygame.color.Color:
-    return pygame.color.Color(
-        random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
-    )
-
-
-async def async_fetch(session: aiohttp.ClientSession, url: str) -> str:
-    with async_timeout.timeout(10):
-        async with session.get(url) as response:
-            return await response.text()
 
 
 class EpochEmitter:

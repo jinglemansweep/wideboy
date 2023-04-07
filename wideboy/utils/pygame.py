@@ -102,5 +102,5 @@ def run_loop(loop_func: Callable) -> None:
 
 
 def clock_tick(clock: pygame.time.Clock) -> float:
-    MQTT.loop(0.0001)
+    MQTT.loop(0)
     return clock.tick(FPS) / 1000

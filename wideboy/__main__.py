@@ -1,5 +1,3 @@
-import asyncio
-import json
 import logging
 import pygame
 import pygame.pkgdata
@@ -11,8 +9,6 @@ from wideboy.constants import (
     AppMetadata,
 )
 from wideboy.config import settings, DEVICE_ID
-
-# from wideboy.mqtt import MQTT
 from wideboy.constants import (
     DEFAULT_POWER,
     DEFAULT_BRIGHTNESS,
@@ -35,7 +31,6 @@ from wideboy.utils.pygame import (
     dispatch_event,
     pump_events,
     main_entrypoint,
-    run_loop,
     clock_tick,
 )
 from wideboy.scenes.credits import CreditsScene
@@ -82,10 +77,9 @@ advertise_entity("action_b", "button")
 advertise_entity("message", "text", dict(min=1))
 
 # Main Loop
-async def start_main_loop():
+def start_main_loop():
 
     global state, matrix, matrix_buffer
-    loop = asyncio.get_event_loop()
 
     scene_manager = SceneManager(
         [
@@ -132,9 +126,8 @@ async def start_main_loop():
 
         # Debugging
         scene_manager.debug(clock, delta)
-        await asyncio.sleep(0)
 
 
 # Entrypoint
 if __name__ == "__main__":
-    main_entrypoint(run_loop(start_main_loop))
+    main_entrypoint(start_main_loop)
