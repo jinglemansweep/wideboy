@@ -85,13 +85,13 @@ def advertise_entity(
         )
 
 
-def update_sensors(clock: pygame.time.Clock, every_tick: int = 10000):
+def update_sensors(clock: pygame.time.Clock, every_tick: int = 5000):
     if pygame.time.get_ticks() % every_tick == 0:
         pygame.event.post(
             pygame.event.Event(
                 EVENT_MQTT_MESSAGE_SEND,
                 topic="fps/state",
-                payload=dict(value=int(clock.get_fps())),
+                payload=dict(value=clock.get_fps()),
             )
         )
 
