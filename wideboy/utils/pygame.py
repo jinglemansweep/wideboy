@@ -48,6 +48,7 @@ def setup_pygame(
 def handle_events(
     events: list[pygame.event.Event], matrix: any, scene_manager: SceneManager
 ) -> None:
+    pump_epoch_events()
     for event in events:
         # Input Events
         handle_internal_event(event)
@@ -63,7 +64,9 @@ def handle_internal_event(event: pygame.event.Event) -> None:
     # PyGame internal events
     if event.type == pygame.QUIT:
         sys.exit()
-    # Epoch events
+
+
+def pump_epoch_events() -> None:
     epochs = epoch_emitter.check()
     if epochs.get("new_sec"):
         pygame.event.post(
