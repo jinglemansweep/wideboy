@@ -63,4 +63,4 @@ class HassEntityTileSprite(BaseSprite):
                 color_outline=pygame.color.Color(0, 0, 0, 255),
             )
             self.image.blit(icon_text, (0, 0))
-            self.dirty = 1
+        self.dirty = 1
