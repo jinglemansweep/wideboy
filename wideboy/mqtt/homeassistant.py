@@ -4,7 +4,6 @@ import pygame
 from typing import Optional
 from homeassistant_api import Client
 
-
 from wideboy.constants import (
     AppMetadata,
     EVENT_MQTT_MESSAGE_SEND,
