@@ -13,11 +13,12 @@ from wideboy.constants import (
 from wideboy.config import (
     settings,
 )
-from wideboy.mqtt import MQTT
-from wideboy.mqtt.homeassistant import HASS, advertise_entity, update_sensors
+
+# from wideboy.mqtt import MQTT
+from wideboy.mqtt.homeassistant import advertise_entity, update_sensors
 from wideboy.scenes.manager import SceneManager
 from wideboy.state import STATE, DEVICE_ID
-from wideboy.utils.events import JOYSTICKS, handle_events
+from wideboy.utils.events import handle_events
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
@@ -28,7 +29,6 @@ from wideboy.utils.pygame import (
     clock_tick,
 )
 
-from wideboy.scenes.blank import BlankScene
 from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
 
@@ -49,6 +49,7 @@ if settings.display.matrix.enabled:
     matrix, matrix_buffer = setup_led_matrix()
 
 
+# Home Assistant Entities
 advertise_entity(
     "master",
     "light",

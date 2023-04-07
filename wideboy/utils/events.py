@@ -6,6 +6,7 @@ from wideboy.constants import (
     EVENT_EPOCH_SECOND,
     EVENT_EPOCH_MINUTE,
     EVENT_EPOCH_HOUR,
+    EVENT_SCENE_MANAGER_NEXT,
     GAMEPAD,
 )
 from wideboy.mqtt import handle_mqtt_event
@@ -65,6 +66,6 @@ def handle_joystick_event(event: pygame.event.Event) -> None:
     if event.type == pygame.JOYBUTTONUP:
         logger.debug(f"joystick action=BUTTONUP button={event.button}")
         if event.button in [GAMEPAD["BUTTON_L"], GAMEPAD["BUTTON_R"]]:
-            pygame.event.post(pygame.event.Event(EVENT_SCENE_NEXT))
+            pygame.event.post(pygame.event.Event(EVENT_SCENE_MANAGER_NEXT))
     if event.type == pygame.JOYHATMOTION:
         logger.debug(f"Joystick action=HATMOTION hat={event.hat} value={event.value}")

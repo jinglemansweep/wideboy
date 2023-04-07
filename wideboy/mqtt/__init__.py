@@ -4,9 +4,8 @@ import pygame
 from typing import Any, Optional
 import paho.mqtt.client as mqtt
 
-from wideboy.config import (
-    settings,
-)
+from wideboy.config import settings
+
 from wideboy.constants import (
     EVENT_MQTT_MESSAGE_RECEIVED,
     EVENT_MQTT_MESSAGE_SEND,
