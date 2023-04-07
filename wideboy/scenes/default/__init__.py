@@ -14,7 +14,6 @@ from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
 from wideboy.scenes.base import BaseScene
-from wideboy.scenes.default.tasks import fetch_weather
 from wideboy.state import DEVICE_ID
 
 from wideboy.config import settings
@@ -32,7 +31,6 @@ class DefaultScene(BaseScene):
         bg_color: pygame.color.Color = (0, 0, 0, 255),
     ) -> None:
         super().__init__(surface, bg_color)
-        asyncio.create_task(fetch_weather())
 
     def setup(self):
         super().setup()

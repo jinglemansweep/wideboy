@@ -105,22 +105,6 @@ validators = [
         default="images/weather",
         cast=Path,
     ),
-    # WEATHER
-    Validator(
-        "WEATHER__FETCH_INTERVAL_MINS",
-        default=15,
-        cast=int,
-    ),
-    Validator(
-        "WEATHER__LATITUDE",
-        default=50.0,
-        cast=float,
-    ),
-    Validator(
-        "WEATHER__LONGITUDE",
-        default=1.0,
-        cast=float,
-    ),
     # BACKGROUNDS
     Validator(
         "BACKGROUNDS__CHANGE_INTERVAL_MINS",

@@ -53,11 +53,6 @@
   # images_weather = "images/icons"
   # images_icons = "images/icons"
   
-[weather]
-  # fetch_interval_mins = 15
-  # latitude = 50.0
-  # longitude = 1.0
-
 [backgrounds]
   # change_interval_mins = 5
   

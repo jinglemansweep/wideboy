@@ -50,20 +50,11 @@ def handle_events(
 ) -> None:
     pump_epoch_events()
     for event in events:
-        # Input Events
         handle_internal_event(event)
         handle_mqtt_event(event)
         handle_joystick_event(event)
-        # State Events
         handle_state_event(event, matrix)
-        # Scene Events
         scene_manager.handle_event(event)
-
-
-def handle_internal_event(event: pygame.event.Event) -> None:
-    # PyGame internal events
-    if event.type == pygame.QUIT:
-        sys.exit()
 
 
 def pump_epoch_events() -> None:
@@ -78,6 +69,11 @@ def pump_epoch_events() -> None:
         )
     if epochs.get("new_hour"):
         pygame.event.post(pygame.event.Event(EVENT_EPOCH_HOUR, unit=epochs.get("hour")))
+
+
+def handle_internal_event(event: pygame.event.Event) -> None:
+    if event.type == pygame.QUIT:
+        sys.exit()
 
 
 def handle_joystick_event(event: pygame.event.Event) -> None:

@@ -3,13 +3,14 @@ import os
 import pygame
 from typing import Optional
 from pygame import SRCALPHA
+from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     render_text,
     load_image,
     pil_to_surface,
 )
-from wideboy.constants import EVENT_EPOCH_SECOND
+from wideboy.constants import EVENT_EPOCH_MINUTE
 from wideboy.state import STATE
 from wideboy.config import settings
 
@@ -33,6 +34,13 @@ class WeatherSprite(BaseSprite):
         self.color_temp = color_temp
         self.color_rain_prob = color_rain_prob
         self.icon_summary = None
+        self.entity_condition = "sensor.openweathermap_condition"
+        self.entity_temp = "sensor.openweathermap_temperature"
+        self.entity_forecast_precipitation = (
+            "sensor.openweathermap_forecast_precipitation_probability"
+        )
+        self.weather = None
+        self.update_state()
         self.render()
 
     def update(
@@ -44,23 +52,42 @@ class WeatherSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if event.type == EVENT_EPOCH_SECOND and event.unit % 10 == 0:
-                self.render()
+            if event.type == EVENT_EPOCH_MINUTE or self.weather is None:
+                self.update_state()
+
+    def update_state(self) -> None:
+        try:
+            condition = HASS.get_entity(entity_id=self.entity_condition)
+            temp = HASS.get_entity(entity_id=self.entity_temp)
+            forecast_precipitation = HASS.get_entity(
+                entity_id=self.entity_forecast_precipitation
+            )
+            self.weather = dict(
+                condition=condition.state.state,
+                temp=float(temp.state.state),
+                forecast_precipitation=float(forecast_precipitation.state.state),
+            )
+            self.render()
+        except Exception as e:
+            logger.warn(f"Error updating weather: {e}")
 
     def render(self) -> None:
+        logger.info(self.weather)
         self.image.fill(self.color_bg)
-        if STATE.weather_summary is not None:
+        if self.weather is not None:
+            # Icon
+            icon_name = condition_to_icon(self.weather["condition"])
             icon_filename = os.path.join(
-                settings.paths.images_weather, f"{STATE.weather_summary}.png"
+                settings.paths.images_weather, f"{icon_name}.png"
             )
             self.icon_summary = pygame.transform.scale(
                 load_image(icon_filename), (48, 48)
             )
             self.image.blit(self.icon_summary, (-4, -8))
-        if STATE.temperature is not None:
+            # Temperature
             temp_str = (
-                f"{int(round(STATE.temperature, 0))}"
-                if STATE.temperature is not None
+                f"{int(self.weather['temp'])}"
+                if self.weather["temp"] is not None
                 else "?"
             )
             temperature_text = render_text(
@@ -81,20 +108,55 @@ class WeatherSprite(BaseSprite):
                 (0, 0, 0, 0),
             )
             self.image.blit(degree_text, (32 + temperature_text.get_width(), -1))
-        if (
-            STATE.rain_probability is not None
-            and STATE.rain_probability > RAIN_PROBABILITY_DISPLAY_THRESHOLD
-        ):
-            rain_prob_str = (
-                f"{STATE.rain_probability}%"
-                if STATE.rain_probability is not None
-                else "?"
-            )
-            rain_prob_text = render_text(
-                rain_prob_str,
-                "fonts/bitstream-vera.ttf",
-                10,
-                self.color_rain_prob,
-            )
-            self.image.blit(rain_prob_text, (63 - rain_prob_text.get_width(), 15))
+            if (
+                self.weather["forecast_precipitation"]
+                > RAIN_PROBABILITY_DISPLAY_THRESHOLD
+            ):
+                rain_prob_str = (
+                    f"{STATE.rain_probability}%"
+                    if STATE.rain_probability is not None
+                    else "?"
+                )
+                rain_prob_text = render_text(
+                    rain_prob_str,
+                    "fonts/bitstream-vera.ttf",
+                    10,
+                    self.color_rain_prob,
+                )
+                self.image.blit(rain_prob_text, (63 - rain_prob_text.get_width(), 15))
         self.dirty = 1
+
+
+def condition_to_icon(condition: int) -> str:
+    icon: str = None
+    if condition == "clear-night":
+        icon = "night"
+    elif condition == "cloudy":
+        icon = "cloudy"
+    elif condition == "exceptional":
+        icon = "exceptional"
+    elif condition == "fog":
+        icon = "fog"
+    elif condition == "hail":
+        icon = "hail"
+    elif condition == "lightning":
+        icon = "thunderstorms"
+    elif condition == "lightning-rainy":
+        icon = "thunderstorms-2"
+    elif condition == "partlycloudy":
+        icon = "clear-cloudy"
+    elif condition == "pouring":
+        icon = "drizzle"
+    elif condition == "rainy":
+        icon = "drizzle"
+    elif condition == "snowy":
+        icon = "snow"
+    elif condition == "snowy-rainy":
+        icon = "sleet"
+    elif condition == "sunny":
+        icon = "sunny"
+    elif condition == "windy":
+        icon = "windy"
+    elif condition == "windy-variant":
+        icon = "windy"
+    return icon
