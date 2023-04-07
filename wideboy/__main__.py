@@ -18,17 +18,16 @@ from wideboy.config import (
 from wideboy.mqtt.homeassistant import advertise_entity, update_sensors
 from wideboy.scenes.manager import SceneManager
 from wideboy.state import STATE, DEVICE_ID
-from wideboy.utils.events import handle_events
 from wideboy.utils.display import setup_led_matrix, render_led_matrix, blank_surface
 from wideboy.utils.helpers import intro_debug
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.pygame import (
     setup_pygame,
+    handle_events,
     main_entrypoint,
     run_loop,
     clock_tick,
 )
-
 from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
 
@@ -56,7 +55,6 @@ advertise_entity(
     dict(brightness=True, color_mode=True, supported_color_modes=["brightness"]),
     dict(state="ON", brightness=128),
 )
-
 advertise_entity("scene_next", "button")
 advertise_entity(
     "fps",
