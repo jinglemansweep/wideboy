@@ -22,7 +22,7 @@ class ClockSprite(BaseSprite):
         font_date: str = "fonts/huggable.ttf",
         font_time: str = "fonts/huggable.ttf",
         font_time_size: int = 50,
-        font_date_size: int = 20,
+        font_date_size: int = 22,
     ) -> None:
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -56,12 +56,10 @@ class ClockSprite(BaseSprite):
         hh_str = now.strftime("%H")
         mm_str = now.strftime("%M")
         hhmm_str = f"{hh_str}:{mm_str}"
-        hhmm_str = "12:34"
         hhmm_offset = (0, -7)
         hhmm_sprite = render_text(
             hhmm_str, self.font_time, self.font_time_size, self.color_time
         )
-        print(self.rect.width, hhmm_sprite.get_rect().width)
         self.image.blit(
             hhmm_sprite,
             (
