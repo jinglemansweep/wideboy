@@ -17,16 +17,22 @@ class ClockSprite(BaseSprite):
         self,
         rect: pygame.rect.Rect,
         color_bg: pygame.color.Color = (0, 0, 0, 0),
-        color_time: pygame.color.Color = (0, 255, 0, 255),
+        color_time: pygame.color.Color = (255, 0, 255, 255),
         color_date: pygame.color.Color = (255, 255, 255, 255),
+        font_date: str = "fonts/bitstream-vera.ttf",
+        font_time: str = "fonts/saucer.ttf",
+        font_time_size: int = 40,
+        font_date_size: int = 12,
     ) -> None:
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
         self.color_time = color_time
         self.color_date = color_date
-        self.font_date = "fonts/digital.ttf"
-        self.font_time = "fonts/digital.ttf"
+        self.font_date = font_date
+        self.font_date_size = font_date_size
+        self.font_time = font_time
+        self.font_time_size = font_time_size
         self.render()
 
     def update(
@@ -45,15 +51,30 @@ class ClockSprite(BaseSprite):
         now = datetime.now()
         dow_str = now.strftime("%A")[:3]
         ddmm_str = now.strftime("%d %b")
-        date_str = f"{dow_str} {ddmm_str}"
+        date_str = f"{dow_str} {ddmm_str}".upper()
         self.image.fill(self.color_bg)
         hh_str = now.strftime("%H")
         mm_str = now.strftime("%M")
-        hhmm_str = f"{hh_str}:{mm_str}" if now.second % 2 == 0 else f"{hh_str} {mm_str}"
-        hhmm_sprite = render_text(hhmm_str, self.font_time, 52, self.color_time)
-        time_pos = ((self.rect[2] - hhmm_sprite.get_rect()[2]) // 2, -2)
-        self.image.blit(hhmm_sprite, time_pos)
-        date_sprite = render_text(date_str, self.font_date, 26, self.color_date)
-        date_pos = ((self.rect[2] - date_sprite.get_rect()[2]) // 2, 40)
+        hhmm_offset = (0, -4)
+        hh_sprite = render_text(
+            hh_str, self.font_time, self.font_time_size, self.color_time
+        )
+        self.image.blit(
+            hh_sprite,
+            ((self.rect.width / 2) - hh_sprite.get_rect().width - 5, hhmm_offset[1]),
+        )
+        mm_sprite = render_text(
+            mm_str, self.font_time, self.font_time_size, self.color_time
+        )
+        self.image.blit(mm_sprite, ((self.rect.width / 2), hhmm_offset[1]))
+        if now.second % 2 == 0:
+            sep_sprite = render_text(
+                ":", self.font_time, self.font_time_size, self.color_time
+            )
+            self.image.blit(sep_sprite, ((self.rect.width / 2) - 11, hhmm_offset[1]))
+        date_sprite = render_text(
+            date_str, self.font_date, self.font_date_size, self.color_date
+        )
+        date_pos = ((self.rect[2] - date_sprite.get_rect()[2] - 2), 28)
         self.image.blit(date_sprite, date_pos)
         self.dirty = 1
