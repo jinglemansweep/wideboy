@@ -23,8 +23,10 @@ def render_led_matrix(
     buffer: Any,
     brightness: int = None,
 ) -> Any:
-    pixels = pygame.surfarray.pixels3d(surface)
-    wrapped = wrap_surface_nparray(pixels, MATRIX_SIZE)
+    # pixels = pygame.surfarray.pixels3d(surface)
+    pil_image = Image.fromarray(pygame.surfarray.array3d(surface))
+    np_image = np.array(pil_image, dtype=np.uint8)
+    wrapped = wrap_surface_nparray(np_image, MATRIX_SIZE)
     image = Image.fromarray(wrapped).convert("RGB")
     buffer.SetImage(image)
     if brightness is not None:
