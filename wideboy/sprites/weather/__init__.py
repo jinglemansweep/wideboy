@@ -114,8 +114,8 @@ class WeatherSprite(BaseSprite):
                 > RAIN_PROBABILITY_DISPLAY_THRESHOLD
             ):
                 rain_prob_str = (
-                    f"{STATE.rain_probability}%"
-                    if STATE.rain_probability is not None
+                    f"{int(self.weather['forecast_precipitation'])}%"
+                    if self.weather["forecast_precipitation"] is not None
                     else "?"
                 )
                 rain_prob_text = render_text(
