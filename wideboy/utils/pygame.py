@@ -4,6 +4,7 @@ import logging
 import pygame
 import sys
 import traceback
+from datetime import datetime
 from pygame import QUIT, RESIZABLE, SCALED
 from typing import Callable
 
@@ -12,13 +13,13 @@ from wideboy.constants import (
     EVENT_EPOCH_SECOND,
     EVENT_EPOCH_MINUTE,
     EVENT_EPOCH_HOUR,
+    EVENT_TIMER_SECOND,
     EVENT_SCENE_MANAGER_NEXT,
     GAMEPAD,
 )
 from wideboy.config import settings
 from wideboy.mqtt import MQTT
 from wideboy.mqtt import handle_mqtt_event
-from wideboy.utils.helpers import EpochEmitter
 
 logger = logging.getLogger("utils.pygame")
 
@@ -26,18 +27,16 @@ DISPLAY_FLAGS = RESIZABLE | SCALED
 FPS = 50
 JOYSTICKS = dict()
 
-epoch_emitter = EpochEmitter()
-
 
 def setup_pygame(
     display_size: pygame.math.Vector2,
 ) -> tuple[pygame.time.Clock, pygame.surface.Surface]:
-
     pygame.init()
     pygame.mixer.quit()
     pygame.event.set_allowed(None)
     pygame.event.set_allowed(QUIT)
     clock = pygame.time.Clock()
+    pygame.time.set_timer(EVENT_TIMER_SECOND, 1000)
     pygame.display.set_caption(AppMetadata.DESCRIPTION)
     screen = pygame.display.set_mode(display_size, DISPLAY_FLAGS)
     return clock, screen
@@ -49,23 +48,22 @@ def dispatch_event(event: pygame.event.Event) -> None:
     handle_joystick_event(event)
 
 
-def pump_events() -> None:
-    epochs = epoch_emitter.check()
-    if epochs.get("new_sec"):
-        pygame.event.post(
-            pygame.event.Event(EVENT_EPOCH_SECOND, unit=epochs.get("sec"))
-        )
-    if epochs.get("new_min"):
-        pygame.event.post(
-            pygame.event.Event(EVENT_EPOCH_MINUTE, unit=epochs.get("min"))
-        )
-    if epochs.get("new_hour"):
-        pygame.event.post(pygame.event.Event(EVENT_EPOCH_HOUR, unit=epochs.get("hour")))
-
-
 def handle_internal_event(event: pygame.event.Event) -> None:
     if event.type == pygame.QUIT:
         sys.exit()
+    if event.type == EVENT_TIMER_SECOND:
+        now = datetime.now()
+        pygame.event.post(
+            pygame.event.Event(EVENT_EPOCH_SECOND, unit=now.second, now=now)
+        )
+        if now.second == 0:
+            pygame.event.post(
+                pygame.event.Event(EVENT_EPOCH_MINUTE, unit=now.minute, now=now)
+            )
+            if now.minute == 0:
+                pygame.event.post(
+                    pygame.event.Event(EVENT_EPOCH_HOUR, unit=now.hour, now=now)
+                )
 
 
 def handle_joystick_event(event: pygame.event.Event) -> None:

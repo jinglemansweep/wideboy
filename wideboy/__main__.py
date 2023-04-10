@@ -29,7 +29,6 @@ from wideboy.utils.logger import setup_logger
 from wideboy.utils.pygame import (
     setup_pygame,
     dispatch_event,
-    pump_events,
     main_entrypoint,
     clock_tick,
 )
@@ -76,9 +75,9 @@ advertise_entity("action_a", "button")
 advertise_entity("action_b", "button")
 advertise_entity("message", "text", dict(min=1))
 
+
 # Main Loop
 def start_main_loop():
-
     global state, matrix, matrix_buffer
 
     scene_manager = SceneManager(
@@ -94,9 +93,7 @@ def start_main_loop():
     brightness = DEFAULT_BRIGHTNESS
 
     while running:
-
         # Events Processing
-        pump_events()
         events = pygame.event.get()
         for event in events:
             dispatch_event(event)
