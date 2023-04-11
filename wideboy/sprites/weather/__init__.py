@@ -234,6 +234,8 @@ class WeatherSprite(BaseSprite):
         self.color_rain_prob = color_rain_prob
         self.icon_summary = None
         self.entity_weather_code = "sensor.openweathermap_weather_code"
+        self.entity_wind_speed = "sensor.openweathermap_wind_speed"
+        self.entity_wind_bearing = "sensor.openweathermap_wind_bearing"
         self.entity_condition = "sensor.openweathermap_condition"
         self.entity_temp = "sensor.openweathermap_temperature"
         self.entity_forecast_precipitation = (
@@ -264,6 +266,8 @@ class WeatherSprite(BaseSprite):
         try:
             sun = HASS.get_entity(entity_id="sun.sun")
             weather_code = HASS.get_entity(entity_id=self.entity_weather_code)
+            wind_speed = HASS.get_entity(entity_id=self.entity_wind_speed)
+            wind_bearing = HASS.get_entity(entity_id=self.entity_wind_bearing)
             condition = HASS.get_entity(entity_id=self.entity_condition)
             temp = HASS.get_entity(entity_id=self.entity_temp)
             forecast_precipitation = HASS.get_entity(
@@ -272,12 +276,14 @@ class WeatherSprite(BaseSprite):
             self.weather = dict(
                 sun=sun.state.state,
                 weather_code=int(weather_code.state.state),
+                wind_speed=float(wind_speed.state.state),
+                wind_bearing=float(wind_bearing.state.state),
                 condition=condition.state.state,
                 temp=float(temp.state.state),
                 forecast_precipitation=float(forecast_precipitation.state.state),
             )
             logger.debug(
-                f"updated: sun={self.weather['sun']} weather_code={self.weather['weather_code']} condition={self.weather['condition']} temp={self.weather['temp']} forecast_precipitation={self.weather['forecast_precipitation']}"
+                f"updated: sun={self.weather['sun']} weather_code={self.weather['weather_code']} wind_speed={self.weather['wind_speed']} wind_bearing={self.weather['wind_bearing']} condition={self.weather['condition']} temp={self.weather['temp']} forecast_precipitation={self.weather['forecast_precipitation']}"
             )
         except Exception as e:
             logger.warn(f"Error updating weather: {e}")
@@ -341,6 +347,31 @@ class WeatherSprite(BaseSprite):
                 (0, 0, 0, 0),
             )
             self.image.blit(degree_text, (temperature_text.get_width() - 4, 32))
+            wind_direction = convert_bearing_to_direction(self.weather["wind_bearing"])
+            wind_speed_mph = int(convert_ms_to_mph(self.weather["wind_speed"]))
+            wind_dir_disc = scale_surface(
+                load_image(
+                    os.path.join(
+                        settings.paths.images_weather,
+                        "premium",
+                        "wind",
+                        "arrows",
+                        f"disc-{wind_direction}.png",
+                    )
+                ),
+                (28, 28),
+            )
+            self.image.blit(wind_dir_disc, (36, 38))
+            pygame.draw.circle(self.image, (0, 0, 0), (50, 52), 6)
+            wind_speed_text = render_text(
+                f"{wind_speed_mph}",
+                "fonts/bitstream-vera.ttf",
+                7,
+                self.color_temp,
+            )
+            self.image.blit(
+                wind_speed_text, (38 + (wind_speed_text.get_width() / 2), 46)
+            )
             if (
                 self.weather["forecast_precipitation"]
                 > RAIN_PROBABILITY_DISPLAY_THRESHOLD
@@ -356,8 +387,31 @@ class WeatherSprite(BaseSprite):
                     8,
                     self.color_rain_prob,
                 )
-                self.image.blit(rain_prob_text, (64 - rain_prob_text.get_width(), 53))
+                self.image.blit(rain_prob_text, (64 - rain_prob_text.get_width(), 0))
         self.dirty = 1
 
     def condition_to_icon(self, condition: int) -> tuple[str, str, str]:
         return self.mapping[condition]
+
+
+def convert_bearing_to_direction(bearing: float) -> str:
+    if 0 < bearing < 45:
+        return "ne"
+    elif 45 <= bearing < 90:
+        return "e"
+    elif 90 <= bearing < 135:
+        return "se"
+    elif 135 <= bearing < 180:
+        return "s"
+    elif 180 <= bearing < 225:
+        return "sw"
+    elif 225 <= bearing < 270:
+        return "w"
+    elif 270 <= bearing < 315:
+        return "nw"
+    elif 315 <= bearing < 360:
+        return "n"
+
+
+def convert_ms_to_mph(ms: float) -> float:
+    return ms * 2.23694
