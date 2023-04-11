@@ -21,7 +21,7 @@ class ClockSprite(BaseSprite):
         color_date: pygame.color.Color = (192, 192, 255, 255),
         font_date: str = "fonts/molot.otf",
         font_time: str = "fonts/molot.otf",
-        font_time_size: int = 36,
+        font_time_size: int = 42,
         font_date_size: int = 18,
     ) -> None:
         super().__init__(rect)
@@ -70,6 +70,6 @@ class ClockSprite(BaseSprite):
         date_sprite = render_text(
             date_str, self.font_date, self.font_date_size, self.color_date
         )
-        date_pos = (((self.rect.width / 2) - date_sprite.get_rect().width / 2), 24)
+        date_pos = (((self.rect.width / 2) - date_sprite.get_rect().width / 2), 30)
         self.image.blit(date_sprite, date_pos)
         self.dirty = 1
