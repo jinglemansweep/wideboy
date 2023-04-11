@@ -309,7 +309,6 @@ class WeatherSprite(BaseSprite):
                 pygame.Color(255, 255, 255),
                 (0, 0, 0, 0),
                 (0, 0, 0, 0),
-                alpha=128,
             )
             self.image.blit(temperature_text, (0, 30))
             degree_text = render_text(
@@ -319,7 +318,6 @@ class WeatherSprite(BaseSprite):
                 self.color_temp,
                 (0, 0, 0, 0),
                 (0, 0, 0, 0),
-                alpha=128,
             )
             self.image.blit(degree_text, (temperature_text.get_width() - 4, 32))
             if (
@@ -336,7 +334,6 @@ class WeatherSprite(BaseSprite):
                     "fonts/bitstream-vera.ttf",
                     8,
                     self.color_rain_prob,
-                    alpha=128,
                 )
                 self.image.blit(rain_prob_text, (63 - rain_prob_text.get_width(), 52))
         self.dirty = 1
