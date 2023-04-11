@@ -65,6 +65,7 @@ class DefaultScene(BaseScene):
         # Setup weather widget
         self.weather_widget = WeatherSprite(
             Rect(576, 0, 64, 64),
+            color_temp=(255, 255, 255, 64),
         )
         self.group.add(self.weather_widget)
         # Setup notification widget

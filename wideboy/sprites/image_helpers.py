@@ -11,7 +11,7 @@ logger = logging.getLogger("sprites.image_helpers")
 
 
 def load_image(filename: str) -> pygame.surface.Surface:
-    return pygame.image.load(filename)
+    return pygame.image.load(filename).convert_alpha()
 
 
 def pil_to_surface(image: Image.Image) -> pygame.surface.Surface:
@@ -72,6 +72,7 @@ def render_text(
     color_bg: pygame.color.Color = pygame.color.Color(0, 0, 0, 0),
     color_outline: pygame.color.Color = pygame.color.Color(0, 0, 0, 255),
     antialias: bool = True,
+    alpha: int = 255,
 ) -> pygame.surface.Surface:
     font = pygame.font.Font(font_filename, font_size)
     surface_orig = font.render(text, antialias, color_fg)
@@ -84,6 +85,7 @@ def render_text(
         surface_outline = font.render(text, antialias, color_outline)
         surface_dest.blit(surface_outline, (offset[0] + 2, offset[1] + 1))
     surface_dest.blit(surface_orig, (2, 1))
+    surface_dest.set_alpha(alpha)
     return surface_dest
 
 

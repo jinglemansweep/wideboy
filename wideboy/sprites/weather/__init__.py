@@ -1,6 +1,7 @@
 import logging
 import os
 import pygame
+import random
 from typing import Optional
 from pygame import SRCALPHA
 from wideboy.mqtt.homeassistant import HASS
@@ -10,7 +11,7 @@ from wideboy.sprites.image_helpers import (
     load_image,
     pil_to_surface,
 )
-from wideboy.constants import EVENT_EPOCH_MINUTE
+from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
 from wideboy.config import settings
 
 logger = logging.getLogger("sprite.weather")
@@ -19,125 +20,6 @@ RAIN_PROBABILITY_DISPLAY_THRESHOLD = 25
 
 
 class WeatherSprite(BaseSprite):
-    def __init__(
-        self,
-        rect: pygame.rect.Rect,
-        color_bg: pygame.color.Color = (0, 0, 0, 0),
-        color_temp: pygame.color.Color = (255, 255, 255, 255),
-        color_rain_prob: pygame.color.Color = (255, 255, 0, 255),
-    ) -> None:
-        super().__init__(rect)
-        self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
-        self.font_temp = pygame.font.SysFont("", 20)
-        self.color_bg = color_bg
-        self.color_temp = color_temp
-        self.color_rain_prob = color_rain_prob
-        self.icon_summary = None
-        self.entity_weather_code = "sensor.openweathermap_weather_code"
-        self.entity_condition = "sensor.openweathermap_condition"
-        self.entity_temp = "sensor.openweathermap_temperature"
-        self.entity_forecast_precipitation = (
-            "sensor.openweathermap_forecast_precipitation_probability"
-        )
-        self.weather = None
-        self.update_state()
-        self.render()
-
-    def update(
-        self,
-        frame: str,
-        clock: pygame.time.Clock,
-        delta: float,
-        events: list[pygame.event.Event],
-    ) -> None:
-        super().update(frame, clock, delta, events)
-        for event in events:
-            if event.type == EVENT_EPOCH_MINUTE or self.weather is None:
-                self.update_state()
-
-    def update_state(self) -> None:
-        try:
-            sun = HASS.get_entity(entity_id="sun.sun")
-            weather_code = HASS.get_entity(entity_id=self.entity_weather_code)
-            condition = HASS.get_entity(entity_id=self.entity_condition)
-            temp = HASS.get_entity(entity_id=self.entity_temp)
-            forecast_precipitation = HASS.get_entity(
-                entity_id=self.entity_forecast_precipitation
-            )
-            self.weather = dict(
-                sun=sun.state.state,
-                weather_code=int(weather_code.state.state),
-                condition=condition.state.state,
-                temp=float(temp.state.state),
-                forecast_precipitation=float(forecast_precipitation.state.state),
-            )
-            logger.debug(
-                f"updated: sun={self.weather['sun']} weather_code={self.weather['weather_code']} condition={self.weather['condition']} temp={self.weather['temp']} forecast_precipitation={self.weather['forecast_precipitation']}"
-            )
-            self.render()
-        except Exception as e:
-            logger.warn(f"Error updating weather: {e}")
-
-    def render(self) -> None:
-        self.image.fill(self.color_bg)
-        if self.weather is not None:
-            # Icon
-            icon_mapping = condition_to_icon(self.weather["weather_code"])
-            icon_name = icon_mapping[1 if self.weather["sun"] == "above_horizon" else 2]
-            icon_filename = os.path.join(
-                settings.paths.images_weather,
-                "premium",
-                "png",
-                f"{icon_name}.png",
-            )
-            self.icon_summary = pygame.transform.scale(
-                load_image(icon_filename), (64, 64)
-            )
-            self.image.blit(self.icon_summary, (0, 0))
-            # Temperature
-            temp_str = (
-                f"{int(self.weather['temp'])}"
-                if self.weather["temp"] is not None
-                else "?"
-            )
-            temperature_text = render_text(
-                temp_str,
-                "fonts/bitstream-vera.ttf",
-                16,
-                self.color_temp,
-                (0, 0, 0, 0),
-                (0, 0, 0, 0),
-            )
-            self.image.blit(temperature_text, (36, 0))
-            degree_text = render_text(
-                "°",
-                "fonts/bitstream-vera.ttf",
-                16,
-                self.color_temp,
-                (0, 0, 0, 0),
-                (0, 0, 0, 0),
-            )
-            self.image.blit(degree_text, (32 + temperature_text.get_width(), -1))
-            if (
-                self.weather["forecast_precipitation"]
-                > RAIN_PROBABILITY_DISPLAY_THRESHOLD
-            ):
-                rain_prob_str = (
-                    f"{int(self.weather['forecast_precipitation'])}%"
-                    if self.weather["forecast_precipitation"] is not None
-                    else "?"
-                )
-                rain_prob_text = render_text(
-                    rain_prob_str,
-                    "fonts/bitstream-vera.ttf",
-                    10,
-                    self.color_rain_prob,
-                )
-                self.image.blit(rain_prob_text, (63 - rain_prob_text.get_width(), 15))
-        self.dirty = 1
-
-
-def condition_to_icon(condition: int) -> str:
     mapping = {
         200: [
             "thunderstorm with light rain",
@@ -279,7 +161,7 @@ def condition_to_icon(condition: int) -> str:
         611: [
             "sleet",
             "wsymbol_0021_cloudy_with_light_sleet",
-            "wsymbol_0037_cloudy_with_light_sleet_night",
+            "wsymbol_0037_cloudy_with_sleet_night",
         ],
         621: [
             "shower snow",
@@ -336,4 +218,128 @@ def condition_to_icon(condition: int) -> str:
             "wsymbol_0039_cloudy_with_heavy_hail_night",
         ],
     }
-    return mapping[condition]
+
+    def __init__(
+        self,
+        rect: pygame.rect.Rect,
+        color_bg: pygame.color.Color = (0, 0, 0, 0),
+        color_temp: pygame.color.Color = (255, 255, 255, 255),
+        color_rain_prob: pygame.color.Color = (255, 255, 0, 255),
+    ) -> None:
+        super().__init__(rect)
+        self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
+        self.color_bg = color_bg
+        self.color_temp = color_temp
+        self.color_rain_prob = color_rain_prob
+        self.icon_summary = None
+        self.entity_weather_code = "sensor.openweathermap_weather_code"
+        self.entity_condition = "sensor.openweathermap_condition"
+        self.entity_temp = "sensor.openweathermap_temperature"
+        self.entity_forecast_precipitation = (
+            "sensor.openweathermap_forecast_precipitation_probability"
+        )
+        self.weather = None
+        self.update_state()
+        self.render()
+
+    def update(
+        self,
+        frame: str,
+        clock: pygame.time.Clock,
+        delta: float,
+        events: list[pygame.event.Event],
+    ) -> None:
+        super().update(frame, clock, delta, events)
+        for event in events:
+            if event.type == EVENT_EPOCH_MINUTE or self.weather is None:
+                self.update_state()
+            # if event.type == EVENT_EPOCH_SECOND and event.unit % 2 == 0:
+            #     self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
+            #     self.render()
+
+    def update_state(self) -> None:
+        try:
+            sun = HASS.get_entity(entity_id="sun.sun")
+            weather_code = HASS.get_entity(entity_id=self.entity_weather_code)
+            condition = HASS.get_entity(entity_id=self.entity_condition)
+            temp = HASS.get_entity(entity_id=self.entity_temp)
+            forecast_precipitation = HASS.get_entity(
+                entity_id=self.entity_forecast_precipitation
+            )
+            self.weather = dict(
+                sun=sun.state.state,
+                weather_code=int(weather_code.state.state),
+                condition=condition.state.state,
+                temp=float(temp.state.state),
+                forecast_precipitation=float(forecast_precipitation.state.state),
+            )
+            logger.debug(
+                f"updated: sun={self.weather['sun']} weather_code={self.weather['weather_code']} condition={self.weather['condition']} temp={self.weather['temp']} forecast_precipitation={self.weather['forecast_precipitation']}"
+            )
+            self.render()
+        except Exception as e:
+            logger.warn(f"Error updating weather: {e}")
+
+    def render(self) -> None:
+        self.image.fill(self.color_bg)
+        if self.weather is not None:
+            # Icon
+            icon_mapping = self.condition_to_icon(self.weather["weather_code"])
+            icon_name = icon_mapping[1 if self.weather["sun"] == "above_horizon" else 2]
+            icon_filename = os.path.join(
+                settings.paths.images_weather,
+                "premium",
+                "png",
+                f"{icon_name}.png",
+            )
+            self.icon_summary = pygame.transform.scale(
+                load_image(icon_filename), (64, 64)
+            )
+            self.image.blit(self.icon_summary, (0, 0))
+            # Temperature
+            temp_str = (
+                f"{int(self.weather['temp'])}"
+                if self.weather["temp"] is not None
+                else "?"
+            )
+            temperature_text = render_text(
+                temp_str,
+                "fonts/molot.otf",
+                24,
+                pygame.Color(255, 255, 255),
+                (0, 0, 0, 0),
+                (0, 0, 0, 0),
+                alpha=128,
+            )
+            self.image.blit(temperature_text, (0, 36))
+            degree_text = render_text(
+                "°",
+                "fonts/bitstream-vera.ttf",
+                16,
+                self.color_temp,
+                (0, 0, 0, 0),
+                (0, 0, 0, 0),
+                alpha=128,
+            )
+            self.image.blit(degree_text, (temperature_text.get_width() - 4, 38))
+            if (
+                self.weather["forecast_precipitation"]
+                > RAIN_PROBABILITY_DISPLAY_THRESHOLD
+            ):
+                rain_prob_str = (
+                    f"{int(self.weather['forecast_precipitation'])}%"
+                    if self.weather["forecast_precipitation"] is not None
+                    else "?"
+                )
+                rain_prob_text = render_text(
+                    rain_prob_str,
+                    "fonts/bitstream-vera.ttf",
+                    8,
+                    self.color_rain_prob,
+                    alpha=128,
+                )
+                self.image.blit(rain_prob_text, (63 - rain_prob_text.get_width(), 52))
+        self.dirty = 1
+
+    def condition_to_icon(self, condition: int) -> tuple[str, str, str]:
+        return self.mapping[condition]
