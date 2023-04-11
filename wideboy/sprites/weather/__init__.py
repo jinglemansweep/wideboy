@@ -305,13 +305,13 @@ class WeatherSprite(BaseSprite):
             temperature_text = render_text(
                 temp_str,
                 "fonts/molot.otf",
-                24,
+                32,
                 pygame.Color(255, 255, 255),
                 (0, 0, 0, 0),
                 (0, 0, 0, 0),
                 alpha=128,
             )
-            self.image.blit(temperature_text, (0, 36))
+            self.image.blit(temperature_text, (0, 30))
             degree_text = render_text(
                 "°",
                 "fonts/bitstream-vera.ttf",
@@ -321,7 +321,7 @@ class WeatherSprite(BaseSprite):
                 (0, 0, 0, 0),
                 alpha=128,
             )
-            self.image.blit(degree_text, (temperature_text.get_width() - 4, 38))
+            self.image.blit(degree_text, (temperature_text.get_width() - 4, 32))
             if (
                 self.weather["forecast_precipitation"]
                 > RAIN_PROBABILITY_DISPLAY_THRESHOLD
