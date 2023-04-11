@@ -335,7 +335,7 @@ class WeatherSprite(BaseSprite):
                     8,
                     self.color_rain_prob,
                 )
-                self.image.blit(rain_prob_text, (63 - rain_prob_text.get_width(), 52))
+                self.image.blit(rain_prob_text, (64 - rain_prob_text.get_width(), 53))
         self.dirty = 1
 
     def condition_to_icon(self, condition: int) -> tuple[str, str, str]:
