@@ -13,6 +13,7 @@ from wideboy.sprites.image_helpers import (
     pil_to_surface,
 )
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
+from wideboy.sprites.weather.resources import IMAGE_MAPPING
 from wideboy.config import settings
 
 logger = logging.getLogger("sprite.weather")
@@ -21,228 +22,35 @@ RAIN_PROBABILITY_DISPLAY_THRESHOLD = 25
 
 
 class WeatherSprite(BaseSprite):
-    mapping = {
-        200: [
-            "thunderstorm with light rain",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        201: [
-            "thunderstorm with rain",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        202: [
-            "thunderstorm with heavy rain",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        210: [
-            "light thunderstorm",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        211: [
-            "thunderstorm",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        212: [
-            "heavy thunderstorm",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        221: [
-            "ragged thunderstorm",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        230: [
-            "thunderstorm with light drizzle",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        231: [
-            "thunderstorm with drizzle",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        232: [
-            "thunderstorm with heavy drizzle",
-            "wsymbol_0024_thunderstorms",
-            "wsymbol_0040_thunderstorms_night",
-        ],
-        300: [
-            "light intensity drizzle",
-            "wsymbol_0048_drizzle",
-            "wsymbol_0066_drizzle_night",
-        ],
-        301: ["drizzle", "wsymbol_0048_drizzle", "wsymbol_0066_drizzle_night"],
-        302: [
-            "heavy intensity drizzle",
-            "wsymbol_0081_heavy_drizzle",
-            "wsymbol_0082_heavy_drizzle_night",
-        ],
-        310: [
-            "light intensity drizzle rain",
-            "wsymbol_0048_drizzle",
-            "wsymbol_0066_drizzle_night",
-        ],
-        311: ["drizzle rain", "wsymbol_0048_drizzle", "wsymbol_0066_drizzle_night"],
-        312: [
-            "heavy intensity drizzle rain",
-            "wsymbol_0081_heavy_drizzle",
-            "wsymbol_0082_heavy_drizzle_night",
-        ],
-        321: [
-            "shower drizzle",
-            "wsymbol_0009_light_rain_showers",
-            "wsymbol_0025_light_rain_showers_night",
-        ],
-        500: [
-            "light rain",
-            "wsymbol_0017_cloudy_with_light_rain",
-            "wsymbol_0033_cloudy_with_light_rain_night",
-        ],
-        501: [
-            "moderate rain",
-            "wsymbol_0017_cloudy_with_light_rain",
-            "wsymbol_0033_cloudy_with_light_rain_night",
-        ],
-        502: [
-            "heavy intensity rain",
-            "wsymbol_0018_cloudy_with_heavy_rain",
-            "wsymbol_0034_cloudy_with_heavy_rain_night",
-        ],
-        503: [
-            "very heavy rain",
-            "wsymbol_0018_cloudy_with_heavy_rain",
-            "wsymbol_0034_cloudy_with_heavy_rain_night",
-        ],
-        504: [
-            "extreme rain",
-            "wsymbol_0051_extreme_rain",
-            "wsymbol_0069_extreme_rain_night",
-        ],
-        511: [
-            "freezing rain",
-            "wsymbol_0050_freezing_rain",
-            "wsymbol_0068_freezing_rain_night",
-        ],
-        520: [
-            "light intensity shower rain",
-            "wsymbol_0009_light_rain_showers",
-            "wsymbol_0025_light_rain_showers_night",
-        ],
-        521: [
-            "shower rain",
-            "wsymbol_0009_light_rain_showers",
-            "wsymbol_0025_light_rain_showers_night",
-        ],
-        522: [
-            "heavy intensity shower rain",
-            "wsymbol_0010_heavy_rain_showers",
-            "wsymbol_0026_heavy_rain_showers_night",
-        ],
-        600: [
-            "light snow",
-            "wsymbol_0019_cloudy_with_light_snow",
-            "wsymbol_0035_cloudy_with_light_snow_night",
-        ],
-        601: [
-            "snow",
-            "wsymbol_0019_cloudy_with_light_snow",
-            "wsymbol_0035_cloudy_with_light_snow_night",
-        ],
-        602: [
-            "heavy snow",
-            "wsymbol_0020_cloudy_with_heavy_snow",
-            "wsymbol_0036_cloudy_with_heavy_snow_night",
-        ],
-        611: [
-            "sleet",
-            "wsymbol_0021_cloudy_with_light_sleet",
-            "wsymbol_0037_cloudy_with_sleet_night",
-        ],
-        621: [
-            "shower snow",
-            "wsymbol_0011_light_snow_showers",
-            "wsymbol_0027_light_snow_showers_night",
-        ],
-        701: ["mist", "wsymbol_0006_mist", "wsymbol_0063_mist_night"],
-        711: ["smoke", "wsymbol_0055_smoke", "wsymbol_0073_smoke_night"],
-        721: ["haze", "wsymbol_0005_hazy_sun", "wsymbol_0041_partly_cloudy_night"],
-        731: [
-            "sand, dust whirls",
-            "wsymbol_0056_dust_sand",
-            "wsymbol_0074_dust_sand_night",
-        ],
-        741: ["fog", "wsymbol_0007_fog", "wsymbol_0064_fog_night"],
-        800: ["sky is clear", "wsymbol_0001_sunny", "wsymbol_0008_clear_sky_night"],
-        801: [
-            "few clouds",
-            "wsymbol_0002_sunny_intervals",
-            "wsymbol_0041_partly_cloudy_night",
-        ],
-        802: [
-            "scattered clouds",
-            "wsymbol_0002_sunny_intervals",
-            "wsymbol_0041_partly_cloudy_night",
-        ],
-        803: [
-            "broken clouds",
-            "wsymbol_0043_mostly_cloudy",
-            "wsymbol_0044_mostly_cloudy_night",
-        ],
-        804: [
-            "overcast clouds",
-            "wsymbol_0004_black_low_cloud",
-            "wsymbol_0042_cloudy_night",
-        ],
-        900: ["tornado", "wsymbol_0079_tornado", "wsymbol_0079_tornado"],
-        901: [
-            "tropical storm",
-            "wsymbol_0080_tropical_storm_hurricane",
-            "wsymbol_0080_tropical_storm_hurricane",
-        ],
-        902: [
-            "hurricane",
-            "wsymbol_0080_tropical_storm_hurricane",
-            "wsymbol_0080_tropical_storm_hurricane",
-        ],
-        903: ["cold", "wsymbol_0046_cold", "wsymbol_0062_cold_night"],
-        904: ["hot", "wsymbol_0045_hot", "wsymbol_0061_hot_night"],
-        905: ["windy", "wsymbol_0060_windy", "wsymbol_0078_windy_night"],
-        906: [
-            "hail",
-            "wsymbol_0023_cloudy_with_heavy_hail",
-            "wsymbol_0039_cloudy_with_heavy_hail_night",
-        ],
-    }
-
     def __init__(
         self,
         rect: pygame.rect.Rect,
         color_bg: pygame.color.Color = (0, 0, 0, 0),
         color_temp: pygame.color.Color = (255, 255, 255, 255),
         color_rain_prob: pygame.color.Color = (255, 255, 0, 255),
+        debug: bool = False,
     ) -> None:
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
         self.color_temp = color_temp
         self.color_rain_prob = color_rain_prob
+        self.debug = debug
         self.icon_summary = None
         self.entity_weather_code = "sensor.openweathermap_weather_code"
+        self.entity_condition = "sensor.openweathermap_condition"
         self.entity_wind_speed = "sensor.openweathermap_wind_speed"
         self.entity_wind_bearing = "sensor.openweathermap_wind_bearing"
-        self.entity_condition = "sensor.openweathermap_condition"
         self.entity_temp = "sensor.openweathermap_temperature"
         self.entity_forecast_precipitation = (
             "sensor.openweathermap_forecast_precipitation_probability"
         )
-        self.icon_cache = dict()
-        self.icon_frame = 0
+        self.image_path = os.path.join(
+            settings.paths.images_weather,
+            "premium",
+        )
+        self.image_cache = dict()
+        self.image_frame = 0
         self.weather = None
         self.update_state()
         self.render()
@@ -276,133 +84,132 @@ class WeatherSprite(BaseSprite):
             self.weather = dict(
                 sun=sun.state.state,
                 weather_code=int(weather_code.state.state),
+                condition=condition.state.state,
                 wind_speed=float(wind_speed.state.state),
                 wind_bearing=float(wind_bearing.state.state),
-                condition=condition.state.state,
                 temp=float(temp.state.state),
                 forecast_precipitation=float(forecast_precipitation.state.state),
             )
             logger.debug(
-                f"updated: sun={self.weather['sun']} weather_code={self.weather['weather_code']} wind_speed={self.weather['wind_speed']} wind_bearing={self.weather['wind_bearing']} condition={self.weather['condition']} temp={self.weather['temp']} forecast_precipitation={self.weather['forecast_precipitation']}"
+                f"updated: sun={self.weather['sun']} weather_code={self.weather['weather_code']} condition={self.weather['condition']} wind_speed={self.weather['wind_speed']} wind_bearing={self.weather['wind_bearing']} temp={self.weather['temp']} forecast_precipitation={self.weather['forecast_precipitation']}"
             )
         except Exception as e:
             logger.warn(f"Error updating weather: {e}")
 
-    def cache_icon_sprites(self, icon_name: str) -> None:
-        if icon_name not in self.icon_cache:
-            self.icon_cache[icon_name] = list()
+    def cache_image(self, name: str) -> None:
+        if name not in self.image_cache:
+            self.image_cache[name] = list()
             for i in range(0, 60):
-                icon_filename = os.path.join(
-                    settings.paths.images_weather,
-                    "premium",
+                filename = os.path.join(
+                    self.image_path,
                     "animated",
-                    icon_name,
-                    f"{icon_name}_{i:05}.png",
+                    name,
+                    f"{name}_{i:05}.png",
                 )
-                if os.path.exists(icon_filename):
-                    icon_surface = load_image(icon_filename)
-                    self.icon_cache[icon_name].append(
-                        scale_surface(icon_surface, (self.rect.width, self.rect.height))
-                    )
+                if os.path.exists(filename):
+                    image = load_image(filename)
+                    scaled = scale_surface(image, (self.rect.width, self.rect.height))
+                    self.image_cache[name].append(scaled)
 
     def render(self) -> None:
         self.image.fill(self.color_bg)
-        if self.weather is not None:
-            # Icon
-            icon_mapping = self.condition_to_icon(self.weather["weather_code"])
-            icon_name = icon_mapping[1 if self.weather["sun"] == "above_horizon" else 2]
-            # icon_name = "wsymbol_0013_sleet_showers"
-            if os.path.exists(
-                os.path.join(
-                    settings.paths.images_weather, "premium", "animated", icon_name
-                )
-            ):
-                self.cache_icon_sprites(icon_name)
-                self.icon_frame = (self.icon_frame + 1) % len(
-                    self.icon_cache[icon_name]
-                )
-                self.image.blit(self.icon_cache[icon_name][self.icon_frame], (0, 0))
-                self.dirty = 1
-            # Temperature
-            temp_str = (
-                f"{int(self.weather['temp'])}"
-                if self.weather["temp"] is not None
-                else "?"
-            )
-            temperature_text = render_text(
-                temp_str,
-                "fonts/molot.otf",
-                32,
-                pygame.Color(255, 255, 255),
-                (0, 0, 0, 0),
-                (0, 0, 0, 0),
-            )
-            self.image.blit(temperature_text, (0, 30))
-            degree_text = render_text(
-                "°",
-                "fonts/bitstream-vera.ttf",
-                16,
-                self.color_temp,
-                (0, 0, 0, 0),
-                (0, 0, 0, 0),
-            )
-            self.image.blit(degree_text, (temperature_text.get_width() - 4, 32))
-            wind_direction = convert_bearing_to_direction(self.weather["wind_bearing"])
-            wind_speed_mph = int(convert_ms_to_mph(self.weather["wind_speed"]))
-            wind_offset = [35, 35]
-            if wind_direction in ["n", "nw", "ne"]:
-                wind_offset[1] = wind_offset[1] + 5
-            if wind_direction in ["s", "sw", "se"]:
-                wind_offset[0] = wind_offset[0] + 5
-            wind_dir_disc = scale_surface(
-                load_image(
-                    os.path.join(
-                        settings.paths.images_weather,
-                        "premium",
-                        "wind",
-                        "arrows",
-                        f"disc-{wind_direction}.png",
-                    )
-                ),
-                (32, 32),
-            )
-            self.image.blit(wind_dir_disc, wind_offset)
-            pygame.draw.circle(
-                self.image, (0, 0, 0), (wind_offset[0] + 16, wind_offset[1] + 16), 6
-            )
-            wind_speed_text = render_text(
-                f"{wind_speed_mph}",
-                "fonts/bitstream-vera.ttf",
-                10,
-                self.color_temp,
-            )
-            self.image.blit(
-                wind_speed_text,
-                (
-                    wind_offset[0] + (wind_speed_text.get_width() / 2),
-                    wind_offset[1] + 8,
-                ),
-            )
-            if (
-                self.weather["forecast_precipitation"]
-                > RAIN_PROBABILITY_DISPLAY_THRESHOLD
-            ):
-                rain_prob_str = (
-                    f"{int(self.weather['forecast_precipitation'])}%"
-                    if self.weather["forecast_precipitation"] is not None
-                    else "?"
-                )
-                rain_prob_text = render_text(
-                    rain_prob_str,
-                    "fonts/bitstream-vera.ttf",
-                    8,
-                    self.color_rain_prob,
-                )
-                self.image.blit(rain_prob_text, (64 - rain_prob_text.get_width(), 0))
+        if not self.weather:
+            return
         self.dirty = 1
+        # Background
+        self.image.blit(self._render_background(), (0, 0))
+        # Temperature
+        self.image.blit(self._render_temperature(), (0, 32))
+        # Wind
+        self.image.blit(self._render_wind(), (32, 32))
+        # Rain probability
+        if self.weather["forecast_precipitation"] > RAIN_PROBABILITY_DISPLAY_THRESHOLD:
+            precip_surface = self._render_precipitation()
+            self.image.blit(precip_surface, (64 - precip_surface.get_width(), 0))
 
-    def condition_to_icon(self, condition: int) -> tuple[str, str, str]:
-        return self.mapping[condition]
+    def _render_background(self) -> pygame.Surface:
+        images = convert_weather_code_to_image_name(self.weather["weather_code"])
+        image_name = images[1 if self.weather["sun"] == "above_horizon" else 2]
+        if self.debug:
+            image_name = "wsymbol_0013_sleet_showers"
+        self.cache_image(image_name)
+        self.image_frame = (self.image_frame + 1) % len(self.image_cache[image_name])
+        return self.image_cache[image_name][self.image_frame]
+
+    def _render_temperature(self) -> pygame.Surface:
+        label = (
+            f"{int(self.weather['temp'])}" if self.weather["temp"] is not None else "?"
+        )
+        temp_text = render_text(
+            label,
+            "fonts/molot.otf",
+            32,
+            pygame.Color(255, 255, 255),
+        )
+        surface = pygame.Surface(
+            (temp_text.get_width() + 20, temp_text.get_height()), SRCALPHA
+        )
+        surface.blit(temp_text, (0, -2))
+        degree_text = render_text(
+            "°",
+            "fonts/bitstream-vera.ttf",
+            16,
+            self.color_temp,
+        )
+        surface.blit(degree_text, (temp_text.get_width() - 4, 0))
+        return surface
+
+    def _render_precipitation(self) -> pygame.Surface:
+        label = (
+            f"{int(self.weather['forecast_precipitation'])}%"
+            if self.weather["forecast_precipitation"] is not None
+            else "?"
+        )
+        return render_text(
+            label,
+            "fonts/bitstream-vera.ttf",
+            8,
+            self.color_rain_prob,
+        )
+
+    def _render_wind(self) -> pygame.Surface:
+        surface = pygame.Surface((32, 32), SRCALPHA)
+        dir = convert_bearing_to_direction(self.weather["wind_bearing"])
+        mph = int(convert_ms_to_mph(self.weather["wind_speed"]))
+        pos = [2, 0]
+        if dir in ["n", "nw", "ne"]:
+            pos[1] = pos[1] + 8
+        if dir in ["s", "sw", "se"]:
+            pos[0] = pos[0] + 8
+        disc = load_image(
+            os.path.join(
+                self.image_path,
+                "wind",
+                "arrows",
+                f"disc-{dir}.png",
+            )
+        )
+        disc_scaled = scale_surface(disc, (32, 32))
+        surface.blit(disc_scaled, pos)
+        pygame.draw.circle(surface, (0, 0, 0), (pos[0] + 16, pos[1] + 16), 6)
+        label = render_text(
+            f"{mph}",
+            "fonts/bitstream-vera.ttf",
+            10,
+            self.color_temp,
+        )
+        surface.blit(
+            label,
+            (
+                pos[0] + (label.get_width() / 2),
+                pos[1] + 8,
+            ),
+        )
+        return surface
+
+
+def convert_weather_code_to_image_name(weather_code: int) -> tuple[str, str, str]:
+    return IMAGE_MAPPING[weather_code]
 
 
 def convert_bearing_to_direction(bearing: float) -> str:
