@@ -253,9 +253,9 @@ class WeatherSprite(BaseSprite):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE or self.weather is None:
                 self.update_state()
-            # if event.type == EVENT_EPOCH_SECOND and event.unit % 2 == 0:
-            #     self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
-            #     self.render()
+            if event.type == EVENT_EPOCH_SECOND and event.unit % 5 == 0:
+                self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
+                self.render()
 
     def update_state(self) -> None:
         try:
