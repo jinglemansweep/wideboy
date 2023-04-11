@@ -9,6 +9,7 @@ from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     render_text,
     load_image,
+    scale_surface,
     pil_to_surface,
 )
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
@@ -255,7 +256,7 @@ class WeatherSprite(BaseSprite):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE or self.weather is None:
                 self.update_state()
-            if event.type == EVENT_EPOCH_SECOND and event.unit % 3 == 0:
+            if event.type == EVENT_EPOCH_SECOND and event.unit % 1 == 0:
                 self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
         self.render()
 
@@ -293,8 +294,9 @@ class WeatherSprite(BaseSprite):
                     f"{icon_name}_{i:05}.png",
                 )
                 if os.path.exists(icon_filename):
+                    icon_surface = load_image(icon_filename)
                     self.icon_cache[icon_name].append(
-                        pygame.image.load(icon_filename).convert_alpha()
+                        scale_surface(icon_surface, (self.rect.width, self.rect.height))
                     )
 
     def render(self) -> None:
