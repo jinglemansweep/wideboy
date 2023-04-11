@@ -258,8 +258,8 @@ class WeatherSprite(BaseSprite):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE or self.weather is None:
                 self.update_state()
-            if event.type == EVENT_EPOCH_SECOND and event.unit % 1 == 0:
-                self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
+            # if event.type == EVENT_EPOCH_SECOND and event.unit % 1 == 0:
+            #    self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
         self.render()
 
     def update_state(self) -> None:
@@ -349,6 +349,11 @@ class WeatherSprite(BaseSprite):
             self.image.blit(degree_text, (temperature_text.get_width() - 4, 32))
             wind_direction = convert_bearing_to_direction(self.weather["wind_bearing"])
             wind_speed_mph = int(convert_ms_to_mph(self.weather["wind_speed"]))
+            wind_offset = [35, 35]
+            if wind_direction in ["n", "nw", "ne"]:
+                wind_offset[1] = wind_offset[1] + 5
+            if wind_direction in ["s", "sw", "se"]:
+                wind_offset[0] = wind_offset[0] + 5
             wind_dir_disc = scale_surface(
                 load_image(
                     os.path.join(
@@ -359,18 +364,24 @@ class WeatherSprite(BaseSprite):
                         f"disc-{wind_direction}.png",
                     )
                 ),
-                (28, 28),
+                (32, 32),
             )
-            self.image.blit(wind_dir_disc, (36, 38))
-            pygame.draw.circle(self.image, (0, 0, 0), (50, 52), 6)
+            self.image.blit(wind_dir_disc, wind_offset)
+            pygame.draw.circle(
+                self.image, (0, 0, 0), (wind_offset[0] + 16, wind_offset[1] + 16), 6
+            )
             wind_speed_text = render_text(
                 f"{wind_speed_mph}",
                 "fonts/bitstream-vera.ttf",
-                7,
+                10,
                 self.color_temp,
             )
             self.image.blit(
-                wind_speed_text, (38 + (wind_speed_text.get_width() / 2), 46)
+                wind_speed_text,
+                (
+                    wind_offset[0] + (wind_speed_text.get_width() / 2),
+                    wind_offset[1] + 8,
+                ),
             )
             if (
                 self.weather["forecast_precipitation"]
@@ -396,21 +407,21 @@ class WeatherSprite(BaseSprite):
 
 def convert_bearing_to_direction(bearing: float) -> str:
     if 0 < bearing < 45:
-        return "ne"
-    elif 45 <= bearing < 90:
-        return "e"
-    elif 90 <= bearing < 135:
-        return "se"
-    elif 135 <= bearing < 180:
-        return "s"
-    elif 180 <= bearing < 225:
         return "sw"
-    elif 225 <= bearing < 270:
+    elif 45 <= bearing < 90:
         return "w"
-    elif 270 <= bearing < 315:
+    elif 90 <= bearing < 135:
         return "nw"
-    elif 315 <= bearing < 360:
+    elif 135 <= bearing < 180:
         return "n"
+    elif 180 <= bearing < 225:
+        return "ne"
+    elif 225 <= bearing < 270:
+        return "e"
+    elif 270 <= bearing < 315:
+        return "se"
+    elif 315 <= bearing < 360:
+        return "s"
 
 
 def convert_ms_to_mph(ms: float) -> float:
