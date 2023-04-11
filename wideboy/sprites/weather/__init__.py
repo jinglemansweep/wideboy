@@ -238,6 +238,7 @@ class WeatherSprite(BaseSprite):
         self.entity_forecast_precipitation = (
             "sensor.openweathermap_forecast_precipitation_probability"
         )
+        self.icon_cache = dict()
         self.icon_frame = 0
         self.weather = None
         self.update_state()
@@ -254,7 +255,7 @@ class WeatherSprite(BaseSprite):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE or self.weather is None:
                 self.update_state()
-            if event.type == EVENT_EPOCH_SECOND and event.unit % 5 == 0:
+            if event.type == EVENT_EPOCH_SECOND and event.unit % 3 == 0:
                 self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
         self.render()
 
@@ -280,37 +281,40 @@ class WeatherSprite(BaseSprite):
         except Exception as e:
             logger.warn(f"Error updating weather: {e}")
 
+    def cache_icon_sprites(self, icon_name: str) -> None:
+        if icon_name not in self.icon_cache:
+            self.icon_cache[icon_name] = list()
+            for i in range(0, 60):
+                icon_filename = os.path.join(
+                    settings.paths.images_weather,
+                    "premium",
+                    "animated",
+                    icon_name,
+                    f"{icon_name}_{i:05}.png",
+                )
+                if os.path.exists(icon_filename):
+                    self.icon_cache[icon_name].append(
+                        pygame.image.load(icon_filename).convert_alpha()
+                    )
+
     def render(self) -> None:
         self.image.fill(self.color_bg)
         if self.weather is not None:
             # Icon
             icon_mapping = self.condition_to_icon(self.weather["weather_code"])
             icon_name = icon_mapping[1 if self.weather["sun"] == "above_horizon" else 2]
-            icon_name = "wsymbol_0013_sleet_showers"
+            # icon_name = "wsymbol_0013_sleet_showers"
             if os.path.exists(
                 os.path.join(
                     settings.paths.images_weather, "premium", "animated", icon_name
                 )
             ):
-                icon_filename = os.path.join(
-                    settings.paths.images_weather,
-                    "premium",
-                    "animated",
-                    icon_name,
-                    f"{icon_name}_{self.icon_frame:05}.png",
+                self.cache_icon_sprites(icon_name)
+                self.icon_frame = (self.icon_frame + 1) % len(
+                    self.icon_cache[icon_name]
                 )
-                self.icon_frame = (self.icon_frame + 1) % 60
-            else:
-                icon_filename = os.path.join(
-                    settings.paths.images_weather,
-                    "premium",
-                    "png",
-                    f"{icon_name}.png",
-                )
-            self.icon_summary = pygame.transform.scale(
-                load_image(icon_filename), (64, 64)
-            )
-            self.image.blit(self.icon_summary, (0, 0))
+                self.image.blit(self.icon_cache[icon_name][self.icon_frame], (0, 0))
+                self.dirty = 1
             # Temperature
             temp_str = (
                 f"{int(self.weather['temp'])}"
