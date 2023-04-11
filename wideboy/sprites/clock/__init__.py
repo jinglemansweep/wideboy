@@ -19,10 +19,10 @@ class ClockSprite(BaseSprite):
         color_bg: pygame.color.Color = (0, 0, 0, 0),
         color_time: pygame.color.Color = (255, 0, 255, 255),
         color_date: pygame.color.Color = (192, 192, 255, 255),
-        font_date: str = "fonts/huggable.ttf",
-        font_time: str = "fonts/huggable.ttf",
-        font_time_size: int = 50,
-        font_date_size: int = 22,
+        font_date: str = "fonts/molot.otf",
+        font_time: str = "fonts/molot.otf",
+        font_time_size: int = 36,
+        font_date_size: int = 18,
     ) -> None:
         super().__init__(rect)
         self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -56,7 +56,7 @@ class ClockSprite(BaseSprite):
         hh_str = now.strftime("%H")
         mm_str = now.strftime("%M")
         hhmm_str = f"{hh_str}:{mm_str}"
-        hhmm_offset = (0, -7)
+        hhmm_offset = (0, -8)
         hhmm_sprite = render_text(
             hhmm_str, self.font_time, self.font_time_size, self.color_time
         )
@@ -70,6 +70,6 @@ class ClockSprite(BaseSprite):
         date_sprite = render_text(
             date_str, self.font_date, self.font_date_size, self.color_date
         )
-        date_pos = (((self.rect.width / 2) - date_sprite.get_rect().width / 2), 32)
+        date_pos = (((self.rect.width / 2) - date_sprite.get_rect().width / 2), 24)
         self.image.blit(date_sprite, date_pos)
         self.dirty = 1
