@@ -48,13 +48,13 @@ class NotificationSprite(BaseSprite):
         self.handle_events(events)
         if self.timeout > 0:
             self.timeout -= 1
+            self.render()
         else:
             if len(self.notifications) > 0:
                 self.message = self.notifications.pop(0)
                 self.timeout = self.timeout_frames
             else:
                 self.message = None
-        self.render()
 
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         for event in events:

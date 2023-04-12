@@ -115,7 +115,6 @@ class WeatherSprite(BaseSprite):
         self.image.fill(self.color_bg)
         if not self.weather:
             return
-        self.dirty = 1
         # Background
         self.image.blit(self._render_background(), (0, 0))
         # Temperature
@@ -133,7 +132,10 @@ class WeatherSprite(BaseSprite):
         if self.debug:
             image_name = "wsymbol_0013_sleet_showers"
         self.cache_image(image_name)
-        self.image_frame = (self.image_frame + 1) % len(self.image_cache[image_name])
+        frame_count = len(self.image_cache[image_name])
+        self.image_frame = (self.image_frame + 1) % frame_count
+        if frame_count > 1:
+            self.dirty = 1
         return self.image_cache[image_name][self.image_frame]
 
     def _render_temperature(self) -> pygame.Surface:
