@@ -114,10 +114,10 @@ def start_main_loop():
         delta = clock_tick(clock)
         updates = scene_manager.render(clock, delta, events)
         pygame.display.update(updates)
-        # logger.debug(f"updates={updates}")
+        logger.debug(f"updates={updates}")
         update_sensors(clock)
 
-        if settings.display.matrix.enabled:
+        if settings.display.matrix.enabled and len(updates) > 0:
             matrix_buffer = render_led_matrix(
                 matrix, screen if power else blank_screen, matrix_buffer
             )
