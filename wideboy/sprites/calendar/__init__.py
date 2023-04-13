@@ -18,12 +18,15 @@ class CalendarSprite(BaseSprite):
         entity_id: str,
         event_count: int = 1,
         max_label_width: int = 64,
+        font: str = "fonts/bitstream-vera.ttf",
+        font_size: int = 8,
     ) -> None:
         super().__init__(rect)
         self.entity_id = entity_id
         self.event_count = event_count
         self.max_label_width = max_label_width
-        self.font = pygame.font.SysFont(None, 20)
+        self.font = font
+        self.font_size = font_size
         self.image = pygame.Surface((rect.width, rect.height), SRCALPHA)
         self.calendar_events = []
         self.render()
@@ -49,8 +52,8 @@ class CalendarSprite(BaseSprite):
             label = self.truncate_label(event["summary"])
             rendered_event = render_text(
                 f"{ddmm_str} {label}",
-                "fonts/bitstream-vera.ttf",
-                9,
+                self.font,
+                self.font_size,
                 pygame.Color(255, 255, 0),
             )
             rendered_events.append(rendered_event)
