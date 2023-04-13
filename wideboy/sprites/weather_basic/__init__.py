@@ -2,7 +2,7 @@ import logging
 import os
 import pygame
 from typing import Optional
-from pygame import SRCALPHA
+from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
@@ -21,13 +21,13 @@ RAIN_PROBABILITY_DISPLAY_THRESHOLD = 25
 class WeatherSprite(BaseSprite):
     def __init__(
         self,
-        rect: pygame.rect.Rect,
-        color_bg: pygame.color.Color = (0, 0, 0, 0),
-        color_temp: pygame.color.Color = (255, 255, 255, 255),
-        color_rain_prob: pygame.color.Color = (255, 255, 0, 255),
+        rect: Rect,
+        color_bg: Color = Color(0, 0, 0, 0),
+        color_temp: Color = Color(255, 255, 255, 255),
+        color_rain_prob: Color = Color(255, 255, 0, 255),
     ) -> None:
         super().__init__(rect)
-        self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
+        self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.font_temp = pygame.font.SysFont("", 20)
         self.color_bg = color_bg
         self.color_temp = color_temp
@@ -45,9 +45,9 @@ class WeatherSprite(BaseSprite):
     def update(
         self,
         frame: str,
-        clock: pygame.time.Clock,
+        clock: Clock,
         delta: float,
-        events: list[pygame.event.Event],
+        events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
@@ -96,8 +96,8 @@ class WeatherSprite(BaseSprite):
                 "fonts/bitstream-vera.ttf",
                 16,
                 self.color_temp,
-                (0, 0, 0, 0),
-                (0, 0, 0, 0),
+                Color(0, 0, 0, 0),
+                Color(0, 0, 0, 0),
             )
             self.image.blit(temperature_text, (36, 0))
             degree_text = render_text(
@@ -105,8 +105,8 @@ class WeatherSprite(BaseSprite):
                 "fonts/bitstream-vera.ttf",
                 16,
                 self.color_temp,
-                (0, 0, 0, 0),
-                (0, 0, 0, 0),
+                Color(0, 0, 0, 0),
+                Color(0, 0, 0, 0),
             )
             self.image.blit(degree_text, (32 + temperature_text.get_width(), -1))
             if (

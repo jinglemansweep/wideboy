@@ -1,6 +1,7 @@
 import json
 import logging
 import pygame
+from pygame import Event
 from typing import Any, Optional
 import paho.mqtt.client as mqtt
 
@@ -97,9 +98,7 @@ class MQTTClient:
             f"mqtt:message topic={topic} payload={payload} userdata={userdata}"
         )
         pygame.event.post(
-            pygame.event.Event(
-                EVENT_MQTT_MESSAGE_RECEIVED, dict(topic=topic, payload=payload)
-            )
+            Event(EVENT_MQTT_MESSAGE_RECEIVED, dict(topic=topic, payload=payload))
         )
 
 
@@ -123,23 +122,17 @@ def handle_mqtt_event(event: pygame.event.Event):
                 logger.warn("hass:mqtt:event error={e}")
             if "state" in payload:
                 pygame.event.post(
-                    pygame.event.Event(
-                        EVENT_MASTER_POWER, value=payload["state"] == "ON"
-                    )
+                    Event(EVENT_MASTER_POWER, value=payload["state"] == "ON")
                 )
             if "brightness" in payload:
                 pygame.event.post(
-                    pygame.event.Event(
-                        EVENT_MASTER_BRIGHTNESS, value=payload["brightness"]
-                    )
+                    Event(EVENT_MASTER_BRIGHTNESS, value=payload["brightness"])
                 )
         if event.topic.endswith("scene_next/set"):
-            pygame.event.post(pygame.event.Event(EVENT_SCENE_MANAGER_NEXT))
+            pygame.event.post(Event(EVENT_SCENE_MANAGER_NEXT))
         if event.topic.endswith("action_a/set"):
-            pygame.event.post(pygame.event.Event(EVENT_ACTION_A))
+            pygame.event.post(Event(EVENT_ACTION_A))
         if event.topic.endswith("action_b/set"):
-            pygame.event.post(pygame.event.Event(EVENT_ACTION_B))
+            pygame.event.post(Event(EVENT_ACTION_B))
         if event.topic.endswith("message/set"):
-            pygame.event.post(
-                pygame.event.Event(EVENT_NOTIFICATION_RECEIVED, message=event.payload)
-            )
+            pygame.event.post(Event(EVENT_NOTIFICATION_RECEIVED, message=event.payload))

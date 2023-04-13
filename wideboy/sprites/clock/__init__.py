@@ -1,7 +1,7 @@
 import logging
-import pygame
+
 from datetime import datetime
-from pygame import SRCALPHA
+from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.sprites.image_helpers import render_text
 from wideboy.constants import EVENT_EPOCH_SECOND
 from wideboy.sprites.base import BaseSprite
@@ -9,23 +9,21 @@ from wideboy.sprites.base import BaseSprite
 
 logger = logging.getLogger("sprite.clock")
 
-# ['bitstreamverasansmono', 'bitstreamverasans', 'anonymousprominus', 'anonymouspro', 'bitstreamveraserif']
-
 
 class ClockSprite(BaseSprite):
     def __init__(
         self,
-        rect: pygame.rect.Rect,
-        color_bg: pygame.color.Color = (0, 0, 0, 0),
-        color_time: pygame.color.Color = (255, 0, 255, 255),
-        color_date: pygame.color.Color = (192, 192, 255, 255),
+        rect: Rect,
+        color_bg: Color = (0, 0, 0, 0),
+        color_time: Color = (255, 0, 255, 255),
+        color_date: Color = (192, 192, 255, 255),
         font_time: str = "fonts/molot.otf",
         font_time_size: int = 40,
         font_date: str = "fonts/molot.otf",
         font_date_size: int = 18,
     ) -> None:
         super().__init__(rect)
-        self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
+        self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
         self.color_time = color_time
         self.color_date = color_date
@@ -38,9 +36,9 @@ class ClockSprite(BaseSprite):
     def update(
         self,
         frame: str,
-        clock: pygame.time.Clock,
+        clock: Clock,
         delta: float,
-        events: list[pygame.event.Event],
+        events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:

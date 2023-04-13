@@ -1,7 +1,6 @@
 import asyncio
 import logging
-import pygame
-from pygame import Rect
+from pygame import Clock, Color, Event, Rect, Surface, Vector2, JOYBUTTONUP
 
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.scenes.animation import Act, Animation
@@ -27,8 +26,8 @@ class DefaultScene(BaseScene):
 
     def __init__(
         self,
-        surface: pygame.surface.Surface,
-        bg_color: pygame.color.Color = (0, 0, 0, 255),
+        surface: Surface,
+        bg_color: Color = (0, 0, 0, 255),
     ) -> None:
         super().__init__(surface, bg_color)
 
@@ -50,7 +49,7 @@ class DefaultScene(BaseScene):
         # Setup faded foreground layer widget
         self.layer_faded = RectSprite(
             Rect(self.width - 256, 0, 256, 64),
-            color_bg=(0, 0, 0, 255 - 64),
+            color_bg=Color(0, 0, 0, 255 - 64),
         )
         self.group.add(self.layer_faded)
         # Setup calendar widget
@@ -70,14 +69,14 @@ class DefaultScene(BaseScene):
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            Rect(576, 0, 64, 64), color_temp=(255, 255, 255, 64), debug=False
+            Rect(576, 0, 64, 64), color_temp=Color(255, 255, 255, 64), debug=False
         )
         self.group.add(self.weather_widget)
         # Setup notification widget
         self.notification_widget = NotificationSprite(
             Rect(32, 4, 768 - 320, 56),
-            color_bg=(0, 0, 0, 192),
-            color_fg=(255, 255, 255, 255),
+            color_bg=Color(0, 0, 0, 192),
+            color_fg=Color(255, 255, 255, 255),
         )
         self.group.add(self.notification_widget)
         # HASS Entity Tile Widgets
@@ -87,7 +86,7 @@ class DefaultScene(BaseScene):
             "sensor.black_bin",
             HassEntityTileSprite.MDI_DELETE,
             lambda entity: entity.state.attributes["days"] < 2,
-            (128, 128, 128, 255),
+            Color(128, 128, 128, 255),
             font_size=16,
         )
         self.group.add(self.hass_bin_black)
@@ -96,7 +95,7 @@ class DefaultScene(BaseScene):
             "sensor.blue_bin",
             HassEntityTileSprite.MDI_DELETE,
             lambda entity: entity.state.attributes["days"] < 2,
-            (0, 128, 255, 255),
+            Color(0, 128, 255, 255),
             font_size=16,
         )
         self.group.add(self.hass_bin_blue)
@@ -108,9 +107,9 @@ class DefaultScene(BaseScene):
 
     def update(
         self,
-        clock: pygame.time.Clock,
+        clock: Clock,
         delta: float,
-        events: list[pygame.event.Event],
+        events: list[Event],
     ) -> None:
         super().update(clock, delta, events)
         if self.act_clock_show is not None:
@@ -120,7 +119,7 @@ class DefaultScene(BaseScene):
 
     # Handle Events
 
-    def handle_events(self, events: list[pygame.event.Event]) -> None:
+    def handle_events(self, events: list[Event]) -> None:
         super().handle_events(events)
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
@@ -129,7 +128,7 @@ class DefaultScene(BaseScene):
                 if event.unit % settings.backgrounds.change_interval_mins == 0:
                     self.run_background_change_act()
             if event.type == EVENT_ACTION_A or (
-                event.type == pygame.JOYBUTTONUP and event.button == GAMEPAD["BUTTON_A"]
+                event.type == JOYBUTTONUP and event.button == GAMEPAD["BUTTON_A"]
             ):
                 self.run_background_change_act()
 
@@ -147,7 +146,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.clock_widget,
-                        (self.width - 128, 0),
+                        Vector2(self.width - 128, 0),
                         64,
                     ),
                 ),
@@ -162,7 +161,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.background_widget,
-                        (0, 0 - self.height),
+                        Vector2(0, 0 - self.height),
                         64,
                     ),
                 ),
@@ -171,9 +170,9 @@ class DefaultScene(BaseScene):
                     64,
                     Animation(
                         self.background_widget,
-                        (0, 0),
+                        Vector2(0, 0),
                         64,
-                        (0, 0 - self.height),
+                        Vector2(0, 0 - self.height),
                     ),
                 ),
             ],

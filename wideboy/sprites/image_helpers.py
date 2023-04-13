@@ -3,39 +3,37 @@ import logging
 import os
 import pygame
 from PIL import Image, ImageFilter, ImageEnhance
-from pygame import SRCALPHA
+from pygame import Color, Surface, Vector2, SRCALPHA
 from typing import Optional
 
 logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
 logger = logging.getLogger("sprites.image_helpers")
 
 
-def load_image(filename: str) -> pygame.surface.Surface:
+def load_image(filename: str) -> Surface:
     return pygame.image.load(filename).convert_alpha()
 
 
-def pil_to_surface(image: Image.Image) -> pygame.surface.Surface:
+def pil_to_surface(image: Image.Image) -> Surface:
     return pygame.image.fromstring(image.tobytes(), image.size, image.mode).convert_alpha()  # type: ignore
 
 
-def surface_to_pil(surface: pygame.surface.Surface) -> Image.Image:
+def surface_to_pil(surface: Surface) -> Image.Image:
     image_bytes = pygame.image.tostring(surface, "RGBA")
     return Image.frombytes(
         "RGBA", (surface.get_width(), surface.get_height()), image_bytes
     )
 
 
-def scale_surface(
-    surface: pygame.surface.Surface, size: pygame.math.Vector2
-) -> pygame.surface.Surface:
+def scale_surface(surface: Surface, size: Vector2) -> Surface:
     return pygame.transform.smoothscale(surface, size)
 
 
 def filter_surface(
-    surface: pygame.surface.Surface,
+    surface: Surface,
     alpha: int = 255,
     filters: Optional[list[ImageFilter.Filter]] = None,
-) -> pygame.surface.Surface:
+) -> Surface:
     image = surface_to_pil(surface)
     if filters is None:
         filters = []
@@ -50,11 +48,9 @@ def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:
     return glob.glob(os.path.join(path, pattern))
 
 
-def tile_surface(
-    surface: pygame.Surface, size: pygame.math.Vector2
-) -> pygame.surface.Surface:
+def tile_surface(surface: Surface, size: Vector2) -> Surface:
     x = y = 0
-    tiled_surface = pygame.Surface(size)
+    tiled_surface = Surface(size)
     while y < size[1]:
         while x < size[0]:
             tiled_surface.blit(surface, (x, y))
@@ -68,9 +64,9 @@ def render_text(
     text: str,
     font_filename: str,
     font_size: int,
-    color_fg: pygame.color.Color,
-    color_bg: pygame.color.Color = pygame.color.Color(0, 0, 0, 0),
-    color_outline: pygame.color.Color = pygame.color.Color(0, 0, 0, 255),
+    color_fg: Color,
+    color_bg: Color = Color(0, 0, 0, 0),
+    color_outline: Color = Color(0, 0, 0, 255),
     antialias: bool = True,
     alpha: int = 255,
 ) -> pygame.surface.Surface:
@@ -89,9 +85,7 @@ def render_text(
     return surface_dest
 
 
-def build_background(
-    size: pygame.math.Vector2, color: pygame.color.Color
-) -> pygame.surface.Surface:
-    background = pygame.surface.Surface(size)
+def build_background(size: Vector2, color: Color) -> Surface:
+    background = Surface(size)
     background.fill(color)
     return background

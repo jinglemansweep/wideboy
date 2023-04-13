@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+from pygame import Surface, Vector2
 from typing import Any
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
@@ -19,7 +20,7 @@ def setup_led_matrix() -> tuple[RGBMatrix, Any]:
 
 def render_led_matrix(
     matrix: RGBMatrix,
-    surface: pygame.surface.Surface,
+    surface: Surface,
     buffer: Any,
 ) -> Any:
     pixels = pygame.surfarray.pixels3d(surface)
@@ -29,13 +30,13 @@ def render_led_matrix(
     return matrix.SwapOnVSync(buffer)
 
 
-def blank_surface(size: pygame.math.Vector2):
-    surface = pygame.surface.Surface(size)
+def blank_surface(size: Vector2):
+    surface = Surface(size)
     surface.fill(0)
     return surface
 
 
-def wrap_surface_nparray(array: Any, new_shape: pygame.math.Vector2) -> Any:
+def wrap_surface_nparray(array: Any, new_shape: Vector2) -> Any:
     row_size = array.shape[1]
     cols = int(new_shape[0])
     rows = int(new_shape[1]) // row_size
@@ -50,11 +51,11 @@ def wrap_surface_nparray(array: Any, new_shape: pygame.math.Vector2) -> Any:
 
 
 def wrap_surface_blit(
-    surface: pygame.surface.Surface,
-    new_shape: pygame.math.Vector2,
-    tile_size: pygame.math.Vector2,
-) -> pygame.surface.Surface:
-    temp_surface = pygame.Surface(new_shape)
+    surface: Surface,
+    new_shape: Vector2,
+    tile_size: Vector2,
+) -> Surface:
+    temp_surface = Surface(new_shape)
     surface_width = surface.get_rect().width
     surface_height = surface.get_rect().height
     wrapped_width = new_shape[0]

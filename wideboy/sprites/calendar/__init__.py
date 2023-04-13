@@ -1,7 +1,6 @@
 import logging
-import pygame
 from datetime import datetime, timedelta
-from pygame import SRCALPHA
+from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.image_helpers import render_text
 from wideboy.constants import EVENT_EPOCH_MINUTE
@@ -14,7 +13,7 @@ logger = logging.getLogger("sprite.calendar")
 class CalendarSprite(BaseSprite):
     def __init__(
         self,
-        rect: pygame.Rect,
+        rect: Rect,
         entity_id: str,
         event_count: int = 1,
         max_label_width: int = 64,
@@ -27,16 +26,16 @@ class CalendarSprite(BaseSprite):
         self.max_label_width = max_label_width
         self.font = font
         self.font_size = font_size
-        self.image = pygame.Surface((rect.width, rect.height), SRCALPHA)
+        self.image = Surface((rect.width, rect.height), SRCALPHA)
         self.calendar_events = []
         self.render()
 
     def update(
         self,
         frame: str,
-        clock: pygame.time.Clock,
+        clock: Clock,
         delta: float,
-        events: list[pygame.event.Event],
+        events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
@@ -54,7 +53,7 @@ class CalendarSprite(BaseSprite):
                 f"{ddmm_str} {label}",
                 self.font,
                 self.font_size,
-                pygame.Color(255, 255, 0),
+                Color(255, 255, 0),
             )
             rendered_events.append(rendered_event)
         self.image.fill((0, 0, 0, 0))

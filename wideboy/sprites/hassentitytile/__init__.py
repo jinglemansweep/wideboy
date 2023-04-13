@@ -1,8 +1,6 @@
 import html
 import logging
-import os
-import pygame
-from pygame import Rect
+from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from typing import Optional
 from wideboy.constants import EVENT_EPOCH_MINUTE
 from wideboy.mqtt.homeassistant import HASS
@@ -25,7 +23,7 @@ class HassEntityTileSprite(BaseSprite):
         entity_id: str,
         icon: str,
         state_callback: Optional[callable] = None,
-        color: pygame.color.Color = pygame.color.Color(255, 255, 255, 255),
+        color: Color = Color(255, 255, 255, 255),
         font_size: int = 24,
     ) -> None:
         super().__init__(rect)
@@ -39,9 +37,9 @@ class HassEntityTileSprite(BaseSprite):
     def update(
         self,
         frame: str,
-        clock: pygame.time.Clock,
+        clock: Clock,
         delta: float,
-        events: list[pygame.event.Event],
+        events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
@@ -51,16 +49,14 @@ class HassEntityTileSprite(BaseSprite):
     def render(self) -> None:
         entity = HASS.get_entity(entity_id=self.entity_id)
         active = self.state_callback(entity) if self.state_callback else True
-        self.image = pygame.surface.Surface(
-            (self.rect.width, self.rect.height), pygame.SRCALPHA
-        )
+        self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         if active:
             icon_text = render_text(
                 html.unescape(f"&#x{self.icon};"),
                 "fonts/material-icons.ttf",
                 self.font_size,
                 self.color,
-                color_outline=pygame.color.Color(0, 0, 0, 255),
+                color_outline=Color(0, 0, 0, 255),
             )
             self.image.blit(icon_text, (0, 0))
         self.dirty = 1

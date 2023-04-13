@@ -3,7 +3,7 @@ import os
 import pygame
 import random
 import yaml
-
+from pygame import Clock, Color, Event, Rect, Surface, Vector2
 from PIL import ImageFilter
 from typing import Optional
 from wideboy.sprites.base import BaseSprite
@@ -22,8 +22,8 @@ logger = logging.getLogger("sprite.background")
 class BackgroundSprite(BaseSprite):
     def __init__(
         self,
-        rect: pygame.Rect,
-        size: pygame.Vector2,
+        rect: Rect,
+        size: Vector2,
         alpha: int = 255,
         shuffle: bool = False,
     ) -> None:
@@ -38,7 +38,7 @@ class BackgroundSprite(BaseSprite):
     def render_next_image(self):
         filename = self.image_files[self.image_index]
         logger.debug(f"image:next index={self.image_index} filename={filename}")
-        surface = pygame.Surface(self.size)
+        surface = Surface(self.size)
         orig_image = load_image(filename)
         orig_image = pygame.transform.scale(orig_image, (512, 64))
         blurred_image = filter_surface(
@@ -55,9 +55,9 @@ class BackgroundSprite(BaseSprite):
                 label_text,
                 "fonts/bitstream-vera.ttf",
                 11,
-                pygame.Color(255, 255, 0),
-                pygame.Color(0, 0, 0, 192),
-                pygame.Color(0, 0, 0, 0),
+                Color(255, 255, 0),
+                Color(0, 0, 0, 192),
+                Color(0, 0, 0, 0),
             )
             surface.blit(label, (512 - label.get_width(), self.rect.height - 15))
         self.image = surface
@@ -85,8 +85,8 @@ class BackgroundSprite(BaseSprite):
     def update(
         self,
         frame: int,
-        clock: pygame.time.Clock,
+        clock: Clock,
         delta: float,
-        events: list[pygame.event.Event],
+        events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)

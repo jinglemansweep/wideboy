@@ -1,11 +1,12 @@
 import logging
-import pygame
+from pygame import Rect
+from pygame.sprite import DirtySprite
 
 logger = logging.getLogger("sprites.base")
 
 
-class BaseSprite(pygame.sprite.DirtySprite):
-    def __init__(self, rect: pygame.rect.Rect) -> None:
+class BaseSprite(DirtySprite):
+    def __init__(self, rect: Rect) -> None:
         super().__init__()
         self.rect = rect
 

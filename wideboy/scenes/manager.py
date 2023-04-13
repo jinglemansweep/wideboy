@@ -1,5 +1,5 @@
 import logging
-import pygame
+from pygame import Clock, Rect
 from typing import Optional
 from wideboy.constants import EVENT_SCENE_MANAGER_NEXT
 from wideboy.scenes.base import BaseScene
@@ -47,12 +47,12 @@ class SceneManager:
             return None
         return self.scene.frame
 
-    def render(self, *args, **kwargs) -> Optional[list[pygame.rect.Rect]]:
+    def render(self, *args, **kwargs) -> Optional[list[Rect]]:
         if not self.scene:
             return []
         return self.scene.render(*args, **kwargs)
 
-    def debug(self, clock: pygame.time.Clock, delta: float):
+    def debug(self, clock: Clock, delta: float):
         if not self.scene:
             return
         return self.scene.debug(clock, delta)

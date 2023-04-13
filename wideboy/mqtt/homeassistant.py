@@ -1,6 +1,7 @@
 import json
 import logging
 import pygame
+from pygame import Event
 from typing import Optional
 from homeassistant_api import Client
 
@@ -65,7 +66,7 @@ def advertise_entity(
         initial_state = dict()
     logger.debug(f"hass:mqtt:config name={name} config={config}")
     pygame.event.post(
-        pygame.event.Event(
+        Event(
             EVENT_MQTT_MESSAGE_SEND,
             topic=config_topic,
             payload=config,
@@ -74,7 +75,7 @@ def advertise_entity(
     )
     if device_class in ["sensor", "switch", "light"]:
         pygame.event.post(
-            pygame.event.Event(
+            Event(
                 EVENT_MQTT_MESSAGE_SEND,
                 topic=state_topic,
                 payload=initial_state,
@@ -85,7 +86,7 @@ def advertise_entity(
 
 def update_entity(topic: str, payload: dict):
     pygame.event.post(
-        pygame.event.Event(
+        Event(
             EVENT_MQTT_MESSAGE_SEND,
             topic=topic,
             payload=payload,

@@ -1,5 +1,7 @@
 import logging
-import pygame
+from pygame import Clock, Color, Event, Rect, Surface, Vector2
+from pygame.sprite import LayeredDirty
+
 
 from wideboy.sprites.image_helpers import build_background
 
@@ -14,15 +16,15 @@ class BaseScene:
 
     def __init__(
         self,
-        surface: pygame.surface.Surface,
-        bg_color: pygame.color.Color,
+        surface: Surface,
+        bg_color: Color,
     ) -> None:
         self.surface = surface
         self.background = build_background(
-            pygame.math.Vector2(surface.get_rect().width, surface.get_rect().height),
+            Vector2(surface.get_rect().width, surface.get_rect().height),
             bg_color,
         )
-        self.group = pygame.sprite.LayeredDirty()
+        self.group = LayeredDirty()
         self.setup()
 
     def reset(self) -> None:
@@ -42,10 +44,10 @@ class BaseScene:
 
     def render(
         self,
-        clock: pygame.time.Clock,
+        clock: Clock,
         delta: float,
-        events: list[pygame.event.Event],
-    ) -> list[pygame.rect.Rect]:
+        events: list[Event],
+    ) -> list[Rect]:
         self.update(clock, delta, events)
         self.clear()
         return self.draw()
@@ -56,20 +58,18 @@ class BaseScene:
     def empty_group(self) -> None:
         self.group.empty()
 
-    def update(
-        self, clock: pygame.time.Clock, delta: float, events: list[pygame.event.Event]
-    ) -> None:
+    def update(self, clock: Clock, delta: float, events: list[Event]) -> None:
         self.handle_events(events)
         self.group.update(self.frame, clock, delta, events)
         self.frame += 1
 
-    def draw(self) -> list[pygame.rect.Rect]:
+    def draw(self) -> list[Rect]:
         return self.group.draw(self.surface)
 
-    def handle_events(self, events: list[pygame.event.Event]) -> None:
+    def handle_events(self, events: list[Event]) -> None:
         pass
 
-    def debug(self, clock: pygame.time.Clock, delta: float) -> None:
+    def debug(self, clock: Clock, delta: float) -> None:
         frame = self.frame
         if frame % self.debug_every_frame == 0:
             logger.debug(

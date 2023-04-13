@@ -1,6 +1,6 @@
 import logging
 import pygame
-from pygame import SRCALPHA
+from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.constants import EVENT_NOTIFICATION_RECEIVED
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import render_text
@@ -12,18 +12,18 @@ logger = logging.getLogger("sprite.notification")
 class NotificationSprite(BaseSprite):
     def __init__(
         self,
-        rect: pygame.rect.Rect,
+        rect: Rect,
         font_name: str = "fonts/bitstream-vera.ttf",
         font_size: int = 32,
-        color_fg: pygame.color.Color = (0, 0, 0, 255),
-        color_bg: pygame.color.Color = (255, 255, 255, 255),
-        color_outline: pygame.color.Color = (0, 0, 0, 255),
+        color_fg: Color = (0, 0, 0, 255),
+        color_bg: Color = (255, 255, 255, 255),
+        color_outline: Color = (0, 0, 0, 255),
         alpha: int = 255,
         timeout_frames: int = 500,
         fadeout_frames: int = 25,
     ) -> None:
         super().__init__(rect)
-        self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
+        self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.font_name = font_name
         self.font_size = font_size
         self.color_fg = color_fg
@@ -40,9 +40,9 @@ class NotificationSprite(BaseSprite):
     def update(
         self,
         frame: str,
-        clock: pygame.time.Clock,
+        clock: Clock,
         delta: float,
-        events: list[pygame.event.Event],
+        events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
         self.handle_events(events)
@@ -56,14 +56,14 @@ class NotificationSprite(BaseSprite):
             else:
                 self.message = None
 
-    def handle_events(self, events: list[pygame.event.Event]) -> None:
+    def handle_events(self, events: list[Event]) -> None:
         for event in events:
             if event.type == EVENT_NOTIFICATION_RECEIVED:
                 logger.debug(f"received: message={event.message}")
                 self.notifications.append(event.message)
 
     def render(self) -> None:
-        self.image.fill(self.color_bg if self.timeout > 0 else (0, 0, 0, 0))
+        self.image.fill(self.color_bg if self.timeout > 0 else Color(0, 0, 0, 0))
         if self.message:
             text_surface = render_text(
                 f"{self.message}",
@@ -79,8 +79,8 @@ class NotificationSprite(BaseSprite):
             progress_width = (self.timeout_frames - self.timeout) / self.timeout_frames
             pygame.draw.rect(
                 self.image,
-                (0, 255, 0),
-                (
+                Color(0, 255, 0),
+                Rect(
                     0,
                     self.rect.height - 2,
                     self.rect.width * progress_width,
