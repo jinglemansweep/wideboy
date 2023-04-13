@@ -37,7 +37,7 @@ from wideboy.mqtt import handle_mqtt_event
 logger = logging.getLogger("utils.pygame")
 
 DISPLAY_FLAGS = RESIZABLE | SCALED
-FPS = 120
+FPS = 60
 JOYSTICKS = dict()
 
 
