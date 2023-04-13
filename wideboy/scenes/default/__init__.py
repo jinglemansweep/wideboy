@@ -75,7 +75,7 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.notification_widget)
         # HASS Entity Tile Widgets
-        bin_rect = Rect(572, 38, 32, 32)
+        bin_rect = Rect(510, 38, 32, 32)
         self.hass_bin_black = HassEntityTileSprite(
             bin_rect,
             "sensor.black_bin",
