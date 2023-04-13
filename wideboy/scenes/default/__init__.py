@@ -97,7 +97,7 @@ class DefaultScene(BaseScene):
             "sensor.blue_bin",
             HassEntityTileSprite.MDI_DELETE,
             lambda entity: entity.state.attributes["days"] < 2,
-            (64, 64, 255, 255),
+            (0, 128, 255, 255),
             font_size=16,
         )
         self.group.add(self.hass_bin_blue)
