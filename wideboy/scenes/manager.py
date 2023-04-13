@@ -56,7 +56,3 @@ class SceneManager:
         if not self.scene:
             return
         return self.scene.debug(clock, delta)
-
-    def handle_event(self, event: pygame.event.Event):
-        if event.type == EVENT_SCENE_MANAGER_NEXT:
-            self.next_scene()

@@ -1,55 +1,79 @@
 import logging
 import pygame
-from datetime import datetime
+from datetime import datetime, timedelta
 from pygame import SRCALPHA
+from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.image_helpers import render_text
-from wideboy.constants import EVENT_EPOCH_SECOND
+from wideboy.constants import EVENT_EPOCH_MINUTE
 from wideboy.sprites.base import BaseSprite
 
 
 logger = logging.getLogger("sprite.calendar")
 
-# ['bitstreamverasansmono', 'bitstreamverasans', 'anonymousprominus', 'anonymouspro', 'bitstreamveraserif']
-
-import pygame
-
 
 class CalendarSprite(BaseSprite):
-    def __init__(self, rect: pygame.Rect):
+    def __init__(
+        self,
+        rect: pygame.Rect,
+        entity_id: str,
+        event_count: int = 1,
+        max_label_width: int = 64,
+    ) -> None:
         super().__init__(rect)
-        self.image = pygame.Surface((self.rect.width, self.rect.height), SRCALPHA)
-        self.events = []
-        self.font = pygame.font.Font(None, 20)
-        self.max_width = 200
-        self.line_spacing = 25
-        self.image = pygame.Surface((self.max_width, self.line_spacing * 5))
-        self.rect = self.image.get_rect()
+        self.entity_id = entity_id
+        self.event_count = event_count
+        self.max_label_width = max_label_width
+        self.font = pygame.font.SysFont(None, 20)
+        self.image = pygame.Surface((rect.width, rect.height), SRCALPHA)
+        self.calendar_events = []
+        self.render()
 
-    def add_event(self, event_type, label_text, icon):
-        self.events.append({"type": event_type, "label": label_text, "icon": icon})
+    def update(
+        self,
+        frame: str,
+        clock: pygame.time.Clock,
+        delta: float,
+        events: list[pygame.event.Event],
+    ) -> None:
+        super().update(frame, clock, delta, events)
+        for event in events:
+            if event.type == EVENT_EPOCH_MINUTE:
+                self.render()
 
-    def draw_events(self):
-        self.image.fill((255, 255, 255))
-        y_offset = 0
-        for event in self.events[:5]:
-            label = event["label"]
-            label_width = self.font.size(label)[0]
-            if label_width > self.max_width:
-                label = (
-                    label[
-                        : int(self.max_width / self.font.size(label)[0] * len(label))
-                        - 3
-                    ]
-                    + "..."
-                )
-            label_text = self.font.render(label, True, (0, 0, 0))
-            icon = event["icon"]
-            icon_rect = icon.get_rect()
-            icon_rect.x = 0
-            icon_rect.y = y_offset
-            self.image.blit(icon, icon_rect)
-            label_rect = label_text.get_rect()
-            label_rect.x = icon_rect.width + 5
-            label_rect.y = y_offset + (self.line_spacing - label_rect.height) / 2
-            self.image.blit(label_text, label_rect)
-            y_offset += self.line_spacing
+    def render(self) -> None:
+        self.calendar_events = self.get_calendar_events()
+        rendered_events = []
+        for event in self.calendar_events[: self.event_count]:
+            start_date = event["start"]["date"]
+            ddmm_str = f"{start_date[8:10]}/{start_date[5:7]}"
+            label = self.truncate_label(event["summary"])
+            rendered_event = render_text(
+                f"{ddmm_str} {label}",
+                "fonts/bitstream-vera.ttf",
+                9,
+                pygame.Color(255, 255, 0),
+            )
+            rendered_events.append(rendered_event)
+        self.image.fill((0, 0, 0, 0))
+        for i, rendered_event in enumerate(rendered_events):
+            self.image.blit(
+                rendered_event,
+                (
+                    (self.rect.width / 2) - (rendered_event.get_width() / 2),
+                    i * rendered_event.get_height(),
+                ),
+            )
+
+    def get_calendar_events(self) -> list[dict]:
+        now = datetime.now()
+        next_year = now + timedelta(days=365)
+        start = now.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        end = next_year.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        events = HASS.request(f"calendars/{self.entity_id}?start={start}&end={end}")
+        logger.debug(f"EVENTS {events}")
+        return sorted(events, key=lambda event: event["start"]["date"])
+
+    def truncate_label(self, label: str) -> str:
+        if len(label) <= self.max_label_width:
+            return label
+        return label[: self.max_label_width - 3] + "..."

@@ -33,12 +33,6 @@ def setup_hass() -> Client:
 
 HASS = setup_hass()
 
-print(
-    HASS.request(
-        "calendars/calendar.wideboy?start=2023-04-08T10:00:00.000Z&end=2024-12-25T10:00:00.000Z"
-    )
-)
-
 
 def advertise_entity(
     name: str,

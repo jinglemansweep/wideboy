@@ -6,6 +6,7 @@ from pygame import Rect
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
+from wideboy.sprites.calendar import CalendarSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.hassentitytile import HassEntityTileSprite
 from wideboy.sprites.notification import NotificationSprite
@@ -52,13 +53,19 @@ class DefaultScene(BaseScene):
             color_bg=(0, 0, 0, 255 - 64),
         )
         self.group.add(self.layer_faded)
+        # Setup calendar widget
+        self.calendar_widget = CalendarSprite(
+            Rect(self.width - 128, 50, 128, 24),
+            "calendar.wideboy",
+        )
+        self.group.add(self.calendar_widget)
         # Setup clock widget
         self.clock_widget = ClockSprite(
             Rect(
                 self.width - 128,
                 0,
                 128,
-                self.height,
+                48,
             ),
         )
         self.group.add(self.clock_widget)
@@ -75,13 +82,14 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.notification_widget)
         # HASS Entity Tile Widgets
-        bin_rect = Rect(510, 38, 32, 32)
+        bin_rect = Rect(self.width - 18, 0, 16, 16)
         self.hass_bin_black = HassEntityTileSprite(
             bin_rect,
             "sensor.black_bin",
             HassEntityTileSprite.MDI_DELETE,
             lambda entity: entity.state.attributes["days"] < 2,
             (128, 128, 128, 255),
+            font_size=16,
         )
         self.group.add(self.hass_bin_black)
         self.hass_bin_blue = HassEntityTileSprite(
@@ -90,6 +98,7 @@ class DefaultScene(BaseScene):
             HassEntityTileSprite.MDI_DELETE,
             lambda entity: entity.state.attributes["days"] < 2,
             (64, 64, 255, 255),
+            font_size=16,
         )
         self.group.add(self.hass_bin_blue)
         # Run initial acts

@@ -178,11 +178,7 @@ class WeatherSprite(BaseSprite):
         surface = pygame.Surface((32, 32), SRCALPHA)
         dir = convert_bearing_to_direction(self.weather["wind_bearing"])
         mph = int(convert_ms_to_mph(self.weather["wind_speed"]))
-        pos = [2, 0]
-        if dir in ["n", "nw", "ne"]:
-            pos[1] = pos[1] + 8
-        if dir in ["s", "sw", "se"]:
-            pos[0] = pos[0] + 8
+        pos = [2, 7]
         disc = load_image(
             os.path.join(
                 self.image_path,
@@ -194,6 +190,7 @@ class WeatherSprite(BaseSprite):
         disc_scaled = scale_surface(disc, (32, 32))
         surface.blit(disc_scaled, pos)
         pygame.draw.circle(surface, (0, 0, 0), (pos[0] + 16, pos[1] + 16), 6)
+        mph = "9"
         label = render_text(
             f"{mph}",
             "fonts/bitstream-vera.ttf",
@@ -203,7 +200,7 @@ class WeatherSprite(BaseSprite):
         surface.blit(
             label,
             (
-                pos[0] + (label.get_width() / 2),
+                pos[0] + 8 + (3 if len(mph) == 1 else 0),
                 pos[1] + 8,
             ),
         )
