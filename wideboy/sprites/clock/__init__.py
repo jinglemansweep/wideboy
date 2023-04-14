@@ -18,9 +18,9 @@ class ClockSprite(BaseSprite):
         color_time: Color = (255, 0, 255, 255),
         color_date: Color = (192, 192, 255, 255),
         font_time: str = "fonts/molot.otf",
-        font_time_size: int = 40,
+        font_time_size: int = 36,
         font_date: str = "fonts/molot.otf",
-        font_date_size: int = 18,
+        font_date_size: int = 16,
     ) -> None:
         super().__init__(rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -50,10 +50,12 @@ class ClockSprite(BaseSprite):
         dow_str = now.strftime("%A")[:3]
         ddmm_str = now.strftime("%d %b")
         date_str = f"{dow_str} {ddmm_str}".upper()
+        # date_str = f"WED 55 JAN"
         self.image.fill(self.color_bg)
         hh_str = now.strftime("%H")
         mm_str = now.strftime("%M")
         hhmm_str = f"{hh_str}:{mm_str}"
+        # hhmm_str = "55:55"
         hhmm_offset = (0, -8)
         hhmm_sprite = render_text(
             hhmm_str, self.font_time, self.font_time_size, self.color_time

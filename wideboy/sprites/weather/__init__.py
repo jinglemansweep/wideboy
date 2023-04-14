@@ -118,7 +118,7 @@ class WeatherSprite(BaseSprite):
         # Background
         self.image.blit(self._render_background(), (0, 0))
         # Temperature
-        self.image.blit(self._render_temperature(), (0, 32))
+        self.image.blit(self._render_temperature(), (0, 30))
         # Wind
         self.image.blit(self._render_wind(), (32, 32))
         # Rain probability
@@ -144,7 +144,7 @@ class WeatherSprite(BaseSprite):
         )
         temp_text = render_text(
             label,
-            "fonts/molot.otf",
+            "fonts/bitstream-vera.ttf",
             32,
             pygame.Color(255, 255, 255),
         )
@@ -178,7 +178,7 @@ class WeatherSprite(BaseSprite):
         surface = pygame.Surface((32, 32), SRCALPHA)
         dir = convert_bearing_to_direction(self.weather["wind_bearing"])
         mph = int(convert_ms_to_mph(self.weather["wind_speed"]))
-        pos = [2, 7]
+        pos = [0, 0]
         disc = load_image(
             os.path.join(
                 self.image_path,
@@ -190,9 +190,9 @@ class WeatherSprite(BaseSprite):
         disc_scaled = scale_surface(disc, (32, 32))
         surface.blit(disc_scaled, pos)
         pygame.draw.circle(surface, (0, 0, 0), (pos[0] + 16, pos[1] + 16), 6)
-        mph = "9"
+        mph_str = f"{mph}"
         label = render_text(
-            f"{mph}",
+            mph_str,
             "fonts/bitstream-vera.ttf",
             10,
             self.color_temp,
@@ -200,7 +200,7 @@ class WeatherSprite(BaseSprite):
         surface.blit(
             label,
             (
-                pos[0] + 8 + (3 if len(mph) == 1 else 0),
+                pos[0] + 8 + (3 if len(mph_str) == 1 else 0),
                 pos[1] + 8,
             ),
         )

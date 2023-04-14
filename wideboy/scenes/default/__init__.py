@@ -54,13 +54,13 @@ class DefaultScene(BaseScene):
         self.group.add(self.layer_faded)
         # Setup calendar widget
         self.calendar_widget = CalendarSprite(
-            Rect(self.width - 128, 49, 96, 24), "calendar.wideboy", font_size=10
+            Rect(self.width - 96, 49, 96, 24), "calendar.wideboy", font_size=10
         )
         self.group.add(self.calendar_widget)
         # Setup clock widget
         self.clock_widget = ClockSprite(
             Rect(
-                self.width - 128,
+                self.width - 96,
                 0,
                 96,
                 48,
@@ -69,7 +69,9 @@ class DefaultScene(BaseScene):
         self.group.add(self.clock_widget)
         # Setup weather widget
         self.weather_widget = WeatherSprite(
-            Rect(576, 0, 64, 64), color_temp=Color(255, 255, 255, 64), debug=False
+            Rect(self.width - 160, 0, 64, 64),
+            color_temp=Color(255, 255, 255, 64),
+            debug=False,
         )
         self.group.add(self.weather_widget)
         # Setup notification widget
@@ -80,23 +82,6 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.notification_widget)
         # HASS Entity Tile Widgets
-        bin_rect = Rect(self.width - 32, 0, 32, 32)
-        self.hass_bin_black = HassEntityTileSprite(
-            bin_rect,
-            HassEntityTileSprite.MDI_DELETE,
-            entity_id="sensor.black_bin",
-            state_callback=lambda state: state.attributes["days"] < 2,
-        )
-        self.group.add(self.hass_bin_black)
-        self.hass_bin_blue = HassEntityTileSprite(
-            bin_rect,
-            HassEntityTileSprite.MDI_DELETE,
-            entity_id="sensor.blue_bin",
-            state_callback=lambda state: state.attributes["days"] < 2,
-            color_icon=Color(0, 128, 255, 255),
-        )
-        self.group.add(self.hass_bin_blue)
-        # Other tiles
         self.hass_tile_download = HassEntityTileSprite(
             Rect(self.width - 256, 0, 32, 32),
             HassEntityTileSprite.MDI_DOWNLOAD,
@@ -112,6 +97,22 @@ class DefaultScene(BaseScene):
             color_icon=Color(255, 0, 0, 255),
             update_interval=60 * 60,
         )
+        bin_rect = Rect(self.width - 256, 32, 32, 32)
+        self.hass_bin_black = HassEntityTileSprite(
+            bin_rect,
+            HassEntityTileSprite.MDI_DELETE,
+            entity_id="sensor.black_bin",
+            state_callback=lambda state: state.attributes["days"] < 2,
+        )
+        self.group.add(self.hass_bin_black)
+        self.hass_bin_blue = HassEntityTileSprite(
+            bin_rect,
+            HassEntityTileSprite.MDI_DELETE,
+            entity_id="sensor.blue_bin",
+            state_callback=lambda state: state.attributes["days"] < 2,
+            color_icon=Color(0, 128, 255, 255),
+        )
+        self.group.add(self.hass_bin_blue)
         self.group.add(self.hass_tile_upload)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
@@ -160,7 +161,7 @@ class DefaultScene(BaseScene):
                     0,
                     Animation(
                         self.clock_widget,
-                        Vector2(self.width - 128, 0),
+                        Vector2(self.width - 96, 0),
                         64,
                     ),
                 ),
