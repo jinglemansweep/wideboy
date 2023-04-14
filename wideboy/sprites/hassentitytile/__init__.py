@@ -1,8 +1,9 @@
 import html
 import logging
+import pygame
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from typing import Optional
-from wideboy.constants import EVENT_EPOCH_MINUTE
+from wideboy.constants import EVENT_EPOCH_SECOND
 from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
@@ -15,23 +16,32 @@ logger = logging.getLogger("sprite.hassentitytile")
 
 
 class HassEntityTileSprite(BaseSprite):
-    MDI_DELETE = "E872"
+    MDI_DELETE = 0xE872
+    MDI_DOWNLOAD = 0xE2C4
+    MDI_UPLOAD = 0xE2C6
 
     def __init__(
         self,
         rect: Rect,
-        entity_id: str,
         icon: str,
-        state_callback: Optional[callable] = None,
-        color: Color = Color(255, 255, 255, 255),
-        font_size: int = 24,
+        template: Optional[str] = None,
+        entity_id: Optional[str] = None,
+        state_callback: callable = lambda state: state.state == "on",
+        color_icon: Color = Color(255, 255, 255, 255),
+        color_template: Color = Color(255, 255, 255, 255),
+        color_bg: Color = Color(0, 0, 0, 0),
+        update_interval: int = 10,
     ) -> None:
         super().__init__(rect)
-        self.entity_id = entity_id
         self.icon = icon
-        self.color = color
-        self.font_size = font_size
+        self.template = template
+        self.entity_id = entity_id
         self.state_callback = state_callback
+        self.color_icon = color_icon
+        self.color_template = color_template
+        self.color_bg = color_bg
+        self.update_interval = update_interval
+        self.icon_size = int(self.rect.width * 0.6)
         self.render()
 
     def update(
@@ -43,20 +53,53 @@ class HassEntityTileSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if event.type == EVENT_EPOCH_MINUTE:
+            if (
+                event.type == EVENT_EPOCH_SECOND
+                and event.unit % self.update_interval == 0
+            ):
                 self.render()
 
     def render(self) -> None:
-        entity = HASS.get_entity(entity_id=self.entity_id)
-        active = self.state_callback(entity) if self.state_callback else True
+        # Entity
+        if self.entity_id:
+            entity = HASS.get_entity(entity_id=self.entity_id)
+            state = entity.get_state()
+            active = self.state_callback(state) if self.state_callback else True
+        else:
+            active = True
+        # Template
+        template_text = None
+        if self.template:
+            template_text = HASS.request(
+                "template", "POST", json={"template": self.template}
+            )
+        # Render
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
+        self.image.fill(self.color_bg)
+        icon_char = chr(self.icon)
+        icon_y = 0
         if active:
             icon_text = render_text(
-                html.unescape(f"&#x{self.icon};"),
+                icon_char,
                 "fonts/material-icons.ttf",
-                self.font_size,
-                self.color,
+                self.icon_size,
+                self.color_icon,
                 color_outline=Color(0, 0, 0, 255),
             )
-            self.image.blit(icon_text, (0, 0))
+            if template_text:
+                template_text = render_text(
+                    template_text,
+                    "fonts/bitstream-vera.ttf",
+                    8,
+                    self.color_template,
+                )
+                text_pos = (
+                    (self.rect.width / 2) - (icon_text.get_width() / 2),
+                    self.rect.height - template_text.get_height(),
+                )
+                self.image.blit(template_text, text_pos)
+            else:
+                icon_y += 4
+            icon_pos = ((self.rect.width / 2) - (icon_text.get_width() / 2), icon_y)
+            self.image.blit(icon_text, icon_pos)
         self.dirty = 1

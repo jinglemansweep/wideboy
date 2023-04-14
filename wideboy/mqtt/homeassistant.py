@@ -28,7 +28,7 @@ SW_VERSION = AppMetadata.VERSION
 
 def setup_hass() -> Client:
     api_url = f"{HASS_URL}/api"
-    hass = Client(api_url, HASS_API_TOKEN)
+    hass = Client(api_url, HASS_API_TOKEN, cache_session=False)
     return hass
 
 

@@ -54,7 +54,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.layer_faded)
         # Setup calendar widget
         self.calendar_widget = CalendarSprite(
-            Rect(self.width - 128, 49, 128, 24), "calendar.wideboy", font_size=10
+            Rect(self.width - 128, 49, 96, 24), "calendar.wideboy", font_size=10
         )
         self.group.add(self.calendar_widget)
         # Setup clock widget
@@ -62,7 +62,7 @@ class DefaultScene(BaseScene):
             Rect(
                 self.width - 128,
                 0,
-                128,
+                96,
                 48,
             ),
         )
@@ -80,25 +80,39 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.notification_widget)
         # HASS Entity Tile Widgets
-        bin_rect = Rect(self.width - 18, 0, 16, 16)
+        bin_rect = Rect(self.width - 32, 0, 32, 32)
         self.hass_bin_black = HassEntityTileSprite(
             bin_rect,
-            "sensor.black_bin",
             HassEntityTileSprite.MDI_DELETE,
-            lambda entity: entity.state.attributes["days"] < 2,
-            Color(128, 128, 128, 255),
-            font_size=16,
+            entity_id="sensor.black_bin",
+            state_callback=lambda state: state.attributes["days"] < 2,
         )
         self.group.add(self.hass_bin_black)
         self.hass_bin_blue = HassEntityTileSprite(
             bin_rect,
-            "sensor.blue_bin",
             HassEntityTileSprite.MDI_DELETE,
-            lambda entity: entity.state.attributes["days"] < 2,
-            Color(0, 128, 255, 255),
-            font_size=16,
+            entity_id="sensor.blue_bin",
+            state_callback=lambda state: state.attributes["days"] < 2,
+            color_icon=Color(0, 128, 255, 255),
         )
         self.group.add(self.hass_bin_blue)
+        # Other tiles
+        self.hass_tile_download = HassEntityTileSprite(
+            Rect(self.width - 256, 0, 32, 32),
+            HassEntityTileSprite.MDI_DOWNLOAD,
+            template="{{ states('sensor.speedtest_download') | int }}",
+            color_icon=Color(0, 255, 0, 255),
+            update_interval=60 * 60,
+        )
+        self.group.add(self.hass_tile_download)
+        self.hass_tile_upload = HassEntityTileSprite(
+            Rect(self.width - 256 + 32, 0, 32, 32),
+            HassEntityTileSprite.MDI_UPLOAD,
+            template="{{ states('sensor.speedtest_upload') | int }}",
+            color_icon=Color(255, 0, 0, 255),
+            update_interval=60 * 60,
+        )
+        self.group.add(self.hass_tile_upload)
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
