@@ -18,7 +18,7 @@ class CalendarSprite(BaseSprite):
         event_count: int = 5,
         max_label_width: int = 64,
         font: str = "fonts/bitstream-vera.ttf",
-        font_size: int = 8,
+        font_size: int = 10,
         interval: int = 10,
         days_ahead: int = 60,
     ) -> None:

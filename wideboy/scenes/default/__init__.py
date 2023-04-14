@@ -54,7 +54,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.layer_faded)
         # Setup calendar widget
         self.calendar_widget = CalendarSprite(
-            Rect(self.width - 96, 49, 96, 24), "calendar.wideboy", font_size=9
+            Rect(self.width - 96, 49, 96, 24), "calendar.wideboy"
         )
         self.group.add(self.calendar_widget)
         # Setup clock widget
