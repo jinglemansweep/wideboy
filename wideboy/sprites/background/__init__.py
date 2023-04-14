@@ -55,9 +55,9 @@ class BackgroundSprite(BaseSprite):
                 label_text,
                 "fonts/bitstream-vera.ttf",
                 11,
-                Color(255, 255, 0),
-                Color(0, 0, 0, 192),
-                Color(0, 0, 0, 0),
+                color_fg=Color(255, 255, 0, 255),
+                color_bg=Color(0, 0, 0, 192),
+                color_outline=Color(0, 0, 0, 255),
             )
             surface.blit(label, (512 - label.get_width(), self.rect.height - 15))
         self.image = surface

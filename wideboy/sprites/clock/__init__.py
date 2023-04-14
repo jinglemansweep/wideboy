@@ -58,7 +58,11 @@ class ClockSprite(BaseSprite):
         # hhmm_str = "55:55"
         hhmm_offset = (0, -8)
         hhmm_sprite = render_text(
-            hhmm_str, self.font_time, self.font_time_size, self.color_time
+            hhmm_str,
+            self.font_time,
+            self.font_time_size,
+            color_fg=self.color_time,
+            color_outline=Color(0, 0, 0, 255),
         )
         self.image.blit(
             hhmm_sprite,
@@ -68,7 +72,11 @@ class ClockSprite(BaseSprite):
             ),
         )
         date_sprite = render_text(
-            date_str, self.font_date, self.font_date_size, self.color_date
+            date_str,
+            self.font_date,
+            self.font_date_size,
+            color_fg=self.color_date,
+            color_outline=Color(0, 0, 0, 255),
         )
         date_pos = (((self.rect.width / 2) - date_sprite.get_rect().width / 2), 29)
         self.image.blit(date_sprite, date_pos)

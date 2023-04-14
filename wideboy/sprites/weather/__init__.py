@@ -151,7 +151,8 @@ class WeatherSprite(BaseSprite):
             label,
             "fonts/bitstream-vera.ttf",
             32,
-            pygame.Color(255, 255, 255),
+            color_fg=Color(255, 255, 255, 255),
+            color_outline=Color(0, 0, 0, 255),
         )
         surface = Surface(
             (temp_text.get_width() + 20, temp_text.get_height()), SRCALPHA
@@ -161,7 +162,8 @@ class WeatherSprite(BaseSprite):
             "°",
             "fonts/bitstream-vera.ttf",
             16,
-            self.color_temp,
+            color_fg=self.color_temp,
+            color_outline=Color(0, 0, 0, 255),
         )
         surface.blit(degree_text, (temp_text.get_width() - 4, 0))
         return surface
@@ -176,13 +178,14 @@ class WeatherSprite(BaseSprite):
             label,
             "fonts/bitstream-vera.ttf",
             8,
-            self.color_rain_prob,
+            color_fg=self.color_rain_prob,
+            color_outline=Color(0, 0, 0, 255),
         )
 
     def _render_wind(self) -> Surface:
         surface = pygame.Surface((32, 32), SRCALPHA)
         dir = convert_bearing_to_direction(self.weather["wind_bearing"])
-        mph = int(convert_ms_to_mph(self.weather["wind_speed"]))
+        speed = int(convert_ms_to_mph(self.weather["wind_speed"]))
         pos = [0, 0]
         disc = load_image(
             os.path.join(
@@ -195,18 +198,19 @@ class WeatherSprite(BaseSprite):
         disc_scaled = scale_surface(disc, (32, 32))
         surface.blit(disc_scaled, pos)
         pygame.draw.circle(surface, (0, 0, 0), (pos[0] + 16, pos[1] + 16), 6)
-        mph_str = f"{mph}"
+        speed_str = f"{speed}"
         label = render_text(
-            mph_str,
+            speed_str,
             "fonts/bitstream-vera.ttf",
             10,
             self.color_temp,
         )
+
         surface.blit(
             label,
             (
-                pos[0] + 8 + (3 if len(mph_str) == 1 else 0),
-                pos[1] + 8,
+                pos[0] + 10 + (2 if len(speed_str) == 1 else 0),
+                pos[1] + 9,
             ),
         )
         return surface

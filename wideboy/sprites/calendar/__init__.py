@@ -65,7 +65,8 @@ class CalendarSprite(BaseSprite):
             f"{ddmm_str} {label}",
             self.font,
             self.font_size,
-            Color(255, 255, 0),
+            color_fg=Color(255, 255, 0, 255),
+            color_outline=Color(0, 0, 0, 255),
         )
 
     def render(self) -> None:

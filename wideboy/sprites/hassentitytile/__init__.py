@@ -70,9 +70,7 @@ class HassEntityTileSprite(BaseSprite):
         # Template
         template_text = None
         if self.template:
-            template_text = HASS.request(
-                "template", "POST", json={"template": self.template}
-            )
+            template_text = HASS.get_rendered_template(self.template)
         # Render
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.image.fill(self.color_bg)
@@ -83,7 +81,7 @@ class HassEntityTileSprite(BaseSprite):
                 icon_char,
                 "fonts/material-icons.ttf",
                 self.icon_size,
-                self.color_icon,
+                color_fg=self.color_icon,
                 color_outline=Color(0, 0, 0, 255),
             )
             if template_text:
@@ -91,7 +89,8 @@ class HassEntityTileSprite(BaseSprite):
                     template_text,
                     "fonts/bitstream-vera.ttf",
                     8,
-                    self.color_template,
+                    color_fg=self.color_template,
+                    color_outline=Color(0, 0, 0, 255),
                 )
                 text_pos = (
                     (self.rect.width / 2) - (icon_text.get_width() / 2),
