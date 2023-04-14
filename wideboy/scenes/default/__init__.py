@@ -117,6 +117,7 @@ class DefaultScene(BaseScene):
             Rect(self.width - 256 + 18, 3, 96, 16),
             "D:{{ states('sensor.speedtest_download') | int }} U:{{ states('sensor.speedtest_upload') | int }}",
             font_size=9,
+            color_outline=Color(0, 0, 0, 255),
         )
         self.group.add(self.template_speedtest)
 
