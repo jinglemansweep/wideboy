@@ -13,6 +13,7 @@ from wideboy.sprites.material_icon import MaterialIconSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.rect import RectSprite
 from wideboy.sprites.qrcode import QRCodeSprite
+from wideboy.sprites.starfield import StarfieldSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
 from wideboy.sprites.image_helpers import MaterialIcons
@@ -50,6 +51,10 @@ class DefaultScene(BaseScene):
             shuffle=True,
         )
         self.group.add(self.background_widget)
+
+        # Starfield widget
+        self.starfield_widget = StarfieldSprite(Rect(0, 0, self.width, self.height))
+        self.group.add(self.starfield_widget)
 
         # Setup faded foreground layer widget
         self.layer_faded = RectSprite(
@@ -124,8 +129,8 @@ class DefaultScene(BaseScene):
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
-        self.act_background_change = self.build_background_change_act()
-        self.act_background_change.start()
+        # self.act_background_change = self.build_background_change_act()
+        # self.act_background_change.start()
 
     def update(
         self,
@@ -136,8 +141,8 @@ class DefaultScene(BaseScene):
         super().update(clock, delta, events)
         if self.act_clock_show is not None:
             self.act_clock_show.update()
-        if self.act_background_change is not None:
-            self.act_background_change.update()
+        # if self.act_background_change is not None:
+        #    self.act_background_change.update()
 
     # Handle Events
 
@@ -147,8 +152,8 @@ class DefaultScene(BaseScene):
             if event.type == EVENT_EPOCH_MINUTE:
                 if event.unit % 5 == 0:
                     self.background_widget.glob_images()
-                if event.unit % settings.backgrounds.change_interval_mins == 0:
-                    self.run_background_change_act()
+                # if event.unit % settings.backgrounds.change_interval_mins == 0:
+                #    self.run_background_change_act()
             if event.type == EVENT_ACTION_A or (
                 event.type == JOYBUTTONUP and event.button == GAMEPAD["BUTTON_A"]
             ):
