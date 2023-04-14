@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.image_helpers import render_text
-from wideboy.constants import EVENT_EPOCH_SECOND, EVENT_EPOCH_MINUTE
+from wideboy.constants import EVENT_EPOCH_SECOND, EVENT_EPOCH_HOUR
 from wideboy.sprites.base import BaseSprite
 
 
@@ -45,7 +45,7 @@ class CalendarSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if event.type == EVENT_EPOCH_MINUTE:
+            if event.type == EVENT_EPOCH_HOUR:
                 self.update_events()
             if event.type == EVENT_EPOCH_SECOND and event.unit % self.interval == 0:
                 self.render()

@@ -28,6 +28,7 @@ class WeatherSprite(BaseSprite):
         color_bg: Color = Color(0, 0, 0, 0),
         color_temp: Color = Color(255, 255, 255, 255),
         color_rain_prob: Color = Color(255, 255, 0, 255),
+        update_interval_mins: int = 15,
         debug: bool = False,
     ) -> None:
         super().__init__(rect)
@@ -35,6 +36,7 @@ class WeatherSprite(BaseSprite):
         self.color_bg = color_bg
         self.color_temp = color_temp
         self.color_rain_prob = color_rain_prob
+        self.update_interval_mins = update_interval_mins
         self.debug = debug
         self.icon_summary = None
         self.entity_weather_code = "sensor.openweathermap_weather_code"
@@ -64,7 +66,10 @@ class WeatherSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if event.type == EVENT_EPOCH_MINUTE or self.weather is None:
+            if (
+                event.type == EVENT_EPOCH_MINUTE
+                and event.unit % self.update_interval_mins == 0
+            ) or self.weather is None:
                 self.update_state()
             # if event.type == EVENT_EPOCH_SECOND and event.unit % 1 == 0:
             #    self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
