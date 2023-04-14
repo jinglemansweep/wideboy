@@ -91,6 +91,33 @@ def render_text(
     return surface_dest
 
 
+class MaterialIcons:
+    MDI_DELETE = 0xE872
+    MDI_DOWNLOAD = 0xE2C4
+    MDI_UPLOAD = 0xE2C6
+    MDI_WIFI = 0xE63E
+    MDI_SYNC_ALT = 0xEA18
+
+
+def render_material_icon(
+    codepoint: str,
+    size: int = 12,
+    color_fg: Color = Color(255, 255, 255, 255),
+    color_outline: Optional[Color] = None,
+) -> Surface:
+    icon_char = chr(codepoint)
+    icon = render_text(
+        icon_char,
+        "fonts/material-icons.ttf",
+        size,
+        color_fg=color_fg,
+        color_outline=color_outline,
+    )
+    surface = Surface((icon.get_rect().width, icon.get_rect().height), SRCALPHA)
+    surface.blit(icon, (0, 0))
+    return surface
+
+
 def build_background(size: Vector2, color: Color) -> Surface:
     background = Surface(size)
     background.fill(color)

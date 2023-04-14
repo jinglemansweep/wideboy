@@ -6,20 +6,13 @@ from typing import Optional
 from wideboy.constants import EVENT_EPOCH_SECOND
 from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.image_helpers import (
-    load_image,
-    render_text,
-)
+from wideboy.sprites.image_helpers import load_image, render_text, render_material_icon
 from wideboy.config import settings
 
 logger = logging.getLogger("sprite.hassentitytile")
 
 
 class HassEntityTileSprite(BaseSprite):
-    MDI_DELETE = 0xE872
-    MDI_DOWNLOAD = 0xE2C4
-    MDI_UPLOAD = 0xE2C6
-
     def __init__(
         self,
         rect: Rect,
@@ -74,15 +67,10 @@ class HassEntityTileSprite(BaseSprite):
         # Render
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.image.fill(self.color_bg)
-        icon_char = chr(self.icon)
         icon_y = 0
         if active:
-            icon_text = render_text(
-                icon_char,
-                "fonts/material-icons.ttf",
-                self.icon_size,
-                color_fg=self.color_icon,
-                color_outline=Color(0, 0, 0, 255),
+            icon_text = render_material_icon(
+                self.icon, self.icon_size, self.color_icon, Color(0, 0, 0, 255)
             )
             if template_text:
                 template_text = render_text(

@@ -8,11 +8,14 @@ from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.calendar import CalendarSprite
 from wideboy.sprites.clock import ClockSprite
 from wideboy.sprites.hassentitytile import HassEntityTileSprite
+from wideboy.sprites.homeassistant import HomeAssistantTemplateSprite
+from wideboy.sprites.material_icon import MaterialIconSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.rect import RectSprite
 from wideboy.sprites.qrcode import QRCodeSprite
 from wideboy.sprites.text import TextSprite
 from wideboy.sprites.weather import WeatherSprite
+from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
 
 from wideboy.config import settings
@@ -33,6 +36,7 @@ class DefaultScene(BaseScene):
 
     def setup(self):
         super().setup()
+
         # Setup background widget
         self.background_widget = BackgroundSprite(
             Rect(
@@ -46,27 +50,26 @@ class DefaultScene(BaseScene):
             shuffle=True,
         )
         self.group.add(self.background_widget)
+
         # Setup faded foreground layer widget
         self.layer_faded = RectSprite(
             Rect(self.width - 256, 0, 256, 64),
             color_bg=Color(0, 0, 0, 255 - 64),
         )
         self.group.add(self.layer_faded)
+
         # Setup calendar widget
         self.calendar_widget = CalendarSprite(
             Rect(self.width - 96, 49, 96, 24), "calendar.wideboy"
         )
         self.group.add(self.calendar_widget)
+
         # Setup clock widget
         self.clock_widget = ClockSprite(
-            Rect(
-                self.width - 96,
-                0,
-                96,
-                48,
-            ),
+            Rect(self.width - 96, 0, 96, 48),
         )
         self.group.add(self.clock_widget)
+
         # Setup weather widget
         self.weather_widget = WeatherSprite(
             Rect(self.width - 160, 0, 64, 64),
@@ -74,6 +77,7 @@ class DefaultScene(BaseScene):
             debug=False,
         )
         self.group.add(self.weather_widget)
+
         # Setup notification widget
         self.notification_widget = NotificationSprite(
             Rect(32, 4, 768 - 320, 56),
@@ -81,39 +85,41 @@ class DefaultScene(BaseScene):
             color_fg=Color(255, 255, 255, 255),
         )
         self.group.add(self.notification_widget)
-        # HASS Entity Tile Widgets
-        self.hass_tile_download = HassEntityTileSprite(
-            Rect(self.width - 256, 0, 32, 32),
-            HassEntityTileSprite.MDI_DOWNLOAD,
-            template="{{ states('sensor.speedtest_download') | int }}",
-            color_icon=Color(0, 255, 0, 255),
-            update_interval=60 * 60,
-        )
-        self.group.add(self.hass_tile_download)
-        self.hass_tile_upload = HassEntityTileSprite(
-            Rect(self.width - 256 + 32, 0, 32, 32),
-            HassEntityTileSprite.MDI_UPLOAD,
-            template="{{ states('sensor.speedtest_upload') | int }}",
-            color_icon=Color(255, 0, 0, 255),
-            update_interval=60 * 60,
-        )
+
+        # Setup bin collection widgets
         bin_rect = Rect(self.width - 256, 32, 32, 32)
         self.hass_bin_black = HassEntityTileSprite(
             bin_rect,
-            HassEntityTileSprite.MDI_DELETE,
+            MaterialIcons.MDI_DELETE,
             entity_id="sensor.black_bin",
             state_callback=lambda state: state.attributes["days"] < 2,
         )
         self.group.add(self.hass_bin_black)
         self.hass_bin_blue = HassEntityTileSprite(
             bin_rect,
-            HassEntityTileSprite.MDI_DELETE,
+            MaterialIcons.MDI_DELETE,
             entity_id="sensor.blue_bin",
             state_callback=lambda state: state.attributes["days"] < 2,
             color_icon=Color(0, 128, 255, 255),
         )
         self.group.add(self.hass_bin_blue)
-        self.group.add(self.hass_tile_upload)
+
+        # Speedtest Widgets
+        self.icon_speedtest = MaterialIconSprite(
+            Rect(self.width - 256, 0, 16, 16),
+            MaterialIcons.MDI_SYNC_ALT,
+            16,
+            color_fg=Color(0, 255, 0, 255),
+            color_outline=Color(0, 0, 0, 255),
+        )
+        self.group.add(self.icon_speedtest)
+        self.template_speedtest = HomeAssistantTemplateSprite(
+            Rect(self.width - 256 + 18, 3, 96, 16),
+            "D:{{ states('sensor.speedtest_download') | int }} U:{{ states('sensor.speedtest_upload') | int }}",
+            font_size=9,
+        )
+        self.group.add(self.template_speedtest)
+
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
