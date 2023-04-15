@@ -125,6 +125,23 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.template_speedtest)
 
+        # Transmission Widgets
+        self.icon_transmission = MaterialIconSprite(
+            Rect(self.width - 256, 14, 16, 16),
+            MaterialIcons.MDI_VPN_LOCK,
+            16,
+            color_fg=Color(0, 255, 255, 255),
+            color_outline=Color(0, 0, 0, 255),
+        )
+        self.group.add(self.icon_transmission)
+        self.template_transmission = HomeAssistantTemplateSprite(
+            Rect(self.width - 256 + 18, 16, 96, 16),
+            "{{ states('sensor.transmission_active_torrents') | int }}/{{ states('sensor.transmission_total_torrents') | int }} | {{ states('sensor.transmission_down_speed') | float | round(1) }}Mbs",
+            font_size=9,
+            color_outline=Color(0, 0, 0, 255),
+        )
+        self.group.add(self.template_transmission)
+
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
         self.act_clock_show.start()
