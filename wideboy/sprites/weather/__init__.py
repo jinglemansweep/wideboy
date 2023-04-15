@@ -120,16 +120,22 @@ class WeatherSprite(BaseSprite):
         self.image.fill(self.color_bg)
         if not self.weather:
             return
-        # Background
-        self.image.blit(self._render_background(), (0, 0))
-        # Temperature
-        self.image.blit(self._render_temperature(), (0, 30))
-        # Wind
-        self.image.blit(self._render_wind(), (32, 32))
-        # Rain probability
-        if self.weather["forecast_precipitation"] > RAIN_PROBABILITY_DISPLAY_THRESHOLD:
-            precip_surface = self._render_precipitation()
-            self.image.blit(precip_surface, (64 - precip_surface.get_width(), 0))
+        try:
+            # Background
+            self.image.blit(self._render_background(), (0, 0))
+            # Temperature
+            self.image.blit(self._render_temperature(), (0, 0))
+            # Wind
+            self.image.blit(self._render_wind(), (0, 32))
+            # Rain probability
+            if (
+                self.weather["forecast_precipitation"]
+                > RAIN_PROBABILITY_DISPLAY_THRESHOLD
+            ):
+                precip_surface = self._render_precipitation()
+                self.image.blit(precip_surface, (64 - precip_surface.get_width(), -1))
+        except Exception as e:
+            logger.warn(f"error rendering weather: {e}")
 
     def _render_background(self) -> pygame.Surface:
         images = convert_weather_code_to_image_name(self.weather["weather_code"])
@@ -143,21 +149,21 @@ class WeatherSprite(BaseSprite):
             self.dirty = 1
         return self.image_cache[image_name][self.image_frame]
 
-    def _render_temperature(self) -> pygame.Surface:
+    def _render_temperature(self, font_size: int = 24) -> pygame.Surface:
         label = (
             f"{int(self.weather['temp'])}" if self.weather["temp"] is not None else "?"
         )
         temp_text = render_text(
             label,
             "fonts/bitstream-vera.ttf",
-            32,
+            font_size,
             color_fg=Color(255, 255, 255, 255),
             color_outline=Color(0, 0, 0, 255),
         )
         surface = Surface(
             (temp_text.get_width() + 20, temp_text.get_height()), SRCALPHA
         )
-        surface.blit(temp_text, (0, -2))
+        surface.blit(temp_text, (0, -4))
         degree_text = render_text(
             "°",
             "fonts/bitstream-vera.ttf",
@@ -187,6 +193,7 @@ class WeatherSprite(BaseSprite):
         dir = convert_bearing_to_direction(self.weather["wind_bearing"])
         speed = int(convert_ms_to_mph(self.weather["wind_speed"]))
         pos = [0, 0]
+        dir = "s"
         disc = load_image(
             os.path.join(
                 self.image_path,
