@@ -235,7 +235,7 @@ def convert_bearing_to_direction(bearing: float) -> str:
         return "e"
     elif 270 <= bearing < 315:
         return "se"
-    elif 315 <= bearing < 360:
+    elif 315 <= bearing <= 360:
         return "s"
 
 
