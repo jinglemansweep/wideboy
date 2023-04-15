@@ -35,6 +35,9 @@ class SceneManager:
             next_index = 0
         self.set_scene(next_index)
 
+    def get_scene_names(self) -> list[str]:
+        return [scene.name for scene in self.scenes]
+
     def get_scene_id_by_name(self, name: str) -> Optional[int]:
         for i, scene in enumerate(self.scenes):
             if name == scene.name:

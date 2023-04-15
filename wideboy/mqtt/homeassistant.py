@@ -53,11 +53,12 @@ def advertise_entity(
         unique_id=entity_id,
         device=build_device_info(),
     )
-    if device_class in ["sensor", "switch", "light"]:
+    if device_class in ["sensor", "switch", "light", "select"]:
         config["device_class"] = device_class
         config["state_topic"] = state_topic
+    if device_class in ["sensor", "switch", "light"]:
         config["schema"] = "json"
-    if device_class in ["switch", "light", "button", "text"]:
+    if device_class in ["switch", "light", "button", "text", "select"]:
         config["command_topic"] = command_topic
     if device_class in ["button"]:
         config["entity_category"] = "config"

@@ -15,6 +15,7 @@ from wideboy.constants import (
     EVENT_MASTER_POWER,
     EVENT_MASTER_BRIGHTNESS,
     EVENT_SCENE_MANAGER_NEXT,
+    EVENT_SCENE_MANAGER_SELECT,
 )
 from wideboy.mqtt.homeassistant import (
     advertise_entity,
@@ -51,6 +52,14 @@ matrix, matrix_buffer = None, None
 if settings.display.matrix.enabled:
     matrix, matrix_buffer = setup_led_matrix()
 
+# Scenes
+
+scene_manager = SceneManager(
+    [
+        DefaultScene(screen),
+        CreditsScene(screen),
+    ]
+)
 
 # Home Assistant Entities
 advertise_entity(
@@ -75,17 +84,17 @@ advertise_entity("action_a", "button")
 advertise_entity("action_b", "button")
 advertise_entity("message", "text", dict(min=1))
 
+advertise_entity(
+    "scene_select",
+    "select",
+    dict(options=scene_manager.get_scene_names(), optimistic=True),
+    dict(selected_option="default"),
+)
+
 
 # Main Loop
 def start_main_loop():
-    global state, matrix, matrix_buffer
-
-    scene_manager = SceneManager(
-        [
-            DefaultScene(screen),
-            CreditsScene(screen),
-        ]
-    )
+    global matrix, matrix_buffer, scene_manager
 
     running = True
 
@@ -109,6 +118,9 @@ def start_main_loop():
                 )
             if event.type == EVENT_SCENE_MANAGER_NEXT:
                 scene_manager.next_scene()
+            if event.type == EVENT_SCENE_MANAGER_SELECT:
+                scene_manager.change_scene(event.name)
+                # update_entity("scene_select/state", event.name)
 
         # Clock, Blitting, Display
         delta = clock_tick(clock)
