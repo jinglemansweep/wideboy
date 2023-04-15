@@ -35,6 +35,7 @@ from wideboy.utils.pygame import (
 )
 from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
+from wideboy.scenes.night import NightScene
 
 CANVAS_SIZE = (settings.display.canvas.width, settings.display.canvas.height)
 
@@ -57,6 +58,7 @@ if settings.display.matrix.enabled:
 scene_manager = SceneManager(
     [
         DefaultScene(screen),
+        NightScene(screen),
         CreditsScene(screen),
     ]
 )
