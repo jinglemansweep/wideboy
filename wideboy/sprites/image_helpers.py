@@ -98,6 +98,7 @@ class MaterialIcons:
     MDI_WIFI = 0xE63E
     MDI_SYNC_ALT = 0xEA18
     MDI_VPN_LOCK = 0xE62F
+    MDI_DNS = 0xE875
 
 
 def render_material_icon(

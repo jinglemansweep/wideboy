@@ -135,12 +135,29 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.icon_transmission)
         self.template_transmission = HomeAssistantTemplateSprite(
-            Rect(self.width - 256 + 18, 16, 96, 16),
+            Rect(self.width - 256 + 18, 17, 96, 16),
             "{{ states('sensor.transmission_active_torrents') | int }}/{{ states('sensor.transmission_total_torrents') | int }} | {{ states('sensor.transmission_down_speed') | float | round(1) }}Mbs",
             font_size=9,
             color_outline=Color(0, 0, 0, 255),
         )
         self.group.add(self.template_transmission)
+
+        # NAS Widgets
+        self.icon_nas_disk = MaterialIconSprite(
+            Rect(self.width - 256, 30, 16, 16),
+            MaterialIcons.MDI_DNS,
+            16,
+            color_fg=Color(255, 255, 0, 255),
+            color_outline=Color(0, 0, 0, 255),
+        )
+        self.group.add(self.icon_nas_disk)
+        self.template_nas_volume_used = HomeAssistantTemplateSprite(
+            Rect(self.width - 256 + 18, 32, 96, 16),
+            "{{ states('sensor.ds920plus_volume_used') | float | round(2) }}%",
+            font_size=9,
+            color_outline=Color(0, 0, 0, 255),
+        )
+        self.group.add(self.template_nas_volume_used)
 
         # Run initial acts
         self.act_clock_show = self.build_clock_show_act()
