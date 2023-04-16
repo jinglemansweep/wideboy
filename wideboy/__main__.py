@@ -89,8 +89,11 @@ advertise_entity("message", "text", dict(min=1))
 advertise_entity(
     "scene_select",
     "select",
-    dict(options=scene_manager.get_scene_names(), optimistic=True),
-    dict(selected_option="default"),
+    dict(
+        options=scene_manager.get_scene_names(),
+        value_template="{{ value_json.selected_option }}",
+    ),
+    initial_state=dict(selected_option="default"),
 )
 
 
@@ -122,7 +125,7 @@ def start_main_loop():
                 scene_manager.next_scene()
             if event.type == EVENT_SCENE_MANAGER_SELECT:
                 scene_manager.change_scene(event.name)
-                # update_entity("scene_select/state", event.name)
+                update_entity("scene_select/state", dict(selected_option=event.name))
 
         # Clock, Blitting, Display
         delta = clock_tick(clock)

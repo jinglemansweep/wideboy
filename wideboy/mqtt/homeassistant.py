@@ -56,7 +56,6 @@ def advertise_entity(
     if device_class in ["sensor", "switch", "light", "select"]:
         config["device_class"] = device_class
         config["state_topic"] = state_topic
-    if device_class in ["sensor", "switch", "light"]:
         config["schema"] = "json"
     if device_class in ["switch", "light", "button", "text", "select"]:
         config["command_topic"] = command_topic
@@ -74,7 +73,7 @@ def advertise_entity(
             auto_prefix=False,
         )
     )
-    if device_class in ["sensor", "switch", "light"]:
+    if device_class in ["sensor", "switch", "light", "select"]:
         pygame.event.post(
             Event(
                 EVENT_MQTT_MESSAGE_SEND,
