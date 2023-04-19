@@ -1,6 +1,6 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface
-from wideboy.sprites.clock import ClockSprite
+from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.starfield import StarfieldSprite
 from wideboy.sprites.notification import NotificationSprite
 
@@ -26,14 +26,26 @@ class NightScene(BaseScene):
         super().setup()
 
         # Starfield widget
-        self.starfield_widget = StarfieldSprite(Rect(0, 0, self.width, self.height))
+        self.starfield_widget = StarfieldSprite(
+            Rect(0, 0, self.width, self.height), color_fg=Color(255, 255, 255, 64)
+        )
         self.group.add(self.starfield_widget)
 
         # Setup clock widget
-        self.clock_widget = ClockSprite(
-            Rect(self.width - 96, 0, 96, 48),
+        clock_pos_adj: tuple[int, int] = (0, 0)
+        self.clock_time_widget = TimeSprite(
+            Rect(self.width - 128 + clock_pos_adj[0], -7 + clock_pos_adj[1], 128, 48),
+            font_size=48,
+            color_fg=Color(0, 0, 0, 0),
+            color_outline=Color(0, 0, 128, 255),
         )
-        self.group.add(self.clock_widget)
+        self.group.add(self.clock_time_widget)
+        self.clock_date_widget = DateSprite(
+            Rect(self.width - 128 + clock_pos_adj[0], 41 + clock_pos_adj[1], 128, 24),
+            color_fg=Color(0, 0, 0, 0),
+            color_outline=Color(0, 0, 128, 255),
+        )
+        self.group.add(self.clock_date_widget)
 
         # Setup notification widget
         self.notification_widget = NotificationSprite(

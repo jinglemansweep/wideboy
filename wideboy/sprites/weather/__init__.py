@@ -171,7 +171,7 @@ class WeatherSprite(BaseSprite):
             color_fg=self.color_temp,
             color_outline=Color(0, 0, 0, 255),
         )
-        surface.blit(degree_text, (temp_text.get_width() - 4, 0))
+        surface.blit(degree_text, (temp_text.get_width() - 4, -2))
         return surface
 
     def _render_precipitation(self) -> Surface:

@@ -10,27 +10,88 @@ from wideboy.sprites.base import BaseSprite
 logger = logging.getLogger("sprite.clock")
 
 
-class ClockSprite(BaseSprite):
+class TimeSprite(BaseSprite):
     def __init__(
         self,
         rect: Rect,
         color_bg: Color = (0, 0, 0, 0),
-        color_time: Color = (255, 0, 255, 255),
-        color_date: Color = (192, 192, 255, 255),
-        font_time: str = "fonts/molot.otf",
-        font_time_size: int = 36,
-        font_date: str = "fonts/molot.otf",
-        font_date_size: int = 16,
+        color_fg: Color = (255, 0, 255, 255),
+        color_outline: Color = (0, 0, 0, 255),
+        font_name: str = "fonts/molot.otf",
+        font_size: int = 36,
+        time_format: str = "%H:%M",
+        pos_adj: tuple[int, int] = (0, 0),
     ) -> None:
         super().__init__(rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
-        self.color_time = color_time
-        self.color_date = color_date
-        self.font_date = font_date
-        self.font_date_size = font_date_size
-        self.font_time = font_time
-        self.font_time_size = font_time_size
+        self.color_fg = color_fg
+        self.color_outline = color_outline
+        self.font_name = font_name
+        self.font_size = font_size
+        self.time_format = time_format
+        self.pos_adj = pos_adj
+        self.render()
+
+    def update(
+        self,
+        frame: str,
+        clock: Clock,
+        delta: float,
+        events: list[Event],
+    ) -> None:
+        super().update(frame, clock, delta, events)
+        for event in events:
+            if event.type == EVENT_EPOCH_SECOND:
+                self.render()
+
+    def render(self) -> None:
+        now = datetime.now()
+        self.image.fill(self.color_bg)
+        time_str = now.strftime(self.time_format)
+        time_surface = render_text(
+            time_str,
+            self.font_name,
+            self.font_size,
+            color_bg=self.color_bg,
+            color_fg=self.color_fg,
+            color_outline=self.color_outline,
+        )
+        self.image.blit(
+            time_surface,
+            (
+                (self.rect.width / 2)
+                - (time_surface.get_rect().width / 2)
+                + self.pos_adj[0],
+                0 + self.pos_adj[1],
+            ),
+        )
+        self.dirty = 1
+
+
+class DateSprite(BaseSprite):
+    def __init__(
+        self,
+        rect: Rect,
+        color_bg: Color = (0, 0, 0, 0),
+        color_fg: Color = (192, 192, 255, 255),
+        color_outline: Color = (0, 0, 0, 255),
+        font_name: str = "fonts/molot.otf",
+        font_size: int = 16,
+        date_format: str = "%a %d %b",
+        uppercase: bool = True,
+        pos_adj: tuple[int, int] = (0, 0),
+    ) -> None:
+        super().__init__(rect)
+        self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
+        self.color_bg = color_bg
+        self.color_fg = color_fg
+        self.color_outline = color_outline
+        self.font_name = font_name
+        self.font_size = font_size
+        self.date_format = date_format
+        self.uppercase = uppercase
+        self.pos_adj = pos_adj
         self.render()
 
     def update(
@@ -48,36 +109,24 @@ class ClockSprite(BaseSprite):
     def render(self) -> None:
         now = datetime.now()
         dow_str = now.strftime("%A")[:3]
-        ddmm_str = now.strftime("%d %b")
-        date_str = f"{dow_str} {ddmm_str}".upper()
-        # date_str = f"WED 55 JAN"
+        date_str = now.strftime(self.date_format)
+        if self.uppercase:
+            date_str = date_str.upper()
         self.image.fill(self.color_bg)
-        hh_str = now.strftime("%H")
-        mm_str = now.strftime("%M")
-        hhmm_str = f"{hh_str}:{mm_str}"
-        # hhmm_str = "55:55"
-        hhmm_offset = (0, -8)
-        hhmm_sprite = render_text(
-            hhmm_str,
-            self.font_time,
-            self.font_time_size,
-            color_fg=self.color_time,
-            color_outline=Color(0, 0, 0, 255),
+        date_surface = render_text(
+            date_str,
+            self.font_name,
+            self.font_size,
+            color_bg=self.color_bg,
+            color_fg=self.color_fg,
+            color_outline=self.color_outline,
         )
         self.image.blit(
-            hhmm_sprite,
+            date_surface,
             (
-                (self.rect.width / 2) - (hhmm_sprite.get_rect().width / 2),
-                hhmm_offset[1],
+                ((self.rect.width / 2) - date_surface.get_rect().width / 2)
+                + self.pos_adj[0],
+                0 + self.pos_adj[1],
             ),
         )
-        date_sprite = render_text(
-            date_str,
-            self.font_date,
-            self.font_date_size,
-            color_fg=self.color_date,
-            color_outline=Color(0, 0, 0, 255),
-        )
-        date_pos = (((self.rect.width / 2) - date_sprite.get_rect().width / 2), 29)
-        self.image.blit(date_sprite, date_pos)
         self.dirty = 1

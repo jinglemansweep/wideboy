@@ -6,7 +6,7 @@ from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.calendar import CalendarSprite
-from wideboy.sprites.clock import ClockSprite
+from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.hassentitytile import HassEntityTileSprite
 from wideboy.sprites.homeassistant import HomeAssistantTemplateSprite
 from wideboy.sprites.material_icon import MaterialIconSprite
@@ -49,12 +49,6 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.background_widget)
 
-        """
-        # Starfield widget
-        self.starfield_widget = StarfieldSprite(Rect(0, 0, self.width, self.height))
-        self.group.add(self.starfield_widget)
-        """
-
         # Setup faded foreground layer widget
         self.layer_faded = RectSprite(
             Rect(self.width - 256, 0, 256, 64),
@@ -68,11 +62,16 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.calendar_widget)
 
-        # Setup clock widget
-        self.clock_widget = ClockSprite(
-            Rect(self.width - 96, 0, 96, 48),
+        # Setup clock widgets
+        clock_pos_adj: tuple[int, int] = (0, 0)
+        self.clock_time_widget = TimeSprite(
+            Rect(self.width - 96 + clock_pos_adj[0], -9 + clock_pos_adj[1], 96, 48),
         )
-        self.group.add(self.clock_widget)
+        self.group.add(self.clock_time_widget)
+        self.clock_date_widget = DateSprite(
+            Rect(self.width - 96 + clock_pos_adj[0], 28 + clock_pos_adj[1], 96, 24),
+        )
+        self.group.add(self.clock_date_widget)
 
         # Setup weather widget
         self.weather_widget = WeatherSprite(
@@ -160,8 +159,6 @@ class DefaultScene(BaseScene):
         self.group.add(self.template_nas_volume_used)
 
         # Run initial acts
-        self.act_clock_show = self.build_clock_show_act()
-        self.act_clock_show.start()
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
 
@@ -172,8 +169,6 @@ class DefaultScene(BaseScene):
         events: list[Event],
     ) -> None:
         super().update(clock, delta, events)
-        if self.act_clock_show is not None:
-            self.act_clock_show.update()
         if self.act_background_change is not None:
             self.act_background_change.update()
 
@@ -197,21 +192,6 @@ class DefaultScene(BaseScene):
         self.act_background_change.start()
 
     # Acts
-
-    def build_clock_show_act(self) -> Act:
-        return Act(
-            64,
-            [
-                (
-                    0,
-                    Animation(
-                        self.clock_widget,
-                        Vector2(self.width - 96, 0),
-                        64,
-                    ),
-                ),
-            ],
-        )
 
     def build_background_change_act(self) -> Act:
         return Act(
