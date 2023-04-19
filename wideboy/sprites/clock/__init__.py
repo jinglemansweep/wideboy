@@ -117,7 +117,6 @@ class DateSprite(BaseSprite):
 
     def render(self) -> None:
         now = datetime.now()
-        dow_str = now.strftime("%A")[:3]
         date_str = now.strftime(self.date_format)
         if self.uppercase:
             date_str = date_str.upper()
