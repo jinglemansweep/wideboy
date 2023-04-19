@@ -27,7 +27,7 @@ class NightScene(BaseScene):
 
         # Starfield widget
         self.starfield_widget = StarfieldSprite(
-            Rect(0, 0, self.width, self.height), color_fg=Color(255, 255, 255, 64)
+            Rect(0, 0, self.width, self.height), color_fg=Color(255, 255, 255, 192)
         )
         self.group.add(self.starfield_widget)
 
