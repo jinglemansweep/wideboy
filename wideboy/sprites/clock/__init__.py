@@ -1,8 +1,9 @@
 import logging
 
 from datetime import datetime
+from typing import Optional
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
-from wideboy.sprites.image_helpers import render_text
+from wideboy.sprites.image_helpers import render_text, rainbow_color
 from wideboy.constants import EVENT_EPOCH_SECOND
 from wideboy.sprites.base import BaseSprite
 
@@ -21,6 +22,7 @@ class TimeSprite(BaseSprite):
         font_size: int = 36,
         time_format: str = "%H:%M",
         pos_adj: tuple[int, int] = (0, 0),
+        rainbow: Optional[str] = None,
     ) -> None:
         super().__init__(rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -31,6 +33,7 @@ class TimeSprite(BaseSprite):
         self.font_size = font_size
         self.time_format = time_format
         self.pos_adj = pos_adj
+        self.rainbow = rainbow
         self.render()
 
     def update(
@@ -41,9 +44,11 @@ class TimeSprite(BaseSprite):
         events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
-        for event in events:
-            if event.type == EVENT_EPOCH_SECOND:
-                self.render()
+        if self.rainbow == "fg":
+            self.color_fg = rainbow_color(frame / 100)
+        elif self.rainbow == "outline":
+            self.color_outline = rainbow_color(frame / 100)
+        self.render()
 
     def render(self) -> None:
         now = datetime.now()
@@ -81,6 +86,7 @@ class DateSprite(BaseSprite):
         date_format: str = "%a %d %b",
         uppercase: bool = True,
         pos_adj: tuple[int, int] = (0, 0),
+        rainbow: Optional[str] = None,
     ) -> None:
         super().__init__(rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -92,6 +98,7 @@ class DateSprite(BaseSprite):
         self.date_format = date_format
         self.uppercase = uppercase
         self.pos_adj = pos_adj
+        self.rainbow = rainbow
         self.render()
 
     def update(
@@ -102,9 +109,11 @@ class DateSprite(BaseSprite):
         events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
-        for event in events:
-            if event.type == EVENT_EPOCH_SECOND:
-                self.render()
+        if self.rainbow == "fg":
+            self.color_fg = rainbow_color(frame / 100)
+        elif self.rainbow == "outline":
+            self.color_outline = rainbow_color(frame / 100)
+        self.render()
 
     def render(self) -> None:
         now = datetime.now()

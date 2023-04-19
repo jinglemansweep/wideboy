@@ -37,13 +37,15 @@ class NightScene(BaseScene):
             Rect(self.width - 128 + clock_pos_adj[0], -7 + clock_pos_adj[1], 128, 48),
             font_size=48,
             color_fg=Color(0, 0, 0, 0),
-            color_outline=Color(128, 0, 128, 255),
+            color_outline=Color(255, 0, 255, 64),
+            rainbow="outline",
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             Rect(self.width - 128 + clock_pos_adj[0], 41 + clock_pos_adj[1], 128, 24),
             color_fg=Color(0, 0, 0, 0),
             color_outline=Color(128, 0, 128, 255),
+            rainbow="outline",
         )
         self.group.add(self.clock_date_widget)
 
