@@ -90,7 +90,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.notification_widget)
 
         # Setup bin collection widgets
-        bin_rect = Rect(self.width - 256, 32, 32, 32)
+        bin_rect = Rect(self.width - 183, 40, 32, 32)
         self.hass_bin_black = HassEntityTileSprite(
             bin_rect,
             MaterialIcons.MDI_DELETE,
