@@ -70,21 +70,29 @@ class Engine:
         updates = self.scene_manager.render(self.clock, delta, events)
         pygame.display.update(updates)
         # logger.debug(f"updates={updates}")
-        # update_sensors(clock)
-        self.display.render(self.screen)
+        if len(updates) > 0:
+            self.display.render(self.screen)
         # Debugging
+        self.update_sensors()
         self.scene_manager.debug(self.clock, delta)
 
     def clock_tick(self) -> float:
         self.mqtt.loop(0)
         return self.clock.tick(self.fps) / 1000
 
+    def update_sensors(self, every_tick: int = 1000):
+        if pygame.time.get_ticks() % every_tick == 0:
+            post_event(
+                EVENT_HASS_ENTITY_UPDATE,
+                name="fps",
+                state=dict(value=self.clock.get_fps()),
+            )
+
     def process_events(self, events: list[pygame.Event]):
         for event in events:
             handle_internal_event(event)
             handle_joystick_event(event, self.joysticks)
             self.hass.handle_event(event)
-
             if event.type == EVENT_MASTER:
                 payload = json.loads(event.payload)
                 self.display.set_visible(hass_to_bool_state(payload["state"]))
