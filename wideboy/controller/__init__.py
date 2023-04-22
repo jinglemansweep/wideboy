@@ -3,7 +3,8 @@ import uuid
 from typing import Optional
 from wideboy.constants import AppMetadata
 from wideboy.display import Display
-from wideboy.homeassistant import HASSManager
+from wideboy.homeassistant.hass import HASSManager, HASSEntity
+from wideboy.homeassistant.mqtt import MQTTClient
 from wideboy.engine import Engine
 from wideboy.scenes.base import BaseScene
 from wideboy.utils.helpers import get_unique_device_id
@@ -13,13 +14,16 @@ logger = logging.getLogger("controller")
 
 
 class Controller:
-    def __init__(self, scenes: list):
+    def __init__(self, scenes: list[BaseScene], entities: list[HASSEntity]):
         self.device_id = settings.general.device_id or get_unique_device_id()
-        logger.debug(f"controller:init device_id={self.device_id} scenes={scenes}")
+        logger.debug(
+            f"controller:init device_id={self.device_id} scenes_count={len(scenes)} entities_count={len(entities)}"
+        )
         self.display = Display()
-        self.hass = HASSManager(device_id=self.device_id)
-        self.engine = Engine(self.display, self.hass)
-        self.setup(scenes)
+        self.mqtt = MQTTClient(device_id=self.device_id)
+        self.hass = HASSManager(self.mqtt, device_id=self.device_id)
+        self.engine = Engine(self.display, self.mqtt, self.hass)
+        self.setup(scenes, entities)
         self.log_intro()
 
     def start(self) -> None:
@@ -27,46 +31,9 @@ class Controller:
         while True:
             self.engine.loop()
 
-    def setup(self, scenes: list[BaseScene]) -> None:
-        self.load_scenes(scenes)
-        self.advertise_hass_entities()
-
-    def load_scenes(self, scenes: list):
+    def setup(self, scenes: list[BaseScene], entities: list[HASSEntity]) -> None:
         self.engine.scene_manager.load_scenes(scenes)
-
-    def advertise_hass_entities(self):
-        self.engine.hass.advertise_entity(
-            "master",
-            "light",
-            dict(
-                brightness=True, color_mode=True, supported_color_modes=["brightness"]
-            ),
-            dict(state="ON", brightness=128),
-        )
-        self.engine.hass.advertise_entity("scene_next", "button")
-        self.engine.hass.advertise_entity(
-            "fps",
-            "sensor",
-            dict(
-                device_class="frequency",
-                suggested_display_precision=1,
-                unit_of_measurement="fps",
-                value_template="{{ value_json.value }}",
-            ),
-            initial_state=dict(value=0),
-        )
-        self.engine.hass.advertise_entity("action_a", "button")
-        self.engine.hass.advertise_entity("action_b", "button")
-        self.engine.hass.advertise_entity("message", "text", dict(min=1))
-        self.engine.hass.advertise_entity(
-            "scene_select",
-            "select",
-            dict(
-                options=self.engine.scene_manager.get_scene_names(),
-                value_template="{{ value_json.selected_option }}",
-            ),
-            initial_state=dict(selected_option="default"),
-        )
+        self.engine.hass.advertise_entities(self.build_internal_entities() + entities)
 
     def log_intro(self):
         logger.info("=" * 80)
@@ -81,3 +48,41 @@ class Controller:
             f"Canvas Size: {settings.display.canvas.width}x{settings.display.canvas.height}"
         )
         logger.info("=" * 80)
+
+    def build_internal_entities(self):
+        return [
+            HASSEntity(
+                "sensor",
+                "fps",
+                dict(
+                    device_class="frequency",
+                    suggested_display_precision=1,
+                    unit_of_measurement="fps",
+                    value_template="{{ value_json.value }}",
+                ),
+                dict(value=0),
+            ),
+            HASSEntity(
+                "light",
+                "master",
+                dict(
+                    brightness=True,
+                    color_mode=True,
+                    supported_color_modes=["brightness"],
+                ),
+                dict(state="ON", brightness=128),
+            ),
+            HASSEntity("button", "scene_next"),
+            HASSEntity("button", "action_a"),
+            HASSEntity("button", "action_b"),
+            HASSEntity("text", "message", dict(min=1)),
+            HASSEntity(
+                "select",
+                "scene_select",
+                dict(
+                    options=["default", "credits", "night"],
+                    value_template="{{ value_json.selected_option }}",
+                ),
+                dict(selected_option="default"),
+            ),
+        ]

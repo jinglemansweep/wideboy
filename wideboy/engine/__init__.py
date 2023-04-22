@@ -10,7 +10,8 @@ from wideboy.engine.scenes import SceneManager
 from wideboy.config import settings
 
 if TYPE_CHECKING:
-    from wideboy.homeassistant import HASSManager
+    from wideboy.homeassistant.hass import HASSManager
+    from wideboy.homeassistant.mqtt import MQTTClient
     from wideboy.display import Display
 
 logger = logging.getLogger("engine")
@@ -23,11 +24,18 @@ class Engine:
     clock: Optional[Clock] = None
     screen: Optional[Surface] = None
 
-    def __init__(self, display: "Display", hass: "HASSManager", fps: int = FPS):
+    def __init__(
+        self,
+        display: "Display",
+        mqtt: "MQTTClient",
+        hass: "HASSManager",
+        fps: int = FPS,
+    ):
         self.display = display
+        self.mqtt = mqtt
         self.hass = hass
         self.fps = fps
-        logger.debug(f"engine:init display={display} hass={hass} fps={fps}")
+        logger.debug(f"engine:init display={display} mqtt={mqtt} hass={hass} fps={fps}")
         self.scene_manager = SceneManager(engine=self)
         self.joysticks = dict()
         self.setup()
@@ -59,7 +67,7 @@ class Engine:
         self.scene_manager.debug(self.clock, delta)
 
     def clock_tick(self) -> float:
-        self.hass.mqtt.loop(0)
+        self.mqtt.loop(0)
         return self.clock.tick(self.fps) / 1000
 
     def process_events(self, events: list[pygame.Event]):

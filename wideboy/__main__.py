@@ -18,15 +18,21 @@ from wideboy.scenes.default import DefaultScene
 
 # from wideboy.scenes.night import NightScene
 from wideboy.controller import Controller
+from wideboy.homeassistant.hass import HASSEntity
 
 # Logging
 setup_logger(level=settings.general.log_level)
 logger = logging.getLogger(AppMetadata.NAME)
 
+# SCENES
+SCENES = [DefaultScene]
+
+# ENTITIES
+ENTITIES = []
+
 
 def main():
-    controller = Controller(scenes=[DefaultScene])
-
+    controller = Controller(scenes=SCENES, entities=ENTITIES)
     controller.start()
 
 

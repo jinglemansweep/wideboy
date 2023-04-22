@@ -3,29 +3,47 @@ import logging
 import pygame
 from dynaconf import Dynaconf
 from pygame import Event
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from homeassistant_api import Client
 
+from wideboy.config import settings
 from wideboy.constants import (
     AppMetadata,
-    EVENT_MQTT_MESSAGE_SEND,
 )
 from wideboy.homeassistant.mqtt import MQTTClient
-from wideboy.config import settings
-
 
 logger = logging.getLogger("homeassistant")
 
 
+class HASSEntity:
+    def __init__(
+        self,
+        device_class: str,
+        name: str,
+        options: Optional[dict] = None,
+        initial_state: Optional[dict] = None,
+    ):
+        self.device_class = device_class
+        self.name = name
+        self.options = options
+        self.initial_state = initial_state
+
+
 class HASSManager:
-    def __init__(self, device_id: str):
+    def __init__(self, mqtt: MQTTClient, device_id: str):
+        self.mqtt = mqtt
         self.device_id = device_id
         self.client = Client(
             f"{settings.homeassistant.url}/api",
             settings.homeassistant.api_token,
             cache_session=False,
         )
-        self.mqtt = MQTTClient(device_id=device_id)
+
+    def advertise_entities(self, entities: list[HASSEntity]) -> None:
+        for entity in entities:
+            self.advertise_entity(
+                entity.name, entity.device_class, entity.options, entity.initial_state
+            )
 
     def advertise_entity(
         self,
@@ -37,7 +55,6 @@ class HASSManager:
         if options is None:
             options = dict()
         entity_id = self.build_entity_id(name)
-
         config_topic = (
             f"{settings.homeassistant.topic_prefix}/{device_class}/{entity_id}/config"
         )
@@ -66,7 +83,7 @@ class HASSManager:
             self.mqtt.publish(state_topic, initial_state)
 
     def build_device_info(self) -> dict:
-        full_device_id = f"{AppMetadata.TITLE}_{self.device_id}"
+        full_device_id = f"{_get_app_id()}_{self.device_id}"
         return dict(
             identifiers=[full_device_id],
             name=full_device_id,
@@ -76,4 +93,8 @@ class HASSManager:
         )
 
     def build_entity_id(self, name: str) -> str:
-        return f"{AppMetadata.NAME}_{self.device_id}_{name}"
+        return f"{_get_app_id()}_{self.device_id}_{name}"
+
+
+def _get_app_id():
+    return AppMetadata.NAME.lower()
