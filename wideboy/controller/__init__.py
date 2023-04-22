@@ -1,5 +1,6 @@
 import logging
 import uuid
+from typing import Optional
 from wideboy.constants import AppMetadata
 from wideboy.display import Display
 from wideboy.homeassistant import HASSManager
@@ -28,9 +29,44 @@ class Controller:
 
     def setup(self, scenes: list[BaseScene]) -> None:
         self.load_scenes(scenes)
+        self.advertise_hass_entities()
 
     def load_scenes(self, scenes: list):
         self.engine.scene_manager.load_scenes(scenes)
+
+    def advertise_hass_entities(self):
+        self.engine.hass.advertise_entity(
+            "master",
+            "light",
+            dict(
+                brightness=True, color_mode=True, supported_color_modes=["brightness"]
+            ),
+            dict(state="ON", brightness=128),
+        )
+        self.engine.hass.advertise_entity("scene_next", "button")
+        self.engine.hass.advertise_entity(
+            "fps",
+            "sensor",
+            dict(
+                device_class="frequency",
+                suggested_display_precision=1,
+                unit_of_measurement="fps",
+                value_template="{{ value_json.value }}",
+            ),
+            initial_state=dict(value=0),
+        )
+        self.engine.hass.advertise_entity("action_a", "button")
+        self.engine.hass.advertise_entity("action_b", "button")
+        self.engine.hass.advertise_entity("message", "text", dict(min=1))
+        self.engine.hass.advertise_entity(
+            "scene_select",
+            "select",
+            dict(
+                options=self.engine.scene_manager.get_scene_names(),
+                value_template="{{ value_json.selected_option }}",
+            ),
+            initial_state=dict(selected_option="default"),
+        )
 
     def log_intro(self):
         logger.info("=" * 80)
