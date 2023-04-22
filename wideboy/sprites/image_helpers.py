@@ -92,6 +92,39 @@ def render_text(
     return surface_dest
 
 
+def render_arrow(
+    start_pos: tuple[int, int] = (0, 0),
+    length: int = 10,
+    angle: int = 0,
+    color: Color = Color(255, 255, 255, 255),
+    adjust: int = 0,
+):
+    surface = pygame.Surface((length * 2, length * 2), pygame.SRCALPHA)
+    rect = surface.get_rect()
+    rect.center = start_pos
+    angle = 360 - angle + 90 + adjust
+    tip_pos = (
+        length * math.cos(math.radians(angle)),
+        -length * math.sin(math.radians(angle)),
+    )
+    base_angle1 = angle + 135
+    base_angle2 = angle - 135
+    base_point1 = (
+        length + length * math.cos(math.radians(base_angle1)),
+        length - length * math.sin(math.radians(base_angle1)),
+    )
+    base_point2 = (
+        length + length * math.cos(math.radians(base_angle2)),
+        length - length * math.sin(math.radians(base_angle2)),
+    )
+    pygame.draw.polygon(
+        surface,
+        color,
+        [(length + tip_pos[0], length + tip_pos[1]), base_point1, base_point2],
+    )
+    return surface
+
+
 class MaterialIcons:
     MDI_DELETE = 0xE872
     MDI_DOWNLOAD = 0xE2C4

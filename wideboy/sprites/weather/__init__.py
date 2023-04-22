@@ -10,12 +10,14 @@ from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     render_text,
+    render_arrow,
     load_image,
     scale_surface,
     pil_to_surface,
 )
-from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
+from wideboy.constants import EVENT_EPOCH_MINUTE
 from wideboy.sprites.weather.resources import IMAGE_MAPPING
+
 from wideboy.config import settings
 
 logger = logging.getLogger("sprite.weather")
@@ -31,6 +33,7 @@ class WeatherSprite(BaseSprite):
         color_bg: Color = Color(0, 0, 0, 0),
         color_temp: Color = Color(255, 255, 255, 255),
         color_rain_prob: Color = Color(255, 255, 0, 255),
+        color_wind: Color = Color(255, 255, 255, 255),
         update_interval_mins: int = 15,
         debug: bool = False,
     ) -> None:
@@ -39,6 +42,7 @@ class WeatherSprite(BaseSprite):
         self.color_bg = color_bg
         self.color_temp = color_temp
         self.color_rain_prob = color_rain_prob
+        self.color_wind = color_wind
         self.update_interval_mins = update_interval_mins
         self.debug = debug
         self.icon_summary = None
@@ -146,7 +150,7 @@ class WeatherSprite(BaseSprite):
                 precip_surface = self._render_precipitation()
                 self.image.blit(precip_surface, (64 - precip_surface.get_width(), -1))
         except Exception as e:
-            logger.warn(f"error rendering weather: {e}")
+            logger.warn(f"error rendering weather: {e}", exc_info=e)
 
     def _render_background(self) -> pygame.Surface:
         images = convert_weather_code_to_image_name(self.weather["weather_code"])
@@ -201,60 +205,24 @@ class WeatherSprite(BaseSprite):
 
     def _render_wind(self) -> Surface:
         surface = pygame.Surface((32, 32), SRCALPHA)
-        dir = convert_bearing_to_direction(self.weather["wind_bearing"])
+        angle = self.weather["wind_bearing"]
         speed = int(convert_ms_to_mph(self.weather["wind_speed"]))
-        pos = [0, 0]
-        dir = "s"
-        disc = load_image(
-            os.path.join(
-                self.image_path,
-                "wind",
-                "arrows",
-                f"disc-{dir}.png",
-            )
-        )
-        disc_scaled = scale_surface(disc, (32, 32))
-        surface.blit(disc_scaled, pos)
-        pygame.draw.circle(surface, (0, 0, 0), (pos[0] + 16, pos[1] + 16), 6)
+        arrow = render_arrow((4, 4), 12, angle, Color(0, 0, 0, 96), adjust=180)
+        surface.blit(arrow, (2, 4))
         speed_str = f"{speed}"
         label = render_text(
             speed_str,
             "fonts/bitstream-vera.ttf",
-            10,
-            self.color_temp,
+            9,
+            self.color_wind,
+            color_outline=Color(0, 0, 0, 255),
         )
-
-        surface.blit(
-            label,
-            (
-                pos[0] + 10 + (2 if len(speed_str) == 1 else 0),
-                pos[1] + 9,
-            ),
-        )
+        surface.blit(label, (14 - (label.get_width() / 2), 8))
         return surface
 
 
 def convert_weather_code_to_image_name(weather_code: int) -> tuple[str, str, str]:
     return IMAGE_MAPPING[weather_code]
-
-
-def convert_bearing_to_direction(bearing: float) -> str:
-    if 0 < bearing < 45:
-        return "sw"
-    elif 45 <= bearing < 90:
-        return "w"
-    elif 90 <= bearing < 135:
-        return "nw"
-    elif 135 <= bearing < 180:
-        return "n"
-    elif 180 <= bearing < 225:
-        return "ne"
-    elif 225 <= bearing < 270:
-        return "e"
-    elif 270 <= bearing < 315:
-        return "se"
-    elif 315 <= bearing <= 360:
-        return "s"
 
 
 def convert_ms_to_mph(ms: float) -> float:

@@ -28,6 +28,11 @@ validators = [
         default="",
         cast=str,
     ),
+    Validator(
+        "GENERAL__FPS",
+        default=30,
+        cast=int,
+    ),
     # Display
     Validator(
         "DISPLAY__CANVAS__WIDTH",

@@ -29,7 +29,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger("engine")
 
 DISPLAY_FLAGS = RESIZABLE | SCALED
-FPS = 60
 
 
 class Engine:
@@ -41,13 +40,14 @@ class Engine:
         display: "Display",
         mqtt: "MQTTClient",
         hass: "HASSManager",
-        fps: int = FPS,
     ):
         self.display = display
         self.mqtt = mqtt
         self.hass = hass
-        self.fps = fps
-        logger.debug(f"engine:init display={display} mqtt={mqtt} hass={hass} fps={fps}")
+        self.fps = settings.general.fps
+        logger.debug(
+            f"engine:init display={display} mqtt={mqtt} hass={hass} fps={self.fps}"
+        )
         self.scene_manager = SceneManager(engine=self)
         self.joysticks = dict()
         self.setup()
