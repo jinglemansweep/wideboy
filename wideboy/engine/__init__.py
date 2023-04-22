@@ -3,11 +3,15 @@ import pygame
 from dynaconf import Dynaconf
 from pygame import Clock, Surface, RESIZABLE, SCALED, QUIT
 from typing import Optional, TYPE_CHECKING
-from wideboy.constants import AppMetadata, EVENT_TIMER_SECOND
 
+from wideboy.constants import AppMetadata, EVENT_TIMER_SECOND
+from wideboy.engine.events import handle_internal_event, handle_joystick_event
+from wideboy.engine.scenes import SceneManager
+from wideboy.config import settings
 
 if TYPE_CHECKING:
-    from wideboy.controller import Controller
+    from wideboy.homeassistant import HASSManager
+    from wideboy.display import Display
 
 logger = logging.getLogger("engine")
 
@@ -16,14 +20,16 @@ FPS = 60
 
 
 class Engine:
-    controller: "Controller"
     clock: Optional[Clock] = None
     screen: Optional[Surface] = None
 
-    def __init__(self, controller, options: Dynaconf):
-        self.controller = controller
-        self.options = options
-        logger.debug(f"engine:init")
+    def __init__(self, display: "Display", hass: "HASSManager", fps: int = FPS):
+        self.display = display
+        self.hass = hass
+        self.fps = fps
+        logger.debug(f"engine:init display={display} hass={hass} fps={fps}")
+        self.scene_manager = SceneManager(engine=self)
+        self.joysticks = dict()
         self.setup()
 
     def setup(self) -> None:
@@ -35,22 +41,28 @@ class Engine:
         pygame.time.set_timer(EVENT_TIMER_SECOND, 1000)
         pygame.display.set_caption(AppMetadata.DESCRIPTION)
         self.screen = pygame.display.set_mode(
-            (self.options.display.canvas.width, self.options.display.canvas.height),
+            (settings.display.canvas.width, settings.display.canvas.height),
             DISPLAY_FLAGS,
         )
 
     def loop(self):
         # Clock, Blitting, Display
         delta = self.clock_tick()
-        events = []
-        updates = self.controller.scene_manager.render(self.clock, delta, events)
+        events = pygame.event.get()
+        self.process_events(events)
+        updates = self.scene_manager.render(self.clock, delta, events)
         pygame.display.update(updates)
         # logger.debug(f"updates={updates}")
         # update_sensors(clock)
-        self.controller.display.render(self.screen)
+        self.display.render(self.screen)
         # Debugging
-        self.controller.scene_manager.debug(self.clock, delta)
+        self.scene_manager.debug(self.clock, delta)
 
     def clock_tick(self) -> float:
-        self.controller.mqtt.loop(0)
-        return self.clock.tick(FPS) / 1000
+        self.hass.mqtt.loop(0)
+        return self.clock.tick(self.fps) / 1000
+
+    def process_events(self, events: list[pygame.Event]):
+        for event in events:
+            handle_internal_event(event)
+            handle_joystick_event(event, self.joysticks)

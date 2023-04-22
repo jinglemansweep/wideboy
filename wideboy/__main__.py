@@ -25,7 +25,7 @@ logger = logging.getLogger(AppMetadata.NAME)
 
 
 def main():
-    controller = Controller(settings, scenes=[DefaultScene])
+    controller = Controller(scenes=[DefaultScene])
     controller.start()
 
 

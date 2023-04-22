@@ -53,7 +53,9 @@ class HomeAssistantTemplateSprite(BaseSprite):
                 self.render()
 
     def render(self) -> None:
-        template_str = HASS.get_rendered_template(self.template)
+        template_str = self.scene.engine.hass.client.get_rendered_template(
+            self.template
+        )
         template_text = render_text(
             template_str,
             self.font_name,

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from wideboy.sprites.image_helpers import build_background
 
 if TYPE_CHECKING:
-    from wideboy.controller import Controller
+    from wideboy.engine import Engine
 
 logger = logging.getLogger("scenes.base")
 
@@ -17,10 +17,10 @@ class BaseScene:
 
     def __init__(
         self,
-        controller: "Controller",
+        engine: "Engine",
         bg_color: Color,
     ) -> None:
-        self.controller = controller
+        self.engine = engine
         self.background = build_background(
             Vector2(self.width, self.height),
             bg_color,
@@ -79,7 +79,7 @@ class BaseScene:
 
     @property
     def screen(self):
-        return self.controller.engine.screen
+        return self.engine.screen
 
     @property
     def height(self):

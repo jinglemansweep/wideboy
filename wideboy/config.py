@@ -96,6 +96,11 @@ validators = [
         default=None,
         cast=str,
     ),
+    Validator(
+        "HOMEASSISTANT__TOPIC_PREFIX",
+        default="homeassistant",
+        cast=str,
+    ),
     # PATHS
     Validator(
         "PATHS__IMAGES_ICONS",

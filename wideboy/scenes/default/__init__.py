@@ -19,7 +19,7 @@ from wideboy.scenes.base import BaseScene
 from wideboy.config import settings
 
 if TYPE_CHECKING:
-    from wideboy.controller import Controller
+    from wideboy.engine import Engine
 
 logger = logging.getLogger("scenes.scene.default")
 
@@ -29,10 +29,10 @@ class DefaultScene(BaseScene):
 
     def __init__(
         self,
-        controller: "Controller",
+        engine: "Engine",
         bg_color: Color = (0, 0, 0, 255),
     ) -> None:
-        super().__init__(controller, bg_color)
+        super().__init__(engine, bg_color)
 
     def setup(self):
         super().setup()

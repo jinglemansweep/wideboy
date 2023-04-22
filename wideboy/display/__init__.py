@@ -5,10 +5,11 @@ import sys
 from dynaconf import Dynaconf
 from pygame import Surface
 from pygame.math import Vector2
-from typing import Any, Optional
+from typing import Any, Optional, TYPE_CHECKING
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
+from wideboy.config import settings, matrix_options
 
 logger = logging.getLogger("display")
 
@@ -17,28 +18,31 @@ class Display:
     matrix: Optional[RGBMatrix] = None
     buffer: Optional[Any] = None
 
-    def __init__(self, options: Dynaconf):
-        self.options = options
+    def __init__(self):
         logger.debug(
-            f"display:init canvas=({options.canvas.width}x{options.canvas.height} matrix_enabled={options.matrix.enabled} matrix_size=({options.matrix.width}x{options.matrix.height})"
+            f"display:init canvas=({settings.display.canvas.width}x{settings.display.canvas.height} matrix_enabled={settings.display.matrix.enabled} matrix_size=({settings.display.matrix.width}x{settings.display.matrix.height})"
         )
-        if self.options.matrix.enabled:
-            self.matrix = RGBMatrix(options=self.options.matrix.driver)
+        if settings.display.matrix.enabled:
+            self.matrix = RGBMatrix(options=matrix_options)
             self.buffer = self.matrix.CreateFrameCanvas()
 
     def render(
         self,
         surface: Surface,
-    ) -> Any:
-        if not self.options.matrix.enabled:
+    ):
+        if not settings.display.matrix.enabled:
             return
         pixels = pygame.surfarray.pixels3d(surface)
         wrapped = self.wrap_surface(
-            pixels, (self.options.matrix.width, self.options.matrix.height)
+            pixels,
+            (
+                settings.display.matrix.width,
+                settings.display.matrix.height,
+            ),
         )
         image = Image.fromarray(wrapped).convert("RGB")
         self.buffer.SetImage(image)
-        return self.matrix.SwapOnVSync(self.buffer)
+        self.matrix.SwapOnVSync(self.buffer)
 
     def blank_surface(size: Vector2):
         surface = Surface(size)

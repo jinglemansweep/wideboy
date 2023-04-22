@@ -80,13 +80,21 @@ class WeatherSprite(BaseSprite):
 
     def update_state(self) -> None:
         try:
-            sun = HASS.get_entity(entity_id="sun.sun")
-            weather_code = HASS.get_entity(entity_id=self.entity_weather_code)
-            wind_speed = HASS.get_entity(entity_id=self.entity_wind_speed)
-            wind_bearing = HASS.get_entity(entity_id=self.entity_wind_bearing)
-            condition = HASS.get_entity(entity_id=self.entity_condition)
-            temp = HASS.get_entity(entity_id=self.entity_temp)
-            forecast_precipitation = HASS.get_entity(
+            sun = self.scene.engine.hass.client.get_entity(entity_id="sun.sun")
+            weather_code = self.scene.engine.hass.client.get_entity(
+                entity_id=self.entity_weather_code
+            )
+            wind_speed = self.scene.engine.hass.client.get_entity(
+                entity_id=self.entity_wind_speed
+            )
+            wind_bearing = self.scene.engine.hass.client.get_entity(
+                entity_id=self.entity_wind_bearing
+            )
+            condition = self.scene.engine.hass.client.get_entity(
+                entity_id=self.entity_condition
+            )
+            temp = self.scene.engine.hass.client.get_entity(entity_id=self.entity_temp)
+            forecast_precipitation = self.scene.engine.hass.client.get_entity(
                 entity_id=self.entity_forecast_precipitation
             )
             self.weather = dict(

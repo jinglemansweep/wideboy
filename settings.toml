@@ -48,6 +48,7 @@
 [homeassistant]
   # url = "http://homeassistant.local:8123"
   # api_token = "my-long-lived-token"
+  # topic_prefix = "homeassistant"
   
 [paths]
   # images_backgrounds = "images/background"

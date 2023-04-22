@@ -1,9 +1,11 @@
 import logging
 from pygame import Clock, Rect
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from wideboy.constants import EVENT_SCENE_MANAGER_NEXT
 from wideboy.scenes.base import BaseScene
 
+if TYPE_CHECKING:
+    from wideboy.engine import Engine
 
 logger = logging.getLogger("scenes")
 
@@ -13,12 +15,12 @@ class SceneManager:
     scene: Optional[BaseScene] = None
     index: int = 0
 
-    def __init__(self, controller) -> None:
-        logger.debug(f"manager:init")
-        self.controller = controller
+    def __init__(self, engine: "Engine") -> None:
+        logger.debug(f"manager:init engine={engine}")
+        self.engine = engine
 
     def load_scenes(self, scenes: list[BaseScene]) -> None:
-        self.scenes = [SceneCls(self.controller) for SceneCls in scenes]
+        self.scenes = [SceneCls(self.engine) for SceneCls in scenes]
 
     def change_scene(self, name: str):
         index = self.get_scene_id_by_name(name)
