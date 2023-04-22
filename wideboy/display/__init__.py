@@ -92,7 +92,7 @@ class Display:
 def build_blank_pil_image(size: Vector2):
     surface = Surface(size)
     surface.fill(0)
-    image_bytes = pygame.image.tostring(surface, "RGBA")
+    image_bytes = pygame.image.tostring(surface, "RGB")
     return Image.frombytes(
-        "RGBA", (surface.get_width(), surface.get_height()), image_bytes
+        "RGB", (surface.get_width(), surface.get_height()), image_bytes
     )
