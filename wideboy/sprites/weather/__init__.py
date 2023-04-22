@@ -207,7 +207,7 @@ class WeatherSprite(BaseSprite):
         surface = pygame.Surface((32, 32), SRCALPHA)
         angle = self.weather["wind_bearing"]
         speed = int(convert_ms_to_mph(self.weather["wind_speed"]))
-        arrow = render_arrow((4, 4), 12, angle, Color(0, 0, 0, 96), adjust=180)
+        arrow = render_arrow((4, 4), 12, angle, Color(0, 0, 0, 192), adjust=180)
         surface.blit(arrow, (2, 4))
         speed_str = f"{speed}"
         label = render_text(
