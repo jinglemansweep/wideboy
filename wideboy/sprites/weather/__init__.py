@@ -217,7 +217,7 @@ class WeatherSprite(BaseSprite):
             self.color_wind,
             color_outline=Color(0, 0, 0, 255),
         )
-        surface.blit(label, (14 - (label.get_width() / 2), 8))
+        surface.blit(label, (14 - (label.get_width() / 2), 9))
         return surface
 
 
