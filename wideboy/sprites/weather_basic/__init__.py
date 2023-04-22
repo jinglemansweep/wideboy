@@ -4,6 +4,7 @@ import pygame
 from typing import Optional
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.mqtt.homeassistant import HASS
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     render_text,
@@ -21,12 +22,13 @@ RAIN_PROBABILITY_DISPLAY_THRESHOLD = 25
 class WeatherSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         color_bg: Color = Color(0, 0, 0, 0),
         color_temp: Color = Color(255, 255, 255, 255),
         color_rain_prob: Color = Color(255, 255, 0, 255),
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.font_temp = pygame.font.SysFont("", 20)
         self.color_bg = color_bg

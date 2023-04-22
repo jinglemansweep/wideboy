@@ -6,6 +6,7 @@ import yaml
 from pygame import Clock, Color, Event, Rect, Surface, Vector2
 from PIL import ImageFilter
 from typing import Optional
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     glob_files,
@@ -22,12 +23,13 @@ logger = logging.getLogger("sprite.background")
 class BackgroundSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         size: Vector2,
         alpha: int = 255,
         shuffle: bool = False,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.size = size
         self.alpha = alpha
         self.glob_images(shuffle)

@@ -5,6 +5,7 @@ from typing import Optional
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.sprites.image_helpers import render_text, rainbow_color
 from wideboy.constants import EVENT_EPOCH_SECOND
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 
 
@@ -14,6 +15,7 @@ logger = logging.getLogger("sprite.clock")
 class TimeSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         color_bg: Color = (0, 0, 0, 0),
         color_fg: Color = (255, 0, 255, 255),
@@ -24,7 +26,7 @@ class TimeSprite(BaseSprite):
         pos_adj: tuple[int, int] = (0, 0),
         rainbow: Optional[str] = None,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
         self.color_fg = color_fg
@@ -77,6 +79,7 @@ class TimeSprite(BaseSprite):
 class DateSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         color_bg: Color = (0, 0, 0, 0),
         color_fg: Color = (192, 192, 255, 255),
@@ -88,7 +91,7 @@ class DateSprite(BaseSprite):
         pos_adj: tuple[int, int] = (0, 0),
         rainbow: Optional[str] = None,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.color_bg = color_bg
         self.color_fg = color_fg

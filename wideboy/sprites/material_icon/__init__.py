@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 from pygame import Color, Rect, Surface, SRCALPHA
 from wideboy.sprites.image_helpers import render_material_icon
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 
 
@@ -11,6 +12,7 @@ logger = logging.getLogger("sprite.material_icon")
 class MaterialIconSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         codepoint: str,
         size: int = 12,
@@ -19,7 +21,7 @@ class MaterialIconSprite(BaseSprite):
         color_outline: Optional[Color] = None,
         font_name: str = "fonts/material-icons.ttf",
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.codepoint = codepoint
         self.size = size

@@ -5,6 +5,7 @@ from typing import Optional
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from pygame.sprite import Group, Sprite
 from wideboy.sprites.image_helpers import render_material_icon
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 
 
@@ -14,6 +15,7 @@ logger = logging.getLogger("sprite.starfield")
 class StarfieldSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         star_count: int = 20,
         star_size_range: tuple[int, int] = (1, 2),
@@ -22,7 +24,7 @@ class StarfieldSprite(BaseSprite):
         color_fg: Color = Color(255, 255, 255, 255),
         color_bg: Color = Color(0, 0, 0, 0),
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.star_count = star_count
         self.star_size_range = star_size_range
         self.layer_count = layer_count

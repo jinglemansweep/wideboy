@@ -2,6 +2,7 @@ import logging
 import pygame
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.constants import EVENT_NOTIFICATION_RECEIVED
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import render_text
 
@@ -12,6 +13,7 @@ logger = logging.getLogger("sprite.notification")
 class NotificationSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         font_name: str = "fonts/bitstream-vera.ttf",
         font_size: int = 32,
@@ -22,7 +24,7 @@ class NotificationSprite(BaseSprite):
         timeout_frames: int = 500,
         fadeout_frames: int = 25,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.font_name = font_name
         self.font_size = font_size
