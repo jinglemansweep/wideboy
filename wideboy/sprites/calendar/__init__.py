@@ -1,10 +1,12 @@
 import logging
 from datetime import datetime, timedelta
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
-from wideboy.mqtt.homeassistant import HASS
+
+# from wideboy.mqtt.homeassistant import HASS
 from wideboy.sprites.image_helpers import render_text
 from wideboy.constants import EVENT_EPOCH_SECOND, EVENT_EPOCH_HOUR
 from wideboy.sprites.base import BaseSprite
+from wideboy.scenes.base import BaseScene
 
 
 logger = logging.getLogger("sprite.calendar")
@@ -13,6 +15,7 @@ logger = logging.getLogger("sprite.calendar")
 class CalendarSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         entity_id: str,
         event_count: int = 5,
@@ -22,7 +25,7 @@ class CalendarSprite(BaseSprite):
         interval: int = 10,
         days_ahead: int = 60,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.entity_id = entity_id
         self.event_count = event_count
         self.max_label_width = max_label_width
@@ -88,8 +91,9 @@ class CalendarSprite(BaseSprite):
         then = now + timedelta(days=self.days_ahead)
         start = now.strftime("%Y-%m-%dT%H:%M:%S.000Z")
         end = then.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-        events = HASS.request(f"calendars/{self.entity_id}?start={start}&end={end}")
-        logger.debug(f"EVENTS {events}")
+        events = self.scene.engine.hass.client.request(
+            f"calendars/{self.entity_id}?start={start}&end={end}"
+        )
         return sorted(events, key=lambda event: event["start"]["date"])
 
     def truncate_label(self, label: str) -> str:

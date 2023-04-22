@@ -1,6 +1,6 @@
 import os
 import sys
-import uuid
+
 
 from dynaconf import Dynaconf, Validator
 from pathlib import Path
@@ -80,6 +80,11 @@ validators = [
         default=None,
         cast=str,
     ),
+    Validator(
+        "MQTT__KEEPALIVE",
+        default=60,
+        cast=int,
+    ),
     # HOME ASSISTANT
     Validator(
         "HOMEASSISTANT__URL",
@@ -89,6 +94,11 @@ validators = [
     Validator(
         "HOMEASSISTANT__API_TOKEN",
         default=None,
+        cast=str,
+    ),
+    Validator(
+        "HOMEASSISTANT__TOPIC_PREFIX",
+        default="homeassistant",
         cast=str,
     ),
     # PATHS
@@ -231,7 +241,6 @@ settings = Dynaconf(
     validators=validators,
 )
 
-DEVICE_ID = settings.general.device_id or uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 # RPI-RGB-LED-MATRIX
 

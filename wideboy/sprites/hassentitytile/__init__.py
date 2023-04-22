@@ -4,7 +4,9 @@ import pygame
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from typing import Optional
 from wideboy.constants import EVENT_EPOCH_SECOND
-from wideboy.mqtt.homeassistant import HASS
+
+# from wideboy.mqtt.homeassistant import HASS
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import load_image, render_text, render_material_icon
 from wideboy.config import settings
@@ -15,6 +17,7 @@ logger = logging.getLogger("sprite.hassentitytile")
 class HassEntityTileSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         icon: str,
         template: Optional[str] = None,
@@ -25,7 +28,7 @@ class HassEntityTileSprite(BaseSprite):
         color_bg: Color = Color(0, 0, 0, 0),
         update_interval: int = 10,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.icon = icon
         self.template = template
         self.entity_id = entity_id
@@ -55,7 +58,7 @@ class HassEntityTileSprite(BaseSprite):
     def render(self) -> None:
         # Entity
         if self.entity_id:
-            entity = HASS.get_entity(entity_id=self.entity_id)
+            entity = self.scene.engine.hass.client.get_entity(entity_id=self.entity_id)
             state = entity.get_state()
             active = self.state_callback(state) if self.state_callback else True
         else:
@@ -63,7 +66,9 @@ class HassEntityTileSprite(BaseSprite):
         # Template
         template_text = None
         if self.template:
-            template_text = HASS.get_rendered_template(self.template)
+            template_text = self.scene.engine.hass.client.get_rendered_template(
+                self.template
+            )
         # Render
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.image.fill(self.color_bg)

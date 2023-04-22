@@ -1,10 +1,11 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, Vector2
 from pygame.sprite import LayeredDirty
-
-
+from typing import TYPE_CHECKING
 from wideboy.sprites.image_helpers import build_background
 
+if TYPE_CHECKING:
+    from wideboy.engine import Engine
 
 logger = logging.getLogger("scenes.base")
 
@@ -16,12 +17,12 @@ class BaseScene:
 
     def __init__(
         self,
-        surface: Surface,
+        engine: "Engine",
         bg_color: Color,
     ) -> None:
-        self.surface = surface
+        self.engine = engine
         self.background = build_background(
-            Vector2(surface.get_rect().width, surface.get_rect().height),
+            Vector2(self.width, self.height),
             bg_color,
         )
         self.group = LayeredDirty()
@@ -40,7 +41,7 @@ class BaseScene:
         logger.debug(f"scene:destroy name={self.name}")
         self.clear()
         self.group.empty()
-        self.surface.blit(self.background, (0, 0))
+        self.screen.blit(self.background, (0, 0))
 
     def render(
         self,
@@ -53,7 +54,7 @@ class BaseScene:
         return self.draw()
 
     def clear(self) -> None:
-        self.group.clear(self.surface, self.background)
+        self.group.clear(self.screen, self.background)
 
     def empty_group(self) -> None:
         self.group.empty()
@@ -64,7 +65,7 @@ class BaseScene:
         self.frame += 1
 
     def draw(self) -> list[Rect]:
-        return self.group.draw(self.surface)
+        return self.group.draw(self.screen)
 
     def handle_events(self, events: list[Event]) -> None:
         pass
@@ -77,9 +78,13 @@ class BaseScene:
             )
 
     @property
+    def screen(self):
+        return self.engine.screen
+
+    @property
     def height(self):
-        return self.surface.get_rect().height
+        return self.screen.get_rect().height
 
     @property
     def width(self):
-        return self.surface.get_rect().width
+        return self.screen.get_rect().width

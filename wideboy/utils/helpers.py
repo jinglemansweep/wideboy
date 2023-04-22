@@ -1,22 +1,29 @@
-import logging
-from datetime import datetime
-from typing import Any
-from wideboy.constants import AppMetadata
+import cProfile
+import pygame
+import uuid
+import pygame
+from typing import Callable
 from wideboy.config import settings
 
-logger = logging.getLogger("utils.helpers")
+
+def get_unique_device_id(self):
+    return uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 
-def intro_debug(device_id: str) -> None:
-    logger.info("=" * 80)
-    logger.info(
-        f"{AppMetadata.DESCRIPTION} [{AppMetadata.NAME}] v{AppMetadata.VERSION}"
-    )
-    logger.info("=" * 80)
-    logger.info(f"Device ID:   {device_id}")
-    logger.info(f"Debug:       {settings.general.debug}")
-    logger.info(f"Log Level:   {settings.general.log_level}")
-    logger.info(
-        f"Canvas Size: {settings.display.canvas.width}x{settings.display.canvas.height}"
-    )
-    logger.info("=" * 80)
+def post_event(event_type: str, **kwargs) -> None:
+    pygame.event.post(pygame.event.Event(event_type, **kwargs))
+
+
+def bool_to_hass_state(value: bool) -> str:
+    return "ON" if value else "OFF"
+
+
+def hass_to_bool_state(value: str) -> bool:
+    return value == "ON"
+
+
+def main_entrypoint(main_func: Callable) -> None:
+    if settings.general.profiling in ["ncalls", "tottime"]:
+        cProfile.run("main_func()", None, sort=settings.general.profiling)
+    else:
+        main_func()

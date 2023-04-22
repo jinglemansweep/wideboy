@@ -4,7 +4,9 @@ import pygame
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from typing import Optional
 from wideboy.constants import EVENT_EPOCH_MINUTE
-from wideboy.mqtt.homeassistant import HASS
+
+# from wideboy.mqtt.homeassistant import HASS
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import load_image, render_text, render_material_icon
 from wideboy.config import settings
@@ -15,6 +17,7 @@ logger = logging.getLogger("sprite.hassentitytile")
 class HomeAssistantTemplateSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         template: str,
         font_name: str = "fonts/bitstream-vera.ttf",
@@ -24,7 +27,7 @@ class HomeAssistantTemplateSprite(BaseSprite):
         color_outline: Optional[Color] = None,
         update_interval_mins: int = 5,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.template = template
         self.font_name = font_name
         self.font_size = font_size
@@ -50,7 +53,9 @@ class HomeAssistantTemplateSprite(BaseSprite):
                 self.render()
 
     def render(self) -> None:
-        template_str = HASS.get_rendered_template(self.template)
+        template_str = self.scene.engine.hass.client.get_rendered_template(
+            self.template
+        )
         template_text = render_text(
             template_str,
             self.font_name,

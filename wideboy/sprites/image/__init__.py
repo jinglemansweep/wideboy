@@ -1,6 +1,7 @@
 import logging
 from pygame import Rect, Vector2
 from typing import Optional
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     load_image,
@@ -15,12 +16,13 @@ logger = logging.getLogger("sprite.image")
 class ImageSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         size: Optional[Vector2],
         filename: str,
         alpha: int = 255,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.filename = filename
         self.size = size
         self.alpha = alpha

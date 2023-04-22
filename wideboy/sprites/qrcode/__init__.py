@@ -2,6 +2,7 @@ import logging
 import pygame
 import qrcode
 from pygame import Color, Rect, Surface, Vector2, SRCALPHA
+from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 
 
@@ -11,6 +12,7 @@ logger = logging.getLogger("sprite.qrcode")
 class QRCodeSprite(BaseSprite):
     def __init__(
         self,
+        scene: BaseScene,
         rect: Rect,
         data: str,
         size: Vector2 = (64, 64),
@@ -18,7 +20,7 @@ class QRCodeSprite(BaseSprite):
         color_fg: Color = (0, 0, 0),
         border: int = 2,
     ) -> None:
-        super().__init__(rect)
+        super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.data = data
         self.size = size
