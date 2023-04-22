@@ -28,7 +28,6 @@ class Display:
         if settings.display.matrix.enabled:
             self.matrix = RGBMatrix(options=matrix_options)
             self.buffer = self.matrix.CreateFrameCanvas()
-            self.set_visible(True)
         self.blank_pil_image = build_blank_pil_image(
             (
                 settings.display.matrix.width,
