@@ -28,7 +28,7 @@ class Display:
         if settings.display.matrix.enabled:
             self.matrix = RGBMatrix(options=matrix_options)
             self.buffer = self.matrix.CreateFrameCanvas()
-        self.blank_pil_image = build_blank_pil_image(
+        self.black = build_black_surface(
             (
                 settings.display.matrix.width,
                 settings.display.matrix.height,
@@ -60,18 +60,16 @@ class Display:
     ):
         if not settings.display.matrix.enabled:
             return
-        if self.visible:
-            pixels = pygame.surfarray.pixels3d(surface)
-            wrapped = self.wrap_surface(
-                pixels,
-                (
-                    settings.display.matrix.width,
-                    settings.display.matrix.height,
-                ),
-            )
-            image = Image.fromarray(wrapped).convert("RGB")
-        else:
-            image = self.blank_pil_image
+        surface = surface if self.visible else self.black
+        pixels = pygame.surfarray.pixels3d(surface)
+        wrapped = self.wrap_surface(
+            pixels,
+            (
+                settings.display.matrix.width,
+                settings.display.matrix.height,
+            ),
+        )
+        image = Image.fromarray(wrapped).convert("RGB")
         self.buffer.SetImage(image)
         self.matrix.SwapOnVSync(self.buffer)
 
@@ -89,10 +87,7 @@ class Display:
         return reshaped
 
 
-def build_blank_pil_image(size: Vector2):
+def build_black_surface(size: Vector2):
     surface = Surface(size)
     surface.fill(0)
-    image_bytes = pygame.image.tostring(surface, "RGB")
-    return Image.frombytes(
-        "RGB", (surface.get_width(), surface.get_height()), image_bytes
-    )
+    return surface
