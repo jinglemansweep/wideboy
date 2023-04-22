@@ -1,6 +1,7 @@
 import logging
-from pygame import Clock, Color, Event, Rect, Surface
+from pygame import Clock, Color, Event, Rect
 from typing import TYPE_CHECKING
+from wideboy.constants import EVENT_ACTION_A
 from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.starfield import StarfieldSprite
 from wideboy.sprites.notification import NotificationSprite
@@ -77,4 +78,5 @@ class NightScene(BaseScene):
     def handle_events(self, events: list[Event]) -> None:
         super().handle_events(events)
         for event in events:
-            pass
+            if event.type == EVENT_ACTION_A:
+                logger.debug("ACTION A")

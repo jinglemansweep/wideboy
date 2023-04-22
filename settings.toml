@@ -54,6 +54,7 @@
   # images_backgrounds = "images/background"
   # images_weather = "images/icons"
   # images_icons = "images/icons"
+  # images_screenshots = "images/screenshots"
   
 [backgrounds]
   # change_interval_mins = 5

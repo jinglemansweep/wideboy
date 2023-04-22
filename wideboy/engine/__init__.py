@@ -1,6 +1,8 @@
 import json
 import logging
+import os
 import pygame
+from datetime import datetime
 from dynaconf import Dynaconf
 from pygame import Clock, Surface, RESIZABLE, SCALED, QUIT
 from typing import Optional, TYPE_CHECKING
@@ -13,6 +15,7 @@ from wideboy.constants import (
     EVENT_MASTER,
     EVENT_SCENE_MANAGER_NEXT,
     EVENT_SCENE_MANAGER_SELECT,
+    EVENT_SCREENSHOT,
 )
 from wideboy.engine.events import handle_internal_event, handle_joystick_event
 from wideboy.engine.scenes import SceneManager
@@ -102,3 +105,11 @@ class Engine:
                 self.scene_manager.next_scene()
             if event.type == EVENT_SCENE_MANAGER_SELECT:
                 self.scene_manager.change_scene(event.payload)
+            if event.type == EVENT_SCREENSHOT:
+                now = datetime.now()
+                timestamp = now.strftime("%Y%m%d%H%M%S%f")[:-3]
+                filename = os.path.join(
+                    settings.paths.images_screenshots, f"screenshot_{timestamp}.png"
+                )
+                logger.info(f"screenshot: filename={filename}")
+                pygame.image.save(self.screen, filename)

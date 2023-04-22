@@ -9,6 +9,7 @@ from wideboy.constants import (
     EVENT_NOTIFICATION_RECEIVED,
     EVENT_ACTION_A,
     EVENT_ACTION_B,
+    EVENT_SCREENSHOT,
 )
 from wideboy.display import Display
 from wideboy.homeassistant.hass import HASSManager, HASSEntity
@@ -84,6 +85,7 @@ class Controller:
             HASSEntity("button", "scene_next", event_type=EVENT_SCENE_MANAGER_NEXT),
             HASSEntity("button", "action_a", event_type=EVENT_ACTION_A),
             HASSEntity("button", "action_b", event_type=EVENT_ACTION_B),
+            HASSEntity("button", "screenshot", event_type=EVENT_SCREENSHOT),
             HASSEntity(
                 "text", "message", dict(min=1), event_type=EVENT_NOTIFICATION_RECEIVED
             ),

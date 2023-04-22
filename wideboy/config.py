@@ -117,6 +117,7 @@ validators = [
         default="images/weather",
         cast=Path,
     ),
+    Validator("PATHS__IMAGES_SCREENSHOTS", default="images/screenshots", cast=Path),
     # BACKGROUNDS
     Validator(
         "BACKGROUNDS__CHANGE_INTERVAL_MINS",
