@@ -91,7 +91,7 @@ class Controller:
                 "select",
                 "scene_select",
                 dict(
-                    options=["default", "credits", "night"],
+                    options=self.engine.scene_manager.get_scene_names(),
                     value_template="{{ value_json.selected_option }}",
                 ),
                 dict(selected_option="default"),

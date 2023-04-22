@@ -1,8 +1,9 @@
 import logging
 from pygame import Clock, Rect
 from typing import Optional, TYPE_CHECKING
-from wideboy.constants import EVENT_SCENE_MANAGER_NEXT
+from wideboy.constants import EVENT_SCENE_MANAGER_NEXT, EVENT_HASS_ENTITY_UPDATE
 from wideboy.scenes.base import BaseScene
+from wideboy.utils.helpers import post_event
 
 if TYPE_CHECKING:
     from wideboy.engine import Engine
@@ -21,6 +22,7 @@ class SceneManager:
 
     def load_scenes(self, scenes: list[BaseScene]) -> None:
         self.scenes = [SceneCls(self.engine) for SceneCls in scenes]
+        self.set_scene(0)
 
     def change_scene(self, name: str):
         index = self.get_scene_id_by_name(name)
@@ -32,12 +34,18 @@ class SceneManager:
             self.scene.destroy()
         self.index = index
         self.scene = self.scenes[self.index]
+        post_event(
+            EVENT_HASS_ENTITY_UPDATE,
+            name="scene_select",
+            state=dict(selected_option=self.scene.name),
+        )
         self.scene.setup()
 
     def next_scene(self) -> None:
         next_index = self.index + 1
         if next_index >= len(self.scenes):
             next_index = 0
+        print("NEXT INDEX", next_index)
         self.set_scene(next_index)
 
     def get_scene_names(self) -> list[str]:
@@ -48,10 +56,6 @@ class SceneManager:
             if name == scene.name:
                 return i
         return None
-
-    @property
-    def scene(self) -> Optional[BaseScene]:
-        return self.scenes[self.index]
 
     @property
     def frame(self) -> Optional[int]:

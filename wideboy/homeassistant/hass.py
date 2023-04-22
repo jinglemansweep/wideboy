@@ -7,7 +7,11 @@ from typing import Optional, TYPE_CHECKING
 from homeassistant_api import Client
 
 from wideboy.config import settings
-from wideboy.constants import AppMetadata, EVENT_MQTT_MESSAGE_RECEIVED
+from wideboy.constants import (
+    AppMetadata,
+    EVENT_HASS_ENTITY_UPDATE,
+    EVENT_MQTT_MESSAGE_RECEIVED,
+)
 from wideboy.homeassistant.mqtt import MQTTClient
 from wideboy.utils.helpers import post_event
 
@@ -42,6 +46,14 @@ class HASSManager:
         self.entities = dict()
 
     def handle_event(self, event: Event) -> None:
+        if event.type == EVENT_HASS_ENTITY_UPDATE:
+            if event.name in self.entities:
+                entity = self.entities[event.name]
+                logger.debug(
+                    f"hass:entity update name={event.name} state={event.state}"
+                )
+                self.mqtt.publish(entity["config"]["state_topic"], event.state)
+
         if event.type == EVENT_MQTT_MESSAGE_RECEIVED:
             command_entities = [
                 entity

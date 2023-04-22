@@ -91,10 +91,9 @@ class CalendarSprite(BaseSprite):
         then = now + timedelta(days=self.days_ahead)
         start = now.strftime("%Y-%m-%dT%H:%M:%S.000Z")
         end = then.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-        events = (
-            []
-        )  # HASS.request(f"calendars/{self.entity_id}?start={start}&end={end}")
-        logger.debug(f"EVENTS {events}")
+        events = self.scene.engine.hass.client.request(
+            f"calendars/{self.entity_id}?start={start}&end={end}"
+        )
         return sorted(events, key=lambda event: event["start"]["date"])
 
     def truncate_label(self, label: str) -> str:

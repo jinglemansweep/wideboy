@@ -5,7 +5,12 @@ from pygame import Clock, Surface, RESIZABLE, SCALED, QUIT
 from typing import Optional, TYPE_CHECKING
 
 from wideboy.config import settings
-from wideboy.constants import AppMetadata, EVENT_TIMER_SECOND
+from wideboy.constants import (
+    AppMetadata,
+    EVENT_TIMER_SECOND,
+    EVENT_SCENE_MANAGER_NEXT,
+    EVENT_SCENE_MANAGER_SELECT,
+)
 from wideboy.engine.events import handle_internal_event, handle_joystick_event
 from wideboy.engine.scenes import SceneManager
 
@@ -76,3 +81,8 @@ class Engine:
             handle_internal_event(event)
             handle_joystick_event(event, self.joysticks)
             self.hass.handle_event(event)
+
+            if event.type == EVENT_SCENE_MANAGER_NEXT:
+                self.scene_manager.next_scene()
+            if event.type == EVENT_SCENE_MANAGER_SELECT:
+                self.scene_manager.change_scene(event.payload)

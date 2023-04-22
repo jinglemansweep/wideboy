@@ -41,7 +41,7 @@ class BaseScene:
         logger.debug(f"scene:destroy name={self.name}")
         self.clear()
         self.group.empty()
-        self.surface.blit(self.background, (0, 0))
+        self.screen.blit(self.background, (0, 0))
 
     def render(
         self,
