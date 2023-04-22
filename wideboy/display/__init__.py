@@ -10,7 +10,7 @@ from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
 
-logger = logging.getLogger("controller.display")
+logger = logging.getLogger("display")
 
 
 class Display:
@@ -20,7 +20,7 @@ class Display:
     def __init__(self, options: Dynaconf):
         self.options = options
         logger.debug(
-            f"Display: canvas=({options.canvas.width}x{options.canvas.height} matrix_enabled={options.matrix.enabled} matrix_size=({options.matrix.width}x{options.matrix.height})"
+            f"display:init canvas=({options.canvas.width}x{options.canvas.height} matrix_enabled={options.matrix.enabled} matrix_size=({options.matrix.width}x{options.matrix.height})"
         )
         if self.options.matrix.enabled:
             self.matrix = RGBMatrix(options=self.options.matrix.driver)

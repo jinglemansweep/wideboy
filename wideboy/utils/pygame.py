@@ -31,8 +31,6 @@ from wideboy.constants import (
     GAMEPAD,
 )
 from wideboy.config import settings
-from wideboy.mqtt import MQTT
-from wideboy.mqtt import handle_mqtt_event
 
 logger = logging.getLogger("utils.pygame")
 
@@ -41,23 +39,9 @@ FPS = 60
 JOYSTICKS = dict()
 
 
-def setup_pygame(
-    display_size: Vector2,
-) -> tuple[Clock, Surface]:
-    pygame.init()
-    pygame.mixer.quit()
-    pygame.event.set_allowed(None)
-    pygame.event.set_allowed(QUIT)
-    clock = Clock()
-    pygame.time.set_timer(EVENT_TIMER_SECOND, 1000)
-    pygame.display.set_caption(AppMetadata.DESCRIPTION)
-    screen = pygame.display.set_mode(display_size, DISPLAY_FLAGS)
-    return clock, screen
-
-
 def dispatch_event(event: Event) -> None:
     handle_internal_event(event)
-    handle_mqtt_event(event)
+    # handle_mqtt_event(event)
     handle_joystick_event(event)
 
 
@@ -89,23 +73,3 @@ def handle_joystick_event(event: pygame.event.Event) -> None:
             pygame.event.post(Event(EVENT_SCENE_MANAGER_NEXT))
     if event.type == JOYHATMOTION:
         logger.debug(f"Joystick action=HATMOTION hat={event.hat} value={event.value}")
-
-
-def main_entrypoint(main_func: Callable) -> None:
-    if settings.general.profiling in ["ncalls", "tottime"]:
-        cProfile.run("main_func()", None, sort=settings.general.profiling)
-    else:
-        main_func()
-
-
-def run_loop(loop_func: Callable) -> None:
-    while True:
-        try:
-            asyncio.run(loop_func())
-        except Exception as e:
-            logging.error(traceback.format_exc())
-
-
-def clock_tick(clock: pygame.time.Clock) -> float:
-    MQTT.loop(0)
-    return clock.tick(FPS) / 1000

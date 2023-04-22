@@ -1,6 +1,6 @@
 import os
 import sys
-import uuid
+
 
 from dynaconf import Dynaconf, Validator
 from pathlib import Path
@@ -236,7 +236,6 @@ settings = Dynaconf(
     validators=validators,
 )
 
-DEVICE_ID = settings.general.device_id or uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 # RPI-RGB-LED-MATRIX
 

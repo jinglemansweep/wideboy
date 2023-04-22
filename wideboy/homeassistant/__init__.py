@@ -10,10 +10,10 @@ from wideboy.constants import (
     AppMetadata,
     EVENT_MQTT_MESSAGE_SEND,
 )
-from wideboy.config import DEVICE_ID, settings
+from wideboy.config import settings
 
 
-logger = logging.getLogger("controller.homeassistant")
+logger = logging.getLogger("homeassistant")
 
 
 class HASSManager:

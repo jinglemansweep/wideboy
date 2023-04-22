@@ -1,22 +1,15 @@
-import logging
-from datetime import datetime
-from typing import Any
-from wideboy.constants import AppMetadata
+import cProfile
+import uuid
+from typing import Callable
 from wideboy.config import settings
 
-logger = logging.getLogger("utils.helpers")
+
+def get_unique_device_id(self):
+    return uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 
-def intro_debug(device_id: str) -> None:
-    logger.info("=" * 80)
-    logger.info(
-        f"{AppMetadata.DESCRIPTION} [{AppMetadata.NAME}] v{AppMetadata.VERSION}"
-    )
-    logger.info("=" * 80)
-    logger.info(f"Device ID:   {device_id}")
-    logger.info(f"Debug:       {settings.general.debug}")
-    logger.info(f"Log Level:   {settings.general.log_level}")
-    logger.info(
-        f"Canvas Size: {settings.display.canvas.width}x{settings.display.canvas.height}"
-    )
-    logger.info("=" * 80)
+def main_entrypoint(main_func: Callable) -> None:
+    if settings.general.profiling in ["ncalls", "tottime"]:
+        cProfile.run("main_func()", None, sort=settings.general.profiling)
+    else:
+        main_func()
