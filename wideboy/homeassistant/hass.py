@@ -7,10 +7,9 @@ from typing import Optional, TYPE_CHECKING
 from homeassistant_api import Client
 
 from wideboy.config import settings
-from wideboy.constants import (
-    AppMetadata,
-)
+from wideboy.constants import AppMetadata, EVENT_MQTT_MESSAGE_RECEIVED
 from wideboy.homeassistant.mqtt import MQTTClient
+from wideboy.utils.helpers import post_event
 
 logger = logging.getLogger("homeassistant")
 
@@ -22,11 +21,13 @@ class HASSEntity:
         name: str,
         options: Optional[dict] = None,
         initial_state: Optional[dict] = None,
+        event_type: Optional[int] = None,
     ):
         self.device_class = device_class
         self.name = name
         self.options = options
         self.initial_state = initial_state
+        self.event_type = event_type
 
 
 class HASSManager:
@@ -38,48 +39,64 @@ class HASSManager:
             settings.homeassistant.api_token,
             cache_session=False,
         )
+        self.entities = dict()
+
+    def handle_event(self, event: Event) -> None:
+        if event.type == EVENT_MQTT_MESSAGE_RECEIVED:
+            command_entities = [
+                entity
+                for entity in self.entities.values()
+                if "command_topic" in entity["config"]
+            ]
+            for entity in command_entities:
+                config, event_trigger = entity["config"], entity["event"]
+                if event.topic == config["command_topic"]:
+                    logger.debug(
+                        f"mqtt:command entity={config['name']} topic={event.topic} payload={event.payload}"
+                    )
+                    if event_trigger:
+                        logger.debug(
+                            f"mqtt:event entity={config['name']} event={event_trigger} payload={event.payload}"
+                        )
+                        post_event(event_trigger, payload=event.payload)
 
     def advertise_entities(self, entities: list[HASSEntity]) -> None:
         for entity in entities:
-            self.advertise_entity(
-                entity.name, entity.device_class, entity.options, entity.initial_state
-            )
+            self.advertise_entity(entity)
 
     def advertise_entity(
         self,
-        name: str,
-        device_class: str,
-        options: Optional[dict] = None,
-        initial_state: Optional[dict] = None,
+        entity: HASSEntity,
     ) -> None:
-        if options is None:
-            options = dict()
-        entity_id = self.build_entity_id(name)
-        config_topic = (
-            f"{settings.homeassistant.topic_prefix}/{device_class}/{entity_id}/config"
+        options = entity.options or dict()
+        entity_id = self.build_entity_id(entity.name)
+        config_topic = f"{settings.homeassistant.topic_prefix}/{entity.device_class}/{entity_id}/config"
+        command_topic = (
+            f"{settings.mqtt.topic_prefix}/{self.device_id}/{entity.name}/set"
         )
-        command_topic = f"{settings.mqtt.topic_prefix}/{self.device_id}/{name}/set"
-        state_topic = f"{settings.mqtt.topic_prefix}/{self.device_id}/{name}/state"
+        state_topic = (
+            f"{settings.mqtt.topic_prefix}/{self.device_id}/{entity.name}/state"
+        )
         config = dict(
-            name=name,
+            name=entity.name,
             object_id=entity_id,
             unique_id=entity_id,
             device=self.build_device_info(),
         )
-        if device_class in ["sensor", "switch", "light", "select"]:
-            config["device_class"] = device_class
+        if entity.device_class in ["sensor", "switch", "light", "select"]:
+            config["device_class"] = entity.device_class
             config["state_topic"] = state_topic
             config["schema"] = "json"
-        if device_class in ["switch", "light", "button", "text", "select"]:
+        if entity.device_class in ["switch", "light", "button", "text", "select"]:
             config["command_topic"] = command_topic
-        if device_class in ["button"]:
+        if entity.device_class in ["button"]:
             config["entity_category"] = "config"
         config.update(options)
-        if initial_state is None:
-            initial_state = dict()
-        logger.debug(f"hass:mqtt:config name={name} config={config}")
+        self.entities[entity.name] = dict(config=config, event=entity.event_type)
+        logger.debug(f"hass:mqtt:config name={entity.name} config={config}")
         self.mqtt.publish(config_topic, config)
-        if device_class in ["sensor", "switch", "light", "select"]:
+        if entity.device_class in ["sensor", "switch", "light", "select"]:
+            initial_state = entity.initial_state or dict()
             self.mqtt.publish(state_topic, initial_state)
 
     def build_device_info(self) -> dict:

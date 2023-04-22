@@ -1,7 +1,15 @@
 import logging
 import uuid
 from typing import Optional
-from wideboy.constants import AppMetadata
+from wideboy.constants import (
+    AppMetadata,
+    EVENT_MASTER,
+    EVENT_SCENE_MANAGER_NEXT,
+    EVENT_SCENE_MANAGER_SELECT,
+    EVENT_NOTIFICATION_RECEIVED,
+    EVENT_ACTION_A,
+    EVENT_ACTION_B,
+)
 from wideboy.display import Display
 from wideboy.homeassistant.hass import HASSManager, HASSEntity
 from wideboy.homeassistant.mqtt import MQTTClient
@@ -71,11 +79,14 @@ class Controller:
                     supported_color_modes=["brightness"],
                 ),
                 dict(state="ON", brightness=128),
+                EVENT_MASTER,
             ),
-            HASSEntity("button", "scene_next"),
-            HASSEntity("button", "action_a"),
-            HASSEntity("button", "action_b"),
-            HASSEntity("text", "message", dict(min=1)),
+            HASSEntity("button", "scene_next", event_type=EVENT_SCENE_MANAGER_NEXT),
+            HASSEntity("button", "action_a", event_type=EVENT_ACTION_A),
+            HASSEntity("button", "action_b", event_type=EVENT_ACTION_B),
+            HASSEntity(
+                "text", "message", dict(min=1), event_type=EVENT_NOTIFICATION_RECEIVED
+            ),
             HASSEntity(
                 "select",
                 "scene_select",
@@ -84,5 +95,6 @@ class Controller:
                     value_template="{{ value_json.selected_option }}",
                 ),
                 dict(selected_option="default"),
+                EVENT_SCENE_MANAGER_SELECT,
             ),
         ]

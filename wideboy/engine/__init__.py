@@ -4,10 +4,11 @@ from dynaconf import Dynaconf
 from pygame import Clock, Surface, RESIZABLE, SCALED, QUIT
 from typing import Optional, TYPE_CHECKING
 
+from wideboy.config import settings
 from wideboy.constants import AppMetadata, EVENT_TIMER_SECOND
 from wideboy.engine.events import handle_internal_event, handle_joystick_event
 from wideboy.engine.scenes import SceneManager
-from wideboy.config import settings
+
 
 if TYPE_CHECKING:
     from wideboy.homeassistant.hass import HASSManager
@@ -74,3 +75,4 @@ class Engine:
         for event in events:
             handle_internal_event(event)
             handle_joystick_event(event, self.joysticks)
+            self.hass.handle_event(event)
