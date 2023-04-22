@@ -10,22 +10,20 @@ from wideboy.constants import (
     AppMetadata,
 )
 from wideboy.config import settings
+from wideboy.controller import Controller
+from wideboy.scenes.credits import CreditsScene
+from wideboy.scenes.default import DefaultScene
+from wideboy.scenes.night import NightScene
 from wideboy.utils.logger import setup_logger
 from wideboy.utils.helpers import main_entrypoint
 
-# from wideboy.scenes.credits import CreditsScene
-from wideboy.scenes.default import DefaultScene
-
-# from wideboy.scenes.night import NightScene
-from wideboy.controller import Controller
-from wideboy.homeassistant.hass import HASSEntity
 
 # Logging
 setup_logger(level=settings.general.log_level)
 logger = logging.getLogger(AppMetadata.NAME)
 
 # SCENES
-SCENES = [DefaultScene]
+SCENES = [DefaultScene, NightScene, CreditsScene]
 
 # ENTITIES
 ENTITIES = []
