@@ -1,6 +1,7 @@
 import logging
 import pygame
 import pygame.pkgdata
+import sys
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -36,12 +37,18 @@ from wideboy.utils.pygame import (
 from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
 from wideboy.scenes.night import NightScene
+from wideboy.controller import Controller
 
 CANVAS_SIZE = (settings.display.canvas.width, settings.display.canvas.height)
 
 # Logging
 setup_logger(level=settings.general.log_level)
 logger = logging.getLogger(AppMetadata.NAME)
+
+# Controller
+controller = Controller(settings)
+
+sys.exit(0)
 
 # Startup
 intro_debug(device_id=DEVICE_ID)

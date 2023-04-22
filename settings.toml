@@ -43,6 +43,7 @@
   # topic_prefix = "wideboy"
   # user = "user"
   # password = "password"
+  # keepalive = 60
   
 [homeassistant]
   # url = "http://homeassistant.local:8123"

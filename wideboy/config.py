@@ -80,6 +80,11 @@ validators = [
         default=None,
         cast=str,
     ),
+    Validator(
+        "MQTT__KEEPALIVE",
+        default=60,
+        cast=int,
+    ),
     # HOME ASSISTANT
     Validator(
         "HOMEASSISTANT__URL",
