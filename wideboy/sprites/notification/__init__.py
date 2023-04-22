@@ -61,8 +61,8 @@ class NotificationSprite(BaseSprite):
     def handle_events(self, events: list[Event]) -> None:
         for event in events:
             if event.type == EVENT_NOTIFICATION_RECEIVED:
-                logger.debug(f"received: message={event.message}")
-                self.notifications.append(event.message)
+                logger.debug(f"notification: message={event.payload}")
+                self.notifications.append(event.payload)
 
     def render(self) -> None:
         self.image.fill(self.color_bg if self.timeout > 0 else Color(0, 0, 0, 0))

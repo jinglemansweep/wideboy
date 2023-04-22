@@ -1,3 +1,4 @@
+import json
 import logging
 import pygame
 from dynaconf import Dynaconf
@@ -7,13 +8,15 @@ from typing import Optional, TYPE_CHECKING
 from wideboy.config import settings
 from wideboy.constants import (
     AppMetadata,
+    EVENT_HASS_ENTITY_UPDATE,
     EVENT_TIMER_SECOND,
+    EVENT_MASTER,
     EVENT_SCENE_MANAGER_NEXT,
     EVENT_SCENE_MANAGER_SELECT,
 )
 from wideboy.engine.events import handle_internal_event, handle_joystick_event
 from wideboy.engine.scenes import SceneManager
-
+from wideboy.utils.helpers import post_event, hass_to_bool_state
 
 if TYPE_CHECKING:
     from wideboy.homeassistant.hass import HASSManager
@@ -82,6 +85,11 @@ class Engine:
             handle_joystick_event(event, self.joysticks)
             self.hass.handle_event(event)
 
+            if event.type == EVENT_MASTER:
+                payload = json.loads(event.payload)
+                self.display.set_visible(hass_to_bool_state(payload["state"]))
+                if "brightness" in payload:
+                    self.display.set_brightness(payload["brightness"])
             if event.type == EVENT_SCENE_MANAGER_NEXT:
                 self.scene_manager.next_scene()
             if event.type == EVENT_SCENE_MANAGER_SELECT:
