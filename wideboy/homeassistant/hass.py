@@ -110,6 +110,8 @@ class HASSManager:
         if entity.device_class in ["sensor", "switch", "light", "select"]:
             initial_state = entity.initial_state or dict()
             self.mqtt.publish(state_topic, initial_state)
+        logger.debug(f"hass:mqtt:subscribe topic={command_topic}")
+        self.mqtt.subscribe(command_topic, 0)
 
     def build_device_info(self) -> dict:
         full_device_id = f"{_get_app_id()}_{self.device_id}"
