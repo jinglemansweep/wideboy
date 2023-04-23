@@ -37,6 +37,7 @@ class CalendarSprite(BaseSprite):
         self.calendar_events = []
         self.event_index = 0
         self.update_events()
+        self.dirty = 1
         self.render()
 
     def update(
@@ -51,6 +52,7 @@ class CalendarSprite(BaseSprite):
             if event.type == EVENT_EPOCH_HOUR:
                 self.update_events()
             if event.type == EVENT_EPOCH_SECOND and event.unit % self.interval == 0:
+                self.dirty = 1
                 self.render()
                 self.event_index += 1
                 if self.event_index > len(self.calendar_events) - 1:
@@ -75,7 +77,6 @@ class CalendarSprite(BaseSprite):
     def render(self) -> None:
         if not len(self.calendar_events):
             return
-        self.dirty = 1
         event_surface = self.render_event_text(self.calendar_events[self.event_index])
         self.image.fill(Color(0, 0, 0, 0))
         self.image.blit(

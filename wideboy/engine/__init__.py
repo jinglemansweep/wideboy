@@ -96,8 +96,7 @@ class Engine:
             handle_joystick_event(event, self.joysticks)
             self.hass.handle_event(event)
             if event.type == EVENT_EPOCH_MINUTE:
-                print(event)
-                # self.update_sensors()
+                self.update_sensors()
             if event.type == EVENT_MASTER:
                 payload = json.loads(event.payload)
                 self.display.set_visible(hass_to_bool_state(payload["state"]))

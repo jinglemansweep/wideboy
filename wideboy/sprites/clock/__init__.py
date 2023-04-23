@@ -46,10 +46,12 @@ class TimeSprite(BaseSprite):
         events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
-        if self.rainbow == "fg":
-            self.color_fg = rainbow_color(frame / 100)
-        elif self.rainbow == "outline":
-            self.color_outline = rainbow_color(frame / 100)
+        if frame % 100 == 0:
+            if self.rainbow == "fg":
+                self.color_fg = rainbow_color(frame / 100)
+            elif self.rainbow == "outline":
+                self.color_outline = rainbow_color(frame / 100)
+            self.dirty = 1
         self.render()
 
     def render(self) -> None:
@@ -73,7 +75,6 @@ class TimeSprite(BaseSprite):
                 0 + self.pos_adj[1],
             ),
         )
-        self.dirty = 1
 
 
 class DateSprite(BaseSprite):
@@ -112,10 +113,12 @@ class DateSprite(BaseSprite):
         events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
-        if self.rainbow == "fg":
-            self.color_fg = rainbow_color(frame / 100)
-        elif self.rainbow == "outline":
-            self.color_outline = rainbow_color(frame / 100)
+        if frame % 100 == 0:
+            if self.rainbow == "fg":
+                self.color_fg = rainbow_color(frame / 100)
+            elif self.rainbow == "outline":
+                self.color_outline = rainbow_color(frame / 100)
+            self.dirty = 1
         self.render()
 
     def render(self) -> None:
@@ -140,4 +143,3 @@ class DateSprite(BaseSprite):
                 0 + self.pos_adj[1],
             ),
         )
-        self.dirty = 1
