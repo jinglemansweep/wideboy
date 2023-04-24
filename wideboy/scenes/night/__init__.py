@@ -97,7 +97,7 @@ class NightScene(BaseScene):
             self.width
             - max(self.clock_time_widget.rect.width, self.clock_date_widget.rect.width),
         )
-        y = random.randint(-13, -3)
+        y = random.randint(-11, -3)
         self.animation_group.add(
             Act(
                 64,
