@@ -31,7 +31,6 @@ class NightScene(BaseScene):
     def setup(self):
         super().setup()
 
-        """
         # Starfield widget
         self.starfield_widget = StarfieldSprite(
             self,
@@ -39,8 +38,8 @@ class NightScene(BaseScene):
             color_fg=Color(255, 255, 255, 192),
         )
         self.group.add(self.starfield_widget)
-        """
 
+        """
         self.rotogrid_widget = RotoGridSprite(
             self,
             Rect(0, 0, self.width, self.height),
@@ -54,6 +53,7 @@ class NightScene(BaseScene):
             rotate_speed=0.5,
         )
         self.group.add(self.rotogrid_widget)
+        """
 
         # Setup clock widget
         self.clock_time_pos: tuple[int, int] = (self.width - 128, -7)
