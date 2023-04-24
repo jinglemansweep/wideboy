@@ -18,18 +18,24 @@ class RotoGridSprite(BaseSprite):
         rect: Rect,
         color_fg: Color = Color(255, 255, 255, 255),
         color_bg: Color = Color(0, 0, 0, 0),
+        grid_size: int = 20,
         zoom_speed: float = 0.01,
+        zoom_range: tuple[float, float] = (1.0, 5.0),
         rotate_speed: int = 1,
+        angle_range: tuple[int, int] = (-5, 5),
     ) -> None:
         super().__init__(scene, rect)
         self.color_fg = color_fg
         self.color_bg = color_bg
+        self.grid_size = grid_size
         self.zoom_speed = zoom_speed
+        self.zoom_range = zoom_range
         self.rotate_speed = rotate_speed
+        self.angle_range = angle_range
         self.image_grid = self.draw_grid(
             (self.rect.width, self.rect.height),  # square based on width
             self.color_fg,
-            grid_size=20,
+            grid_size=self.grid_size,
         )
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.scale = 1.5
@@ -44,10 +50,10 @@ class RotoGridSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         self.scale += self.zoom_speed
-        if self.scale < 1.5 or self.scale > 3.0:
+        if self.scale < self.zoom_range[0] or self.scale > self.zoom_range[1]:
             self.zoom_speed *= -1
         self.angle += self.rotate_speed
-        if self.angle > 5 or self.angle < -5:
+        if self.angle < self.angle_range[0] or self.angle > self.angle_range[1]:
             self.rotate_speed *= -1
         self.dirty = 1
         self.render()
