@@ -27,12 +27,12 @@ class RotoGridSprite(BaseSprite):
         self.zoom_speed = zoom_speed
         self.rotate_speed = rotate_speed
         self.image_grid = self.draw_grid(
-            (self.rect.width, self.rect.width),  # square based on width
+            (self.rect.width, self.rect.height),  # square based on width
             self.color_fg,
             grid_size=20,
         )
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
-        self.scale = 1
+        self.scale = 1.5
         self.angle = 0
 
     def update(
@@ -44,10 +44,10 @@ class RotoGridSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         self.scale += self.zoom_speed
-        if self.scale < 1 or self.scale > 2.0:
+        if self.scale < 1.5 or self.scale > 3.0:
             self.zoom_speed *= -1
         self.angle += self.rotate_speed
-        if self.angle > 360 or self.angle < 0:
+        if self.angle > 5 or self.angle < -5:
             self.rotate_speed *= -1
         self.dirty = 1
         self.render()
