@@ -19,6 +19,7 @@ class RotoGridSprite(BaseSprite):
         color_fg: Color = Color(255, 255, 255, 255),
         color_bg: Color = Color(0, 0, 0, 0),
         grid_size: int = 20,
+        line_size: int = 1,
         zoom_speed: float = 0.01,
         zoom_range: tuple[float, float] = (1.0, 5.0),
         rotate_speed: int = 1,
@@ -28,6 +29,7 @@ class RotoGridSprite(BaseSprite):
         self.color_fg = color_fg
         self.color_bg = color_bg
         self.grid_size = grid_size
+        self.line_size = line_size
         self.zoom_speed = zoom_speed
         self.zoom_range = zoom_range
         self.rotate_speed = rotate_speed
@@ -36,6 +38,7 @@ class RotoGridSprite(BaseSprite):
             (self.rect.width, self.rect.height),  # square based on width
             self.color_fg,
             grid_size=self.grid_size,
+            line_size=self.line_size
         )
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.scale = 1.5
