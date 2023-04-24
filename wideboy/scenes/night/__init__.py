@@ -4,6 +4,7 @@ from pygame import Clock, Color, Event, Rect, Vector2
 from typing import TYPE_CHECKING
 from wideboy.constants import EVENT_EPOCH_SECOND, EVENT_ACTION_A
 from wideboy.sprites.clock import DateSprite, TimeSprite
+from wideboy.sprites.rotogrid import RotoGridSprite
 from wideboy.sprites.starfield import StarfieldSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.scenes.animation import Act, Animation
@@ -31,12 +32,22 @@ class NightScene(BaseScene):
         super().setup()
 
         # Starfield widget
-        self.starfield_widget = StarfieldSprite(
-            self,
-            Rect(0, 0, self.width, self.height),
-            color_fg=Color(255, 255, 255, 192),
-        )
-        self.group.add(self.starfield_widget)
+        if random.random() < 0.5:
+            self.starfield_widget = StarfieldSprite(
+                self,
+                Rect(0, 0, self.width, self.height),
+                color_fg=Color(255, 255, 255, 192),
+            )
+            self.group.add(self.starfield_widget)
+        else:
+            self.rotogrid_widget = RotoGridSprite(
+                self,
+                Rect(0, 0, self.width, self.height),
+                Color(0, 128, 0, 255),
+                zoom_speed=0.01,
+                rotate_speed=0.5,
+            )
+            self.group.add(self.rotogrid_widget)
 
         # Setup clock widget
         self.clock_time_pos: tuple[int, int] = (self.width - 128, -7)
