@@ -18,7 +18,8 @@ class RotoGridSprite(BaseSprite):
         rect: Rect,
         color_fg: Color = Color(255, 255, 255, 255),
         color_bg: Color = Color(0, 0, 0, 0),
-        grid_size: int = 20,
+        grid_size: tuple[int, int] = (100, 100),
+        cell_size: int = 10,
         line_size: int = 1,
         zoom_speed: float = 0.01,
         zoom_range: tuple[float, float] = (1.0, 5.0),
@@ -29,19 +30,20 @@ class RotoGridSprite(BaseSprite):
         self.color_fg = color_fg
         self.color_bg = color_bg
         self.grid_size = grid_size
+        self.cell_size = cell_size
         self.line_size = line_size
         self.zoom_speed = zoom_speed
         self.zoom_range = zoom_range
         self.rotate_speed = rotate_speed
         self.angle_range = angle_range
         self.image_grid = self.draw_grid(
-            (self.rect.width, self.rect.height),  # square based on width
+            self.grid_size,  # square based on width
             self.color_fg,
-            grid_size=self.grid_size,
-            line_size=self.line_size
+            cell_size=self.cell_size,
+            line_size=self.line_size,
         )
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
-        self.scale = 1.5
+        self.scale = self.zoom_range[0]
         self.angle = 0
 
     def update(
@@ -69,12 +71,12 @@ class RotoGridSprite(BaseSprite):
         self,
         size: Vector2,
         color: Color = Color(255, 255, 255, 255),
-        grid_size=10,
+        cell_size=5,
         line_size=1,
     ) -> Surface:
         surface = Surface(size, SRCALPHA)
-        for i in range(0, size[0], grid_size):
+        for i in range(0, size[0], cell_size):
             pygame.draw.line(surface, color, (i, 0), (i, size[1]), line_size)
-        for i in range(0, size[1], grid_size):
+        for i in range(0, size[1], cell_size):
             pygame.draw.line(surface, color, (0, i), (size[0], i), line_size)
         return surface

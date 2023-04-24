@@ -45,12 +45,13 @@ class NightScene(BaseScene):
             self,
             Rect(0, 0, self.width, self.height),
             Color(0, 128, 0, 255),
-            grid_size=20,
-            line_size=2,
-            zoom_speed=0.01,
-            zoom_range=(1.0, 3),
-            angle_range=(-1, 1),
-            rotate_speed=0.005,
+            grid_size=(100, 100),
+            cell_size=3,
+            line_size=1,
+            zoom_speed=0.1,
+            zoom_range=(8.0, 20),
+            angle_range=(0, 360),
+            rotate_speed=0.5,
         )
         self.group.add(self.rotogrid_widget)
 
