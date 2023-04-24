@@ -42,7 +42,7 @@ class DefaultScene(BaseScene):
             self,
             Rect(
                 0,
-                0 - self.height,
+                0,
                 self.width,
                 self.height,
             ),
@@ -178,16 +178,6 @@ class DefaultScene(BaseScene):
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
 
-    def update(
-        self,
-        clock: Clock,
-        delta: float,
-        events: list[Event],
-    ) -> None:
-        super().update(clock, delta, events)
-        if self.act_background_change is not None:
-            self.act_background_change.update()
-
     # Handle Events
 
     def handle_events(self, events: list[Event]) -> None:
@@ -204,30 +194,29 @@ class DefaultScene(BaseScene):
                 self.run_background_change_act()
 
     def run_background_change_act(self) -> None:
-        self.act_background_change = self.build_background_change_act()
-        self.act_background_change.start()
+        self.animation_group.add(self.build_background_change_act())
 
     # Acts
 
     def build_background_change_act(self) -> Act:
         return Act(
-            128,
+            64,
             [
                 (
                     0,
                     Animation(
                         self.background_widget,
                         Vector2(0, 0 - self.height),
-                        64,
+                        32,
                     ),
                 ),
-                (64, lambda: self.background_widget.render_next_image()),
+                (32, lambda: self.background_widget.render_next_image()),
                 (
-                    64,
+                    32,
                     Animation(
                         self.background_widget,
                         Vector2(0, 0),
-                        64,
+                        32,
                         Vector2(0, 0 - self.height),
                     ),
                 ),

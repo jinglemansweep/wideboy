@@ -8,17 +8,16 @@ from wideboy.sprites.base import BaseSprite
 logger = logging.getLogger("scenes.animation")
 
 
-class Act:
+class Act(pygame.sprite.Sprite):
     def __init__(
         self,
         duration: int,
         actions: Optional[list[Any]] = None,
-        loop: bool = False,
         run_now: bool = True,
     ) -> None:
+        super().__init__()
         self.duration = duration
         self.actions = actions or []
-        self.loop = loop
         self.act_time_index = 0 if run_now else None
 
     def add_action(
@@ -43,7 +42,7 @@ class Act:
                         action()
             self.act_time_index += 1
         if self.act_time_index == self.duration - 1:
-            self.act_time_index = 0 if self.loop else None
+            self.kill()
 
 
 class Animation:

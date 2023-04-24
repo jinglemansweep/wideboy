@@ -1,6 +1,6 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, Vector2
-from pygame.sprite import LayeredDirty
+from pygame.sprite import LayeredDirty, Group
 from typing import TYPE_CHECKING
 from wideboy.sprites.image_helpers import build_background
 
@@ -26,6 +26,7 @@ class BaseScene:
             bg_color,
         )
         self.group = LayeredDirty()
+        self.animation_group = Group()
         self.setup()
 
     def reset(self) -> None:
@@ -34,13 +35,13 @@ class BaseScene:
 
     def setup(self) -> None:
         self.clear()
-        self.empty_group()
+        self.empty_groups()
         self.frame = 0
 
     def destroy(self) -> None:
         logger.debug(f"scene:destroy name={self.name}")
         self.clear()
-        self.group.empty()
+        self.empty_groups()
         self.screen.blit(self.background, (0, 0))
 
     def render(
@@ -56,11 +57,13 @@ class BaseScene:
     def clear(self) -> None:
         self.group.clear(self.screen, self.background)
 
-    def empty_group(self) -> None:
+    def empty_groups(self) -> None:
         self.group.empty()
+        self.animation_group.empty()
 
     def update(self, clock: Clock, delta: float, events: list[Event]) -> None:
         self.handle_events(events)
+        self.animation_group.update()
         self.group.update(self.frame, clock, delta, events)
         self.frame += 1
 
