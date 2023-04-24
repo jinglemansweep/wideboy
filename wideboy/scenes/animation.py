@@ -8,7 +8,7 @@ from wideboy.sprites.base import BaseSprite
 logger = logging.getLogger("scenes.animation")
 
 
-class Act(pygame.sprite.Sprite):
+class Act(pygame.sprite.DirtySprite):
     def __init__(
         self,
         duration: int,
@@ -19,6 +19,7 @@ class Act(pygame.sprite.Sprite):
         self.duration = duration
         self.actions = actions or []
         self.act_time_index = 0 if run_now else None
+        self.dirty = 0
 
     def add_action(
         self,

@@ -87,7 +87,7 @@ class NightScene(BaseScene):
         super().handle_events(events)
         for event in events:
             if event.type == EVENT_ACTION_A or (
-                event.type == EVENT_EPOCH_SECOND and event.unit % 15 == 0
+                event.type == EVENT_EPOCH_SECOND and event.unit % 30 == 0
             ):
                 self.animate_clock()
 
