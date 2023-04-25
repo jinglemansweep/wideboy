@@ -1,7 +1,7 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, Vector2
 from pygame.sprite import LayeredDirty, Group
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 from wideboy.sprites.image_helpers import build_background
 
 if TYPE_CHECKING:
@@ -18,15 +18,15 @@ class BaseScene:
     def __init__(
         self,
         engine: "Engine",
-        bg_color: Color,
+        bg_color: Color = Color(0, 0, 0, 255),
     ) -> None:
         self.engine = engine
         self.background = build_background(
             Vector2(self.width, self.height),
             bg_color,
         )
-        self.group = LayeredDirty()
-        self.animation_group = Group()
+        self.group: LayeredDirty = LayeredDirty()
+        self.animation_group: Group = Group()
         self.setup()
 
     def reset(self) -> None:

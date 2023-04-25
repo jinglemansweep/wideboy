@@ -4,11 +4,11 @@ import pygame
 from wideboy.config import settings
 
 
-def get_unique_device_id(self):
+def get_unique_device_id():
     return uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 
-def post_event(event_type: str, **kwargs) -> None:
+def post_event(event_type: int, **kwargs) -> None:
     pygame.event.post(pygame.event.Event(event_type, **kwargs))
 
 

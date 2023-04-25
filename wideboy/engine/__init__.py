@@ -4,8 +4,8 @@ import os
 import pygame
 from datetime import datetime
 from dynaconf import Dynaconf
-from pygame import Clock, Surface, RESIZABLE, SCALED, QUIT
-from typing import Optional, TYPE_CHECKING
+from pygame import Clock, Joystick, Surface, RESIZABLE, SCALED, QUIT
+from typing import Optional, Any, TYPE_CHECKING
 
 from wideboy.config import settings
 from wideboy.constants import (
@@ -33,8 +33,8 @@ DISPLAY_FLAGS = RESIZABLE | SCALED
 
 
 class Engine:
-    clock: Optional[Clock] = None
-    screen: Optional[Surface] = None
+    clock: Clock
+    screen: Surface
 
     def __init__(
         self,
@@ -50,7 +50,7 @@ class Engine:
             f"engine:init display={display} mqtt={mqtt} hass={hass} fps={self.fps}"
         )
         self.scene_manager = SceneManager(engine=self)
-        self.joysticks = dict()
+        self.joysticks: dict[int, Any] = dict()
         self.setup()
 
     def setup(self) -> None:

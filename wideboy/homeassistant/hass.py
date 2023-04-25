@@ -43,7 +43,7 @@ class HASSManager:
             settings.homeassistant.api_token,
             cache_session=False,
         )
-        self.entities = dict()
+        self.entities: dict[str, dict] = dict()
 
     def handle_event(self, event: Event) -> None:
         if event.type == EVENT_HASS_ENTITY_UPDATE:

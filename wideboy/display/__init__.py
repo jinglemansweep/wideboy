@@ -46,7 +46,7 @@ class Display:
 
     def set_brightness(self, brightness: int) -> None:
         logger.debug(f"display:brightness brightness={brightness}")
-        if settings.display.matrix.enabled:
+        if settings.display.matrix.enabled and self.matrix is not None:
             self.matrix.brightness = (brightness / 255) * 100
         post_event(
             EVENT_HASS_ENTITY_UPDATE,
@@ -64,14 +64,15 @@ class Display:
         pixels = pygame.surfarray.pixels3d(surface)
         wrapped = self.wrap_surface(
             pixels,
-            (
+            Vector2(
                 settings.display.matrix.width,
                 settings.display.matrix.height,
             ),
         )
         image = Image.fromarray(wrapped).convert("RGB")
-        self.buffer.SetImage(image)
-        self.matrix.SwapOnVSync(self.buffer)
+        if self.buffer is not None and self.matrix is not None:
+            self.buffer.SetImage(image)
+            self.matrix.SwapOnVSync(self.buffer)
 
     def wrap_surface(self, array: Any, new_shape: Vector2) -> Any:
         row_size = array.shape[1]

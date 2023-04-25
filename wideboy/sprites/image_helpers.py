@@ -176,7 +176,7 @@ class MaterialIcons:
 
 
 def render_material_icon(
-    codepoint: str,
+    codepoint: int,
     size: int = 12,
     color_fg: Color = Color(255, 255, 255, 255),
     color_outline: Optional[Color] = None,

@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, Vector2, JOYBUTTONUP
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
@@ -30,7 +30,7 @@ class DefaultScene(BaseScene):
     def __init__(
         self,
         engine: "Engine",
-        bg_color: Color = (0, 0, 0, 255),
+        bg_color: Color = Color(0, 0, 0, 255),
     ) -> None:
         super().__init__(engine, bg_color)
 

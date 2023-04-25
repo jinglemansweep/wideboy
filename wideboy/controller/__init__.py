@@ -1,6 +1,5 @@
 import logging
-import uuid
-from typing import Optional
+from typing import List, Type
 from wideboy.constants import (
     AppMetadata,
     EVENT_MASTER,
@@ -23,7 +22,7 @@ logger = logging.getLogger("controller")
 
 
 class Controller:
-    def __init__(self, scenes: list[BaseScene], entities: list[HASSEntity]):
+    def __init__(self, scenes: List[Type[BaseScene]], entities: list[HASSEntity]):
         self.device_id = settings.general.device_id or get_unique_device_id()
         logger.debug(
             f"controller:init device_id={self.device_id} scenes_count={len(scenes)} entities_count={len(entities)}"
@@ -40,7 +39,7 @@ class Controller:
         while True:
             self.engine.loop()
 
-    def setup(self, scenes: list[BaseScene], entities: list[HASSEntity]) -> None:
+    def setup(self, scenes: List[Type[BaseScene]], entities: list[HASSEntity]) -> None:
         self.engine.scene_manager.load_scenes(scenes)
         self.engine.hass.advertise_entities(self.build_internal_entities() + entities)
 
@@ -58,7 +57,7 @@ class Controller:
         )
         logger.info("=" * 80)
 
-    def build_internal_entities(self):
+    def build_internal_entities(self) -> List[HASSEntity]:
         return [
             HASSEntity(
                 "sensor",
