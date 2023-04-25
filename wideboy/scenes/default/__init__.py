@@ -1,7 +1,6 @@
-import asyncio
 import logging
-from pygame import Clock, Color, Event, Rect, Surface, Vector2, JOYBUTTONUP
-from typing import Optional, TYPE_CHECKING
+from pygame import Color, Event, Rect, Vector2, JOYBUTTONUP
+from typing import TYPE_CHECKING
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite

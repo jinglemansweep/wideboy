@@ -35,7 +35,7 @@ class Controller:
         self.log_intro()
 
     def start(self) -> None:
-        logger.debug(f"controller:start")
+        logger.debug("controller:start")
         while True:
             self.engine.loop()
 

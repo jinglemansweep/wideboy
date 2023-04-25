@@ -1,10 +1,5 @@
 import logging
-import math
-import pygame
-import random
-from typing import Optional
-from pygame import Clock, Color, Event, Rect, Surface, Vector2, SRCALPHA
-from pygame.sprite import Group, Sprite
+from pygame import Clock, Color, Event, Rect
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import render_grid

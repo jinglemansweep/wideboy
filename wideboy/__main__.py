@@ -1,33 +1,30 @@
 import cProfile
 import logging
-import pygame
-import pygame.pkgdata
-import sys
 from dotenv import load_dotenv, find_dotenv
-from typing import Callable
-
-load_dotenv(find_dotenv())
-
+from typing import Type, List
 from wideboy.constants import (
     AppMetadata,
 )
 from wideboy.config import settings
 from wideboy.controller import Controller
+from wideboy.homeassistant.hass import HASSEntity
+from wideboy.scenes.base import BaseScene
 from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
 from wideboy.scenes.night import NightScene
 from wideboy.utils.logger import setup_logger
 
+load_dotenv(find_dotenv())
 
 # Logging
 setup_logger(level=settings.general.log_level)
 logger = logging.getLogger(AppMetadata.NAME)
 
 # SCENES
-SCENES = [DefaultScene, NightScene, CreditsScene]
+SCENES: List[Type[BaseScene]] = [DefaultScene, NightScene, CreditsScene]
 
 # ENTITIES
-ENTITIES = []
+ENTITIES: List[Type[HASSEntity]] = []
 
 
 def main():

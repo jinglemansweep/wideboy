@@ -3,9 +3,8 @@ import logging
 import os
 import pygame
 from datetime import datetime
-from dynaconf import Dynaconf
-from pygame import Clock, Joystick, Surface, RESIZABLE, SCALED, QUIT
-from typing import Optional, Any, TYPE_CHECKING
+from pygame import Clock, Surface, RESIZABLE, SCALED, QUIT
+from typing import Any, TYPE_CHECKING
 
 from wideboy.config import settings
 from wideboy.constants import (

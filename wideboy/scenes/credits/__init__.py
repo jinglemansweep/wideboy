@@ -1,5 +1,5 @@
 import logging
-from pygame import Clock, Color, Event, Rect, Surface, Vector2
+from pygame import Clock, Color, Event, Rect, Vector2
 from typing import TYPE_CHECKING
 from wideboy.constants import AppMetadata, EVENT_EPOCH_SECOND
 from wideboy.sprites.image import ImageSprite

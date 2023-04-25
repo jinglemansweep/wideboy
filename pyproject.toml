@@ -24,7 +24,9 @@ pygame-ce = "^2.2.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
+flake8 = "^6.0.0"
 mypy = "^1.0.0"
+
 types-pillow = "^9.4.0.10"
 
 [build-system]

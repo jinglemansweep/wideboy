@@ -4,13 +4,12 @@ from pygame import Clock, Color, Event, Rect, Vector2
 from typing import TYPE_CHECKING
 from wideboy.constants import EVENT_EPOCH_SECOND, EVENT_ACTION_A
 from wideboy.sprites.clock import DateSprite, TimeSprite
-from wideboy.sprites.rotogrid import RotoGridSprite
+
+# from wideboy.sprites.rotogrid import RotoGridSprite
 from wideboy.sprites.starfield import StarfieldSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.scenes.animation import Act, Animation
 from wideboy.scenes.base import BaseScene
-
-from wideboy.config import settings
 
 if TYPE_CHECKING:
     from wideboy.engine import Engine
@@ -109,8 +108,12 @@ class NightScene(BaseScene):
     def animate_clock(self):
         x = random.randint(
             0,
-            self.width
-            - max(self.clock_time_widget.rect.width, self.clock_date_widget.rect.width),
+            (
+                self.width
+                - max(
+                    self.clock_time_widget.rect.width, self.clock_date_widget.rect.width
+                )
+            ),
         )
         y = random.randint(-11, -3)
         self.animation_group.add(

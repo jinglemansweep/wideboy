@@ -1,10 +1,8 @@
 import logging
 import pygame
 import random
-from typing import Optional
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from pygame.sprite import Group, Sprite
-from wideboy.sprites.image_helpers import render_material_icon
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 

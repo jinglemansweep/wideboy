@@ -1,8 +1,6 @@
 import logging
 import os
 import pygame
-import random
-from typing import Optional
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 
 # from wideboy.mqtt.homeassistant import HASS
@@ -13,7 +11,6 @@ from wideboy.sprites.image_helpers import (
     render_arrow,
     load_image,
     scale_surface,
-    pil_to_surface,
 )
 from wideboy.constants import EVENT_EPOCH_MINUTE
 from wideboy.sprites.weather.resources import IMAGE_MAPPING

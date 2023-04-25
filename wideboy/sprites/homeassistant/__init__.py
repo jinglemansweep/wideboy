@@ -1,6 +1,4 @@
-import html
 import logging
-import pygame
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from typing import Optional
 from wideboy.constants import EVENT_EPOCH_MINUTE
@@ -8,8 +6,7 @@ from wideboy.constants import EVENT_EPOCH_MINUTE
 # from wideboy.mqtt.homeassistant import HASS
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.image_helpers import load_image, render_text, render_material_icon
-from wideboy.config import settings
+from wideboy.sprites.image_helpers import render_text
 
 logger = logging.getLogger("sprite.hassentitytile")
 

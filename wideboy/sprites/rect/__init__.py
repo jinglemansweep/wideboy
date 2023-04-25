@@ -1,5 +1,4 @@
 import logging
-import pygame
 from pygame import Color, Rect, Surface, SRCALPHA
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
@@ -13,7 +12,7 @@ class RectSprite(BaseSprite):
         self,
         scene: BaseScene,
         rect: Rect,
-        color_bg: Color = (0, 0, 0, 192),
+        color_bg: Color = Color(0, 0, 0, 192),
     ) -> None:
         super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)

@@ -5,7 +5,6 @@ import random
 import yaml
 from pygame import Clock, Color, Event, Rect, Surface, Vector2
 from PIL import ImageFilter
-from typing import Optional
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (

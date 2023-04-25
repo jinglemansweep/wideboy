@@ -1,11 +1,7 @@
-import json
 import logging
-import pygame
-from dynaconf import Dynaconf
 from pygame import Event
-from typing import Optional, TYPE_CHECKING
+from typing import Optional
 from homeassistant_api import Client
-
 from wideboy.config import settings
 from wideboy.constants import (
     AppMetadata,

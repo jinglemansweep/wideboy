@@ -1,7 +1,7 @@
 import logging
-from pygame import Clock, Color, Event, Rect, Surface, Vector2
+from pygame import Clock, Color, Event, Rect, Vector2
 from pygame.sprite import LayeredDirty, Group
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from wideboy.sprites.image_helpers import build_background
 
 if TYPE_CHECKING:

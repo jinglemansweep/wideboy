@@ -72,7 +72,9 @@ class Animation:
         )
         self.index: Optional[int] = None
         logger.debug(
-            f"sprite::animation target={self.target} origin={self.origin} duration={self.duration} distances={self.distances}"
+            f"sprite::animation target={self.target} \
+            origin={self.origin} duration={self.duration} \
+            distances={self.distances}"
         )
 
     def start(self) -> None:

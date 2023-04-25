@@ -1,11 +1,9 @@
 import logging
 import numpy as np
 import pygame
-import sys
-from dynaconf import Dynaconf
 from pygame import Surface
 from pygame.math import Vector2
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, Optional
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
@@ -23,7 +21,10 @@ class Display:
 
     def __init__(self):
         logger.debug(
-            f"display:init canvas=({settings.display.canvas.width}x{settings.display.canvas.height} matrix_enabled={settings.display.matrix.enabled} matrix_size=({settings.display.matrix.width}x{settings.display.matrix.height})"
+            f"display:init \
+              canvas=({settings.display.canvas.width}x{settings.display.canvas.height} \
+              matrix_enabled={settings.display.matrix.enabled} \
+              matrix_size=({settings.display.matrix.width}x{settings.display.matrix.height})"
         )
         if settings.display.matrix.enabled:
             self.matrix = RGBMatrix(options=matrix_options)

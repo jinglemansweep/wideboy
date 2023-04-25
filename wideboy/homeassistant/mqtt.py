@@ -18,7 +18,9 @@ logger = logging.getLogger("mqtt")
 class MQTTClient:
     def __init__(self, device_id: str) -> None:
         logger.info(
-            f"mqtt:init device_id={device_id} host={settings.mqtt.host} port={settings.mqtt.port} user={settings.mqtt.user} password={'*' * len(settings.mqtt.password) or 0}"
+            f"mqtt:init device_id={device_id} \
+            host={settings.mqtt.host} port={settings.mqtt.port} \
+            user={settings.mqtt.user} password={'*' * len(settings.mqtt.password) or 0}"
         )
         self.device_id = device_id
         self.client: mqtt.Client = mqtt.Client()
@@ -27,7 +29,7 @@ class MQTTClient:
         self.connect()
 
     def connect(self) -> None:
-        logger.debug(f"mqtt:connecting")
+        logger.debug("mqtt:connecting")
         if settings.mqtt.user is not None:
             self.client.username_pw_set(settings.mqtt.user, settings.mqtt.password)
         self.client.connect(

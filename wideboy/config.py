@@ -1,11 +1,17 @@
 import os
 import sys
-
-
 from dynaconf import Dynaconf, Validator
 from pathlib import Path
-from pprint import pprint
 
+sys.path.append(
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__), "../lib/rpi-rgb-led-matrix/bindings/python"
+        ),
+    ),
+)
+
+from rgbmatrix import RGBMatrixOptions  # type: ignore
 from wideboy.constants import DYNACONF_ENVVAR_PREFIX
 
 
@@ -249,15 +255,6 @@ settings = Dynaconf(
 
 
 # RPI-RGB-LED-MATRIX
-
-sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__), "../lib/rpi-rgb-led-matrix/bindings/python"
-        ),
-    ),
-)
-from rgbmatrix import RGBMatrixOptions  # type: ignore
 
 matrix_options = RGBMatrixOptions()
 driver_settings = settings.display.matrix.driver

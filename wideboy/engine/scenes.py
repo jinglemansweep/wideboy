@@ -1,7 +1,7 @@
 import logging
 from pygame import Clock, Rect
 from typing import List, Optional, Type, TYPE_CHECKING
-from wideboy.constants import EVENT_SCENE_MANAGER_NEXT, EVENT_HASS_ENTITY_UPDATE
+from wideboy.constants import EVENT_HASS_ENTITY_UPDATE
 from wideboy.scenes.base import BaseScene
 from wideboy.utils.helpers import post_event
 

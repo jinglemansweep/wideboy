@@ -1,7 +1,5 @@
 import pygame
 import uuid
-import pygame
-from wideboy.config import settings
 
 
 def get_unique_device_id():
