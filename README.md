@@ -1,6 +1,6 @@
 # WideBoy
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![MyPy](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
 
