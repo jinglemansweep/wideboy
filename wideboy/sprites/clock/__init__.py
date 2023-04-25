@@ -136,7 +136,6 @@ class DateSprite(BaseSprite):
         date_str = now.strftime(self.date_format)
         if self.uppercase:
             date_str = date_str.upper()
-        self.image.fill(self.color_bg)
         self.surface_text = render_text(
             date_str,
             self.font_name,
@@ -148,6 +147,7 @@ class DateSprite(BaseSprite):
 
     def render(self) -> None:
         self.dirty = 1
+        self.image.fill(self.color_bg)
         self.image.blit(
             self.surface_text,
             (
