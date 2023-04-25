@@ -125,6 +125,45 @@ def render_arrow(
     return surface
 
 
+def render_grid(
+    size: tuple[int, int],
+    spacing: int,
+    color: Color,
+    zoom: float,
+    angle: float,
+    line_size: int = 1,
+) -> Surface:
+    width, height = size
+    surface = Surface((width, height))
+    center_x, center_y = width // 2, height // 2
+    radians = math.radians(angle)
+    for x in range(-width, width, int(spacing * zoom)):
+        for y in range(-height, height, int(spacing * zoom)):
+            # Calculate the rotated endpoints for horizontal and vertical lines
+            x1 = x * math.cos(radians) - y * math.sin(radians)
+            y1 = x * math.sin(radians) + y * math.cos(radians)
+            x2 = (x + int(spacing * zoom)) * math.cos(radians) - y * math.sin(radians)
+            y2 = (x + int(spacing * zoom)) * math.sin(radians) + y * math.cos(radians)
+            x3 = x * math.cos(radians) - (y + int(spacing * zoom)) * math.sin(radians)
+            y3 = x * math.sin(radians) + (y + int(spacing * zoom)) * math.cos(radians)
+            # Draw horizontal and vertical lines
+            pygame.draw.line(
+                surface,
+                color,
+                (center_x + x1, center_y - y1),
+                (center_x + x2, center_y - y2),
+                line_size,
+            )
+            pygame.draw.line(
+                surface,
+                color,
+                (center_x + x1, center_y - y1),
+                (center_x + x3, center_y - y3),
+                line_size,
+            )
+    return surface
+
+
 class MaterialIcons:
     MDI_DELETE = 0xE872
     MDI_DOWNLOAD = 0xE2C4
