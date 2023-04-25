@@ -1,6 +1,6 @@
 # WideBoy
 
-[![MyPy](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![mypy](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml) [![flake8](https://github.com/jinglemansweep/wideboy/actions/workflows/flake8.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/flake8.yml) [![black](https://github.com/jinglemansweep/wideboy/actions/workflows/black.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/black.yml) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
 
