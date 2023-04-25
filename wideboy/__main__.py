@@ -1,8 +1,10 @@
+import cProfile
 import logging
 import pygame
 import pygame.pkgdata
 import sys
 from dotenv import load_dotenv, find_dotenv
+from typing import Callable
 
 load_dotenv(find_dotenv())
 
@@ -15,7 +17,6 @@ from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
 from wideboy.scenes.night import NightScene
 from wideboy.utils.logger import setup_logger
-from wideboy.utils.helpers import main_entrypoint
 
 
 # Logging
@@ -36,4 +37,7 @@ def main():
 
 # Entrypoint
 if __name__ == "__main__":
-    main_entrypoint(main)
+    if settings.general.profiling in ["ncalls", "tottime"]:
+        cProfile.run("main()", None, sort=settings.general.profiling)
+    else:
+        main()

@@ -71,6 +71,7 @@ def render_text(
     antialias: bool = True,
     alpha: int = 255,
 ) -> pygame.surface.Surface:
+    # logger.debug(f"render_text: text={text}")
     font = pygame.font.Font(font_filename, font_size)
     surface_orig = font.render(text, antialias, color_fg)
     padding = 2 if color_outline else 0

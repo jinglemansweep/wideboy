@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from wideboy.sprites.image_helpers import render_text, rainbow_color
-from wideboy.constants import EVENT_EPOCH_SECOND
+from wideboy.constants import EVENT_EPOCH_MINUTE
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 
@@ -36,6 +36,7 @@ class TimeSprite(BaseSprite):
         self.time_format = time_format
         self.pos_adj = pos_adj
         self.rainbow = rainbow
+        self.render_text_surface()
         self.render()
 
     def update(
@@ -46,19 +47,20 @@ class TimeSprite(BaseSprite):
         events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
+        for event in events:
+            if event.type == EVENT_EPOCH_MINUTE:
+                self.render_text_surface()
         if frame % 100 == 0:
             if self.rainbow == "fg":
                 self.color_fg = rainbow_color(frame / 100)
             elif self.rainbow == "outline":
                 self.color_outline = rainbow_color(frame / 100)
-            self.dirty = 1
-        self.render()
+            self.render()
 
-    def render(self) -> None:
+    def render_text_surface(self) -> None:
         now = datetime.now()
-        self.image.fill(self.color_bg)
         time_str = now.strftime(self.time_format)
-        time_surface = render_text(
+        self.surface_text = render_text(
             time_str,
             self.font_name,
             self.font_size,
@@ -66,11 +68,15 @@ class TimeSprite(BaseSprite):
             color_fg=self.color_fg,
             color_outline=self.color_outline,
         )
+
+    def render(self) -> None:
+        self.dirty = 1
+        self.image.fill(self.color_bg)
         self.image.blit(
-            time_surface,
+            self.surface_text,
             (
                 (self.rect.width / 2)
-                - (time_surface.get_rect().width / 2)
+                - (self.surface_text.get_rect().width / 2)
                 + self.pos_adj[0],
                 0 + self.pos_adj[1],
             ),
@@ -103,6 +109,8 @@ class DateSprite(BaseSprite):
         self.uppercase = uppercase
         self.pos_adj = pos_adj
         self.rainbow = rainbow
+        self.dirty = 1
+        self.render_text_surface()
         self.render()
 
     def update(
@@ -113,21 +121,23 @@ class DateSprite(BaseSprite):
         events: list[Event],
     ) -> None:
         super().update(frame, clock, delta, events)
+        for event in events:
+            if event.type == EVENT_EPOCH_MINUTE:
+                self.render_text_surface()
         if frame % 100 == 0:
             if self.rainbow == "fg":
                 self.color_fg = rainbow_color(frame / 100)
             elif self.rainbow == "outline":
                 self.color_outline = rainbow_color(frame / 100)
-            self.dirty = 1
-        self.render()
+            self.render()
 
-    def render(self) -> None:
+    def render_text_surface(self) -> None:
         now = datetime.now()
         date_str = now.strftime(self.date_format)
         if self.uppercase:
             date_str = date_str.upper()
         self.image.fill(self.color_bg)
-        date_surface = render_text(
+        self.surface_text = render_text(
             date_str,
             self.font_name,
             self.font_size,
@@ -135,10 +145,13 @@ class DateSprite(BaseSprite):
             color_fg=self.color_fg,
             color_outline=self.color_outline,
         )
+
+    def render(self) -> None:
+        self.dirty = 1
         self.image.blit(
-            date_surface,
+            self.surface_text,
             (
-                ((self.rect.width / 2) - date_surface.get_rect().width / 2)
+                ((self.rect.width / 2) - self.surface_text.get_rect().width / 2)
                 + self.pos_adj[0],
                 0 + self.pos_adj[1],
             ),

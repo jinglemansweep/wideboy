@@ -1,8 +1,6 @@
-import cProfile
 import pygame
 import uuid
 import pygame
-from typing import Callable
 from wideboy.config import settings
 
 
@@ -20,10 +18,3 @@ def bool_to_hass_state(value: bool) -> str:
 
 def hass_to_bool_state(value: str) -> bool:
     return value == "ON"
-
-
-def main_entrypoint(main_func: Callable) -> None:
-    if settings.general.profiling in ["ncalls", "tottime"]:
-        cProfile.run("main_func()", None, sort=settings.general.profiling)
-    else:
-        main_func()

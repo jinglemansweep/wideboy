@@ -62,6 +62,7 @@ class WeatherSprite(BaseSprite):
         self.image_frame = 0
         self.weather = None
         self.update_state()
+        self.render_text_surfaces()
         self.render()
 
     def update(
@@ -78,9 +79,15 @@ class WeatherSprite(BaseSprite):
                 and event.unit % self.update_interval_mins == 0
             ) or self.weather is None:
                 self.update_state()
+                self.render_text_surfaces()
             # if event.type == EVENT_EPOCH_SECOND and event.unit % 1 == 0:
             #    self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
         self.render()
+
+    def render_text_surfaces(self) -> None:
+        self.surface_temp = self._render_temperature()
+        self.surface_rain_prob = self._render_precipitation()
+        self.surface_wind = self._render_wind()
 
     def update_state(self) -> None:
         try:
@@ -139,16 +146,18 @@ class WeatherSprite(BaseSprite):
             # Background
             self.image.blit(self._render_background(), (0, 0))
             # Temperature
-            self.image.blit(self._render_temperature(), (0, 0))
+            self.image.blit(self.surface_temp, (0, 0))
             # Wind
-            self.image.blit(self._render_wind(), (0, 32))
+            self.image.blit(self.surface_wind, (0, 32))
             # Rain probability
             if (
                 self.weather["forecast_precipitation"]
                 > RAIN_PROBABILITY_DISPLAY_THRESHOLD
             ):
-                precip_surface = self._render_precipitation()
-                self.image.blit(precip_surface, (64 - precip_surface.get_width(), -1))
+                self.image.blit(
+                    self.surface_rain_prob,
+                    (64 - self.surface_rain_prob.get_width(), -1),
+                )
         except Exception as e:
             logger.warn(f"error rendering weather: {e}", exc_info=e)
 
