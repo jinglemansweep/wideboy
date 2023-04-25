@@ -1,5 +1,7 @@
 # WideBoy
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 ![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
 
 WideBoy is an experimental project that provides an ultra wide video wall display, serving dashboards, art/image slideshows and notification alerts. It is developed using Python and PyGame CE, providing smooth and fast animations, and is designed to run on Raspberry Pi single board computers for both energy-efficient and cost-effective operation.

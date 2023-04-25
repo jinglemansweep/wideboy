@@ -24,7 +24,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip poetry
+          python -m venv ./venv
+          . ./venv/bin/activate
           poetry install
       - name: MyPy check
         run: |
+          . ./venv/bin/activate
           mypy wideboy/**/*.py
