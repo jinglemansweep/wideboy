@@ -26,7 +26,7 @@ class SceneManager:
 
     def change_scene(self, name: str):
         index = self.get_scene_id_by_name(name)
-        if index:
+        if index is not None:
             self.set_scene(index)
 
     def set_scene(self, index: int):
@@ -55,6 +55,7 @@ class SceneManager:
     def get_scene_id_by_name(self, name: str) -> Optional[int]:
         for i, scene in enumerate(self.scenes):
             if name == scene.name:
+                print(name, i)
                 return i
         return None
 
