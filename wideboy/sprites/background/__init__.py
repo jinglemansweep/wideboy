@@ -53,7 +53,7 @@ class BackgroundSprite(BaseSprite):
                 color_bg=Color(0, 0, 0, 128),
                 color_outline=Color(0, 0, 0, 255),
             )
-            surface.blit(label, (640 - label.get_width(), self.rect.height - 14))
+            surface.blit(label, (0, self.rect.height - 14))
         self.image = surface
         self.image_index += 1
         if self.image_index > len(self.image_files) - 1:
