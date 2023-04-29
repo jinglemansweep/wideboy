@@ -51,13 +51,14 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.background_widget)
 
-        # Setup faded foreground layer widget
-        self.layer_faded = RectSprite(
+        # Setup weather widget
+        self.weather_widget = WeatherSprite(
             self,
-            Rect(self.width - 256, 0, 256, 64),
-            color_bg=Color(0, 0, 0, 255 - 64),
+            Rect(self.width - 128, 0, 128, 64),
+            color_temp=Color(255, 255, 255, 64),
+            demo=settings.general.demo,
         )
-        self.group.add(self.layer_faded)
+        self.group.add(self.weather_widget)
 
         # Setup calendar widget
         self.calendar_widget = CalendarSprite(
@@ -77,15 +78,6 @@ class DefaultScene(BaseScene):
             Rect(self.width - 96 + clock_pos_adj[0], 28 + clock_pos_adj[1], 96, 24),
         )
         self.group.add(self.clock_date_widget)
-
-        # Setup weather widget
-        self.weather_widget = WeatherSprite(
-            self,
-            Rect(self.width - 160, 0, 64, 64),
-            color_temp=Color(255, 255, 255, 64),
-            demo=settings.general.demo,
-        )
-        self.group.add(self.weather_widget)
 
         # Setup notification widget
         self.notification_widget = NotificationSprite(

@@ -139,7 +139,7 @@ class WeatherSprite(BaseSprite):
                 if os.path.exists(filename):
                     image = load_image(filename)
                     scaled = scale_surface(
-                        image, Vector2(self.rect.width, self.rect.height)
+                        image, Vector2(self.rect.width, self.rect.width)  # squared
                     )
                     self.image_cache[name].append(scaled)
 
@@ -149,7 +149,7 @@ class WeatherSprite(BaseSprite):
             return
         try:
             # Background
-            self.image.blit(self._render_background(), (0, 0))
+            self.image.blit(self._render_background(), (0, -32))
             # Temperature
             self.image.blit(self.surface_temp, (0, 0))
             # Wind
