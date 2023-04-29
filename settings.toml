@@ -51,6 +51,8 @@
 [homeassistant]
   # url = "http://homeassistant.local:8123"
   # api_token = "my-long-lived-token"
+  # cache_backend = "memory"
+  # cache_duration_mins = 1
   # topic_prefix = "homeassistant"
   
 [paths]

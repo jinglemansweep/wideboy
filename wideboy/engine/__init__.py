@@ -4,6 +4,7 @@ import os
 import pygame
 from datetime import datetime
 from pygame import Clock, Surface, RESIZABLE, SCALED, QUIT
+
 from typing import Any, TYPE_CHECKING
 
 from wideboy.config import settings

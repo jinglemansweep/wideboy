@@ -118,6 +118,16 @@ validators = [
         cast=str,
     ),
     Validator(
+        "HOMEASSISTANT__CACHE_BACKEND",
+        default="memory",
+        cast=str,
+    ),
+    Validator(
+        "HOMEASSISTANT__CACHE_DURATION_MINS",
+        default=1,
+        cast=int,
+    ),
+    Validator(
         "HOMEASSISTANT__TOPIC_PREFIX",
         default="homeassistant",
         cast=str,

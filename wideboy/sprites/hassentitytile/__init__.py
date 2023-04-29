@@ -58,8 +58,9 @@ class HassEntityTileSprite(BaseSprite):
     def render(self) -> None:
         # Entity
         if self.entity_id:
-            entity = self.scene.engine.hass.client.get_entity(entity_id=self.entity_id)
-            state = entity.get_state()
+            with self.scene.engine.hass.client as hass:
+                entity = hass.get_entity(entity_id=self.entity_id)
+                state = entity.get_state()
             active = (
                 self.state_callback(state) if self.state_callback is not None else True
             )
@@ -68,9 +69,8 @@ class HassEntityTileSprite(BaseSprite):
         # Template
         template_text = None
         if self.template:
-            template_text = self.scene.engine.hass.client.get_rendered_template(
-                self.template
-            )
+            with self.scene.engine.hass.client as hass:
+                template_text = hass.get_rendered_template(self.template)
         # Render
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.image.fill(self.color_bg)

@@ -1,7 +1,9 @@
 import logging
+from datetime import timedelta
 from pygame import Event
-from typing import Optional
-from homeassistant_api import Client
+from requests_cache import CachedSession
+from typing import Optional, Tuple
+from homeassistant_api import Client, State
 from wideboy.config import settings
 from wideboy.constants import (
     AppMetadata,
@@ -31,13 +33,20 @@ class HASSEntity:
 
 
 class HASSManager:
+    state: Tuple[State, ...]
+
     def __init__(self, mqtt: MQTTClient, device_id: str):
         self.mqtt = mqtt
         self.device_id = device_id
         self.client = Client(
             f"{settings.homeassistant.url}/api",
             settings.homeassistant.api_token,
-            cache_session=False,
+            cache_session=CachedSession(
+                backend=settings.homeassistant.cache_backend,
+                expire_after=timedelta(
+                    minutes=settings.homeassistant.cache_duration_mins
+                ),
+            ),
         )
         self.entities: dict[str, dict] = dict()
 

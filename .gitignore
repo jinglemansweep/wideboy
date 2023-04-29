@@ -1,5 +1,6 @@
 images/screenshots/**
 images/weather/premium/**
+http_cache
 venv
 __pycache__
 dietpi.txt
