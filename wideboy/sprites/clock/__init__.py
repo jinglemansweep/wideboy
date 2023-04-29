@@ -26,6 +26,7 @@ class TimeSprite(BaseSprite):
         font_name: str = "fonts/molot.otf",
         font_size: int = 36,
         time_format: str = "%H:%M",
+        align: str = "center",
         pos_adj: tuple[int, int] = (0, 0),
         rainbow: Optional[str] = None,
     ) -> None:
@@ -37,6 +38,7 @@ class TimeSprite(BaseSprite):
         self.font_name = font_name
         self.font_size = font_size
         self.time_format = time_format
+        self.align = align
         self.pos_adj = pos_adj
         self.rainbow = rainbow
         self.render_text_surface()
@@ -75,12 +77,15 @@ class TimeSprite(BaseSprite):
     def render(self) -> None:
         self.dirty = 1
         self.image.fill(self.color_bg)
+        x: float = (self.rect.width / 2) - (self.surface_text.get_rect().width / 2)
+        if self.align == "left":
+            x = 0.0
+        elif self.align == "right":
+            x = self.rect.width - self.surface_text.get_rect().width
         self.image.blit(
             self.surface_text,
             (
-                (self.rect.width / 2)
-                - (self.surface_text.get_rect().width / 2)
-                + self.pos_adj[0],
+                x,
                 0 + self.pos_adj[1],
             ),
         )
@@ -101,6 +106,7 @@ class DateSprite(BaseSprite):
         font_size: int = 16,
         date_format: str = "%a %d %b",
         uppercase: bool = True,
+        align: str = "center",
         pos_adj: tuple[int, int] = (0, 0),
         rainbow: Optional[str] = None,
     ) -> None:
@@ -113,6 +119,7 @@ class DateSprite(BaseSprite):
         self.font_size = font_size
         self.date_format = date_format
         self.uppercase = uppercase
+        self.align = align
         self.pos_adj = pos_adj
         self.rainbow = rainbow
         self.dirty = 1
@@ -154,11 +161,15 @@ class DateSprite(BaseSprite):
     def render(self) -> None:
         self.dirty = 1
         self.image.fill(self.color_bg)
+        x: float = (self.rect.width / 2) - (self.surface_text.get_rect().width / 2)
+        if self.align == "left":
+            x = 0.0
+        elif self.align == "right":
+            x = self.rect.width - self.surface_text.get_rect().width
         self.image.blit(
             self.surface_text,
             (
-                ((self.rect.width / 2) - self.surface_text.get_rect().width / 2)
-                + self.pos_adj[0],
+                x,
                 0 + self.pos_adj[1],
             ),
         )

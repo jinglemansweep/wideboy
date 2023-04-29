@@ -70,12 +70,18 @@ class DefaultScene(BaseScene):
         clock_pos_adj: tuple[int, int] = (0, 0)
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(self.width - 96 + clock_pos_adj[0], -9 + clock_pos_adj[1], 96, 48),
+            Rect(self.width - 96, -6, 96, 32),
+            color_fg=Color(255, 255, 255, 128),
+            font_size=28,
+            align="right",
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(self.width - 96 + clock_pos_adj[0], 28 + clock_pos_adj[1], 96, 24),
+            Rect(self.width - 96, 20, 96, 24),
+            color_fg=Color(255, 255, 0, 128),
+            font_size=14,
+            align="right",
         )
         self.group.add(self.clock_date_widget)
 
