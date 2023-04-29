@@ -25,12 +25,10 @@ class BackgroundSprite(BaseSprite):
         self,
         scene: BaseScene,
         rect: Rect,
-        size: Vector2,
         alpha: int = 255,
         shuffle: bool = False,
     ) -> None:
         super().__init__(scene, rect)
-        self.size = size
         self.alpha = alpha
         self.glob_images(shuffle)
         self.image_index = random.randint(0, len(self.image_files) - 1)
@@ -40,28 +38,22 @@ class BackgroundSprite(BaseSprite):
     def render_next_image(self):
         filename = self.image_files[self.image_index]
         logger.debug(f"image:next index={self.image_index} filename={filename}")
-        surface = Surface(self.size)
+        surface = Surface((self.rect.width, self.rect.height))
         orig_image = load_image(filename)
-        orig_image = pygame.transform.scale(orig_image, (512, 64))
-        blurred_image = filter_surface(
-            scale_surface(orig_image.copy(), self.size),
-            alpha=192,
-            filters=[ImageFilter.BLUR],
-        )
-        surface.blit(blurred_image, (0, 0))
-        surface.blit(orig_image, (0, 0))
+        scaled_image = scale_surface(orig_image, (self.rect.width, self.rect.height))
+        surface.blit(scaled_image, (0, 0))
         metadata = self.load_metadata(filename)
         if metadata:
             label_text = metadata["inputs"]["prompt"].strip()
             label = render_text(
                 label_text,
                 "fonts/bitstream-vera.ttf",
-                11,
+                10,
                 color_fg=Color(255, 255, 0, 255),
-                color_bg=Color(0, 0, 0, 192),
+                color_bg=Color(0, 0, 0, 128),
                 color_outline=Color(0, 0, 0, 255),
             )
-            surface.blit(label, (512 - label.get_width(), self.rect.height - 15))
+            surface.blit(label, (640 - label.get_width(), self.rect.height - 14))
         self.image = surface
         self.image_index += 1
         if self.image_index > len(self.image_files) - 1:
@@ -83,12 +75,3 @@ class BackgroundSprite(BaseSprite):
         except Exception as e:
             logger.warn(f"metadata:load error={e}")
         return None
-
-    def update(
-        self,
-        frame: int,
-        clock: Clock,
-        delta: float,
-        events: list[Event],
-    ) -> None:
-        super().update(frame, clock, delta, events)

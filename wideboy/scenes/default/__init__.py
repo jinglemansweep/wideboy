@@ -42,14 +42,25 @@ class DefaultScene(BaseScene):
             Rect(
                 0,
                 0,
-                self.width,
+                640,
                 self.height,
             ),
-            (self.width, self.height),
             255,
             shuffle=True,
         )
         self.group.add(self.background_widget)
+
+        # Faded background
+        self.background_fade_widget = RectSprite(
+            self,
+            Rect(
+                0,
+                0,
+                640,
+                12,
+            ),
+        )
+        self.group.add(self.background_fade_widget)
 
         # Setup weather widget
         self.weather_widget = WeatherSprite(
@@ -67,21 +78,18 @@ class DefaultScene(BaseScene):
         self.group.add(self.calendar_widget)
 
         # Setup clock widgets
-        clock_pos_adj: tuple[int, int] = (0, 0)
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(self.width - 96, -6, 96, 36),
+            Rect(self.width - 128, -6, 128, 36),
             color_fg=Color(255, 255, 255, 128),
             font_size=34,
-            align="right",
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(self.width - 96, 26, 96, 24),
+            Rect(self.width - 128, 26, 128, 24),
             color_fg=Color(255, 255, 0, 128),
             font_size=14,
-            align="right",
         )
         self.group.add(self.clock_date_widget)
 
@@ -114,20 +122,21 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.hass_bin_blue)
 
+        icons_offset_y = -3
         # Speedtest Widgets
         self.icon_speedtest = MaterialIconSprite(
             self,
-            Rect(self.width - 256, 0, 16, 16),
+            Rect(self.width - 252, icons_offset_y, 16, 16),
             MaterialIcons.MDI_SYNC_ALT,
-            16,
+            15,
             color_fg=Color(0, 255, 0, 255),
             color_outline=Color(0, 0, 0, 255),
         )
         self.group.add(self.icon_speedtest)
         self.template_speedtest = HomeAssistantTemplateSprite(
             self,
-            Rect(self.width - 256 + 18, 2, 96, 16),
-            "{{ states('sensor.download_iperf_as42831_net') | int }}|{{ states('sensor.upload_iperf_as42831_net') | int }}|{{ states('sensor.speedtest_ping') | int }}ms",
+            Rect(self.width - 252 + 18, icons_offset_y + 2, 96, 16),
+            "D: {{ states('sensor.download_iperf_as42831_net') | int }} U: {{ states('sensor.upload_iperf_as42831_net') | int }} P: {{ states('sensor.speedtest_ping') | int }}ms",
             font_size=9,
             color_outline=Color(0, 0, 0, 255),
         )
@@ -136,16 +145,16 @@ class DefaultScene(BaseScene):
         # Transmission Widgets
         self.icon_transmission = MaterialIconSprite(
             self,
-            Rect(self.width - 256, 14, 16, 16),
+            Rect(self.width - 256 - 140, icons_offset_y + 1, 16, 16),
             MaterialIcons.MDI_VPN_LOCK,
-            16,
+            12,
             color_fg=Color(0, 255, 255, 255),
             color_outline=Color(0, 0, 0, 255),
         )
         self.group.add(self.icon_transmission)
         self.template_transmission = HomeAssistantTemplateSprite(
             self,
-            Rect(self.width - 256 + 18, 17, 96, 16),
+            Rect(self.width - 256 - 140 + 18, icons_offset_y + 2, 96, 16),
             "{{ states('sensor.transmission_active_torrents') | int }}/{{ states('sensor.transmission_total_torrents') | int }} | {{ states('sensor.transmission_down_speed') | float | round(1) }}Mbs",
             font_size=9,
             color_outline=Color(0, 0, 0, 255),
@@ -155,16 +164,16 @@ class DefaultScene(BaseScene):
         # NAS Widgets
         self.icon_nas_disk = MaterialIconSprite(
             self,
-            Rect(self.width - 256, 30, 16, 16),
+            Rect(self.width - 256 - 48, icons_offset_y, 16, 16),
             MaterialIcons.MDI_DNS,
-            16,
+            14,
             color_fg=Color(255, 255, 0, 255),
             color_outline=Color(0, 0, 0, 255),
         )
         self.group.add(self.icon_nas_disk)
         self.template_nas_volume_used = HomeAssistantTemplateSprite(
             self,
-            Rect(self.width - 256 + 18, 32, 96, 16),
+            Rect(self.width - 256 - 48 + 18, icons_offset_y + 2, 96, 16),
             "{{ states('sensor.ds920plus_volume_used') | float | round(2) }}%",
             font_size=9,
             color_outline=Color(0, 0, 0, 255),
