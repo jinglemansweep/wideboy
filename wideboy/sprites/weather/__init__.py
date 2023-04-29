@@ -76,15 +76,21 @@ class WeatherSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if (
-                event.type == EVENT_EPOCH_MINUTE
-                and event.unit % self.update_interval_mins == 0
-            ) or self.weather is None:
-                self.update_state()
-                self.render_text_surfaces()
-            if self.demo and event.type == EVENT_EPOCH_SECOND and event.unit % 10 == 0:
-                self.weather["weather_code"] = random.choice(list(IMAGE_MAPPING.keys()))
-        self.render()
+            if self.demo:
+                if event.type == EVENT_EPOCH_SECOND and event.unit % 10 == 0:
+                    self.weather["weather_code"] = random.choice(
+                        list(IMAGE_MAPPING.keys())
+                    )
+            else:
+                if (
+                    event.type == EVENT_EPOCH_MINUTE
+                    and event.unit % self.update_interval_mins == 0
+                ) or self.weather is None:
+                    self.update_state()
+                    self.render_text_surfaces()
+
+        if frame % 2 == 0:
+            self.render()
 
     def render_text_surfaces(self) -> None:
         self.surface_temp = self._render_temperature()
