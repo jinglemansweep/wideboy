@@ -77,7 +77,7 @@ class WeatherSprite(BaseSprite):
         super().update(frame, clock, delta, events)
         for event in events:
             if self.demo:
-                if event.type == EVENT_EPOCH_SECOND and event.unit % 10 == 0:
+                if event.type == EVENT_EPOCH_SECOND and event.unit % 30 == 0:
                     self.weather["weather_code"] = random.choice(
                         list(IMAGE_MAPPING.keys())
                     )
