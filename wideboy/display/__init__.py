@@ -63,14 +63,17 @@ class Display:
             return
         surface = surface if self.visible else self.black
         pixels = pygame.surfarray.pixels3d(surface)
-        wrapped = self.wrap_surface(
-            pixels,
-            Vector2(
-                settings.display.matrix.width,
-                settings.display.matrix.height,
-            ),
-        )
-        image = Image.fromarray(wrapped).convert("RGB")
+        if settings.display.matrix.wrap_surface:
+            wrapped = self.wrap_surface(
+                pixels,
+                Vector2(
+                    settings.display.matrix.width,
+                    settings.display.matrix.height,
+                ),
+            )
+            image = Image.fromarray(wrapped).convert("RGB")
+        else:
+            image = Image.fromarray(pixels).convert("RGB")
         if self.buffer is not None and self.matrix is not None:
             self.buffer.SetImage(image)
             self.matrix.SwapOnVSync(self.buffer)

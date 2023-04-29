@@ -65,6 +65,11 @@ validators = [
         default=192,
         cast=int,
     ),
+    Validator(
+        "DISPLAY__MATRIX__WRAP_SURFACE",
+        default=True,
+        cast=bool,
+    ),
     # MQTT
     Validator(
         "MQTT__HOST",

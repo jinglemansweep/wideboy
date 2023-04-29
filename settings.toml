@@ -12,6 +12,7 @@
     # height = 64
   [display.matrix]
     # enabled = true
+    # wrap_surface = true
     # width = 256 # 64 * 4
     # height = 192 # 64 * 3
   [display.matrix.driver]
