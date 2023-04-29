@@ -59,7 +59,7 @@ class NightScene(BaseScene):
             self,
             Rect(self.clock_time_pos[0], self.clock_time_pos[1], 128, 48),
             font_size=48,
-            color_fg=Color(0, 0, 0, 0),
+            color_fg=Color(0, 0, 0, 255),
             color_outline=Color(255, 0, 255, 64),
             rainbow="outline",
         )
