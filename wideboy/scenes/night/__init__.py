@@ -72,7 +72,7 @@ class NightScene(BaseScene):
                 128,
                 24,
             ),
-            color_fg=Color(0, 0, 0, 0),
+            color_fg=Color(0, 0, 0, 255),
             color_outline=Color(128, 0, 128, 255),
             rainbow="outline",
         )
