@@ -39,6 +39,11 @@ validators = [
         default=30,
         cast=int,
     ),
+    Validator(
+        "GENERAL__DEMO",
+        default=False,
+        cast=bool,
+    ),
     # Display
     Validator(
         "DISPLAY__CANVAS__WIDTH",

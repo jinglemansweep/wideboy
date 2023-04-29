@@ -83,7 +83,7 @@ class DefaultScene(BaseScene):
             self,
             Rect(self.width - 160, 0, 64, 64),
             color_temp=Color(255, 255, 255, 64),
-            debug=False,
+            demo=settings.general.demo,
         )
         self.group.add(self.weather_widget)
 

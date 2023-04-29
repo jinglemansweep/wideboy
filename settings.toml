@@ -5,6 +5,7 @@
   # log_level = "debug" # info, debug
   # profiling = ""
   # fps = 30
+  # demo = false
 
 [display]
   [display.canvas]

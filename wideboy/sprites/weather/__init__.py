@@ -1,6 +1,7 @@
 import logging
 import os
 import pygame
+import random
 from pygame import Clock, Color, Event, Rect, Surface, Vector2, SRCALPHA
 from typing import Optional, Dict, List
 
@@ -13,7 +14,7 @@ from wideboy.sprites.image_helpers import (
     load_image,
     scale_surface,
 )
-from wideboy.constants import EVENT_EPOCH_MINUTE
+from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
 from wideboy.sprites.weather.resources import IMAGE_MAPPING
 
 from wideboy.config import settings
@@ -36,7 +37,7 @@ class WeatherSprite(BaseSprite):
         color_rain_prob: Color = Color(255, 255, 0, 255),
         color_wind: Color = Color(255, 255, 255, 255),
         update_interval_mins: int = 15,
-        debug: bool = False,
+        demo: bool = False,
     ) -> None:
         super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -45,7 +46,7 @@ class WeatherSprite(BaseSprite):
         self.color_rain_prob = color_rain_prob
         self.color_wind = color_wind
         self.update_interval_mins = update_interval_mins
-        self.debug = debug
+        self.demo = demo
         self.icon_summary = None
         self.entity_weather_code = "sensor.openweathermap_weather_code"
         self.entity_condition = "sensor.openweathermap_condition"
@@ -81,8 +82,8 @@ class WeatherSprite(BaseSprite):
             ) or self.weather is None:
                 self.update_state()
                 self.render_text_surfaces()
-            # if event.type == EVENT_EPOCH_SECOND and event.unit % 1 == 0:
-            #    self.weather["weather_code"] = random.choice(list(self.mapping.keys()))
+            if self.demo and event.type == EVENT_EPOCH_SECOND and event.unit % 10 == 0:
+                self.weather["weather_code"] = random.choice(list(IMAGE_MAPPING.keys()))
         self.render()
 
     def render_text_surfaces(self) -> None:
@@ -134,6 +135,7 @@ class WeatherSprite(BaseSprite):
                     name,
                     f"{name}_{i:05}.png",
                 )
+
                 if os.path.exists(filename):
                     image = load_image(filename)
                     scaled = scale_surface(
@@ -167,8 +169,6 @@ class WeatherSprite(BaseSprite):
     def _render_background(self) -> pygame.Surface:
         images = convert_weather_code_to_image_name(self.weather["weather_code"])
         image_name = images[1 if self.weather["sun"] == "above_horizon" else 2]
-        if self.debug:
-            image_name = "wsymbol_0013_sleet_showers"
         self.cache_image(image_name)
         frame_count = len(self.image_cache[image_name])
         self.image_frame = (self.image_frame + 1) % frame_count
