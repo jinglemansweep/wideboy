@@ -62,6 +62,7 @@ class WeatherSprite(BaseSprite):
         )
         self.image_cache: dict[str, List[Surface]] = dict()
         self.image_frame = 0
+        self.demo_index = 0
         self.weather: Optional[Dict] = None
         self.update_state()
         self.render_text_surfaces()
@@ -77,10 +78,13 @@ class WeatherSprite(BaseSprite):
         super().update(frame, clock, delta, events)
         for event in events:
             if self.demo:
-                if event.type == EVENT_EPOCH_SECOND and event.unit % 30 == 0:
-                    self.weather["weather_code"] = random.choice(
-                        list(IMAGE_MAPPING.keys())
-                    )
+                if event.type == EVENT_EPOCH_SECOND and event.unit % 5 == 0:
+                    self.weather["weather_code"] = list(IMAGE_MAPPING.keys())[
+                        self.demo_index
+                    ]
+                    self.demo_index += 1
+                    if self.demo_index >= len(list(IMAGE_MAPPING.keys())):
+                        self.demo_index = 0
             else:
                 if (
                     event.type == EVENT_EPOCH_MINUTE
