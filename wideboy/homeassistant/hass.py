@@ -43,9 +43,7 @@ class HASSManager:
             settings.homeassistant.api_token,
             cache_session=CachedSession(
                 backend=settings.homeassistant.cache_backend,
-                expire_after=timedelta(
-                    minutes=settings.homeassistant.cache_duration_mins
-                ),
+                expire_after=timedelta(seconds=settings.homeassistant.cache_duration),
             ),
         )
         self.entities: dict[str, dict] = dict()

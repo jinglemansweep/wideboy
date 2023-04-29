@@ -123,8 +123,8 @@ validators = [
         cast=str,
     ),
     Validator(
-        "HOMEASSISTANT__CACHE_DURATION_MINS",
-        default=1,
+        "HOMEASSISTANT__CACHE_DURATION",
+        default=10,
         cast=int,
     ),
     Validator(
