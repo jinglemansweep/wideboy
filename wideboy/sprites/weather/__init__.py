@@ -147,8 +147,6 @@ class WeatherSprite(BaseSprite):
                     self.image_cache[name].append(scaled)
 
     def render(self) -> None:
-        with self.scene.engine.hass.client as hass:
-            print(hass.get_state(entity_id="light.wideboy_ideapad_master"))
         self.image.fill(self.color_bg)
         if not self.weather:
             return
