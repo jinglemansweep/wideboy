@@ -9,6 +9,9 @@ logger = logging.getLogger("sprite.text")
 
 
 class TextSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
@@ -16,9 +19,9 @@ class TextSprite(BaseSprite):
         text: str,
         font_name: str = "fonts/bitstream-vera.ttf",
         font_size: int = 20,
-        color_fg: Color = (255, 255, 255, 255),
-        color_bg: Color = (0, 0, 0, 255),
-        color_outline: Color = (0, 0, 0, 255),
+        color_fg: Color = Color(255, 255, 255, 255),
+        color_bg: Color = Color(0, 0, 0, 255),
+        color_outline: Color = Color(0, 0, 0, 255),
     ) -> None:
         super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)

@@ -5,6 +5,7 @@ import random
 import yaml
 from pygame import Clock, Color, Event, Rect, Surface, Vector2
 from PIL import ImageFilter
+from typing import Any, Optional
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
@@ -74,7 +75,7 @@ class BackgroundSprite(BaseSprite):
         if shuffle:
             random.shuffle(self.image_files)
 
-    def load_metadata(self, filename: str) -> dict:
+    def load_metadata(self, filename: str) -> Any:
         basename, _ = os.path.splitext(filename)
         try:
             with open(f"{basename}.yml", "r") as yaml_file:

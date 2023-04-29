@@ -1,5 +1,5 @@
 import logging
-from pygame import Clock, Color, Event, Rect
+from pygame import Clock, Color, Event, Rect, Surface
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import render_grid
@@ -9,13 +9,16 @@ logger = logging.getLogger("sprite.rotogrid")
 
 
 class RotoGridSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
         rect: Rect,
         color_fg: Color = Color(255, 255, 255, 255),
         color_bg: Color = Color(0, 0, 0, 0),
-        spacing: float = 10,
+        spacing: int = 10,
         line_size: int = 1,
         zoom_speed: float = 0.1,
         zoom_range: tuple[float, float] = (1.0, 1.1),

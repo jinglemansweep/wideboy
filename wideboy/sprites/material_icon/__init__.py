@@ -10,11 +10,14 @@ logger = logging.getLogger("sprite.material_icon")
 
 
 class MaterialIconSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
         rect: Rect,
-        codepoint: str,
+        codepoint: int,
         size: int = 12,
         color_fg: Color = Color(255, 255, 255, 255),
         color_bg: Color = Color(0, 0, 0, 0),

@@ -10,14 +10,17 @@ logger = logging.getLogger("sprite.qrcode")
 
 
 class QRCodeSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
         rect: Rect,
         data: str,
-        size: Vector2 = (64, 64),
-        color_bg: Color = (255, 255, 255),
-        color_fg: Color = (0, 0, 0),
+        size: Vector2 = Vector2(64, 64),
+        color_bg: Color = Color(255, 255, 255),
+        color_fg: Color = Color(0, 0, 0),
         border: int = 2,
     ) -> None:
         super().__init__(scene, rect)
@@ -33,7 +36,10 @@ class QRCodeSprite(BaseSprite):
         qr = qrcode.QRCode(border=self.border)
         qr.add_data(self.data)
         qr.make(fit=True)
-        qr_img = qr.make_image(fill_color=self.color_fg, back_color=self.color_bg)
+        qr_img = qr.make_image(
+            fill_color=(self.color_fg.r, self.color_fg.g, self.color_fg.b),
+            back_color=(self.color_bg.r, self.color_bg.g, self.color_bg.b),
+        )
         qr_surface = pygame.image.fromstring(
             qr_img.tobytes(), qr_img.size, qr_img.mode
         ).convert()

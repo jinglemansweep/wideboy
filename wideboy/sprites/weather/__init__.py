@@ -1,7 +1,8 @@
 import logging
 import os
 import pygame
-from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
+from pygame import Clock, Color, Event, Rect, Surface, Vector2, SRCALPHA
+from typing import Optional, Dict, List
 
 # from wideboy.mqtt.homeassistant import HASS
 from wideboy.scenes.base import BaseScene
@@ -23,6 +24,9 @@ RAIN_PROBABILITY_DISPLAY_THRESHOLD = 25
 
 
 class WeatherSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
@@ -55,9 +59,9 @@ class WeatherSprite(BaseSprite):
             settings.paths.images_weather,
             "premium",
         )
-        self.image_cache = dict()
+        self.image_cache: dict[str, List[Surface]] = dict()
         self.image_frame = 0
-        self.weather = None
+        self.weather: Optional[Dict] = None
         self.update_state()
         self.render_text_surfaces()
         self.render()
@@ -132,7 +136,9 @@ class WeatherSprite(BaseSprite):
                 )
                 if os.path.exists(filename):
                     image = load_image(filename)
-                    scaled = scale_surface(image, (self.rect.width, self.rect.height))
+                    scaled = scale_surface(
+                        image, Vector2(self.rect.width, self.rect.height)
+                    )
                     self.image_cache[name].append(scaled)
 
     def render(self) -> None:
@@ -227,7 +233,7 @@ class WeatherSprite(BaseSprite):
         return surface
 
 
-def convert_weather_code_to_image_name(weather_code: int) -> tuple[str, str, str]:
+def convert_weather_code_to_image_name(weather_code: int) -> List[str]:
     return IMAGE_MAPPING[weather_code]
 
 

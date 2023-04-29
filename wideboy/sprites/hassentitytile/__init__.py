@@ -1,6 +1,6 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
-from typing import Optional
+from typing import Optional, Callable
 from wideboy.constants import EVENT_EPOCH_SECOND
 
 # from wideboy.mqtt.homeassistant import HASS
@@ -12,14 +12,17 @@ logger = logging.getLogger("sprite.hassentitytile")
 
 
 class HassEntityTileSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
         rect: Rect,
-        icon: str,
+        icon: int,
         template: Optional[str] = None,
         entity_id: Optional[str] = None,
-        state_callback: callable = lambda state: state.state == "on",
+        state_callback: Callable = lambda state: state.state == "on",
         color_icon: Color = Color(255, 255, 255, 255),
         color_template: Color = Color(255, 255, 255, 255),
         color_bg: Color = Color(0, 0, 0, 0),
@@ -57,7 +60,9 @@ class HassEntityTileSprite(BaseSprite):
         if self.entity_id:
             entity = self.scene.engine.hass.client.get_entity(entity_id=self.entity_id)
             state = entity.get_state()
-            active = self.state_callback(state) if self.state_callback else True
+            active = (
+                self.state_callback(state) if self.state_callback is not None else True
+            )
         else:
             active = True
         # Template
@@ -75,7 +80,7 @@ class HassEntityTileSprite(BaseSprite):
                 self.icon, self.icon_size, self.color_icon, Color(0, 0, 0, 255)
             )
             if template_text:
-                template_text = render_text(
+                template_text_surface = render_text(
                     template_text,
                     "fonts/bitstream-vera.ttf",
                     8,
@@ -84,9 +89,9 @@ class HassEntityTileSprite(BaseSprite):
                 )
                 text_pos = (
                     (self.rect.width / 2) - (icon_text.get_width() / 2),
-                    self.rect.height - template_text.get_height(),
+                    self.rect.height - template_text_surface.get_height(),
                 )
-                self.image.blit(template_text, text_pos)
+                self.image.blit(template_text_surface, text_pos)
             else:
                 icon_y += 4
             icon_pos = ((self.rect.width / 2) - (icon_text.get_width() / 2), icon_y)

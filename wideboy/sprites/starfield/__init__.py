@@ -3,6 +3,7 @@ import pygame
 import random
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from pygame.sprite import Group, Sprite
+from typing import List
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 
@@ -11,6 +12,9 @@ logger = logging.getLogger("sprite.starfield")
 
 
 class StarfieldSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
@@ -30,7 +34,7 @@ class StarfieldSprite(BaseSprite):
         self.color_fg = color_fg
         self.color_bg = color_bg
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
-        self.star_groups = [Group() for i in range(self.layer_count)]
+        self.star_groups: List[Group] = [Group() for i in range(self.layer_count)]
         self.add_stars()
         self.render()
 

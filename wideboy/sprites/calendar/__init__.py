@@ -13,6 +13,9 @@ logger = logging.getLogger("sprite.calendar")
 
 
 class CalendarSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
@@ -62,7 +65,7 @@ class CalendarSprite(BaseSprite):
         self.calendar_events = self.get_calendar_events()
         self.event_index = 0
 
-    def render_event_text(self, event: dict) -> None:
+    def render_event_text(self, event: dict) -> Surface:
         start_date = event["start"]["date"]
         ddmm_str = f"{start_date[8:10]}/{start_date[5:7]}"
         label = self.truncate_label(event["summary"])

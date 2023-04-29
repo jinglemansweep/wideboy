@@ -13,6 +13,9 @@ logger = logging.getLogger("sprite.clock")
 
 
 class TimeSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
@@ -41,7 +44,7 @@ class TimeSprite(BaseSprite):
 
     def update(
         self,
-        frame: str,
+        frame: int,
         clock: Clock,
         delta: float,
         events: list[Event],
@@ -84,6 +87,9 @@ class TimeSprite(BaseSprite):
 
 
 class DateSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
@@ -115,7 +121,7 @@ class DateSprite(BaseSprite):
 
     def update(
         self,
-        frame: str,
+        frame: int,
         clock: Clock,
         delta: float,
         events: list[Event],

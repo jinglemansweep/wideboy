@@ -1,5 +1,5 @@
 import logging
-from pygame import Rect, Vector2
+from pygame import Rect, Surface, Vector2
 from typing import Optional
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
@@ -14,6 +14,9 @@ logger = logging.getLogger("sprite.image")
 
 
 class ImageSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
@@ -33,7 +36,8 @@ class ImageSprite(BaseSprite):
         self.rect = Rect(
             self.rect[0], self.rect[1], surface.get_rect()[2], surface.get_rect()[3]
         )
-        surface = scale_surface(surface, self.size)
+        if self.size:
+            surface = scale_surface(surface, self.size)
         surface = filter_surface(surface, alpha=self.alpha)
         self.image = surface
         self.dirty = 1

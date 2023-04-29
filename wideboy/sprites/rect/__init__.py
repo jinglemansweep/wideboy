@@ -8,6 +8,9 @@ logger = logging.getLogger("sprite.placeholder")
 
 
 class RectSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,

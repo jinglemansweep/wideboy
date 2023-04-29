@@ -12,6 +12,9 @@ logger = logging.getLogger("sprite.hassentitytile")
 
 
 class HomeAssistantTemplateSprite(BaseSprite):
+    rect: Rect
+    image: Surface
+
     def __init__(
         self,
         scene: BaseScene,
