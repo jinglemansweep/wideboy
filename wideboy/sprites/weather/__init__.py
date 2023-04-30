@@ -100,7 +100,7 @@ class WeatherAnimationSprite(BaseSprite):
 
     def render(self) -> None:
         self.image.fill(Color(0, 0, 0, 0))
-        images = convert_weather_code_to_image_name(self.weather_code)
+        images = convert_weather_code_to_image_name(self.weather_code.state)
         image_name = images[1 if self.weather_daytime else 2]
         self.cache_image(image_name)
         frame_count = len(self.image_cache[image_name])
