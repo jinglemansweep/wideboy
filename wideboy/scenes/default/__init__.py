@@ -202,7 +202,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.icon_speedtest)
         self.template_speedtest = HomeAssistantTemplateSprite(
             self,
-            Rect(self.width - 258 + 18, icons_offset_y + 2, 96, 16),
+            Rect(self.width - 258 + 18, icons_offset_y + 2, 102, 16),
             "D: {{ states('sensor.download_iperf_as42831_net') | int }} U: {{ states('sensor.upload_iperf_as42831_net') | int }} P: {{ states('sensor.speedtest_ping') | int }}ms",
             font_size=9,
             color_outline=Color(0, 0, 0, 255),
