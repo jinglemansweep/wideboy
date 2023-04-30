@@ -138,7 +138,7 @@ IMAGE_MAPPING = {
     ],
     611: [
         "sleet",
-        "wsymbol_0021_cloudy_with_light_sleet",
+        "wsymbol_0021_cloudy_with_sleet",
         "wsymbol_0037_cloudy_with_sleet_night",
     ],
     621: [
