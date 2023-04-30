@@ -102,13 +102,13 @@ class WeatherAnimationSprite(BaseSprite):
 
     def render(self) -> None:
         self.image.fill(Color(0, 0, 0, 0))
+        # self.weather_code = "801"
         images = convert_weather_code_to_image_name(self.weather_code)
         image_name = images[1 if self.weather_daytime else 2]
         self.cache_image(image_name)
         frame_count = len(self.image_cache[image_name])
         self.image_frame = (self.image_frame + 1) % frame_count
-        if frame_count > 1:
-            self.dirty = 1
+        self.dirty = 1
         self.image.blit(self.image_cache[image_name][self.image_frame], self.offset)
 
 
