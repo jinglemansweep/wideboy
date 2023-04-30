@@ -72,7 +72,9 @@ class WeatherAnimationSprite(BaseSprite):
                 self.weather_daytime = (
                     hass.get_state(entity_id="sun.sun").state == "above_horizon"
                 )
-                self.weather_code = hass.get_state(entity_id=self.entity_weather_code)
+                self.weather_code = hass.get_state(
+                    entity_id=self.entity_weather_code
+                ).state
         else:
             self.weather_daytime = random.choice([True, False])
             self.weather_code = random.choice(list(IMAGE_MAPPING.keys()))
@@ -100,7 +102,7 @@ class WeatherAnimationSprite(BaseSprite):
 
     def render(self) -> None:
         self.image.fill(Color(0, 0, 0, 0))
-        images = convert_weather_code_to_image_name(self.weather_code.state)
+        images = convert_weather_code_to_image_name(self.weather_code)
         image_name = images[1 if self.weather_daytime else 2]
         self.cache_image(image_name)
         frame_count = len(self.image_cache[image_name])
