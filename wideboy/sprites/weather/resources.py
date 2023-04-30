@@ -1,4 +1,4 @@
-IMAGE_MAPPING = mapping = {
+IMAGE_MAPPING = {
     200: [
         "thunderstorm with light rain",
         "wsymbol_0024_thunderstorms",

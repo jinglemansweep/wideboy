@@ -11,7 +11,7 @@ from wideboy.sprites.homeassistant import HomeAssistantTemplateSprite
 from wideboy.sprites.material_icon import MaterialIconSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.rect import RectSprite
-from wideboy.sprites.weather import WeatherSprite
+from wideboy.sprites.weather import WeatherAnimationSprite
 from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
 
@@ -36,7 +36,10 @@ class DefaultScene(BaseScene):
     def setup(self):
         super().setup()
 
-        # Setup background widget
+        # =====================================================================
+        # ARTYFARTY BACKGROUND WIDGET
+        # =====================================================================
+
         self.background_widget = BackgroundSprite(
             self,
             Rect(
@@ -50,7 +53,10 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.background_widget)
 
-        # Faded background
+        # =====================================================================
+        # FADED OVERLAY WIDGETS
+        # =====================================================================
+
         self.background_fade_widget = RectSprite(
             self,
             Rect(
@@ -62,38 +68,50 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.background_fade_widget)
 
-        # Setup weather widget
-        self.weather_widget = WeatherSprite(
+        # =====================================================================
+        # WEATHER WIDGET
+        # =====================================================================
+
+        self.weather_widget = WeatherAnimationSprite(
             self,
             Rect(self.width - 128, 0, 128, 64),
-            color_temp=Color(255, 255, 255, 64),
             demo=settings.general.demo,
+            offset=Vector2(0, -32),
         )
         self.group.add(self.weather_widget)
 
-        # Setup calendar widget
+        # =====================================================================
+        # CALENDAR WIDGET
+        # =====================================================================
+
         self.calendar_widget = CalendarSprite(
-            self, Rect(self.width - 96, 49, 96, 24), "calendar.wideboy"
+            self, Rect(self.width - 128, 49, 128, 24), "calendar.wideboy"
         )
         self.group.add(self.calendar_widget)
 
-        # Setup clock widgets
+        # =====================================================================
+        # CLOCK WIDGET
+        # =====================================================================
+
         self.clock_time_widget = TimeSprite(
             self,
             Rect(self.width - 128, -6, 128, 36),
-            color_fg=Color(255, 255, 255, 128),
+            color_fg=Color(255, 255, 0, 255),
             font_size=34,
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
             Rect(self.width - 128, 26, 128, 24),
-            color_fg=Color(255, 255, 0, 128),
+            color_fg=Color(192, 192, 255, 255),
             font_size=14,
         )
         self.group.add(self.clock_date_widget)
 
-        # Setup notification widget
+        # =====================================================================
+        # NOTIFICATION WIDGET
+        # =====================================================================
+
         self.notification_widget = NotificationSprite(
             self,
             Rect(32, 4, 768 - 320, 56),
@@ -102,7 +120,10 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.notification_widget)
 
-        # Setup bin collection widgets
+        # =====================================================================
+        # BIN COLLECTION WIDGETS
+        # =====================================================================
+
         bin_rect = Rect(self.width - 183, 40, 32, 32)
         self.hass_bin_black = HassEntityTileSprite(
             self,
@@ -122,27 +143,14 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.hass_bin_blue)
 
-        icons_offset_y = -3
-        # Speedtest Widgets
-        self.icon_speedtest = MaterialIconSprite(
-            self,
-            Rect(self.width - 252, icons_offset_y, 16, 16),
-            MaterialIcons.MDI_SYNC_ALT,
-            15,
-            color_fg=Color(0, 255, 0, 255),
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.group.add(self.icon_speedtest)
-        self.template_speedtest = HomeAssistantTemplateSprite(
-            self,
-            Rect(self.width - 252 + 18, icons_offset_y + 2, 96, 16),
-            "D: {{ states('sensor.download_iperf_as42831_net') | int }} U: {{ states('sensor.upload_iperf_as42831_net') | int }} P: {{ states('sensor.speedtest_ping') | int }}ms",
-            font_size=9,
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.group.add(self.template_speedtest)
+        # =====================================================================
+        # HASS ENTITY WIDGETS
+        # =====================================================================
 
-        # Transmission Widgets
+        icons_offset_y = -3
+
+        # Transmission Widget
+
         self.icon_transmission = MaterialIconSprite(
             self,
             Rect(self.width - 256 - 140, icons_offset_y + 1, 16, 16),
@@ -161,7 +169,8 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.template_transmission)
 
-        # NAS Widgets
+        # NAS Widget
+
         self.icon_nas_disk = MaterialIconSprite(
             self,
             Rect(self.width - 256 - 48, icons_offset_y, 16, 16),
@@ -180,7 +189,30 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.template_nas_volume_used)
 
-        # Run initial acts
+        # Speedtest Widget
+
+        self.icon_speedtest = MaterialIconSprite(
+            self,
+            Rect(self.width - 252, icons_offset_y, 16, 16),
+            MaterialIcons.MDI_SYNC_ALT,
+            15,
+            color_fg=Color(0, 255, 0, 255),
+            color_outline=Color(0, 0, 0, 255),
+        )
+        self.group.add(self.icon_speedtest)
+        self.template_speedtest = HomeAssistantTemplateSprite(
+            self,
+            Rect(self.width - 252 + 18, icons_offset_y + 2, 96, 16),
+            "D: {{ states('sensor.download_iperf_as42831_net') | int }} U: {{ states('sensor.upload_iperf_as42831_net') | int }} P: {{ states('sensor.speedtest_ping') | int }}ms",
+            font_size=9,
+            color_outline=Color(0, 0, 0, 255),
+        )
+        self.group.add(self.template_speedtest)
+
+        # =====================================================================
+        # SCENE STARTUP
+        # =====================================================================
+
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
 

@@ -24,7 +24,7 @@ logger = logging.getLogger("sprite.weather")
 RAIN_PROBABILITY_DISPLAY_THRESHOLD = 25
 
 
-class WeatherSprite(BaseSprite):
+class WeatherAnimationSprite(BaseSprite):
     rect: Rect
     image: Surface
 
@@ -32,30 +32,16 @@ class WeatherSprite(BaseSprite):
         self,
         scene: BaseScene,
         rect: Rect,
-        color_bg: Color = Color(0, 0, 0, 0),
-        color_temp: Color = Color(255, 255, 255, 255),
-        color_rain_prob: Color = Color(255, 255, 0, 255),
-        color_wind: Color = Color(255, 255, 255, 255),
-        update_interval_mins: int = 15,
+        offset: Vector2 = Vector2(0, 0),
         demo: bool = False,
     ) -> None:
         super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
-        self.color_bg = color_bg
-        self.color_temp = color_temp
-        self.color_rain_prob = color_rain_prob
-        self.color_wind = color_wind
-        self.update_interval_mins = update_interval_mins
+        self.offset = offset
         self.demo = demo
         self.icon_summary = None
         self.entity_weather_code = "sensor.openweathermap_weather_code"
-        self.entity_condition = "sensor.openweathermap_condition"
-        self.entity_wind_speed = "sensor.openweathermap_wind_speed"
-        self.entity_wind_bearing = "sensor.openweathermap_wind_bearing"
-        self.entity_temp = "sensor.openweathermap_temperature"
-        self.entity_forecast_precipitation = (
-            "sensor.openweathermap_forecast_precipitation_probability"
-        )
+        self.entity_sun = "sun.sun"
         self.image_path = os.path.join(
             settings.paths.images_weather,
             "premium",
@@ -63,9 +49,7 @@ class WeatherSprite(BaseSprite):
         self.image_cache: dict[str, List[Surface]] = dict()
         self.image_frame = 0
         self.demo_index = 0
-        self.weather: Optional[Dict] = None
         self.update_state()
-        self.render_text_surfaces()
         self.render()
 
     def update(
@@ -77,56 +61,24 @@ class WeatherSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if self.demo:
-                if event.type == EVENT_EPOCH_SECOND and event.unit % 5 == 0:
-                    self.weather["weather_code"] = list(IMAGE_MAPPING.keys())[
-                        self.demo_index
-                    ]
-                    self.demo_index += 1
-                    if self.demo_index >= len(list(IMAGE_MAPPING.keys())):
-                        self.demo_index = 0
-            else:
-                if (
-                    event.type == EVENT_EPOCH_MINUTE
-                    and event.unit % self.update_interval_mins == 0
-                ) or self.weather is None:
-                    self.update_state()
-                    self.render_text_surfaces()
-
+            if event.type == EVENT_EPOCH_MINUTE:
+                self.update_state()
         if frame % 2 == 0:
             self.render()
 
-    def render_text_surfaces(self) -> None:
-        self.surface_temp = self._render_temperature()
-        self.surface_rain_prob = self._render_precipitation()
-        self.surface_wind = self._render_wind()
-
     def update_state(self) -> None:
-        try:
+        if not self.demo:
             with self.scene.engine.hass.client as hass:
-                sun = hass.get_entity(entity_id="sun.sun")
-                weather_code = hass.get_entity(entity_id=self.entity_weather_code)
-                wind_speed = hass.get_entity(entity_id=self.entity_wind_speed)
-                wind_bearing = hass.get_entity(entity_id=self.entity_wind_bearing)
-                condition = hass.get_entity(entity_id=self.entity_condition)
-                temp = hass.get_entity(entity_id=self.entity_temp)
-                forecast_precipitation = hass.get_entity(
-                    entity_id=self.entity_forecast_precipitation
+                self.weather_daytime = (
+                    hass.get_state(entity_id="sun.sun").state == "above_horizon"
                 )
-            self.weather = dict(
-                sun=sun.state.state,
-                weather_code=int(weather_code.state.state),
-                condition=condition.state.state,
-                wind_speed=float(wind_speed.state.state),
-                wind_bearing=float(wind_bearing.state.state),
-                temp=float(temp.state.state),
-                forecast_precipitation=float(forecast_precipitation.state.state),
-            )
-            logger.debug(
-                f"updated: sun={self.weather['sun']} weather_code={self.weather['weather_code']} condition={self.weather['condition']} wind_speed={self.weather['wind_speed']} wind_bearing={self.weather['wind_bearing']} temp={self.weather['temp']} forecast_precipitation={self.weather['forecast_precipitation']}"
-            )
-        except Exception as e:
-            logger.warn(f"Error updating weather: {e}")
+                self.weather_code = hass.get_state(entity_id=self.entity_weather_code)
+        else:
+            self.weather_daytime = random.choice([True, False])
+            self.weather_code = random.choice(list(IMAGE_MAPPING.keys()))
+        logger.debug(
+            f"weather:state demo={self.demo} daytime={self.weather_daytime} code={self.weather_code}"
+        )
 
     def cache_image(self, name: str) -> None:
         if name not in self.image_cache:
@@ -147,97 +99,19 @@ class WeatherSprite(BaseSprite):
                     self.image_cache[name].append(scaled)
 
     def render(self) -> None:
-        self.image.fill(self.color_bg)
-        if not self.weather:
-            return
-        try:
-            # Background
-            self.image.blit(self._render_background(), (0, -32))
-            # Temperature
-            self.image.blit(self.surface_temp, (0, 0))
-            # Wind
-            self.image.blit(self.surface_wind, (0, 32))
-            # Rain probability
-            if (
-                self.weather["forecast_precipitation"]
-                > RAIN_PROBABILITY_DISPLAY_THRESHOLD
-            ):
-                self.image.blit(
-                    self.surface_rain_prob,
-                    (64 - self.surface_rain_prob.get_width(), -1),
-                )
-        except Exception as e:
-            logger.warn(f"error rendering weather: {e}", exc_info=e)
-
-    def _render_background(self) -> pygame.Surface:
-        images = convert_weather_code_to_image_name(self.weather["weather_code"])
-        image_name = images[1 if self.weather["sun"] == "above_horizon" else 2]
+        self.image.fill(Color(0, 0, 0, 0))
+        images = convert_weather_code_to_image_name(self.weather_code)
+        image_name = images[1 if self.weather_daytime else 2]
         self.cache_image(image_name)
         frame_count = len(self.image_cache[image_name])
         self.image_frame = (self.image_frame + 1) % frame_count
         if frame_count > 1:
             self.dirty = 1
-        return self.image_cache[image_name][self.image_frame]
-
-    def _render_temperature(self, font_size: int = 24) -> pygame.Surface:
-        label = (
-            f"{int(self.weather['temp'])}" if self.weather["temp"] is not None else "?"
-        )
-        temp_text = render_text(
-            label,
-            "fonts/bitstream-vera.ttf",
-            font_size,
-            color_fg=Color(255, 255, 255, 255),
-            color_outline=Color(0, 0, 0, 255),
-        )
-        surface = Surface(
-            (temp_text.get_width() + 20, temp_text.get_height()), SRCALPHA
-        )
-        surface.blit(temp_text, (0, -4))
-        degree_text = render_text(
-            "°",
-            "fonts/bitstream-vera.ttf",
-            16,
-            color_fg=self.color_temp,
-            color_outline=Color(0, 0, 0, 255),
-        )
-        surface.blit(degree_text, (temp_text.get_width() - 4, -2))
-        return surface
-
-    def _render_precipitation(self) -> Surface:
-        label = (
-            f"{int(self.weather['forecast_precipitation'])}%"
-            if self.weather["forecast_precipitation"] is not None
-            else "?"
-        )
-        return render_text(
-            label,
-            "fonts/bitstream-vera.ttf",
-            8,
-            color_fg=self.color_rain_prob,
-            color_outline=Color(0, 0, 0, 255),
-        )
-
-    def _render_wind(self) -> Surface:
-        surface = pygame.Surface((32, 32), SRCALPHA)
-        angle = self.weather["wind_bearing"]
-        speed = int(convert_ms_to_mph(self.weather["wind_speed"]))
-        arrow = render_arrow((4, 4), 12, angle, Color(0, 0, 0, 192), adjust=180)
-        surface.blit(arrow, (2, 4))
-        speed_str = f"{speed}"
-        label = render_text(
-            speed_str,
-            "fonts/bitstream-vera.ttf",
-            9,
-            self.color_wind,
-            color_outline=Color(0, 0, 0, 255),
-        )
-        surface.blit(label, (14 - (label.get_width() / 2), 9))
-        return surface
+        self.image.blit(self.image_cache[image_name][self.image_frame], self.offset)
 
 
-def convert_weather_code_to_image_name(weather_code: int) -> List[str]:
-    return IMAGE_MAPPING[weather_code]
+def convert_weather_code_to_image_name(weather_code: str) -> List[str]:
+    return IMAGE_MAPPING[int(weather_code)]
 
 
 def convert_ms_to_mph(ms: float) -> float:
