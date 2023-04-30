@@ -153,7 +153,7 @@ class DefaultScene(BaseScene):
 
         self.icon_transmission = MaterialIconSprite(
             self,
-            Rect(self.width - 256 - 140, icons_offset_y + 1, 16, 16),
+            Rect(self.width - 256 - 146, icons_offset_y + 1, 16, 16),
             MaterialIcons.MDI_VPN_LOCK,
             12,
             color_fg=Color(0, 255, 255, 255),
@@ -162,7 +162,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.icon_transmission)
         self.template_transmission = HomeAssistantTemplateSprite(
             self,
-            Rect(self.width - 256 - 140 + 18, icons_offset_y + 2, 96, 16),
+            Rect(self.width - 256 - 146 + 18, icons_offset_y + 2, 96, 16),
             "{{ states('sensor.transmission_active_torrents') | int }}/{{ states('sensor.transmission_total_torrents') | int }} | {{ states('sensor.transmission_down_speed') | float | round(1) }}Mbs",
             font_size=9,
             color_outline=Color(0, 0, 0, 255),
@@ -173,7 +173,7 @@ class DefaultScene(BaseScene):
 
         self.icon_nas_disk = MaterialIconSprite(
             self,
-            Rect(self.width - 256 - 48, icons_offset_y, 16, 16),
+            Rect(self.width - 256 - 54, icons_offset_y, 16, 16),
             MaterialIcons.MDI_DNS,
             14,
             color_fg=Color(255, 255, 0, 255),
@@ -182,7 +182,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.icon_nas_disk)
         self.template_nas_volume_used = HomeAssistantTemplateSprite(
             self,
-            Rect(self.width - 256 - 48 + 18, icons_offset_y + 2, 96, 16),
+            Rect(self.width - 256 - 54 + 18, icons_offset_y + 2, 96, 16),
             "{{ states('sensor.ds920plus_volume_used') | float | round(2) }}%",
             font_size=9,
             color_outline=Color(0, 0, 0, 255),
@@ -193,7 +193,7 @@ class DefaultScene(BaseScene):
 
         self.icon_speedtest = MaterialIconSprite(
             self,
-            Rect(self.width - 252, icons_offset_y, 16, 16),
+            Rect(self.width - 258, icons_offset_y, 16, 16),
             MaterialIcons.MDI_SYNC_ALT,
             15,
             color_fg=Color(0, 255, 0, 255),
@@ -202,7 +202,7 @@ class DefaultScene(BaseScene):
         self.group.add(self.icon_speedtest)
         self.template_speedtest = HomeAssistantTemplateSprite(
             self,
-            Rect(self.width - 252 + 18, icons_offset_y + 2, 96, 16),
+            Rect(self.width - 258 + 18, icons_offset_y + 2, 96, 16),
             "D: {{ states('sensor.download_iperf_as42831_net') | int }} U: {{ states('sensor.upload_iperf_as42831_net') | int }} P: {{ states('sensor.speedtest_ping') | int }}ms",
             font_size=9,
             color_outline=Color(0, 0, 0, 255),
