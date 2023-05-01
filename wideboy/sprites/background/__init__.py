@@ -1,17 +1,15 @@
 import logging
 import os
-import pygame
+
 import random
 import yaml
-from pygame import Clock, Color, Event, Rect, Surface, Vector2
-from PIL import ImageFilter
-from typing import Any, Optional
+from pygame import Color, Rect, Surface
+from typing import Any
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
     glob_files,
     load_image,
-    filter_surface,
     scale_surface,
     render_text,
 )

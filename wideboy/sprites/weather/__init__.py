@@ -1,16 +1,13 @@
 import logging
 import os
-import pygame
 import random
-from pygame import Clock, Color, Event, Rect, Surface, Vector2, SRCALPHA
-from typing import Optional, Dict, List
+from pygame import Clock, Event, Rect, Surface, Vector2, SRCALPHA
+from typing import Optional, List
 
 # from wideboy.mqtt.homeassistant import HASS
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
-    render_text,
-    render_arrow,
     load_image,
     scale_surface,
 )
