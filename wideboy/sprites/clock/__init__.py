@@ -58,9 +58,11 @@ class TimeSprite(BaseSprite):
         if frame % 100 == 0:
             if self.rainbow == "fg":
                 self.color_fg = rainbow_color(frame / 100)
+                self.dirty = 1
             elif self.rainbow == "outline":
                 self.color_outline = rainbow_color(frame / 100)
-            self.render()
+                self.dirty = 1
+        self.render()
 
     def render_text_surface(self) -> None:
         now = datetime.now()
@@ -76,7 +78,6 @@ class TimeSprite(BaseSprite):
 
     def render(self) -> None:
         self.image.fill(self.color_bg)
-        self.dirty = 1
         x: float = (self.rect.width / 2) - (self.surface_text.get_rect().width / 2)
         if self.align == "left":
             x = 0.0
