@@ -98,10 +98,15 @@ class CalendarSprite(BaseSprite):
         then = now + timedelta(days=self.days_ahead)
         start = now.strftime("%Y-%m-%dT%H:%M:%S.000Z")
         end = then.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-        events = self.scene.engine.hass.client.request(
-            f"calendars/{self.entity_id}?start={start}&end={end}"
-        )
-        return sorted(events, key=lambda event: event["start"]["date"])
+        try:
+            with self.scene.engine.hass.client as hass:
+                events = hass.request(
+                    f"calendars/{self.entity_id}?start={start}&end={end}"
+                )
+            return sorted(events, key=lambda event: event["start"]["date"])
+        except:
+            logger.error("Failed to get calendar events")
+            return []
 
     def truncate_label(self, label: str) -> str:
         if len(label) <= self.max_label_width:

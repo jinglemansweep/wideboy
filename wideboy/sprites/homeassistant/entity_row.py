@@ -50,7 +50,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 self.render()
 
     def render(self) -> None:
-        w, h = 0, 0
+        w, h = 1, 2
         surfaces = []
         for entity in self.entities:
             callback = entity.get("cb_active", lambda e: True)

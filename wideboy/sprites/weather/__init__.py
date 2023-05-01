@@ -46,6 +46,7 @@ class WeatherAnimationSprite(BaseSprite):
         self.image_cache: dict[str, List[Surface]] = dict()
         self.image_frame = 0
         self.demo_index = 0
+        self.weather_code: Optional[str] = None
         self.update_state()
         self.render()
 
@@ -67,20 +68,23 @@ class WeatherAnimationSprite(BaseSprite):
             self.render()
 
     def update_state(self) -> None:
-        if not self.demo:
-            with self.scene.engine.hass.client as hass:
-                self.weather_daytime = (
-                    hass.get_state(entity_id="sun.sun").state == "above_horizon"
-                )
-                self.weather_code = hass.get_state(
-                    entity_id=self.entity_weather_code
-                ).state
-        else:
-            self.weather_daytime = random.choice([True, False])
-            self.weather_code = random.choice(list(IMAGE_MAPPING.keys()))
-        logger.debug(
-            f"weather:state demo={self.demo} daytime={self.weather_daytime} code={self.weather_code}"
-        )
+        try:
+            if not self.demo:
+                with self.scene.engine.hass.client as hass:
+                    self.weather_daytime = (
+                        hass.get_state(entity_id="sun.sun").state == "above_horizon"
+                    )
+                    self.weather_code = hass.get_state(
+                        entity_id=self.entity_weather_code
+                    ).state
+            else:
+                self.weather_daytime = random.choice([True, False])
+                self.weather_code = str(random.choice(list(IMAGE_MAPPING.keys())))
+            logger.debug(
+                f"weather:state demo={self.demo} daytime={self.weather_daytime} code={self.weather_code}"
+            )
+        except:
+            logger.error(f"weather:state")
 
     def cache_image(self, name: str) -> None:
         if name not in self.image_cache:
@@ -100,6 +104,8 @@ class WeatherAnimationSprite(BaseSprite):
 
     def render(self) -> None:
         # self.weather_code = "600"
+        if not self.weather_code:
+            return
         images = convert_weather_code_to_image_name(self.weather_code)
         image_name = images[1 if self.weather_daytime else 2]
         self.cache_image(image_name)
