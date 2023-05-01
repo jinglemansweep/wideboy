@@ -23,6 +23,7 @@ class CalendarSprite(BaseSprite):
         entity_id: str,
         event_count: int = 5,
         max_label_width: int = 64,
+        color_fg: Color = Color(255, 255, 255, 255),
         font: str = "fonts/bitstream-vera.ttf",
         font_size: int = 10,
         interval: int = 10,
@@ -32,6 +33,7 @@ class CalendarSprite(BaseSprite):
         self.entity_id = entity_id
         self.event_count = event_count
         self.max_label_width = max_label_width
+        self.color_fg = color_fg
         self.font = font
         self.font_size = font_size
         self.interval = interval
@@ -74,7 +76,7 @@ class CalendarSprite(BaseSprite):
             self.font,
             self.font_size,
             color_bg=Color(0, 0, 0, 0),
-            color_fg=Color(255, 255, 0, 255),
+            color_fg=self.color_fg,
             color_outline=Color(0, 0, 0, 255),
         )
 

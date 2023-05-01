@@ -86,16 +86,16 @@ class DefaultScene(BaseScene):
 
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(self.width - 64, -4, 64, 30),
+            Rect(self.width - 96, -7, 96, 39),
             color_fg=Color(255, 255, 0, 255),
-            font_size=23,
+            font_size=38,
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(self.width - 64, 18, 64, 12),
+            Rect(self.width - 96, 31, 96, 14),
             color_fg=Color(255, 255, 255, 255),
-            font_size=10,
+            font_size=12,
         )
         self.group.add(self.clock_date_widget)
 
@@ -104,7 +104,11 @@ class DefaultScene(BaseScene):
         # =====================================================================
 
         self.calendar_widget = CalendarSprite(
-            self, Rect(self.width - 64, 52, 64, 15), "calendar.wideboy", font_size=8
+            self,
+            Rect(self.width - 96, 51, 96, 15),
+            "calendar.wideboy",
+            font_size=9,
+            color_fg=Color(255, 128, 255, 255),
         )
         self.group.add(self.calendar_widget)
 
