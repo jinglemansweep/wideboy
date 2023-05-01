@@ -95,9 +95,9 @@ class DefaultScene(BaseScene):
 
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(self.width - 64, -4, 64, 36),
+            Rect(self.width - 64, -5, 64, 36),
             color_fg=Color(255, 255, 0, 255),
-            font_size=24,
+            font_size=23,
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
