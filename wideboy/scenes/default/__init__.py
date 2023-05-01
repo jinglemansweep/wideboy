@@ -76,6 +76,7 @@ class DefaultScene(BaseScene):
             self,
             Rect(self.width - 128, 0, 128, 64),
             demo=settings.general.demo,
+            size=Vector2(128, 128),
             offset=Vector2(0, -32),
         )
         self.group.add(self.weather_widget)
@@ -85,7 +86,7 @@ class DefaultScene(BaseScene):
         # =====================================================================
 
         self.calendar_widget = CalendarSprite(
-            self, Rect(self.width - 128, 49, 128, 24), "calendar.wideboy"
+            self, Rect(self.width - 96, 49, 96, 24), "calendar.wideboy"
         )
         self.group.add(self.calendar_widget)
 
@@ -95,16 +96,16 @@ class DefaultScene(BaseScene):
 
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(self.width - 64, -5, 64, 36),
+            Rect(self.width - 96, -5, 96, 36),
             color_fg=Color(255, 255, 0, 255),
-            font_size=23,
+            font_size=28,
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(self.width - 64, 18, 64, 24),
+            Rect(self.width - 96, 20, 96, 24),
             color_fg=Color(255, 255, 255, 255),
-            font_size=10,
+            font_size=12,
         )
         self.group.add(self.clock_date_widget)
 

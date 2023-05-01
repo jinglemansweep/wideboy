@@ -32,11 +32,13 @@ class WeatherAnimationSprite(BaseSprite):
         self,
         scene: BaseScene,
         rect: Rect,
+        size: Optional[Vector2] = None,
         offset: Vector2 = Vector2(0, 0),
         demo: bool = False,
     ) -> None:
         super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
+        self.size = size or Vector2(self.rect.width, self.rect.height)
         self.offset = offset
         self.demo = demo
         self.icon_summary = None
@@ -99,9 +101,7 @@ class WeatherAnimationSprite(BaseSprite):
 
                 if os.path.exists(filename):
                     image = load_image(filename)
-                    scaled = scale_surface(
-                        image, Vector2(self.rect.width, self.rect.width)  # squared
-                    )
+                    scaled = scale_surface(image, self.size)
                     self.image_cache[name].append(scaled)
 
     def render(self) -> None:
