@@ -76,7 +76,6 @@ class TimeSprite(BaseSprite):
 
     def render(self) -> None:
         self.dirty = 1
-        self.image.fill(self.color_bg)
         x: float = (self.rect.width / 2) - (self.surface_text.get_rect().width / 2)
         if self.align == "left":
             x = 0.0
@@ -137,12 +136,15 @@ class DateSprite(BaseSprite):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
                 self.render_text_surface()
+                self.dirty = 1
         if frame % 100 == 0:
             if self.rainbow == "fg":
                 self.color_fg = rainbow_color(frame / 100)
+                self.dirty = 1
             elif self.rainbow == "outline":
                 self.color_outline = rainbow_color(frame / 100)
-            self.render()
+                self.dirty = 1
+        self.render()
 
     def render_text_surface(self) -> None:
         now = datetime.now()
@@ -159,8 +161,6 @@ class DateSprite(BaseSprite):
         )
 
     def render(self) -> None:
-        self.dirty = 1
-        self.image.fill(self.color_bg)
         x: float = (self.rect.width / 2) - (self.surface_text.get_rect().width / 2)
         if self.align == "left":
             x = 0.0

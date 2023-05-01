@@ -81,32 +81,32 @@ class DefaultScene(BaseScene):
         self.group.add(self.weather_widget)
 
         # =====================================================================
-        # CALENDAR WIDGET
-        # =====================================================================
-
-        self.calendar_widget = CalendarSprite(
-            self, Rect(self.width - 96, 49, 96, 15), "calendar.wideboy"
-        )
-        self.group.add(self.calendar_widget)
-
-        # =====================================================================
         # CLOCK WIDGET
         # =====================================================================
 
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(self.width - 96, -5, 96, 36),
+            Rect(self.width - 64, -4, 64, 30),
             color_fg=Color(255, 255, 0, 255),
-            font_size=28,
+            font_size=23,
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(self.width - 96, 20, 96, 24),
+            Rect(self.width - 64, 18, 64, 12),
             color_fg=Color(255, 255, 255, 255),
-            font_size=12,
+            font_size=10,
         )
         self.group.add(self.clock_date_widget)
+
+        # =====================================================================
+        # CALENDAR WIDGET
+        # =====================================================================
+
+        self.calendar_widget = CalendarSprite(
+            self, Rect(self.width - 64, 52, 64, 15), "calendar.wideboy", font_size=8
+        )
+        self.group.add(self.calendar_widget)
 
         # =====================================================================
         # NOTIFICATION WIDGET
