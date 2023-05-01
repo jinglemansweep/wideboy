@@ -102,9 +102,9 @@ class DefaultScene(BaseScene):
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(self.width - 64, 20, 64, 24),
+            Rect(self.width - 64, 18, 64, 24),
             color_fg=Color(255, 255, 255, 255),
-            font_size=11,
+            font_size=10,
         )
         self.group.add(self.clock_date_widget)
 
