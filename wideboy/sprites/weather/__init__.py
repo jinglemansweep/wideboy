@@ -63,7 +63,10 @@ class WeatherAnimationSprite(BaseSprite):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
                 self.update_state()
-        if frame % 2 == 0:
+            if event.type == EVENT_EPOCH_SECOND and event.unit % 10 == 0:
+                self.dirty = 1
+ 
+        if frame % 3 == 0:
             self.render()
 
     def update_state(self) -> None:
@@ -102,13 +105,14 @@ class WeatherAnimationSprite(BaseSprite):
 
     def render(self) -> None:
         self.image.fill(Color(0, 0, 0, 0))
-        # self.weather_code = "801"
+        self.weather_code = "801"
         images = convert_weather_code_to_image_name(self.weather_code)
         image_name = images[1 if self.weather_daytime else 2]
         self.cache_image(image_name)
         frame_count = len(self.image_cache[image_name])
         self.image_frame = (self.image_frame + 1) % frame_count
-        self.dirty = 1
+        if frame_count > 1: 
+            self.dirty = 1
         self.image.blit(self.image_cache[image_name][self.image_frame], self.offset)
 
 
