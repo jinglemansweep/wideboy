@@ -1,5 +1,5 @@
 import logging
-from pygame import Color, Event, Rect, Vector2, JOYBUTTONUP
+from pygame import Clock, Color, Event, Rect, Vector2, JOYBUTTONUP
 from typing import TYPE_CHECKING
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.scenes.animation import Act, Animation
@@ -7,8 +7,7 @@ from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.calendar import CalendarSprite
 from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.hassentitytile import HassEntityTileSprite
-from wideboy.sprites.homeassistant import HomeAssistantTemplateSprite
-from wideboy.sprites.material_icon import MaterialIconSprite
+from wideboy.sprites.homeassistant.entity_row import HomeAssistantEntityRowSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.rect import RectSprite
 from wideboy.sprites.weather import WeatherAnimationSprite
@@ -125,6 +124,61 @@ class DefaultScene(BaseScene):
         self.group.add(self.notification_widget)
 
         # =====================================================================
+        # HASS ENTITY ROW WIDGETS
+        # =====================================================================
+
+        hass_row_entities = [
+            dict(
+                entity_id="sensor.transmission_down_speed",
+                icon=MaterialIcons.MDI_VPN_LOCK,
+                icon_color=Color(255, 255, 255, 255),
+                template="{{ states('sensor.transmission_down_speed') | int }}Mbps",
+                cb_active=lambda state: float(state.state) > 0,
+            ),
+            dict(
+                entity_id="sensor.ds920plus_volume_used",
+                icon=MaterialIcons.MDI_DNS,
+                icon_color=Color(255, 255, 0, 255),
+                template="{{ states('sensor.ds920plus_volume_used') }}%",
+            ),
+            dict(
+                entity_id="sensor.download_iperf_as42831_net",
+                icon=MaterialIcons.MDI_DOWNLOAD,
+                icon_color=Color(0, 255, 0, 255),
+                template="{{ states('sensor.download_iperf_as42831_net') | int }}Mbps",
+                cb_active=lambda state: float(state.state) < 750,
+            ),
+            dict(
+                entity_id="sensor.upload_iperf_as42831_net",
+                icon=MaterialIcons.MDI_UPLOAD,
+                icon_color=Color(255, 0, 0, 255),
+                template="{{ states('sensor.upload_iperf_as42831_net') | int }}Mbps",
+                cb_active=lambda state: float(state.state) < 750,
+            ),
+            dict(
+                entity_id="sensor.speedtest_ping",
+                icon=MaterialIcons.MDI_WIFI,
+                icon_color=Color(0, 0, 255, 255),
+                template="{{ states('sensor.speedtest_ping') | int }}ms",
+                cb_active=lambda state: float(state.state) > 10,
+            ),
+            dict(
+                entity_id="switch.lounge_fans",
+                icon=MaterialIcons.MDI_AC_UNIT,
+                icon_color=Color(196, 196, 255, 255),
+                template="ON",
+                cb_active=lambda state: state.state == "on",
+            ),
+        ]
+
+        self.hass_row = HomeAssistantEntityRowSprite(
+            self,
+            Rect(512, 48, 128, 16),
+            hass_row_entities,
+        )
+        self.group.add(self.hass_row)
+
+        # =====================================================================
         # BIN COLLECTION WIDGETS
         # =====================================================================
 
@@ -148,77 +202,22 @@ class DefaultScene(BaseScene):
         self.group.add(self.hass_bin_blue)
 
         # =====================================================================
-        # HASS ENTITY WIDGETS
-        # =====================================================================
-
-        icons_offset_y = -3
-
-        # Transmission Widget
-
-        self.icon_transmission = MaterialIconSprite(
-            self,
-            Rect(self.width - 256 - 146, icons_offset_y + 1, 16, 16),
-            MaterialIcons.MDI_VPN_LOCK,
-            12,
-            color_fg=Color(0, 255, 255, 255),
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.group.add(self.icon_transmission)
-        self.template_transmission = HomeAssistantTemplateSprite(
-            self,
-            Rect(self.width - 256 - 146 + 18, icons_offset_y + 2, 96, 16),
-            "{{ states('sensor.transmission_active_torrents') | int }}/{{ states('sensor.transmission_total_torrents') | int }} | {{ states('sensor.transmission_down_speed') | float | round(1) }}Mbs",
-            font_size=9,
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.group.add(self.template_transmission)
-
-        # NAS Widget
-
-        self.icon_nas_disk = MaterialIconSprite(
-            self,
-            Rect(self.width - 256 - 54, icons_offset_y, 16, 16),
-            MaterialIcons.MDI_DNS,
-            14,
-            color_fg=Color(255, 255, 0, 255),
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.group.add(self.icon_nas_disk)
-        self.template_nas_volume_used = HomeAssistantTemplateSprite(
-            self,
-            Rect(self.width - 256 - 54 + 18, icons_offset_y + 2, 96, 16),
-            "{{ states('sensor.ds920plus_volume_used') | float | round(2) }}%",
-            font_size=9,
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.group.add(self.template_nas_volume_used)
-
-        # Speedtest Widget
-
-        self.icon_speedtest = MaterialIconSprite(
-            self,
-            Rect(self.width - 258, icons_offset_y, 16, 16),
-            MaterialIcons.MDI_SYNC_ALT,
-            15,
-            color_fg=Color(0, 255, 0, 255),
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.group.add(self.icon_speedtest)
-        self.template_speedtest = HomeAssistantTemplateSprite(
-            self,
-            Rect(self.width - 258 + 18, icons_offset_y + 2, 102, 16),
-            "D: {{ states('sensor.download_iperf_as42831_net') | int }} U: {{ states('sensor.upload_iperf_as42831_net') | int }} P: {{ states('sensor.speedtest_ping') | int }}ms",
-            font_size=9,
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.group.add(self.template_speedtest)
-
-        # =====================================================================
         # SCENE STARTUP
         # =====================================================================
 
         self.act_background_change = self.build_background_change_act()
         self.act_background_change.start()
+
+    # Update
+
+    def update(
+        self,
+        clock: Clock,
+        delta: float,
+        events: list[Event],
+    ) -> None:
+        super().update(clock, delta, events)
+        self.hass_row.rect.topright = self.width - 128, 0
 
     # Handle Events
 

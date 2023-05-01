@@ -171,10 +171,12 @@ class MaterialIcons:
     MDI_DELETE = 0xE872
     MDI_DOWNLOAD = 0xE2C4
     MDI_UPLOAD = 0xE2C6
+    MDI_NETWORK_PING = 0xEBCA
     MDI_WIFI = 0xE63E
     MDI_SYNC_ALT = 0xEA18
     MDI_VPN_LOCK = 0xE62F
     MDI_DNS = 0xE875
+    MDI_AC_UNIT = 0xEB3B
 
 
 def render_material_icon(
