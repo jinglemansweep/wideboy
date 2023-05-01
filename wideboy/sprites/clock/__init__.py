@@ -75,6 +75,7 @@ class TimeSprite(BaseSprite):
         )
 
     def render(self) -> None:
+        self.image.fill(self.color_bg)
         self.dirty = 1
         x: float = (self.rect.width / 2) - (self.surface_text.get_rect().width / 2)
         if self.align == "left":
@@ -161,6 +162,7 @@ class DateSprite(BaseSprite):
         )
 
     def render(self) -> None:
+        self.image.fill(self.color_bg)
         x: float = (self.rect.width / 2) - (self.surface_text.get_rect().width / 2)
         if self.align == "left":
             x = 0.0
