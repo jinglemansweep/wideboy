@@ -46,7 +46,6 @@ class SceneManager:
         next_index = self.index + 1
         if next_index >= len(self.scenes):
             next_index = 0
-        print("NEXT INDEX", next_index)
         self.set_scene(next_index)
 
     def get_scene_names(self) -> List[str]:
