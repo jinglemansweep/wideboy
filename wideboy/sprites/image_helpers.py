@@ -177,6 +177,8 @@ class MaterialIcons:
     MDI_VPN_LOCK = 0xE62F
     MDI_DNS = 0xE875
     MDI_AC_UNIT = 0xEB3B
+    MDI_LIGHTBULB = 0xE0F0
+    MDI_DOOR = 0xF1B5
 
 
 def render_material_icon(

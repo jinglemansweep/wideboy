@@ -124,7 +124,7 @@ validators = [
     ),
     Validator(
         "HOMEASSISTANT__CACHE_DURATION",
-        default=10,
+        default=60,
         cast=int,
     ),
     Validator(

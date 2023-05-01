@@ -19,7 +19,7 @@ class CreditsScene(BaseScene):
     def __init__(
         self,
         engine: "Engine",
-        bg_color: Color = (0, 0, 0),
+        bg_color: Color = Color(0, 0, 0, 255),
     ) -> None:
         super().__init__(engine, bg_color)
 

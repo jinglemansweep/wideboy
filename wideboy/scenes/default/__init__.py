@@ -53,21 +53,6 @@ class DefaultScene(BaseScene):
         self.group.add(self.background_widget)
 
         # =====================================================================
-        # FADED OVERLAY WIDGETS
-        # =====================================================================
-
-        self.background_fade_widget = RectSprite(
-            self,
-            Rect(
-                0,
-                0,
-                640,
-                12,
-            ),
-        )
-        self.group.add(self.background_fade_widget)
-
-        # =====================================================================
         # WEATHER WIDGET
         # =====================================================================
 
@@ -163,6 +148,34 @@ class DefaultScene(BaseScene):
                 cb_active=lambda state: float(state.state) > 10,
             ),
             dict(
+                entity_id="sensor.black_bin",
+                icon=MaterialIcons.MDI_DELETE,
+                icon_color=Color(128, 128, 128, 255),
+                template="{{ state_attr('sensor.black_bin', 'days') }}d",
+                cb_active=lambda state: float(state.attributes["days"]) < 3,
+            ),
+            dict(
+                entity_id="sensor.blue_bin",
+                icon=MaterialIcons.MDI_DELETE,
+                icon_color=Color(0, 128, 255, 255),
+                template="{{ state_attr('sensor.blue_bin', 'days') }}d",
+                cb_active=lambda state: float(state.attributes["days"]) < 3,
+            ),
+            dict(
+                entity_id="binary_sensor.back_door_contact_sensor_contact",
+                icon=MaterialIcons.MDI_DOOR,
+                icon_color=Color(255, 64, 64, 255),
+                template="Back",
+                cb_active=lambda state: state.state == "on",
+            ),
+            dict(
+                entity_id="binary_sensor.front_door_contact_sensor_contact",
+                icon=MaterialIcons.MDI_DOOR,
+                icon_color=Color(255, 64, 64, 255),
+                template="Front",
+                cb_active=lambda state: state.state == "on",
+            ),
+            dict(
                 entity_id="switch.lounge_fans",
                 icon=MaterialIcons.MDI_AC_UNIT,
                 icon_color=Color(196, 196, 255, 255),
@@ -175,31 +188,9 @@ class DefaultScene(BaseScene):
             self,
             Rect(512, 48, 128, 16),
             hass_row_entities,
+            color_bg=Color(0, 0, 0, 196),
         )
         self.group.add(self.hass_row)
-
-        # =====================================================================
-        # BIN COLLECTION WIDGETS
-        # =====================================================================
-
-        bin_rect = Rect(self.width - 183, 40, 32, 32)
-        self.hass_bin_black = HassEntityTileSprite(
-            self,
-            bin_rect,
-            MaterialIcons.MDI_DELETE,
-            entity_id="sensor.black_bin",
-            state_callback=lambda state: state.attributes["days"] < 2,
-        )
-        self.group.add(self.hass_bin_black)
-        self.hass_bin_blue = HassEntityTileSprite(
-            self,
-            bin_rect,
-            MaterialIcons.MDI_DELETE,
-            entity_id="sensor.blue_bin",
-            state_callback=lambda state: state.attributes["days"] < 2,
-            color_icon=Color(0, 128, 255, 255),
-        )
-        self.group.add(self.hass_bin_blue)
 
         # =====================================================================
         # SCENE STARTUP
