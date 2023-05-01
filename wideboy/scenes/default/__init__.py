@@ -85,7 +85,7 @@ class DefaultScene(BaseScene):
         # =====================================================================
 
         self.calendar_widget = CalendarSprite(
-            self, Rect(self.width - 96, 49, 96, 24), "calendar.wideboy"
+            self, Rect(self.width - 96, 49, 96, 15), "calendar.wideboy"
         )
         self.group.add(self.calendar_widget)
 
