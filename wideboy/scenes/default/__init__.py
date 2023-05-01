@@ -74,10 +74,9 @@ class DefaultScene(BaseScene):
 
         self.weather_widget = WeatherAnimationSprite(
             self,
-            Rect(self.width - 128, 0, 128, 64),
+            Rect(self.width - 128, -32, 128, 64),
             demo=settings.general.demo,
             size=Vector2(128, 128),
-            offset=Vector2(0, -32),
         )
         self.group.add(self.weather_widget)
 

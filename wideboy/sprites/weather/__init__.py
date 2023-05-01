@@ -33,13 +33,11 @@ class WeatherAnimationSprite(BaseSprite):
         scene: BaseScene,
         rect: Rect,
         size: Optional[Vector2] = None,
-        offset: Vector2 = Vector2(0, 0),
         demo: bool = False,
     ) -> None:
         super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.size = size or Vector2(self.rect.width, self.rect.height)
-        self.offset = offset
         self.demo = demo
         self.icon_summary = None
         self.entity_weather_code = "sensor.openweathermap_weather_code"
@@ -105,7 +103,6 @@ class WeatherAnimationSprite(BaseSprite):
                     self.image_cache[name].append(scaled)
 
     def render(self) -> None:
-        self.image.fill(Color(0, 0, 0, 0))
         # self.weather_code = "600"
         images = convert_weather_code_to_image_name(self.weather_code)
         image_name = images[1 if self.weather_daytime else 2]
@@ -115,9 +112,8 @@ class WeatherAnimationSprite(BaseSprite):
         # logger.debug(
         #     f"weather:render frame={self.image_frame}/{frame_count} name={image_name}"
         # )
-        if frame_count > 1:
-            self.dirty = 1
-        self.image.blit(self.image_cache[image_name][self.image_frame], self.offset)
+        self.image = self.image_cache[image_name][self.image_frame]
+        self.dirty = 1
 
 
 def convert_weather_code_to_image_name(weather_code: str) -> List[str]:
