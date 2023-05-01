@@ -103,7 +103,7 @@ class DateSprite(BaseSprite):
         color_outline: Color = Color(0, 0, 0, 255),
         font_name: str = "fonts/molot.otf",
         font_size: int = 16,
-        date_format: str = "%a %d %b",
+        date_format: str = "%a %e %b",
         uppercase: bool = True,
         align: str = "center",
         pos_adj: tuple[int, int] = (0, 0),
