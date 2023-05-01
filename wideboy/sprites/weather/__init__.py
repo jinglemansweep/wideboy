@@ -49,7 +49,6 @@ class WeatherAnimationSprite(BaseSprite):
         self.image_cache: dict[str, List[Surface]] = dict()
         self.image_frame = 0
         self.demo_index = 0
-        self.dirty = 1
         self.update_state()
         self.render()
 
@@ -113,7 +112,8 @@ class WeatherAnimationSprite(BaseSprite):
         #     f"weather:render frame={self.image_frame}/{frame_count} name={image_name}"
         # )
         self.image = self.image_cache[image_name][self.image_frame]
-        self.dirty = 1
+        if frame_count > 1:
+            self.dirty = 1
 
 
 def convert_weather_code_to_image_name(weather_code: str) -> List[str]:
