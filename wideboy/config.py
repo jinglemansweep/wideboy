@@ -72,7 +72,7 @@ validators = [
     ),
     Validator(
         "DISPLAY__MATRIX__WRAP_SURFACE",
-        default=True,
+        default=False,
         cast=bool,
     ),
     # MQTT
@@ -168,12 +168,12 @@ validators = [
     ),
     Validator(
         "DISPLAY__MATRIX__DRIVER__COLS",
-        default=64,
+        default=256,
         cast=int,
     ),
     Validator(
         "DISPLAY__MATRIX__DRIVER__CHAIN",
-        default=4,
+        default=1,
         cast=int,
     ),
     Validator(
@@ -188,7 +188,7 @@ validators = [
     ),
     Validator(
         "DISPLAY__MATRIX__DRIVER__PIXEL_MAPPER",
-        default="Rotate:270;Mirror:H",
+        default="V-mapper;Rotate:90;Mirror:V",
         cast=str,
     ),
     Validator(
@@ -321,3 +321,5 @@ if driver_settings.daemon:
     matrix_options.daemon = driver_settings.daemon
 if driver_settings.no_drop_privs:
     matrix_options.drop_privileges = 0
+
+print(matrix_options.chain_length, matrix_options.parallel, matrix_options.rows, matrix_options.cols)
