@@ -193,7 +193,7 @@ validators = [
     ),
     Validator(
         "DISPLAY__MATRIX__DRIVER__PWM_BITS",
-        default=7,
+        default=8,
         cast=int,
     ),
     Validator(
