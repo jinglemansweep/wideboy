@@ -26,6 +26,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         color_bg: Color = Color(0, 0, 0, 255),
         color_outline: Optional[Color] = None,
         padding_right: int = 3,
+        show_all: bool = False,
     ) -> None:
         super().__init__(scene, rect)
         self.entities = entities
@@ -35,6 +36,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         self.color_bg = color_bg
         self.color_outline = color_outline
         self.padding_right = padding_right
+        self.show_all = show_all
         self.render()
 
     def update(
@@ -61,7 +63,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 # logger.debug(
                 #     f"hass:entity entity_id={entity['entity_id']} state={hass_state.dict()}"
                 # )
-                active = callback(hass_state)
+                active = self.show_all or callback(hass_state)
                 label = None
                 if not active:
                     continue
