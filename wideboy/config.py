@@ -155,6 +155,8 @@ validators = [
         default=10,
         cast=int,
     ),
+    # SECRETS
+    Validator("SECRETS__HOME_IP", default="", cast=str),
     # LED DRIVER
     Validator(
         "DISPLAY__MATRIX__DRIVER__GPIO_MAPPING",
@@ -322,4 +324,9 @@ if driver_settings.daemon:
 if driver_settings.no_drop_privs:
     matrix_options.drop_privileges = 0
 
-print(matrix_options.chain_length, matrix_options.parallel, matrix_options.rows, matrix_options.cols)
+print(
+    matrix_options.chain_length,
+    matrix_options.parallel,
+    matrix_options.rows,
+    matrix_options.cols,
+)

@@ -175,6 +175,7 @@ class MaterialIcons:
     MDI_WIFI = 0xE63E
     MDI_SYNC_ALT = 0xEA18
     MDI_VPN_LOCK = 0xE62F
+    MDI_LOCK = 0xE897
     MDI_DNS = 0xE875
     MDI_AC_UNIT = 0xEB3B
     MDI_LIGHTBULB = 0xE0F0

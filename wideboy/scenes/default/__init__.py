@@ -113,6 +113,14 @@ class DefaultScene(BaseScene):
         # =====================================================================
 
         hass_row_entities = [
+            # active when public IP is home IP
+            dict(
+                entity_id="sensor.privacy_ip_info",
+                icon=MaterialIcons.MDI_LOCK,
+                icon_color=Color(255, 0, 0, 255),
+                template="VPN DOWN ({{ states('sensor.privacy_ip_info') }})",
+                cb_active=lambda state: state.state == settings.secrets.home_ip,
+            ),
             dict(
                 entity_id="sensor.transmission_down_speed",
                 icon=MaterialIcons.MDI_VPN_LOCK,

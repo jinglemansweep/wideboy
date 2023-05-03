@@ -18,13 +18,13 @@
     # height = 192 # 64 * 3
   [display.matrix.driver]
     # gpio_mapping = "regular"
-    # rows = 64
+    # rows = 256
     # cols = 64
-    # chain = 4
+    # chain = 1
     # parallel = 3
     # multiplexing = 0
-    # pixel_mapper = "Rotate:270;Mirror:H"
-    # pwm_bits = 7
+    # pixel_mapper = "V-mapper;Rotate:90;Mirror:V"
+    # pwm_bits = 8
     # brightness = 50
     # scan_mode = 0
     # row_addr_type = 0
