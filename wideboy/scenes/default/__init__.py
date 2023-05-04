@@ -113,6 +113,12 @@ class DefaultScene(BaseScene):
         # =====================================================================
 
         hass_row_entities = [
+            dict(
+                entity_id="sensor.steps_louis",
+                icon=MaterialIcons.MDI_DIRECTIONS_WALK,
+                icon_color=Color(255, 0, 255, 255),
+                template="{{ states('sensor.steps_louis') }}",
+            ),
             # active when public IP is home IP
             dict(
                 entity_id="sensor.privacy_ip_info",

@@ -180,6 +180,7 @@ class MaterialIcons:
     MDI_AC_UNIT = 0xEB3B
     MDI_LIGHTBULB = 0xE0F0
     MDI_DOOR = 0xF1B5
+    MDI_DIRECTIONS_WALK = 0xE536
 
 
 def render_material_icon(
