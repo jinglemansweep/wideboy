@@ -60,21 +60,6 @@ validators = [
         default=False,
         cast=bool,
     ),
-    Validator(
-        "DISPLAY__MATRIX__WIDTH",
-        default=256,
-        cast=int,
-    ),
-    Validator(
-        "DISPLAY__MATRIX__HEIGHT",
-        default=192,
-        cast=int,
-    ),
-    Validator(
-        "DISPLAY__MATRIX__WRAP_SURFACE",
-        default=False,
-        cast=bool,
-    ),
     # MQTT
     Validator(
         "MQTT__HOST",

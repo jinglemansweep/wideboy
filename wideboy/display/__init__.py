@@ -23,16 +23,15 @@ class Display:
         logger.debug(
             f"display:init \
               canvas=({settings.display.canvas.width}x{settings.display.canvas.height} \
-              matrix_enabled={settings.display.matrix.enabled} \
-              matrix_size=({settings.display.matrix.width}x{settings.display.matrix.height})"
+              matrix_enabled={settings.display.matrix.enabled}"
         )
         if settings.display.matrix.enabled:
             self.matrix = RGBMatrix(options=matrix_options)
             self.buffer = self.matrix.CreateFrameCanvas()
         self.black = build_black_surface(
             (
-                settings.display.matrix.width,
-                settings.display.matrix.height,
+                settings.display.canvas.width,
+                settings.display.canvas.height,
             )
         )
 
@@ -63,33 +62,10 @@ class Display:
             return
         surface = surface if self.visible else self.black
         pixels = pygame.surfarray.pixels3d(surface)
-        if settings.display.matrix.wrap_surface:
-            wrapped = self.wrap_surface(
-                pixels,
-                Vector2(
-                    settings.display.matrix.width,
-                    settings.display.matrix.height,
-                ),
-            )
-            image = Image.fromarray(wrapped).convert("RGB")
-        else:
-            image = Image.fromarray(pixels).convert("RGB")
+        image = Image.fromarray(pixels).convert("RGB")
         if self.buffer is not None and self.matrix is not None:
             self.buffer.SetImage(image)
             self.matrix.SwapOnVSync(self.buffer)
-
-    def wrap_surface(self, array: Any, new_shape: Vector2) -> Any:
-        row_size = array.shape[1]
-        cols = int(new_shape[0])
-        rows = int(new_shape[1]) // row_size
-        reshaped = np.full((cols, rows * row_size, 3), 0, dtype=np.uint8)
-        for ri in range(rows):
-            row_offset = ri * row_size
-            col_offset = ri * cols
-            reshaped[0:cols, row_offset : row_offset + row_size] = array[
-                col_offset : col_offset + cols, 0:row_size
-            ]
-        return reshaped
 
 
 def build_black_surface(size: Vector2):
