@@ -1,9 +1,8 @@
 import logging
-import numpy as np
 import pygame
-from pygame import Surface
+from pygame import Rect, Surface
 from pygame.math import Vector2
-from typing import Any, Optional
+from typing import Any, List, Optional
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
@@ -54,17 +53,19 @@ class Display:
             state=dict(state=bool_to_hass_state(self.visible), brightness=brightness),
         )
 
-    def render(
-        self,
-        surface: Surface,
-    ):
+    def render(self, surface: Surface, updates: List[Rect] = []):
         if not settings.display.matrix.enabled:
             return
         surface = surface if self.visible else self.black
         pixels = pygame.surfarray.pixels3d(surface)
         image = Image.fromarray(pixels).convert("RGB")
         if self.buffer is not None and self.matrix is not None:
-            self.buffer.SetImage(image)
+            for rect in updates:
+                self.buffer.SetImage(
+                    surface.subsurface(rect),
+                    rect.x,
+                    rect.y,
+                )
             self.matrix.SwapOnVSync(self.buffer)
 
 
