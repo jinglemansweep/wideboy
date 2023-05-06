@@ -73,8 +73,8 @@ class Engine:
         self.process_events(events)
         updates = self.scene_manager.render(self.clock, delta, events)
         if len(updates) > 0:
-            logger.debug(f"updates={updates}")
-            pygame.display.update(updates)
+            # logger.debug(f"updates={updates}")
+            # pygame.display.update(updates)
             self.display.render(self.screen, updates)
         # Debugging
         self.scene_manager.debug(self.clock, delta)

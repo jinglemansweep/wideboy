@@ -60,7 +60,8 @@ class Display:
         if self.buffer is not None and self.matrix is not None:
             for rect in updates:
                 self.buffer.SetImage(crop_surface_to_pil(surface, rect))
-            self.matrix.SwapOnVSync(self.buffer)
+            if len(updates):
+                self.matrix.SwapOnVSync(self.buffer)
 
 
 def crop_surface_to_pil(surface: Surface, rect: Optional[Rect] = None):
