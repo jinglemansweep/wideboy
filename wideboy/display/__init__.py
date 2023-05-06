@@ -62,7 +62,7 @@ class Display:
         if self.buffer is not None and self.matrix is not None:
             for rect in updates:
                 self.buffer.SetImage(
-                    surface.subsurface(rect),
+                    surface.subsurface(rect).get_buffer().raw,
                     rect.x,
                     rect.y,
                 )
