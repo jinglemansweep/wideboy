@@ -57,16 +57,17 @@ class Display:
         if not settings.display.matrix.enabled:
             return
         surface = surface if self.visible else self.black
-        pixels = pygame.surfarray.pixels3d(surface)
-        image = Image.fromarray(pixels).convert("RGB")
         if self.buffer is not None and self.matrix is not None:
             for rect in updates:
-                self.buffer.SetImage(
-                    surface.subsurface(rect).get_buffer().raw,
-                    rect.x,
-                    rect.y,
-                )
+                self.buffer.SetImage(crop_surface_to_pil(surface, rect))
             self.matrix.SwapOnVSync(self.buffer)
+
+
+def crop_surface_to_pil(surface: Surface, rect: Optional[Rect] = None):
+    if rect is not None:
+        surface = surface.subsurface(rect)
+    pixels = pygame.surfarray.pixels3d(surface)
+    return Image.fromarray(pixels).convert("RGB")
 
 
 def build_black_surface(size: Vector2):
