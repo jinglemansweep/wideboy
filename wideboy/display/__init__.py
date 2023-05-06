@@ -57,10 +57,13 @@ class Display:
         if not settings.display.matrix.enabled:
             return
         surface = surface if self.visible else self.black
+        dirty = False
         if self.buffer is not None and self.matrix is not None:
             for rect in updates:
-                self.buffer.SetImage(crop_surface_to_pil(surface, rect))
-            if len(updates):
+                if rect.width > 0 and rect.height > 0:
+                    self.buffer.SetImage(crop_surface_to_pil(surface, rect), rect.x, rect.y)
+                    dirty = True
+            if dirty:
                 self.matrix.SwapOnVSync(self.buffer)
 
 
