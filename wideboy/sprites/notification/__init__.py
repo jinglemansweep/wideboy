@@ -77,6 +77,7 @@ class NotificationSprite(BaseSprite):
     def render(self) -> None:
         if not self.message:
             self.surface_text = None
+            return
         else:
             if self.surface_text is None:
                 self.surface_text = render_text(

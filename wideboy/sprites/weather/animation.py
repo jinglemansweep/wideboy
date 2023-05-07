@@ -84,7 +84,7 @@ class WeatherAnimationSprite(BaseSprite):
                 f"weather:state demo={self.demo} daytime={self.weather_daytime} code={self.weather_code}"
             )
         except Exception as e:
-            logger.error("weather:error", exc_info=e)
+            logger.error("weather:background", exc_info=e)
 
     def cache_image(self, name: str) -> None:
         if name not in self.image_cache:
