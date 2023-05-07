@@ -43,6 +43,7 @@ class NotificationSprite(BaseSprite):
         self.timeout_frames = timeout_frames
         self.fadeout_frames = fadeout_frames
         self.message: Optional[str] = None
+        self.surface_text: Optional[Surface] = None
         self.timeout = 0
         self.notifications: List[str] = []
         self.render()
