@@ -66,7 +66,7 @@ class DefaultScene(BaseScene):
 
         self.weather_temp_widget = WeatherTemperatureSprite(
             self,
-            Rect(self.width - 128 + 6, 0, 32, 28),
+            Rect(self.width - 128 + 4, 0, 32, 28),
         )
         self.group.add(self.weather_temp_widget)
 
