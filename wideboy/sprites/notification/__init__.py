@@ -60,6 +60,7 @@ class NotificationSprite(BaseSprite):
             self.timeout -= 1
             self.render()
         else:
+            self.surface_text = None
             if len(self.notifications) > 0:
                 self.message = self.notifications.pop(0)
                 self.timeout = self.timeout_frames
@@ -73,7 +74,6 @@ class NotificationSprite(BaseSprite):
                 self.notifications.append(event.payload)
 
     def render(self) -> None:
-        self.image.fill(self.color_bg if self.timeout > 0 else Color(0, 0, 0, 0))
         if not self.message:
             self.surface_text = None
         else:
@@ -85,14 +85,16 @@ class NotificationSprite(BaseSprite):
                     self.color_fg,
                     color_outline=self.color_outline,
                 )
-
-            self.image.blit(
-                self.surface_text,
-                (
-                    (self.rect.width - self.surface_text.get_width()) / 2,
-                    self.font_padding,
-                ),
-            )
+                self.image.fill(
+                    self.color_bg if self.timeout > 0 else Color(0, 0, 0, 0)
+                )
+                self.image.blit(
+                    self.surface_text,
+                    (
+                        (self.rect.width - self.surface_text.get_width()) / 2,
+                        self.font_padding,
+                    ),
+                )
             progress_width = (self.timeout_frames - self.timeout) / self.timeout_frames
             pygame.draw.rect(
                 self.image,
