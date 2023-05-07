@@ -102,7 +102,7 @@ class DefaultScene(BaseScene):
 
         self.notification_widget = NotificationSprite(
             self,
-            Rect(32, 4, 768 - 320, 56),
+            Rect(16, 12, 640 - 32, 64 - 24),
             color_bg=Color(0, 0, 0, 192),
             color_fg=Color(255, 255, 255, 255),
         )
