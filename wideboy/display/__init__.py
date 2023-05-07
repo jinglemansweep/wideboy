@@ -58,15 +58,14 @@ class Display:
         if not settings.display.matrix.enabled:
             return
         surface = surface if self.visible else self.black
-        dirty = False
         if self.buffer is not None and self.matrix is not None:
             self.buffer.SetImage(surface_to_led_matrix(surface))
             self.matrix.SwapOnVSync(self.buffer)
 
 
-def surface_to_led_matrix(surface: Surface) -> np.ndarray:
+def surface_to_led_matrix(surface: Surface) -> Image.Image:
     pixels = pygame.surfarray.pixels3d(surface)
-    return np.rot90(pixels, k=3).astype(np.uint8)
+    return Image.fromarray(pixels)
 
 
 def build_black_surface(size: Vector2):
