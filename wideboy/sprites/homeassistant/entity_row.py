@@ -83,8 +83,10 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 w += entity_surface.get_rect().width
                 h = max(h, entity_surface.get_rect().height)
                 surfaces.append(entity_surface)
-            except:
-                logger.warn(f"failed to render entity {entity['entity_id']}")
+            except Exception as e:
+                logger.warn(
+                    f"failed to render entity {entity['entity_id']}", exc_info=e
+                )
         self.image = Surface((w, h - 1), SRCALPHA)
         self.image.fill(self.color_bg)
         x = 0

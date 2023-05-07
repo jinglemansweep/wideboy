@@ -104,8 +104,8 @@ class CalendarSprite(BaseSprite):
                     f"calendars/{self.entity_id}?start={start}&end={end}"
                 )
             return sorted(events, key=lambda event: event["start"]["date"])
-        except:
-            logger.error("Failed to get calendar events")
+        except Exception as e:
+            logger.error("Failed to get calendar events", exc_info=e)
             return []
 
     def truncate_label(self, label: str) -> str:

@@ -1,9 +1,8 @@
 import logging
-import numpy as np
 import pygame
-from pygame import Rect, Surface
+from pygame import Surface
 from pygame.math import Vector2
-from typing import Any, List, Optional
+from typing import Any, Optional
 from PIL import Image
 from rgbmatrix import RGBMatrix  # type: ignore
 
