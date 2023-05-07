@@ -6,6 +6,7 @@ from wideboy.constants import EVENT_EPOCH_SECOND, EVENT_ACTION_A
 from wideboy.sprites.clock import DateSprite, TimeSprite
 
 # from wideboy.sprites.rotogrid import RotoGridSprite
+from wideboy.sprites.sphere import SphereSprite
 from wideboy.sprites.starfield import StarfieldSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.scenes.animation import Act, Animation
@@ -30,7 +31,10 @@ class NightScene(BaseScene):
     def setup(self):
         super().setup()
 
-        # Starfield widget
+        # =====================================================================
+        # STARFIELD WIDGET
+        # =====================================================================
+
         self.starfield_widget = StarfieldSprite(
             self,
             Rect(0, 0, self.width, self.height),
@@ -38,21 +42,22 @@ class NightScene(BaseScene):
         )
         self.group.add(self.starfield_widget)
 
-        """
-        self.rotogrid_widget = RotoGridSprite(
-            self,
-            Rect(0, 0, self.width, self.height),
-            Color(0, 128, 0, 255),
-            spacing=50,
-            zoom_speed=0.000,
-            zoom_range=(0.5, 0.6),
-            rotate_range=(0, 45),
-            rotate_speed=0.1,
-        )
-        self.group.add(self.rotogrid_widget)
-        """
+        # =====================================================================
+        # SPHERE WIDGET
+        # =====================================================================
 
-        # Setup clock widget
+        self.sphere_widget = SphereSprite(
+            self,
+            Rect(576, -32, 768 - 576, 128),
+            color_fg=Color(0, 0, 255, 64),
+            radius=100,
+        )
+        self.group.add(self.sphere_widget)
+
+        # =====================================================================
+        # CLOCK WIDGET
+        # =====================================================================
+
         self.clock_time_pos: tuple[int, int] = (self.width - 128, -7)
         self.clock_date_offset: tuple[int, int] = [0, 48]
         self.clock_time_widget = TimeSprite(
