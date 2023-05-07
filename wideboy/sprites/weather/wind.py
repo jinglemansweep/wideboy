@@ -1,17 +1,11 @@
 import logging
-import os
-import random
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
-from typing import Optional, List
 
 # from wideboy.mqtt.homeassistant import HASS
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import render_arrow, render_text
-from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
-from wideboy.sprites.weather.resources import IMAGE_MAPPING
-
-from wideboy.config import settings
+from wideboy.constants import EVENT_EPOCH_MINUTE
 
 logger = logging.getLogger("sprite.weather.wind")
 

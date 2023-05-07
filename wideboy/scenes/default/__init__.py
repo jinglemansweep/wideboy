@@ -9,6 +9,7 @@ from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.homeassistant.entity_row import HomeAssistantEntityRowSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.weather.animation import WeatherAnimationSprite
+from wideboy.sprites.weather.temperature import WeatherTemperatureSprite
 from wideboy.sprites.weather.wind import WeatherWindSprite
 from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
@@ -62,6 +63,12 @@ class DefaultScene(BaseScene):
             size=Vector2(128, 128),
         )
         self.group.add(self.weather_animation_widget)
+
+        self.weather_temp_widget = WeatherTemperatureSprite(
+            self,
+            Rect(self.width - 128 + 6, 0, 32, 28),
+        )
+        self.group.add(self.weather_temp_widget)
 
         self.weather_wind_widget = WeatherWindSprite(
             self,
