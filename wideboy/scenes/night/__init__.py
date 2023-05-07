@@ -46,6 +46,7 @@ class NightScene(BaseScene):
         # SPHERE WIDGET
         # =====================================================================
 
+        """
         self.sphere_widget = SphereSprite(
             self,
             Rect(576, -32, 768 - 576, 128),
@@ -53,6 +54,7 @@ class NightScene(BaseScene):
             radius=100,
         )
         self.group.add(self.sphere_widget)
+        """
 
         # =====================================================================
         # CLOCK WIDGET
