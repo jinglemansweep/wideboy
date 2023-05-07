@@ -25,6 +25,7 @@ class NotificationSprite(BaseSprite):
         color_fg: Color = Color(0, 0, 0, 255),
         color_bg: Color = Color(255, 255, 255, 255),
         color_outline: Color = Color(0, 0, 0, 255),
+        color_progress: Color = Color(0, 255, 0, 255),
         alpha: int = 255,
         timeout_frames: int = 300,
         fadeout_frames: int = 25,
@@ -37,6 +38,7 @@ class NotificationSprite(BaseSprite):
         self.color_fg = color_fg
         self.color_bg = color_bg
         self.color_outline = color_outline
+        self.color_progress = color_progress
         self.alpha = alpha
         self.timeout_frames = timeout_frames
         self.fadeout_frames = fadeout_frames
@@ -94,7 +96,7 @@ class NotificationSprite(BaseSprite):
             progress_width = (self.timeout_frames - self.timeout) / self.timeout_frames
             pygame.draw.rect(
                 self.image,
-                Color(0, 255, 0),
+                self.color_progress,
                 Rect(
                     0,
                     self.rect.height - 2,
@@ -104,7 +106,7 @@ class NotificationSprite(BaseSprite):
             )
             pygame.draw.rect(
                 self.image,
-                Color(0, 255, 0),
+                self.color_progress,
                 Rect(
                     self.rect.width - self.rect.width * progress_width,
                     0,

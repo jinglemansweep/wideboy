@@ -78,12 +78,16 @@ class NightScene(BaseScene):
         )
         self.group.add(self.clock_date_widget)
 
-        # Setup notification widget
+        # =====================================================================
+        # NOTIFICATION WIDGET
+        # =====================================================================
+
         self.notification_widget = NotificationSprite(
             self,
-            Rect(32, 4, 768 - 320, 56),
-            color_bg=Color(0, 0, 0, 192),
-            color_fg=Color(255, 255, 255, 255),
+            Rect(0, 0, 768, 64),
+            color_bg=Color(0, 0, 0, 128),
+            color_fg=Color(128, 128, 255, 255),
+            color_progress=Color(0, 0, 255, 255),
         )
         self.group.add(self.notification_widget)
 
