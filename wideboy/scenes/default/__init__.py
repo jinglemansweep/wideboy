@@ -97,18 +97,6 @@ class DefaultScene(BaseScene):
         self.group.add(self.calendar_widget)
 
         # =====================================================================
-        # NOTIFICATION WIDGET
-        # =====================================================================
-
-        self.notification_widget = NotificationSprite(
-            self,
-            Rect(16, 12, 640 - 32, 64 - 24),
-            color_bg=Color(0, 0, 0, 192),
-            color_fg=Color(255, 255, 255, 255),
-        )
-        self.group.add(self.notification_widget)
-
-        # =====================================================================
         # HASS ENTITY ROW WIDGETS
         # =====================================================================
 
@@ -205,6 +193,20 @@ class DefaultScene(BaseScene):
             color_bg=Color(0, 0, 0, 196),
         )
         self.group.add(self.hass_row)
+
+        # =====================================================================
+        # NOTIFICATION WIDGET
+        # =====================================================================
+
+        self.notification_widget = NotificationSprite(
+            self,
+            Rect(0, 0, 640, 64),
+            color_bg=Color(0, 0, 0, 192),
+            color_fg=Color(255, 255, 255, 255),
+            font_size=30,
+            font_padding=12,
+        )
+        self.group.add(self.notification_widget)
 
         # =====================================================================
         # SCENE STARTUP
