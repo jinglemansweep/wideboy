@@ -64,7 +64,7 @@ class Display:
             self.matrix.SwapOnVSync(self.buffer)
 
 
-def surface_to_led_matrix(surface: Surface) -> np.nparray:
+def surface_to_led_matrix(surface: Surface) -> np.ndarray:
     pixels = pygame.surfarray.pixels3d(surface)
     return np.rot90(pixels, k=3).astype(np.uint8)
 
