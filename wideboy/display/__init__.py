@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 import pygame
 from pygame import Rect, Surface
 from pygame.math import Vector2
@@ -53,25 +54,19 @@ class Display:
             state=dict(state=bool_to_hass_state(self.visible), brightness=brightness),
         )
 
-    def render(self, surface: Surface, updates: List[Rect] = []):
+    def render(self, surface: Surface):
         if not settings.display.matrix.enabled:
             return
         surface = surface if self.visible else self.black
         dirty = False
         if self.buffer is not None and self.matrix is not None:
-            for rect in updates:
-                if rect.width > 0 and rect.height > 0:
-                    self.buffer.SetImage(crop_surface_to_pil(surface, rect), rect.x, rect.y)
-                    dirty = True
-            if dirty:
-                self.matrix.SwapOnVSync(self.buffer)
+            self.buffer.SetImage(surface_to_led_matrix(surface))
+            self.matrix.SwapOnVSync(self.buffer)
 
 
-def crop_surface_to_pil(surface: Surface, rect: Optional[Rect] = None):
-    if rect is not None:
-        surface = surface.subsurface(rect)
+def surface_to_led_matrix(surface: Surface) -> np.nparray:
     pixels = pygame.surfarray.pixels3d(surface)
-    return Image.fromarray(pixels).convert("RGB")
+    return np.rot90(pixels, k=3).astype(np.uint8)
 
 
 def build_black_surface(size: Vector2):
