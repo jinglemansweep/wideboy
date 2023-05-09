@@ -63,8 +63,8 @@ class Display:
 
 
 def surface_to_led_matrix(surface: Surface) -> Image.Image:
-    pixels = pygame.image.tostring(surface, "RGBA")
-    return Image.frombytes("RGBA", (surface.get_width(), surface.get_height()), pixels)
+    pixels = pygame.image.tostring(surface, "RGB")
+    return Image.frombytes("RGB", (surface.get_width(), surface.get_height()), pixels)
 
 
 def build_black_surface(size: Vector2):

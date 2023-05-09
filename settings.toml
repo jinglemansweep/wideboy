@@ -20,7 +20,7 @@
     # chain = 1
     # parallel = 3
     # multiplexing = 0
-    # pixel_mapper = "V-mapper;Rotate:90;Mirror:V"
+    # pixel_mapper = "V-mapper"
     # pwm_bits = 8
     # brightness = 50
     # scan_mode = 0

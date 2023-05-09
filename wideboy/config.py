@@ -175,7 +175,7 @@ validators = [
     ),
     Validator(
         "DISPLAY__MATRIX__DRIVER__PIXEL_MAPPER",
-        default="V-mapper;Rotate:90;Mirror:V",
+        default="V-mapper",
         cast=str,
     ),
     Validator(
