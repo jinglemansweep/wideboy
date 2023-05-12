@@ -90,9 +90,13 @@ class WeatherWindSprite(BaseSprite):
             color_fg=self.color_fg,
             color_outline=self.color_outline,
         )
+        label_offset = (-2, 0)
         surface.blit(
             label,
-            ((self.rect.width / 2) - (label.get_width() / 2), 8 + self.font_padding),
+            (
+                (self.rect.width / 2) - (label.get_width() / 2) + label_offset[0],
+                8 + self.font_padding + label_offset[1],
+            ),
         )
         return surface
 
