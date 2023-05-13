@@ -141,17 +141,17 @@ class DefaultScene(BaseScene):
                 template="{{ states('sensor.ds920plus_volume_used') }}%",
             ),
             dict(
-                entity_id="sensor.download_iperf_as42831_net",
+                entity_id="sensor.speedtest_download",
                 icon=MaterialIcons.MDI_DOWNLOAD,
                 icon_color=Color(0, 255, 0, 255),
-                template="{{ states('sensor.download_iperf_as42831_net') | int }}Mbps",
+                template="{{ states('sensor.speedtest_download') | int }}Mbps",
                 cb_active=lambda state: float(state.state) < 750,
             ),
             dict(
-                entity_id="sensor.upload_iperf_as42831_net",
+                entity_id="sensor.speedtest_upload",
                 icon=MaterialIcons.MDI_UPLOAD,
                 icon_color=Color(255, 0, 0, 255),
-                template="{{ states('sensor.upload_iperf_as42831_net') | int }}Mbps",
+                template="{{ states('sensor.speedtest_upload') | int }}Mbps",
                 cb_active=lambda state: float(state.state) < 750,
             ),
             dict(
