@@ -64,7 +64,7 @@ class WeatherAnimationSprite(BaseSprite):
             if event.type == EVENT_EPOCH_SECOND and event.unit % 10 == 0:
                 self.dirty = 1
 
-        if frame % 2 == 0:
+        if frame % 3 == 0:
             self.render()
 
     def update_state(self) -> None:
