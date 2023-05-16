@@ -139,7 +139,7 @@ class DefaultScene(BaseScene):
                 icon=MaterialIcons.MDI_DNS,
                 icon_color=Color(255, 255, 0, 255),
                 template="{{ states('sensor.ds920plus_volume_used') }}%",
-                cb_active=lambda state: float(state.state) > 75.0,
+                cb_active=lambda state: float(state.state) > 66.66,
             ),
             dict(
                 entity_id="sensor.speedtest_download_average",
