@@ -5,7 +5,6 @@ from pygame import Clock, Color, Event, Rect, Surface
 from typing import Tuple
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.image_helpers import render_grid
 
 
 logger = logging.getLogger("sprite.sphere")

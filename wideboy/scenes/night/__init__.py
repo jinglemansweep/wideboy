@@ -6,7 +6,7 @@ from wideboy.constants import EVENT_EPOCH_SECOND, EVENT_ACTION_A
 from wideboy.sprites.clock import DateSprite, TimeSprite
 
 # from wideboy.sprites.rotogrid import RotoGridSprite
-from wideboy.sprites.sphere import SphereSprite
+# from wideboy.sprites.sphere import SphereSprite
 from wideboy.sprites.starfield import StarfieldSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.scenes.animation import Act, Animation
