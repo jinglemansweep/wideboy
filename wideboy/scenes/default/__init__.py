@@ -163,18 +163,11 @@ class DefaultScene(BaseScene):
                 cb_active=lambda state: float(state.state) > 10,
             ),
             dict(
-                entity_id="sensor.black_bin",
+                entity_id="sensor.bin_collection_days",
                 icon=MaterialIcons.MDI_DELETE,
                 icon_color=Color(192, 192, 192, 255),
-                template="{{ state_attr('sensor.black_bin', 'days') }}d",
-                cb_active=lambda state: float(state.attributes["days"]) <= 1,
-            ),
-            dict(
-                entity_id="sensor.blue_bin",
-                icon=MaterialIcons.MDI_DELETE,
-                icon_color=Color(0, 128, 255, 255),
-                template="{{ state_attr('sensor.blue_bin', 'days') }}d",
-                cb_active=lambda state: float(state.attributes["days"]) <= 1,
+                template="{{ state_attr('calendar.bin_collection', 'message') }}",
+                cb_active=lambda state: float(state.state) <= 1,
             ),
             dict(
                 entity_id="binary_sensor.back_door_contact_sensor_contact",
