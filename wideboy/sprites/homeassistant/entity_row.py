@@ -1,4 +1,5 @@
 import logging
+import sys
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from typing import Optional, List, Dict
 from wideboy.constants import EVENT_EPOCH_MINUTE
@@ -68,6 +69,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 if not active:
                     continue
                 if template:
+                    logger.debug(f"hass:entity_row template={template}")
                     try:
                         with self.scene.engine.hass.client as hass:
                             label = hass.get_rendered_template(template)
@@ -83,9 +85,9 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 w += entity_surface.get_rect().width
                 h = max(h, entity_surface.get_rect().height)
                 surfaces.append(entity_surface)
-            except Exception as e:
+            except:
                 logger.warn(
-                    f"failed to render entity {entity['entity_id']}", exc_info=e
+                    f"failed to render entity {entity['entity_id']}", exc_info=sys.exc_info()[0]
                 )
         self.image = Surface((w, h - 1), SRCALPHA)
         self.image.fill(self.color_bg)
