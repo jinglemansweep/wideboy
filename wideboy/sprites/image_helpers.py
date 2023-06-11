@@ -181,6 +181,7 @@ class MaterialIcons:
     MDI_LIGHTBULB = 0xE0F0
     MDI_DOOR = 0xF1B5
     MDI_DIRECTIONS_WALK = 0xE536
+    MDI_BOLT = 0xEA0B
 
 
 def render_material_icon(

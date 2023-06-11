@@ -184,6 +184,13 @@ class DefaultScene(BaseScene):
                 cb_active=lambda state: state.state == "on",
             ),
             dict(
+                entity_id="input_number.octopus_electricity_rate",
+                icon=MaterialIcons.MDI_BOLT,
+                icon_color=Color(255, 128, 128, 255),
+                template="{{ states('input_number.octopus_electricity_rate') | int }}p/kWh",
+                cb_active=lambda state: float(state.state) >= 15.0,
+            ),
+            dict(
                 entity_id="switch.lounge_fans",
                 icon=MaterialIcons.MDI_AC_UNIT,
                 icon_color=Color(196, 196, 255, 255),
