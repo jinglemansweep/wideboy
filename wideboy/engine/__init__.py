@@ -76,7 +76,7 @@ class Engine:
             logger.debug(f"updates={updates}")
             if os.environ.get("SDL_VIDEODRIVER") != "dummy":
                 pygame.display.update(updates)
-            self.display.render(self.screen, len(updates) > 0)
+            self.display.render(self.screen)
         # Debugging
         self.scene_manager.debug(self.clock, delta)
 
