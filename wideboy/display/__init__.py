@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 import pygame
 from pygame import Surface
 from pygame.math import Vector2
@@ -54,41 +53,14 @@ class Display:
             state=dict(state=bool_to_hass_state(self.visible), brightness=brightness),
         )
 
-    def render(
-        self,
-        surface: Surface,
-    ):
+    def render(self, surface: Surface, is_updates: bool = False):
         if not settings.display.matrix.enabled:
             return
         surface = surface if self.visible else self.black
-        pixels = pygame.surfarray.pixels3d(surface)
-        if settings.display.matrix.wrap_surface:
-            wrapped = self.wrap_surface(
-                pixels,
-                Vector2(
-                    settings.display.matrix.width,
-                    settings.display.matrix.height,
-                ),
-            )
-            image = Image.fromarray(wrapped).convert("RGB")
-        else:
-            image = Image.fromarray(pixels).convert("RGB")
         if self.buffer is not None and self.matrix is not None:
-            self.buffer.SetImage(image)
+            if is_updates:
+                self.buffer.SetImage(surface_to_led_matrix(surface))
             self.matrix.SwapOnVSync(self.buffer)
-
-    def wrap_surface(self, array: Any, new_shape: Vector2) -> Any:
-        row_size = array.shape[1]
-        cols = int(new_shape[0])
-        rows = int(new_shape[1]) // row_size
-        reshaped = np.full((cols, rows * row_size, 3), 0, dtype=np.uint8)
-        for ri in range(rows):
-            row_offset = ri * row_size
-            col_offset = ri * cols
-            reshaped[0:cols, row_offset : row_offset + row_size] = array[
-                col_offset : col_offset + cols, 0:row_size
-            ]
-        return reshaped
 
 
 def surface_to_led_matrix(surface: Surface) -> Image.Image:
