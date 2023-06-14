@@ -11,8 +11,11 @@ logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
 logger = logging.getLogger("sprites.image_helpers")
 
 
-def load_image(filename: str) -> Surface:
-    return pygame.image.load(filename).convert_alpha()
+def load_image(filename: str, convert_alpha=False) -> Surface:
+    image = pygame.image.load(filename)
+    if convert_alpha:
+        image = image.convert_alpha()
+    return image
 
 
 def pil_to_surface(image: Image.Image) -> Surface:

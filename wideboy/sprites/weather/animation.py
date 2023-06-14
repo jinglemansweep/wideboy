@@ -89,6 +89,7 @@ class WeatherAnimationSprite(BaseSprite):
     def cache_image(self, name: str) -> None:
         if name not in self.image_cache:
             self.image_cache[name] = list()
+            frame_count = 0
             for i in range(0, 60):
                 filename = os.path.join(
                     self.image_path,
@@ -96,12 +97,13 @@ class WeatherAnimationSprite(BaseSprite):
                     name,
                     f"{name}_{i:05}.png",
                 )
-
                 if os.path.exists(filename):
                     image = load_image(filename)
                     scaled = scale_surface(image, self.size)
                     self.image_cache[name].append(scaled)
-
+                    frame_count += 1
+            logger.debug(f"image:cache name={name} frames={frame_count}")
+ 
     def render(self) -> None:
         # self.weather_code = "600"
         if not self.weather_code:
