@@ -184,11 +184,10 @@ class DefaultScene(BaseScene):
                 cb_active=lambda state: state.state == "on",
             ),
             dict(
-                entity_id="input_number.octopus_electricity_rate",
+                entity_id="sensor.octopus_agile_current_rate",
                 icon=MaterialIcons.MDI_BOLT,
                 icon_color=Color(255, 128, 128, 255),
-                template="{{ states('input_number.octopus_electricity_rate') | int }}p/kWh",
-                cb_active=lambda state: float(state.state) >= 15.0,
+                template="{{ states('sensor.octopus_agile_current_rate') | int }}p",
             ),
             dict(
                 entity_id="switch.lounge_fans",
