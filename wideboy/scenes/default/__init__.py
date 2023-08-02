@@ -72,7 +72,7 @@ class DefaultScene(BaseScene):
 
         self.weather_wind_widget = WeatherWindSprite(
             self,
-            Rect(self.width - 128 + 6, 20, 32, 32),
+            Rect(self.width - 128 + 6, 22, 32, 32),
         )
         self.group.add(self.weather_wind_widget)
 
