@@ -135,9 +135,9 @@ def render_hass_tile(
     surface = Surface((w + padding_right, h), SRCALPHA)
     x = 0
     if icon_surface is not None:
-        surface.blit(icon_surface, (x, -1))
+        surface.blit(icon_surface, (x, 0))
         x += icon_surface.get_rect().width
     if label_surface is not None:
-        surface.blit(label_surface, (x, -2))
+        surface.blit(label_surface, (x, -1))
         x += label_surface.get_rect().width
     return surface
