@@ -58,8 +58,8 @@ class NightScene(BaseScene):
         # =====================================================================
 
         CLOCK_POSITION = (self.width - 100, 0)
-        CLOCK_COLOR_FG = Color(0, 0, 0, 192)
-        CLOCK_COLOR_OUTLINE = Color(128, 255, 255, 255)
+        CLOCK_COLOR_FG = Color(0, 0, 0, 255)
+        CLOCK_COLOR_OUTLINE = Color(255, 192, 192, 255)
 
         self.clock_time_widget = TimeSprite(
             self,
