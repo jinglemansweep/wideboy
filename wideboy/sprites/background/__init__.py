@@ -23,12 +23,14 @@ class BackgroundSprite(BaseSprite):
         self,
         scene: BaseScene,
         rect: Rect,
+        image_path: str,
         alpha: int = 255,
         shuffle: bool = False,
     ) -> None:
         super().__init__(scene, rect)
+        self.image_path = image_path
         self.alpha = alpha
-        self.glob_images(shuffle)
+        self.glob_images(self.image_path, shuffle)
         self.image_index = random.randint(0, len(self.image_files) - 1)
         self.render_next_image()
         logger.debug(f"sprite:image files={len(self.image_files)}")
@@ -58,9 +60,9 @@ class BackgroundSprite(BaseSprite):
             self.image_index = 0
         self.dirty = 1
 
-    def glob_images(self, shuffle: bool = False):
+    def glob_images(self, image_path: str, shuffle: bool = False):
         self.image_files = glob_files(
-            os.path.join(settings.paths.images_backgrounds), "*.png"
+            image_path, "*.png"
         )
         if shuffle:
             random.shuffle(self.image_files)

@@ -47,6 +47,7 @@ class DefaultScene(BaseScene):
                 640,
                 self.height,
             ),
+            settings.paths.images_backgrounds,
             255,
             shuffle=True,
         )

@@ -12,6 +12,7 @@ from wideboy.scenes.base import BaseScene
 from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
 from wideboy.scenes.night import NightScene
+from wideboy.scenes.starfield import StarfieldScene
 from wideboy.utils.logger import setup_logger
 
 load_dotenv(find_dotenv())
@@ -21,7 +22,7 @@ setup_logger(level=settings.general.log_level)
 logger = logging.getLogger(AppMetadata.NAME)
 
 # SCENES
-SCENES: List[Type[BaseScene]] = [DefaultScene, NightScene, CreditsScene]
+SCENES: List[Type[BaseScene]] = [NightScene, DefaultScene, StarfieldScene, CreditsScene]
 
 # ENTITIES
 ENTITIES: List[Type[HASSEntity]] = []
