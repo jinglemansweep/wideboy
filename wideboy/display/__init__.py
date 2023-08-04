@@ -53,13 +53,12 @@ class Display:
             state=dict(state=bool_to_hass_state(self.visible), brightness=brightness),
         )
 
-    def render(self, surface: Surface, is_updates: bool = False):
+    def render(self, surface: Surface):
         if not settings.display.matrix.enabled:
             return
         surface = surface if self.visible else self.black
         if self.buffer is not None and self.matrix is not None:
-            if is_updates:
-                self.buffer.SetImage(surface_to_led_matrix(surface))
+            self.buffer.SetImage(surface_to_led_matrix(surface))
             self.matrix.SwapOnVSync(self.buffer)
 
 

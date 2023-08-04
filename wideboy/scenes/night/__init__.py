@@ -57,7 +57,7 @@ class NightScene(BaseScene):
         # CLOCK WIDGET
         # =====================================================================
 
-        CLOCK_POSITION = (self.width - 100, 0)
+        CLOCK_POSITION = (self.width - 104, 0)
         CLOCK_COLOR_FG = Color(0, 0, 0, 255)
         CLOCK_COLOR_OUTLINE = Color(255, 192, 192, 255)
 

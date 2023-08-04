@@ -22,7 +22,7 @@ setup_logger(level=settings.general.log_level)
 logger = logging.getLogger(AppMetadata.NAME)
 
 # SCENES
-SCENES: List[Type[BaseScene]] = [NightScene, DefaultScene, StarfieldScene, CreditsScene]
+SCENES: List[Type[BaseScene]] = [DefaultScene, NightScene, StarfieldScene, CreditsScene]
 
 # ENTITIES
 ENTITIES: List[Type[HASSEntity]] = []
