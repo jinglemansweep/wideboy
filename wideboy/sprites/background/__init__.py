@@ -61,9 +61,7 @@ class BackgroundSprite(BaseSprite):
         self.dirty = 1
 
     def glob_images(self, image_path: str, shuffle: bool = False):
-        self.image_files = glob_files(
-            image_path, "*.png"
-        )
+        self.image_files = glob_files(image_path, "*.png")
         if shuffle:
             random.shuffle(self.image_files)
 

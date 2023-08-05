@@ -1,7 +1,12 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Vector2, JOYBUTTONUP
 from typing import TYPE_CHECKING
-from wideboy.constants import EVENT_EPOCH_HOUR, EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
+from wideboy.constants import (
+    EVENT_EPOCH_HOUR,
+    EVENT_EPOCH_MINUTE,
+    EVENT_ACTION_A,
+    GAMEPAD,
+)
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.calendar import CalendarSprite
@@ -19,7 +24,7 @@ from wideboy.config import settings
 if TYPE_CHECKING:
     from wideboy.engine import Engine
 
-logger = logging.getLogger("scenes.scene.default")
+logger = logging.getLogger("scenes.scene.night")
 
 
 class NightScene(BaseScene):
@@ -44,7 +49,7 @@ class NightScene(BaseScene):
             Rect(
                 0,
                 0,
-                self.width,
+                self.width - 128,
                 self.height,
             ),
             settings.paths.images_backgrounds_night,
@@ -57,24 +62,23 @@ class NightScene(BaseScene):
         # CLOCK WIDGET
         # =====================================================================
 
-        CLOCK_POSITION = (self.width - 104, 0)
+        CLOCK_POSITION = (self.width - 128, -4)
         CLOCK_COLOR_FG = Color(0, 0, 0, 255)
-        CLOCK_COLOR_OUTLINE = Color(255, 192, 192, 255)
 
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(CLOCK_POSITION[0], CLOCK_POSITION[1], 96, 39),
+            Rect(CLOCK_POSITION[0], CLOCK_POSITION[1], 128, 42),
             color_fg=CLOCK_COLOR_FG,
-            color_outline=CLOCK_COLOR_OUTLINE,
-            font_size=38,
+            color_outline=Color(255, 192, 192, 128),
+            font_size=42,
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(CLOCK_POSITION[0], CLOCK_POSITION[1] + 39, 96, 16),
+            Rect(CLOCK_POSITION[0], CLOCK_POSITION[1] + 45, 128, 20),
             color_fg=CLOCK_COLOR_FG,
-            color_outline=CLOCK_COLOR_OUTLINE,
-            font_size=14,
+            color_outline=Color(192, 255, 255, 128),
+            font_size=16,
         )
         self.group.add(self.clock_date_widget)
 
@@ -86,17 +90,19 @@ class NightScene(BaseScene):
             dict(
                 entity_id="binary_sensor.back_door_contact_sensor_contact",
                 icon=MaterialIcons.MDI_DOOR,
-                icon_color=Color(255, 64, 64, 255),
+                icon_color=Color(255, 255, 255, 255),
+                label_color=Color(128, 128, 128, 255),
                 template="Back",
                 cb_active=lambda state: state.state == "on",
             ),
             dict(
                 entity_id="binary_sensor.front_door_contact_sensor_contact",
                 icon=MaterialIcons.MDI_DOOR,
-                icon_color=Color(255, 64, 64, 255),
+                icon_color=Color(255, 255, 255, 255),
+                label_color=Color(128, 128, 128, 128),
                 template="Front",
                 cb_active=lambda state: state.state == "on",
-            )
+            ),
         ]
 
         self.hass_row = HomeAssistantEntityRowSprite(
@@ -144,9 +150,12 @@ class NightScene(BaseScene):
     def handle_events(self, events: list[Event]) -> None:
         super().handle_events(events)
         for event in events:
-            if event.type == EVENT_EPOCH_HOUR:
+            if event.type == EVENT_EPOCH_HOUR or (
+                event.type == EVENT_ACTION_A
+                or (event.type == JOYBUTTONUP and event.button == GAMEPAD["BUTTON_A"])
+            ):
                 self.run_background_change_act()
-         
+
     def run_background_change_act(self) -> None:
         self.animation_group.add(self.build_background_change_act())
 

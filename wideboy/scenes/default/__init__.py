@@ -246,7 +246,9 @@ class DefaultScene(BaseScene):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
                 if event.unit % 5 == 0:
-                    self.background_widget.glob_images()
+                    self.background_widget.glob_images(
+                        settings.paths.images_backgrounds
+                    )
                 if event.unit % settings.backgrounds.change_interval_mins == 0:
                     self.run_background_change_act()
             if event.type == EVENT_ACTION_A or (

@@ -103,7 +103,7 @@ class WeatherAnimationSprite(BaseSprite):
                     self.image_cache[name].append(scaled)
                     frame_count += 1
             logger.debug(f"image:cache name={name} frames={frame_count}")
- 
+
     def render(self) -> None:
         # self.weather_code = "600"
         if not self.weather_code:

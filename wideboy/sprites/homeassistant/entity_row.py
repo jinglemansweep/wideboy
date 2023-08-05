@@ -79,6 +79,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 entity_surface = render_hass_tile(
                     icon_codepoint=entity.get("icon", None),
                     icon_color=entity.get("icon_color", None),
+                    label_color=entity.get("label_color", Color(255, 255, 255, 255)),
                     label_text=label,
                     padding_right=self.padding_right,
                 )
@@ -87,7 +88,8 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 surfaces.append(entity_surface)
             except:
                 logger.warn(
-                    f"failed to render entity {entity['entity_id']}", exc_info=sys.exc_info()[0]
+                    f"failed to render entity {entity['entity_id']}",
+                    exc_info=sys.exc_info()[0],
                 )
         self.image = Surface((w, h - 1), SRCALPHA)
         self.image.fill(self.color_bg)
