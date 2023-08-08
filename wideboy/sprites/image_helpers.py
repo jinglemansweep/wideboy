@@ -185,7 +185,7 @@ class MaterialIcons:
     MDI_DOOR = 0xF1B5
     MDI_DIRECTIONS_WALK = 0xE536
     MDI_BOLT = 0xEA0B
-
+    MDI_TOGGLE_ON = 0xE9F6
 
 def render_material_icon(
     codepoint: int,

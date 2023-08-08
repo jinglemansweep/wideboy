@@ -191,6 +191,13 @@ class DefaultScene(BaseScene):
                 template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_rate') | float) }}",
             ),
             dict(
+                entity_id="input_boolean.house_manual",
+                icon=MaterialIcons.MDI_TOGGLE_ON,
+                icon_color=Color(255, 0, 0, 255),
+                template="MANUAL",
+                cb_active=lambda state: state.state == "on",
+            ),
+            dict(
                 entity_id="switch.lounge_fans",
                 icon=MaterialIcons.MDI_AC_UNIT,
                 icon_color=Color(196, 196, 255, 255),
