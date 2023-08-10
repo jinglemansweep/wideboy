@@ -55,12 +55,6 @@ class TimeSprite(BaseSprite):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
                 self.render_text_surface()
-        if frame % 100 == 0:
-            if self.rainbow == "fg":
-                self.color_fg = rainbow_color(frame / 100)
-                self.dirty = 1
-            elif self.rainbow == "outline":
-                self.color_outline = rainbow_color(frame / 100)
                 self.dirty = 1
         self.render()
 
