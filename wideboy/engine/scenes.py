@@ -1,6 +1,6 @@
 import logging
-from pygame import Clock, Rect
-from typing import List, Optional, Type, TYPE_CHECKING
+from pygame import Clock, Rect, FRect
+from typing import List, Optional, Type, Union, TYPE_CHECKING
 from wideboy.constants import EVENT_HASS_ENTITY_UPDATE
 from wideboy.scenes.base import BaseScene
 from wideboy.utils.helpers import post_event
@@ -64,7 +64,7 @@ class SceneManager:
             return None
         return self.scene.frame
 
-    def render(self, *args, **kwargs) -> Optional[list[Rect]]:
+    def render(self, *args, **kwargs) -> Optional[list[Union[Rect, FRect]]]:
         if not self.scene:
             logger.debug("SceneManager: no scene loaded")
             return []
