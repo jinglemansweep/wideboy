@@ -39,10 +39,7 @@ class WeatherAnimationSprite(BaseSprite):
         self.icon_summary = None
         self.entity_weather_code = "sensor.openweathermap_weather_code"
         self.entity_sun = "sun.sun"
-        self.image_path = os.path.join(
-            settings.paths.images_weather,
-            "premium",
-        )
+        self.image_path = settings.paths.images_weather
         self.image_cache: dict[str, List[Surface]] = dict()
         self.image_frame = 0
         self.demo_index = 0
@@ -104,6 +101,7 @@ class WeatherAnimationSprite(BaseSprite):
                     frame_count += 1
             logger.debug(f"image:cache name={name} frames={frame_count}")
 
+
     def render(self) -> None:
         # self.weather_code = "600"
         if not self.weather_code:
@@ -112,6 +110,8 @@ class WeatherAnimationSprite(BaseSprite):
         image_name = images[1 if self.weather_daytime else 2]
         self.cache_image(image_name)
         frame_count = len(self.image_cache[image_name])
+        if frame_count == 0:
+            return
         self.image_frame = (self.image_frame + 1) % frame_count
         # logger.debug(
         #     f"weather:render frame={self.image_frame}/{frame_count} name={image_name}"
