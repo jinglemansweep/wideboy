@@ -187,6 +187,7 @@ class MaterialIcons:
     MDI_BOLT = 0xEA0B
     MDI_TOGGLE_ON = 0xE9F6
 
+
 def render_material_icon(
     codepoint: int,
     size: int = 12,

@@ -3,8 +3,6 @@ import os
 import random
 from pygame import Clock, Event, Rect, Surface, Vector2, SRCALPHA
 from typing import Optional, List
-
-# from wideboy.mqtt.homeassistant import HASS
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import (
@@ -100,7 +98,6 @@ class WeatherAnimationSprite(BaseSprite):
                     self.image_cache[name].append(scaled)
                     frame_count += 1
             logger.debug(f"image:cache name={name} frames={frame_count}")
-
 
     def render(self) -> None:
         # self.weather_code = "600"

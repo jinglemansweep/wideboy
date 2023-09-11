@@ -13,7 +13,6 @@ from wideboy.sprites.image_helpers import (
     scale_surface,
     render_text,
 )
-from wideboy.config import settings
 
 logger = logging.getLogger("sprite.background")
 

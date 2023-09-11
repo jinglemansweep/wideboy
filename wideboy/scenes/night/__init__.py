@@ -3,19 +3,14 @@ from pygame import Clock, Color, Event, Rect, Vector2, JOYBUTTONUP
 from typing import TYPE_CHECKING
 from wideboy.constants import (
     EVENT_EPOCH_HOUR,
-    EVENT_EPOCH_MINUTE,
     EVENT_ACTION_A,
     GAMEPAD,
 )
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
-from wideboy.sprites.calendar import CalendarSprite
 from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.homeassistant.entity_row import HomeAssistantEntityRowSprite
 from wideboy.sprites.notification import NotificationSprite
-from wideboy.sprites.weather.animation import WeatherAnimationSprite
-from wideboy.sprites.weather.temperature import WeatherTemperatureSprite
-from wideboy.sprites.weather.wind import WeatherWindSprite
 from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
 

@@ -1,5 +1,4 @@
 import logging
-import sys
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from typing import Optional, List, Dict
 from wideboy.constants import EVENT_EPOCH_MINUTE
@@ -86,10 +85,10 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 w += entity_surface.get_rect().width
                 h = max(h, entity_surface.get_rect().height)
                 surfaces.append(entity_surface)
-            except:
+            except Exception as ex:
                 logger.warn(
                     f"failed to render entity {entity['entity_id']}",
-                    exc_info=sys.exc_info()[0],
+                    exc_info=ex
                 )
         self.image = Surface((w, h - 1), SRCALPHA)
         self.image.fill(self.color_bg)
