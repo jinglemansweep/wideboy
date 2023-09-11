@@ -1,5 +1,5 @@
 import logging
-from pygame import Clock, Color, Event, Rect, Vector2
+from pygame import Clock, Color, Event, Rect, FRect, Vector2
 from pygame.sprite import LayeredDirty, Group
 from typing import TYPE_CHECKING
 from wideboy.sprites.image_helpers import build_background
@@ -67,7 +67,7 @@ class BaseScene:
         self.group.update(self.frame, clock, delta, events)
         self.frame += 1
 
-    def draw(self) -> list[Rect]:
+    def draw(self) -> list[FRect or Rect]:
         return self.group.draw(self.screen)
 
     def handle_events(self, events: list[Event]) -> None:
