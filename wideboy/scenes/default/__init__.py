@@ -185,6 +185,12 @@ class DefaultScene(BaseScene):
                 cb_active=lambda state: state.state == "on",
             ),
             dict(
+                entity_id="sensor.octopus_energy_electricity_current_demand",
+                icon=MaterialIcons.MDI_BOLT,
+                icon_color=Color(255, 255, 128, 255),
+                template="{{ states('sensor.octopus_energy_electricity_current_demand') }}w",
+            ),
+            dict(
                 entity_id="sensor.octopus_energy_electricity_current_rate",
                 icon=MaterialIcons.MDI_BOLT,
                 icon_color=Color(255, 128, 128, 255),
