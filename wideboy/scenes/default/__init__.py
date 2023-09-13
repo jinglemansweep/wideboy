@@ -188,7 +188,7 @@ class DefaultScene(BaseScene):
                 entity_id="sensor.octopus_energy_electricity_current_demand",
                 icon=MaterialIcons.MDI_BOLT,
                 icon_color=Color(255, 255, 128, 255),
-                template="{{ states('sensor.octopus_energy_electricity_current_demand') }}w",
+                template="{{ states('sensor.octopus_energy_electricity_current_demand') | int }}w",
             ),
             dict(
                 entity_id="sensor.octopus_energy_electricity_current_rate",
