@@ -186,6 +186,8 @@ class MaterialIcons:
     MDI_DIRECTIONS_WALK = 0xE536
     MDI_BOLT = 0xEA0B
     MDI_TOGGLE_ON = 0xE9F6
+    MDI_CURRENCY_POUND = 0xEAF1
+    MDI_BATTERY = 0xE1A4
 
 
 def render_material_icon(

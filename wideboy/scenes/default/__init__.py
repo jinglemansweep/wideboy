@@ -113,7 +113,7 @@ class DefaultScene(BaseScene):
         # HASS ENTITY ROW WIDGETS
         # =====================================================================
 
-        hass_row_entities = [
+        hass_row_main_entities = [
             dict(
                 entity_id="sensor.steps_louis",
                 icon=MaterialIcons.MDI_DIRECTIONS_WALK,
@@ -185,18 +185,6 @@ class DefaultScene(BaseScene):
                 cb_active=lambda state: state.state == "on",
             ),
             dict(
-                entity_id="sensor.octopus_energy_electricity_current_demand",
-                icon=MaterialIcons.MDI_BOLT,
-                icon_color=Color(255, 255, 128, 255),
-                template="{{ states('sensor.octopus_energy_electricity_current_demand') | int }}w",
-            ),
-            dict(
-                entity_id="sensor.octopus_energy_electricity_current_rate",
-                icon=MaterialIcons.MDI_BOLT,
-                icon_color=Color(255, 128, 128, 255),
-                template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_rate') | float) }}",
-            ),
-            dict(
                 entity_id="input_boolean.house_manual",
                 icon=MaterialIcons.MDI_TOGGLE_ON,
                 icon_color=Color(255, 0, 0, 255),
@@ -212,13 +200,49 @@ class DefaultScene(BaseScene):
             ),
         ]
 
-        self.hass_row = HomeAssistantEntityRowSprite(
+        self.hass_row_main = HomeAssistantEntityRowSprite(
             self,
             Rect(512, 48, 128, 16),
-            hass_row_entities,
+            hass_row_main_entities,
             color_bg=Color(0, 0, 0, 196),
         )
-        self.group.add(self.hass_row)
+        self.group.add(self.hass_row_main)
+
+
+        hass_row_power_entities = [
+            dict(
+                entity_id="sensor.octopus_energy_electricity_current_demand",
+                icon=MaterialIcons.MDI_BOLT,
+                icon_color=Color(255, 255, 128, 255),
+                template="{{ states('sensor.octopus_energy_electricity_current_demand') | int }}w",
+            ),
+            dict(
+                entity_id="sensor.octopus_energy_electricity_current_rate",
+                icon=MaterialIcons.MDI_BOLT,
+                icon_color=Color(255, 255, 255, 255),
+                template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_rate') | float) }}",
+            ),
+            dict(
+                entity_id="sensor.octopus_energy_electricity_current_accumulative_cost",
+                icon=MaterialIcons.MDI_BOLT,
+                icon_color=Color(255, 128, 255, 255),
+                template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_accumulative_cost') | float) }}",
+            ),
+            dict(
+                entity_id="sensor.delta_2_max_downstairs_battery_level",
+                icon=MaterialIcons.MDI_BATTERY,
+                icon_color=Color(255, 128, 255, 255),
+                template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}%",
+            )
+        ]
+
+        self.hass_row_power = HomeAssistantEntityRowSprite(
+            self,
+            Rect(512, 48, 128, 32),
+            hass_row_power_entities,
+            color_bg=Color(0, 0, 0, 196),
+        )
+        self.group.add(self.hass_row_power)
 
         # =====================================================================
         # NOTIFICATION WIDGET
@@ -250,7 +274,8 @@ class DefaultScene(BaseScene):
         events: list[Event],
     ) -> None:
         super().update(clock, delta, events)
-        self.hass_row.rect.topright = self.width - 128, 0
+        self.hass_row_main.rect.topright = self.width - 128 - 3, 2
+        self.hass_row_power.rect.topright = self.width - 128 - 3, 17
 
     # Handle Events
 

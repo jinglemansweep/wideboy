@@ -101,22 +101,22 @@ class WeatherAnimationSprite(BaseSprite):
 
     def render(self) -> None:
         # self.weather_code = "600"
-        if not self.weather_code:
-            return
-        images = convert_weather_code_to_image_name(self.weather_code)
-        image_name = images[1 if self.weather_daytime else 2]
-        self.cache_image(image_name)
-        frame_count = len(self.image_cache[image_name])
-        if frame_count == 0:
-            return
-        self.image_frame = (self.image_frame + 1) % frame_count
-        # logger.debug(
-        #     f"weather:render frame={self.image_frame}/{frame_count} name={image_name}"
-        # )
-        self.image = self.image_cache[image_name][self.image_frame]
-        if frame_count > 1:
-            self.dirty = 1
-
+        try:
+            images = convert_weather_code_to_image_name(self.weather_code)
+            image_name = images[1 if self.weather_daytime else 2]
+            self.cache_image(image_name)
+            frame_count = len(self.image_cache[image_name])
+            if frame_count == 0:
+                return
+            self.image_frame = (self.image_frame + 1) % frame_count
+            # logger.debug(
+            #     f"weather:render frame={self.image_frame}/{frame_count} name={image_name}"
+            # )
+            self.image = self.image_cache[image_name][self.image_frame]
+            if frame_count > 1:
+                self.dirty = 1
+        except Exception as e:
+            logger.warn(f"image:render error={e}")
 
 def convert_weather_code_to_image_name(weather_code: str) -> List[str]:
     return IMAGE_MAPPING[int(weather_code)]
