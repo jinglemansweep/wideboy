@@ -227,12 +227,37 @@ class DefaultScene(BaseScene):
                 icon=MaterialIcons.MDI_BOLT,
                 icon_color=Color(255, 128, 255, 255),
                 template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_accumulative_cost') | float) }}",
-            ),
+            )
+        ]
+
+        self.hass_row_power = HomeAssistantEntityRowSprite(
+            self,
+            Rect(512, 48, 128, 16),
+            hass_row_power_entities,
+            color_bg=Color(0, 0, 0, 196),
+        )
+        self.group.add(self.hass_row_power)
+
+        hass_row_battery_entities = [
             dict(
                 entity_id="sensor.delta_2_max_downstairs_battery_level",
                 icon=MaterialIcons.MDI_BATTERY,
                 icon_color=Color(255, 255, 128, 255),
-                template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}% ({{ states('sensor.delta_2_max_downstairs_discharge_remaining_time') | int }}m)",
+                template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}%",
+            ),
+            dict(
+                entity_id="sensor.delta_2_max_downstairs_discharge_remaining_time",
+                icon=MaterialIcons.MDI_BATTERY,
+                icon_color=Color(255, 64, 64, 255),
+                template="{{ states('sensor.delta_2_max_downstairs_discharge_remaining_time') | int }}m",
+                cb_active=lambda state: 0 > float(state.state) > 60,
+            ),
+            dict(
+                entity_id="sensor.delta_2_max_downstairs_charge_remaining_time",
+                icon=MaterialIcons.MDI_BATTERY,
+                icon_color=Color(64, 255, 64, 255),
+                template="{{ states('sensor.delta_2_max_downstairs_charge_remaining_time') | int }}m",
+                cb_active=lambda state: float(state.state) > 0,
             ),
             dict(
                 entity_id="sensor.delta_2_max_downstairs_ac_in_power",
@@ -243,13 +268,13 @@ class DefaultScene(BaseScene):
             )
         ]
 
-        self.hass_row_power = HomeAssistantEntityRowSprite(
+        self.hass_row_battery = HomeAssistantEntityRowSprite(
             self,
-            Rect(512, 48, 128, 32),
-            hass_row_power_entities,
+            Rect(512, 48, 128, 16),
+            hass_row_battery_entities,
             color_bg=Color(0, 0, 0, 196),
         )
-        self.group.add(self.hass_row_power)
+        self.group.add(self.hass_row_battery)
 
         # =====================================================================
         # NOTIFICATION WIDGET
@@ -283,6 +308,7 @@ class DefaultScene(BaseScene):
         super().update(clock, delta, events)
         self.hass_row_main.rect.topright = self.width - 128 - 3, 2
         self.hass_row_power.rect.topright = self.width - 128 - 3, 17
+        self.hass_row_battery.rect.topright = self.width - 128 - 3, 32
 
     # Handle Events
 
