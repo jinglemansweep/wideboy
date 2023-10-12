@@ -231,7 +231,7 @@ class DefaultScene(BaseScene):
             dict(
                 entity_id="sensor.delta_2_max_downstairs_battery_level",
                 icon=MaterialIcons.MDI_BATTERY,
-                icon_color=Color(255, 128, 255, 255),
+                icon_color=Color(255, 255, 128, 255),
                 template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}%",
             )
         ]
