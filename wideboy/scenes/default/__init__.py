@@ -232,7 +232,14 @@ class DefaultScene(BaseScene):
                 entity_id="sensor.delta_2_max_downstairs_battery_level",
                 icon=MaterialIcons.MDI_BATTERY,
                 icon_color=Color(255, 255, 128, 255),
-                template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}%",
+                template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}% ({{ states('sensor.delta_2_max_downstairs_discharge_remaining_time') | int }}m)",
+            ),
+            dict(
+                entity_id="sensor.delta_2_max_downstairs_ac_in_power",
+                icon=MaterialIcons.MDI_BOLT,
+                icon_color=Color(255, 255, 255, 255),
+                template="{{ states('sensor.delta_2_max_downstairs_ac_in_power') | int }}w",
+                cb_active=lambda state: float(state.state) > 0,
             )
         ]
 
