@@ -187,7 +187,11 @@ class MaterialIcons:
     MDI_BOLT = 0xEA0B
     MDI_TOGGLE_ON = 0xE9F6
     MDI_CURRENCY_POUND = 0xEAF1
+    MDI_CURRENCY_DOLLAR = 0xE227
     MDI_BATTERY = 0xE1A4
+    MDI_SCHEDULE = 0xE8B5
+    MDI_HOURGLASS = 0xE88C
+    MDI_POWER = 0xE63C
 
 
 def render_material_icon(

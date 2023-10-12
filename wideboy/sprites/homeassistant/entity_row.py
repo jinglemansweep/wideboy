@@ -1,7 +1,7 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from typing import Optional, List, Dict
-from wideboy.constants import EVENT_EPOCH_MINUTE
+from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
 
 # from wideboy.mqtt.homeassistant import HASS
 from wideboy.scenes.base import BaseScene
@@ -48,7 +48,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if event.type == EVENT_EPOCH_MINUTE:
+            if event.type == EVENT_EPOCH_SECOND:
                 self.render()
 
     def render(self) -> None:
