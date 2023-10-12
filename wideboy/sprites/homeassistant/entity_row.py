@@ -48,7 +48,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if event.type == EVENT_EPOCH_SECOND:
+            if event.type == EVENT_EPOCH_MINUTE:
                 self.render()
 
     def render(self) -> None:
