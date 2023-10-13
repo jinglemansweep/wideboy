@@ -196,6 +196,7 @@ class MaterialIcons:
     MDI_CALENDAR_TODAY = 0xE935
     MDI_LIGHT_MODE = 0xE518
     MDI_SCHEDULE = 0xE8B5
+    MDI_LOOP = 0xE028
 
 
 def render_material_icon(

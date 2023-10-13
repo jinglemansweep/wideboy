@@ -252,6 +252,12 @@ class DefaultScene(BaseScene):
                 template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}%",
             ),
             dict(
+                entity_id="sensor.delta_2_max_downstairs_cycles",
+                icon=MaterialIcons.MDI_LOOP,
+                icon_color=Color(192, 192, 192, 255),
+                template="{{ states('sensor.delta_2_max_downstairs_cycles') | int }}"
+            ),
+            dict(
                 entity_id="sensor.delta_2_max_downstairs_discharge_remaining_time",
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(255, 64, 64, 255),
@@ -273,6 +279,7 @@ class DefaultScene(BaseScene):
                 cb_active=lambda state: float(state.state) > 0,
             )
         ]
+
 
         self.hass_row_battery = HomeAssistantEntityRowSprite(
             self,
