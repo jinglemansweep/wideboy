@@ -213,19 +213,25 @@ class DefaultScene(BaseScene):
             dict(
                 entity_id="sensor.octopus_energy_electricity_current_demand",
                 icon=MaterialIcons.MDI_BOLT,
-                icon_color=Color(255, 64, 64, 255),
+                icon_color=Color(192, 192, 192, 255),
                 template="{{ states('sensor.octopus_energy_electricity_current_demand') | int }}w",
             ),
             dict(
                 entity_id="sensor.octopus_energy_electricity_current_rate",
-                icon=MaterialIcons.MDI_CURRENCY_DOLLAR,
-                icon_color=Color(255, 128, 255, 255),
+                icon=MaterialIcons.MDI_SYMBOL_AT,
+                icon_color=Color(192, 192, 192, 255),
                 template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_rate') | float) }}",
             ),
             dict(
-                entity_id="sensor.octopus_energy_electricity_current_accumulative_cost",
+                entity_id="sensor.octopus_energy_electricity_current_demand",
                 icon=MaterialIcons.MDI_CURRENCY_DOLLAR,
-                icon_color=Color(255, 255, 255, 255),
+                icon_color=Color(255, 64, 64, 255),
+                template="£{{ '{:.2f}'.format(int(states('sensor.octopus_energy_electricity_current_demand')) / 1000 * float(states('sensor.octopus_energy_electricity_current_rate'))) }}",
+            ),
+            dict(
+                entity_id="sensor.octopus_energy_electricity_current_accumulative_cost",
+                icon=MaterialIcons.MDI_SCHEDULE,
+                icon_color=Color(255, 64, 64, 255),
                 template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_accumulative_cost') | float) }}",
             )
         ]
@@ -242,21 +248,21 @@ class DefaultScene(BaseScene):
             dict(
                 entity_id="sensor.delta_2_max_downstairs_battery_level",
                 icon=MaterialIcons.MDI_BATTERY,
-                icon_color=Color(255, 255, 128, 255),
+                icon_color=Color(192, 192, 192, 255),
                 template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}%",
             ),
             dict(
                 entity_id="sensor.delta_2_max_downstairs_discharge_remaining_time",
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(255, 64, 64, 255),
-                template="{{ states('sensor.delta_2_max_downstairs_discharge_remaining_time') | int }}m",
-                cb_active=lambda state: 0 > float(state.state) > 60,
+                template="{{ (states('sensor.delta_2_max_downstairs_discharge_remaining_time') | int) // 60 }}h{{ '{:2d}'.format((states('sensor.delta_2_max_downstairs_discharge_remaining_time') | int) % 60) }}m",
+                cb_active=lambda state: float(state.state) > 0,
             ),
             dict(
                 entity_id="sensor.delta_2_max_downstairs_charge_remaining_time",
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(64, 255, 64, 255),
-                template="{{ states('sensor.delta_2_max_downstairs_charge_remaining_time') | int }}m",
+                template="{{ (states('sensor.delta_2_max_downstairs_charge_remaining_time') | int) // 60 }}h{{ '{:2d}'.format((states('sensor.delta_2_max_downstairs_charge_remaining_time') | int) % 60) }}m",
                 cb_active=lambda state: float(state.state) > 0,
             ),
             dict(

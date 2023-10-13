@@ -192,6 +192,10 @@ class MaterialIcons:
     MDI_SCHEDULE = 0xE8B5
     MDI_HOURGLASS = 0xE88C
     MDI_POWER = 0xE63C
+    MDI_SYMBOL_AT = 0xE0E6
+    MDI_CALENDAR_TODAY = 0xE935
+    MDI_LIGHT_MODE = 0xE518
+    MDI_SCHEDULE = 0xE8B5
 
 
 def render_material_icon(
