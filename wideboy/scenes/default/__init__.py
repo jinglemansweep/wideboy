@@ -115,88 +115,104 @@ class DefaultScene(BaseScene):
 
         hass_row_main_entities = [
             dict(
-                entity_id="sensor.steps_louis",
                 icon=MaterialIcons.MDI_DIRECTIONS_WALK,
                 icon_color=Color(255, 0, 255, 255),
-                template="{{ states('sensor.steps_louis') }}",
+                template="{{ states['sensor.steps_louis'] }}",
+                watch_entities=["sensor.steps_louis"],
             ),
             # active when public IP is home IP
             dict(
-                entity_id="sensor.privacy_ip_info",
                 icon=MaterialIcons.MDI_LOCK,
                 icon_color=Color(255, 0, 0, 255),
-                template="VPN DOWN ({{ states('sensor.privacy_ip_info') }})",
-                cb_active=lambda state: state.state == settings.secrets.home_ip,
+                template="VPN DOWN ({{ states['sensor.privacy_ip_info'] }})",
+                cb_active=lambda states: states["sensor.privacy_ip_info"]
+                == settings.secrets.home_ip,
+                watch_entities=["sensor.privacy_ip_info"],
             ),
             dict(
-                entity_id="sensor.transmission_down_speed",
                 icon=MaterialIcons.MDI_VPN_LOCK,
                 icon_color=Color(255, 255, 255, 255),
-                template="{{ states('sensor.transmission_down_speed') | int }}Mbps",
-                cb_active=lambda state: float(state.state) > 0,
+                template="{{ states['sensor.transmission_down_speed'] }}Mbps",
+                cb_active=lambda states: float(states["sensor.transmission_down_speed"])
+                > 0,
+                watch_entities=["sensor.transmission_down_speed"],
             ),
             dict(
-                entity_id="sensor.ds920plus_volume_used",
                 icon=MaterialIcons.MDI_DNS,
                 icon_color=Color(255, 255, 0, 255),
-                template="{{ states('sensor.ds920plus_volume_used') }}%",
-                cb_active=lambda state: float(state.state) > 66.66,
+                template="{{ states['sensor.ds920plus_volume_used'] }}%",
+                cb_active=lambda states: float(states["sensor.ds920plus_volume_used"])
+                > 66.66,
+                watch_entities=["sensor.ds920plus_volume_used"],
             ),
             dict(
-                entity_id="sensor.speedtest_download_average",
                 icon=MaterialIcons.MDI_DOWNLOAD,
                 icon_color=Color(0, 255, 0, 255),
-                template="{{ states('sensor.speedtest_download_average') | int }}Mbps",
-                cb_active=lambda state: float(state.state) < 600,
+                template="{{ states['sensor.speedtest_download_average'] }}Mbps",
+                cb_active=lambda states: float(
+                    states["sensor.speedtest_download_average"]
+                )
+                < 600,
+                watch_entities=["sensor.speedtest_download_average"],
             ),
             dict(
-                entity_id="sensor.speedtest_upload_average",
                 icon=MaterialIcons.MDI_UPLOAD,
                 icon_color=Color(255, 0, 0, 255),
-                template="{{ states('sensor.speedtest_upload_average') | int }}Mbps",
-                cb_active=lambda state: float(state.state) < 600,
+                template="{{ states['sensor.speedtest_upload_average'] }}Mbps",
+                cb_active=lambda states: float(
+                    states["sensor.speedtest_upload_average"]
+                )
+                < 600,
+                watch_entities=["sensor.speedtest_upload_average"],
             ),
             dict(
-                entity_id="sensor.speedtest_ping_average",
                 icon=MaterialIcons.MDI_WIFI,
                 icon_color=Color(0, 0, 255, 255),
-                template="{{ states('sensor.speedtest_ping_average') | int }}ms",
-                cb_active=lambda state: float(state.state) > 10,
+                template="{{ states['sensor.speedtest_ping_average' ] }}ms",
+                cb_active=lambda states: float(states["sensor.speedtest_ping_average"])
+                > 10,
+                watch_entities=["sensor.speedtest_ping_average"],
             ),
+            # dict(
+            #    icon=MaterialIcons.MDI_DELETE,
+            #    icon_color=Color(192, 192, 192, 255),
+            #    template="{{ state_attr('calendar.bin_collection', 'message') }}",
+            #    cb_active=lambda state: float(state.state) <= 1,
+            #    watch_entities=["sensor.bin_collection_days"],
+            # ),
             dict(
-                entity_id="sensor.bin_collection_days",
-                icon=MaterialIcons.MDI_DELETE,
-                icon_color=Color(192, 192, 192, 255),
-                template="{{ state_attr('calendar.bin_collection', 'message') }}",
-                cb_active=lambda state: float(state.state) <= 1,
-            ),
-            dict(
-                entity_id="binary_sensor.back_door_contact_sensor_contact",
                 icon=MaterialIcons.MDI_DOOR,
                 icon_color=Color(255, 64, 64, 255),
                 template="Back",
-                cb_active=lambda state: state.state == "on",
+                cb_active=lambda states: states[
+                    "binary_sensor.back_door_contact_sensor_contact"
+                ]
+                == "on",
+                watch_entities=["binary_sensor.back_door_contact_sensor_contact"],
             ),
             dict(
-                entity_id="binary_sensor.front_door_contact_sensor_contact",
                 icon=MaterialIcons.MDI_DOOR,
                 icon_color=Color(255, 64, 64, 255),
                 template="Front",
-                cb_active=lambda state: state.state == "on",
+                cb_active=lambda states: states[
+                    "binary_sensor.front_door_contact_sensor_contact"
+                ]
+                == "on",
+                watch_entities=["binary_sensor.front_door_contact_sensor_contact"],
             ),
             dict(
-                entity_id="input_boolean.house_manual",
                 icon=MaterialIcons.MDI_TOGGLE_ON,
                 icon_color=Color(255, 0, 0, 255),
                 template="MANUAL",
-                cb_active=lambda state: state.state == "on",
+                cb_active=lambda states: states["input_boolean.house_manual"] == "on",
+                watch_entities=["input_boolean.house_manual"],
             ),
             dict(
-                entity_id="switch.lounge_fans",
                 icon=MaterialIcons.MDI_AC_UNIT,
                 icon_color=Color(196, 196, 255, 255),
                 template="ON",
-                cb_active=lambda state: state.state == "on",
+                cb_active=lambda states: states["switch.lounge_fans"] == "on",
+                watch_entities=["switch.lounge_fans"],
             ),
         ]
 
@@ -208,32 +224,36 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.hass_row_main)
 
-
         hass_row_power_entities = [
             dict(
-                entity_id="sensor.octopus_energy_electricity_current_demand",
                 icon=MaterialIcons.MDI_BOLT,
                 icon_color=Color(192, 192, 192, 255),
-                template="{{ states('sensor.octopus_energy_electricity_current_demand') | int }}w",
+                template="{{ states['sensor.octopus_energy_electricity_current_demand'] }}w",
+                watch_entities=["sensor.octopus_energy_electricity_current_demand"],
             ),
             dict(
-                entity_id="sensor.octopus_energy_electricity_current_rate",
                 icon=MaterialIcons.MDI_SYMBOL_AT,
                 icon_color=Color(192, 192, 192, 255),
-                template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_rate') | float) }}",
+                template="£{{ '{:.2f}'.format(states['sensor.octopus_energy_electricity_current_rate'] | float) }}",
+                watch_entities=["sensor.octopus_energy_electricity_current_rate"],
             ),
             dict(
-                entity_id="sensor.octopus_energy_electricity_current_demand",
                 icon=MaterialIcons.MDI_CURRENCY_DOLLAR,
                 icon_color=Color(255, 64, 64, 255),
-                template="£{{ '{:.2f}'.format(int(states('sensor.octopus_energy_electricity_current_demand')) / 1000 * float(states('sensor.octopus_energy_electricity_current_rate'))) }}",
+                template="£{{ (states['sensor.octopus_energy_electricity_current_demand'] | int / 1000) * (states['sensor.octopus_energy_electricity_current_rate'] | float) }}",
+                watch_entities=[
+                    "sensor.octopus_energy_electricity_current_demand",
+                    "sensor.octopus_energy_electricity_current_rate",
+                ],
             ),
             dict(
-                entity_id="sensor.octopus_energy_electricity_current_accumulative_cost",
                 icon=MaterialIcons.MDI_SCHEDULE,
                 icon_color=Color(255, 64, 64, 255),
-                template="£{{ '{:.2f}'.format(states('sensor.octopus_energy_electricity_current_accumulative_cost') | float) }}",
-            )
+                template="£{{ '{:.2f}'.format(states['sensor.octopus_energy_electricity_current_accumulative_cost'] | float) }}",
+                watch_entities=[
+                    "sensor.octopus_energy_electricity_current_accumulative_cost"
+                ],
+            ),
         ]
 
         self.hass_row_power = HomeAssistantEntityRowSprite(
@@ -246,40 +266,34 @@ class DefaultScene(BaseScene):
 
         hass_row_battery_entities = [
             dict(
-                entity_id="sensor.delta_2_max_downstairs_battery_level",
                 icon=MaterialIcons.MDI_BATTERY,
                 icon_color=Color(192, 192, 192, 255),
-                template="{{ states('sensor.delta_2_max_downstairs_battery_level') | int }}%",
+                template="{{ states['sensor.delta_2_max_downstairs_battery_level'] | int }}%",
             ),
             dict(
-                entity_id="sensor.delta_2_max_downstairs_cycles",
                 icon=MaterialIcons.MDI_LOOP,
                 icon_color=Color(192, 192, 192, 255),
-                template="{{ states('sensor.delta_2_max_downstairs_cycles') | int }}"
+                template="{{ states['sensor.delta_2_max_downstairs_cycles'] | int }}",
             ),
             dict(
-                entity_id="sensor.delta_2_max_downstairs_discharge_remaining_time",
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(255, 64, 64, 255),
-                template="{{ (states('sensor.delta_2_max_downstairs_discharge_remaining_time') | int) // 60 }}h{{ '{:2d}'.format((states('sensor.delta_2_max_downstairs_discharge_remaining_time') | int) % 60) }}m",
+                template="{{ states['sensor.delta_2_max_downstairs_discharge_remaining_time'] | int }}m",
                 cb_active=lambda state: float(state.state) > 0,
             ),
             dict(
-                entity_id="sensor.delta_2_max_downstairs_charge_remaining_time",
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(64, 255, 64, 255),
-                template="{{ (states('sensor.delta_2_max_downstairs_charge_remaining_time') | int) // 60 }}h{{ '{:2d}'.format((states('sensor.delta_2_max_downstairs_charge_remaining_time') | int) % 60) }}m",
+                template="{{ ( states['sensor.delta_2_max_downstairs_discharge_remaining_time'] | int ) }}m",
                 cb_active=lambda state: float(state.state) > 0,
             ),
             dict(
-                entity_id="sensor.delta_2_max_downstairs_ac_in_power",
                 icon=MaterialIcons.MDI_POWER,
                 icon_color=Color(255, 64, 64, 255),
-                template="{{ states('sensor.delta_2_max_downstairs_ac_in_power') | int }}w",
+                template="{{ states['sensor.delta_2_max_downstairs_ac_in_power'] | int }}w",
                 cb_active=lambda state: float(state.state) > 0,
-            )
+            ),
         ]
-
 
         self.hass_row_battery = HomeAssistantEntityRowSprite(
             self,

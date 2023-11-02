@@ -1,7 +1,12 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
-from typing import Optional, List, Dict
-from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_EPOCH_SECOND
+from jinja2 import Template
+from typing import Optional, List, Set, Dict, Any
+from wideboy.constants import (
+    EVENT_EPOCH_MINUTE,
+    EVENT_EPOCH_SECOND,
+    EVENT_MQTT_MESSAGE_RECEIVED,
+)
 
 # from wideboy.mqtt.homeassistant import HASS
 from wideboy.scenes.base import BaseScene
@@ -30,6 +35,8 @@ class HomeAssistantEntityRowSprite(BaseSprite):
     ) -> None:
         super().__init__(scene, rect)
         self.entities = entities
+        self.entity_states: Dict[str, Any] = dict()
+        self.entity_watches: Set[str] = set()
         self.font_name = font_name
         self.font_size = font_size
         self.color_fg = color_fg
@@ -37,6 +44,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         self.color_outline = color_outline
         self.padding_right = padding_right
         self.show_all = show_all
+        self.setup_watches()
         self.render()
 
     def update(
@@ -48,8 +56,37 @@ class HomeAssistantEntityRowSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
+            if event.type == EVENT_MQTT_MESSAGE_RECEIVED:
+                changed = self.parse_state_message(event.topic, event.payload)
+                if changed:
+                    self.render()
             if event.type == EVENT_EPOCH_MINUTE:
                 self.render()
+
+    def setup_watches(self) -> None:
+        for entity in self.entities:
+            self.entity_watches.update(entity.get("watch_entities", []))
+        for watched_entities in self.entity_watches:
+            self.entity_states[watched_entities] = ""
+
+    def parse_state_message(self, topic, payload) -> bool | None:
+        topic_exploded = topic.split("/")
+        if len(topic_exploded) < 3:
+            return None
+        device_class, device_id = topic_exploded[1:3]
+        entity_id = f"{device_class}.{device_id}"
+        changed = False
+        if entity_id in self.entity_watches:
+            if entity_id in self.entity_states:
+                changed = self.entity_states[entity_id] != payload
+            if changed:
+                logger.debug(
+                    f"hass:entity_row watch_entity_change entity={entity_id} state={self.entity_states[entity_id]}"
+                )
+        else:
+            changed = True
+        self.entity_states[entity_id] = payload
+        return changed
 
     def render(self) -> None:
         w, h = 1, 2
@@ -58,23 +95,26 @@ class HomeAssistantEntityRowSprite(BaseSprite):
             callback = entity.get("cb_active", lambda e: True)
             template = entity.get("template", None)
             try:
-                with self.scene.engine.hass.client as hass:
-                    hass_state = hass.get_state(entity_id=entity["entity_id"])
-                # logger.debug(
-                #     f"hass:entity entity_id={entity['entity_id']} state={hass_state.dict()}"
-                # )
-                active = self.show_all or callback(hass_state)
-                label = None
+                try:
+                    active = self.show_all or callback(self.entity_states)
+                except Exception as e:
+                    logger.warn(f"hass:entity_row callback error={e}")
+                    active = False
+
+                if template:
+                    try:
+                        jinja_template = Template(template)
+                        label = jinja_template.render(states=self.entity_states)
+                        logger.debug(
+                            f"hass:entity_row template={template} label={label}"
+                        )
+                    except Exception as e:
+                        logger.warn(f"hass:entity_row template={template}", exc_info=e)
+                        label = "?"
+
                 if not active:
                     continue
-                if template:
-                    logger.debug(f"hass:entity_row template={template}")
-                    try:
-                        with self.scene.engine.hass.client as hass:
-                            label = hass.get_rendered_template(template)
-                    except Exception as e:
-                        logger.warn(f"failed to render template {template}", exc_info=e)
-                        label = "ERR"
+
                 entity_surface = render_hass_tile(
                     icon_codepoint=entity.get("icon", None),
                     icon_color=entity.get("icon_color", None),
@@ -86,10 +126,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                 h = max(h, entity_surface.get_rect().height)
                 surfaces.append(entity_surface)
             except Exception as ex:
-                logger.warn(
-                    f"failed to render entity {entity['entity_id']}",
-                    exc_info=ex
-                )
+                logger.warn(f"failed to render entity", exc_info=ex)
         self.image = Surface((w, h - 1), SRCALPHA)
         self.image.fill(self.color_bg)
         x = 0

@@ -60,14 +60,15 @@ class MQTTClient:
         logger.info(
             f"mqtt:connected connected={client.is_connected()} userdata={userdata} flags={flags} rc={str(rc)}"
         )
+        self.subscribe(f"homeassistant/#", 0)
         # DISABLED, could be too slow
         # self.subscribe(f"{settings.mqtt.topic_prefix}/{self.device_id}/#", 0)
 
     def _on_message(self, client: mqtt.Client, userdata, msg):
         topic, payload = str(msg.topic), msg.payload.decode("utf-8")
-        logger.debug(
-            f"mqtt:message_received topic={topic} payload={payload} userdata={userdata}"
-        )
+        # logger.debug(
+        #     f"mqtt:message_received topic={topic} payload={payload} userdata={userdata}"
+        # )
         pygame.event.post(
             Event(EVENT_MQTT_MESSAGE_RECEIVED, dict(topic=topic, payload=payload))
         )
