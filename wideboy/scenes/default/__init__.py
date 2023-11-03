@@ -132,7 +132,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_VPN_LOCK,
                 icon_color=Color(255, 255, 255, 255),
-                template="{{ states['sensor.transmission_down_speed'] }}Mbps",
+                template="{{ states['sensor.transmission_down_speed'] | int }}Mbps",
                 cb_active=lambda states: float(states["sensor.transmission_down_speed"])
                 > 0,
                 watch_entities=["sensor.transmission_down_speed"],
@@ -140,7 +140,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_DNS,
                 icon_color=Color(255, 255, 0, 255),
-                template="{{ states['sensor.ds920plus_volume_used'] }}%",
+                template="{{ states['sensor.ds920plus_volume_used'] | int }}%",
                 cb_active=lambda states: float(states["sensor.ds920plus_volume_used"])
                 > 66.66,
                 watch_entities=["sensor.ds920plus_volume_used"],
@@ -148,7 +148,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_DOWNLOAD,
                 icon_color=Color(0, 255, 0, 255),
-                template="{{ states['sensor.speedtest_download_average'] }}Mbps",
+                template="{{ states['sensor.speedtest_download_average'] | int }}Mbps",
                 cb_active=lambda states: float(
                     states["sensor.speedtest_download_average"]
                 )
@@ -158,7 +158,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_UPLOAD,
                 icon_color=Color(255, 0, 0, 255),
-                template="{{ states['sensor.speedtest_upload_average'] }}Mbps",
+                template="{{ states['sensor.speedtest_upload_average'] | int }}Mbps",
                 cb_active=lambda states: float(
                     states["sensor.speedtest_upload_average"]
                 )
@@ -228,7 +228,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_BOLT,
                 icon_color=Color(192, 192, 192, 255),
-                template="{{ states['sensor.octopus_energy_electricity_current_demand'] }}w",
+                template="{{ states['sensor.octopus_energy_electricity_current_demand'] | int }}w",
                 watch_entities=["sensor.octopus_energy_electricity_current_demand"],
             ),
             dict(
@@ -240,7 +240,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_CURRENCY_DOLLAR,
                 icon_color=Color(255, 64, 64, 255),
-                template="£{{ ( (states['sensor.octopus_energy_electricity_current_demand'] | float / 1000) * (states['sensor.octopus_energy_electricity_current_rate'] | float) ) | numberFormat }}",
+                template="£{{ ( (states['sensor.octopus_energy_electricity_current_demand'] | float / 1000) * (states['sensor.octopus_energy_electricity_current_rate'] | float) ) | round(2) }}",
                 watch_entities=[
                     "sensor.octopus_energy_electricity_current_demand",
                     "sensor.octopus_energy_electricity_current_rate",
@@ -269,11 +269,13 @@ class DefaultScene(BaseScene):
                 icon=MaterialIcons.MDI_BATTERY,
                 icon_color=Color(192, 192, 192, 255),
                 template="{{ states['sensor.delta_2_max_downstairs_battery_level'] | int }}%",
+                watch_entities=["sensor.delta_2_max_downstairs_battery_level"],
             ),
             dict(
                 icon=MaterialIcons.MDI_LOOP,
                 icon_color=Color(192, 192, 192, 255),
                 template="{{ states['sensor.delta_2_max_downstairs_cycles'] | int }}",
+                watch_entities=["sensor.delta_2_max_downstairs_cycles"],
             ),
             dict(
                 icon=MaterialIcons.MDI_HOURGLASS,
@@ -281,8 +283,12 @@ class DefaultScene(BaseScene):
                 template="{{ states['sensor.delta_2_max_downstairs_discharge_remaining_time'] | int }}m",
                 cb_active=lambda states: float(
                     states["sensor.delta_2_max_downstairs_discharge_remaining_time"]
+                    or 0
                 )
                 > 0,
+                watch_entities=[
+                    "sensor.delta_2_max_downstairs_discharge_remaining_time"
+                ],
             ),
             dict(
                 icon=MaterialIcons.MDI_HOURGLASS,
@@ -290,17 +296,22 @@ class DefaultScene(BaseScene):
                 template="{{ ( states['sensor.delta_2_max_downstairs_discharge_remaining_time'] | int ) }}m",
                 cb_active=lambda states: float(
                     states["sensor.delta_2_max_downstairs_discharge_remaining_time"]
+                    or 0
                 )
                 > 0,
+                watch_entities=[
+                    "sensor.delta_2_max_downstairs_discharge_remaining_time"
+                ],
             ),
             dict(
                 icon=MaterialIcons.MDI_POWER,
                 icon_color=Color(255, 64, 64, 255),
                 template="{{ states['sensor.delta_2_max_downstairs_ac_in_power'] | int }}w",
                 cb_active=lambda states: float(
-                    states["sensor.delta_2_max_downstairs_ac_in_power"]
+                    states["sensor.delta_2_max_downstairs_ac_in_power"] or 0
                 )
                 > 0,
+                watch_entities=["sensor.delta_2_max_downstairs_ac_in_power"],
             ),
         ]
 

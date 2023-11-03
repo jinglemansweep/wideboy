@@ -104,10 +104,10 @@ class HomeAssistantEntityRowSprite(BaseSprite):
             template = entity.get("template", None)
             try:
                 try:
-                    active = self.show_all or callback(self.entity_states)
+                    display = self.show_all or callback(self.entity_states)
                 except Exception as e:
                     logger.warn(f"hass:entity_row callback error={e}")
-                    active = False
+                    display = False
 
                 if template:
                     try:
@@ -115,9 +115,10 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                         label = tmpl.render(states=self.entity_states)
                     except Exception as e:
                         logger.warn(f"hass:entity_row template={template} error={e}")
-                        label = "?"
+                        label = ""
+                        display = False
 
-                if not active:
+                if not display:
                     continue
 
                 entity_surface = render_hass_tile(
