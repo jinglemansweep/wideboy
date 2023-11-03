@@ -18,11 +18,11 @@ logger = logging.getLogger("sprite.hass_entity_row")
 j2env = Environment()
 
 
-def numberFormat(value):
-    return value
+def format_currency(amount):
+    return "{:,.2f}".format(amount)
 
 
-j2env.filters["numberFormat"] = numberFormat
+j2env.filters["currency"] = format_currency
 
 
 class HomeAssistantEntityRowSprite(BaseSprite):

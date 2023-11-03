@@ -240,7 +240,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_CURRENCY_DOLLAR,
                 icon_color=Color(255, 64, 64, 255),
-                template="£{{ ( (states['sensor.octopus_energy_electricity_current_demand'] | float / 1000) * (states['sensor.octopus_energy_electricity_current_rate'] | float) ) | currency_gbp }}",
+                template="£{{ ( (states['sensor.octopus_energy_electricity_current_demand'] | float / 1000) * (states['sensor.octopus_energy_electricity_current_rate'] | float) ) | currency }}",
                 watch_entities=[
                     "sensor.octopus_energy_electricity_current_demand",
                     "sensor.octopus_energy_electricity_current_rate",
