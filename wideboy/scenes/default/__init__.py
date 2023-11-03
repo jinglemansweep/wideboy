@@ -240,7 +240,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_CURRENCY_DOLLAR,
                 icon_color=Color(255, 64, 64, 255),
-                template="£{{ (states['sensor.octopus_energy_electricity_current_demand'] | int / 1000) * (states['sensor.octopus_energy_electricity_current_rate'] | float) }}",
+                template="£{{ ( (states['sensor.octopus_energy_electricity_current_demand'] | float / 1000) * (states['sensor.octopus_energy_electricity_current_rate'] | float) ) | numberFormat }}",
                 watch_entities=[
                     "sensor.octopus_energy_electricity_current_demand",
                     "sensor.octopus_energy_electricity_current_rate",
@@ -279,19 +279,28 @@ class DefaultScene(BaseScene):
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(255, 64, 64, 255),
                 template="{{ states['sensor.delta_2_max_downstairs_discharge_remaining_time'] | int }}m",
-                cb_active=lambda state: float(state.state) > 0,
+                cb_active=lambda states: float(
+                    states["sensor.delta_2_max_downstairs_discharge_remaining_time"]
+                )
+                > 0,
             ),
             dict(
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(64, 255, 64, 255),
                 template="{{ ( states['sensor.delta_2_max_downstairs_discharge_remaining_time'] | int ) }}m",
-                cb_active=lambda state: float(state.state) > 0,
+                cb_active=lambda states: float(
+                    states["sensor.delta_2_max_downstairs_discharge_remaining_time"]
+                )
+                > 0,
             ),
             dict(
                 icon=MaterialIcons.MDI_POWER,
                 icon_color=Color(255, 64, 64, 255),
                 template="{{ states['sensor.delta_2_max_downstairs_ac_in_power'] | int }}w",
-                cb_active=lambda state: float(state.state) > 0,
+                cb_active=lambda states: float(
+                    states["sensor.delta_2_max_downstairs_ac_in_power"]
+                )
+                > 0,
             ),
         ]
 

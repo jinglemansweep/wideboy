@@ -1,6 +1,6 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
-from jinja2 import Template
+from jinja2 import Environment
 from typing import Optional, List, Set, Dict, Any
 from wideboy.constants import (
     EVENT_EPOCH_MINUTE,
@@ -14,6 +14,15 @@ from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import render_text, render_material_icon
 
 logger = logging.getLogger("sprite.hass_entity_row")
+
+j2env = Environment()
+
+
+def numberFormat(value):
+    return value
+
+
+j2env.filters["numberFormat"] = numberFormat
 
 
 class HomeAssistantEntityRowSprite(BaseSprite):
@@ -76,16 +85,15 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         device_class, device_id = topic_exploded[1:3]
         entity_id = f"{device_class}.{device_id}"
         changed = False
-        if entity_id in self.entity_watches:
-            if entity_id in self.entity_states:
-                changed = self.entity_states[entity_id] != payload
-            if changed:
-                logger.debug(
-                    f"hass:entity_row watch_entity_change entity={entity_id} state={self.entity_states[entity_id]}"
-                )
-        else:
-            changed = True
+        if entity_id not in self.entity_watches:
+            return False
+        if entity_id in self.entity_states:
+            changed = self.entity_states[entity_id] != payload
         self.entity_states[entity_id] = payload
+        if changed:
+            logger.debug(
+                f"hass:entity_row watch_entity_change entity={entity_id} state={self.entity_states[entity_id]}"
+            )
         return changed
 
     def render(self) -> None:
@@ -103,13 +111,10 @@ class HomeAssistantEntityRowSprite(BaseSprite):
 
                 if template:
                     try:
-                        jinja_template = Template(template)
-                        label = jinja_template.render(states=self.entity_states)
-                        logger.debug(
-                            f"hass:entity_row template={template} label={label}"
-                        )
+                        tmpl = j2env.from_string(template)
+                        label = tmpl.render(states=self.entity_states)
                     except Exception as e:
-                        logger.warn(f"hass:entity_row template={template}", exc_info=e)
+                        logger.warn(f"hass:entity_row template={template} error={e}")
                         label = "?"
 
                 if not active:
