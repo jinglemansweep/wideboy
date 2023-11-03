@@ -1,7 +1,7 @@
 import logging
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
 from jinja2 import Environment
-from typing import Optional, List, Set, Dict, Any
+from typing import Optional, List, Set, Dict, Any, Union
 from wideboy.constants import (
     EVENT_EPOCH_MINUTE,
     EVENT_EPOCH_SECOND,
@@ -78,7 +78,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         for watched_entities in self.entity_watches:
             self.entity_states[watched_entities] = ""
 
-    def parse_state_message(self, topic, payload) -> bool | None:
+    def parse_state_message(self, topic, payload) -> Union[bool, None]:
         topic_exploded = topic.split("/")
         if len(topic_exploded) < 3:
             return None
