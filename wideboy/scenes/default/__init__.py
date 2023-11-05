@@ -117,7 +117,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_DIRECTIONS_WALK,
                 icon_color=Color(255, 0, 255, 255),
-                template="{state[sensor.steps_louis]}",
+                template="{state[sensor.steps_louis]:.0f}",
                 watch_entities=["sensor.steps_louis"],
             ),
             # active when public IP is home IP
