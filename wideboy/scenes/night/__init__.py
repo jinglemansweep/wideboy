@@ -88,7 +88,11 @@ class NightScene(BaseScene):
                 icon_color=Color(255, 255, 255, 255),
                 label_color=Color(128, 128, 128, 255),
                 template="Back",
-                cb_active=lambda state: state.state == "on",
+                cb_active=lambda state: state[
+                    "binary_sensor.back_door_contact_sensor_contact"
+                ]
+                == "on",
+                watch_entities=["binary_sensor.back_door_contact_sensor_contact"],
             ),
             dict(
                 entity_id="binary_sensor.front_door_contact_sensor_contact",
@@ -96,7 +100,11 @@ class NightScene(BaseScene):
                 icon_color=Color(255, 255, 255, 255),
                 label_color=Color(128, 128, 128, 128),
                 template="Front",
-                cb_active=lambda state: state.state == "on",
+                cb_active=lambda state: state[
+                    "binary_sensor.front_door_contact_sensor_contact"
+                ]
+                == "on",
+                watch_entities=["binary_sensor.front_door_contact_sensor_contact"],
             ),
         ]
 

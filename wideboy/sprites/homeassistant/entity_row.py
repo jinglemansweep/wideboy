@@ -1,28 +1,17 @@
 import logging
+import types
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
-from jinja2 import Environment
 from typing import Optional, List, Set, Dict, Any, Union
 from wideboy.constants import (
     EVENT_EPOCH_MINUTE,
-    EVENT_EPOCH_SECOND,
     EVENT_HASS_STATESTREAM_UPDATE,
 )
 
-# from wideboy.mqtt.homeassistant import HASS
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.image_helpers import render_text, render_material_icon
 
 logger = logging.getLogger("sprite.hass_entity_row")
-
-j2env = Environment()
-
-
-def format_currency(amount):
-    return "{:,.2f}".format(amount)
-
-
-j2env.filters["currency"] = format_currency
 
 
 class HomeAssistantEntityRowSprite(BaseSprite):
@@ -73,21 +62,26 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         surfaces = []
         for entity in self.entities:
             callback = entity.get("cb_active", lambda e: True)
-            template = entity.get("template", None)
+            template = entity.get("template", "")
+            label = ""
+            display = False
             try:
                 try:
                     display = self.show_all or callback(self.scene.hass.state)
+                except KeyError as e:
+                    pass
                 except Exception as e:
-                    logger.warn(f"hass:entity_row callback error={e}")
-                    display = False
-                if template:
-                    try:
-                        tmpl = j2env.from_string(template)
-                        label = tmpl.render(states=self.scene.hass.state)
-                    except Exception as e:
-                        logger.warn(f"hass:entity_row template={template} error={e}")
-                        label = ""
-                        display = False
+                    logger.warn(f"hass:entity_row callback error={e}", exc_info=e)
+
+                try:
+                    if isinstance(template, types.FunctionType):
+                        label = template(self.scene.hass.state)
+                    else:
+                        label = template.format(state=self.scene.hass.state)
+                except KeyError as e:
+                    pass
+                except Exception as e:
+                    logger.warn(f"hass:entity_row template={template} error={e}")
 
                 if not display:
                     continue
