@@ -271,7 +271,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(255, 64, 64, 255),
-                template="{state[sensor.delta_2_max_downstairs_discharge_remaining_time]:.0f}m",
+                template=lambda state: f"{int(state['sensor.delta_2_max_downstairs_discharge_remaining_time']//60)}h{int(state['sensor.delta_2_max_downstairs_discharge_remaining_time']%60)}m",
                 cb_active=lambda state: state[
                     "sensor.delta_2_max_downstairs_discharge_remaining_time"
                 ]
@@ -283,7 +283,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(64, 255, 64, 255),
-                template="{state[sensor.delta_2_max_downstairs_charge_remaining_time]:.0f}m",
+                template=lambda state: f"{int(state['sensor.delta_2_max_downstairs_charge_remaining_time']//60)}h{int(state['sensor.delta_2_max_downstairs_charge_remaining_time']%60)}m",
                 cb_active=lambda state: state[
                     "sensor.delta_2_max_downstairs_charge_remaining_time"
                 ]

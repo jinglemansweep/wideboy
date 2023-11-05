@@ -74,7 +74,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                     logger.warn(f"hass:entity_row callback error={e}", exc_info=e)
 
                 try:
-                    if isinstance(template, types.FunctionType):
+                    if isinstance(template, types.LambdaType):
                         label = template(self.scene.hass.state)
                     else:
                         label = template.format(state=self.scene.hass.state)
