@@ -9,6 +9,7 @@ from wideboy.constants import (
     AppMetadata,
     EVENT_HASS_ENTITY_UPDATE,
     EVENT_MQTT_MESSAGE_RECEIVED,
+    EVENT_HASS_STATESTREAM_UPDATE,
 )
 from wideboy.homeassistant.mqtt import MQTTClient
 from wideboy.utils.helpers import post_event
@@ -100,6 +101,10 @@ class HASSManager:
             except ValueError:
                 payload_cast = payload
         self.state[entity_id] = payload_cast
+        post_event(
+            EVENT_HASS_STATESTREAM_UPDATE,
+            payload=dict(entity_id=entity_id, state=payload_cast),
+        )
 
     def advertise_entities(self, entities: list[HASSEntity]) -> None:
         for entity in entities:

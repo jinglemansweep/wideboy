@@ -5,7 +5,7 @@ from typing import Optional, List, Set, Dict, Any, Union
 from wideboy.constants import (
     EVENT_EPOCH_MINUTE,
     EVENT_EPOCH_SECOND,
-    EVENT_MQTT_MESSAGE_RECEIVED,
+    EVENT_HASS_STATESTREAM_UPDATE,
 )
 
 # from wideboy.mqtt.homeassistant import HASS
@@ -44,8 +44,6 @@ class HomeAssistantEntityRowSprite(BaseSprite):
     ) -> None:
         super().__init__(scene, rect)
         self.entities = entities
-        self.entity_states: Dict[str, Any] = dict()
-        self.entity_watches: Set[str] = set()
         self.font_name = font_name
         self.font_size = font_size
         self.color_fg = color_fg
@@ -53,7 +51,6 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         self.color_outline = color_outline
         self.padding_right = padding_right
         self.show_all = show_all
-        self.setup_watches()
         self.render()
 
     def update(
@@ -65,38 +62,11 @@ class HomeAssistantEntityRowSprite(BaseSprite):
     ) -> None:
         super().update(frame, clock, delta, events)
         for event in events:
-            if event.type == EVENT_MQTT_MESSAGE_RECEIVED:
-                changed = self.parse_state_message(event.topic, event.payload)
-                if changed:
-                    self.render()
-            if event.type == EVENT_EPOCH_MINUTE:
+            if (
+                event.type == EVENT_HASS_STATESTREAM_UPDATE
+                or event.type == EVENT_EPOCH_MINUTE
+            ):
                 self.render()
-            if event.type == EVENT_EPOCH_SECOND:
-                logger.debug(f"test:hass.state state={self.scene.hass.state}")
-
-    def setup_watches(self) -> None:
-        for entity in self.entities:
-            self.entity_watches.update(entity.get("watch_entities", []))
-        for watched_entities in self.entity_watches:
-            self.entity_states[watched_entities] = ""
-
-    def parse_state_message(self, topic, payload) -> Union[bool, None]:
-        topic_exploded = topic.split("/")
-        if len(topic_exploded) < 3:
-            return None
-        device_class, device_id = topic_exploded[1:3]
-        entity_id = f"{device_class}.{device_id}"
-        changed = False
-        if entity_id not in self.entity_watches:
-            return False
-        if entity_id in self.entity_states:
-            changed = self.entity_states[entity_id] != payload
-        self.entity_states[entity_id] = payload
-        if changed:
-            logger.debug(
-                f"hass:entity_row watch_entity_change entity={entity_id} state={self.entity_states[entity_id]}"
-            )
-        return changed
 
     def render(self) -> None:
         w, h = 1, 2
@@ -106,15 +76,14 @@ class HomeAssistantEntityRowSprite(BaseSprite):
             template = entity.get("template", None)
             try:
                 try:
-                    display = self.show_all or callback(self.entity_states)
+                    display = self.show_all or callback(self.scene.hass.state)
                 except Exception as e:
                     logger.warn(f"hass:entity_row callback error={e}")
                     display = False
-
                 if template:
                     try:
                         tmpl = j2env.from_string(template)
-                        label = tmpl.render(states=self.entity_states)
+                        label = tmpl.render(states=self.scene.hass.state)
                     except Exception as e:
                         logger.warn(f"hass:entity_row template={template} error={e}")
                         label = ""
