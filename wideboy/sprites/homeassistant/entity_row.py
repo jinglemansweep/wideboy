@@ -71,6 +71,8 @@ class HomeAssistantEntityRowSprite(BaseSprite):
                     self.render()
             if event.type == EVENT_EPOCH_MINUTE:
                 self.render()
+            if event.type == EVENT_EPOCH_SECOND:
+                logger.debug(f"test:hass.state state={self.scene.hass.state}")
 
     def setup_watches(self) -> None:
         for entity in self.entities:

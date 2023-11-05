@@ -21,6 +21,7 @@ class BaseScene:
         bg_color: Color = Color(0, 0, 0, 255),
     ) -> None:
         self.engine = engine
+        self.hass = engine.hass
         self.background = build_background(
             Vector2(self.width, self.height),
             bg_color,

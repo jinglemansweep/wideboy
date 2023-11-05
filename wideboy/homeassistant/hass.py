@@ -2,7 +2,7 @@ import logging
 from datetime import timedelta
 from pygame import Event
 from requests_cache import CachedSession
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Any, Union
 from homeassistant_api import Client, State
 from wideboy.config import settings
 from wideboy.constants import (
@@ -33,7 +33,8 @@ class HASSEntity:
 
 
 class HASSManager:
-    state: Tuple[State, ...]
+    entities: dict[str, dict]
+    state: dict[str, Any]
 
     def __init__(self, mqtt: MQTTClient, device_id: str):
         self.mqtt = mqtt
@@ -46,7 +47,8 @@ class HASSManager:
                 expire_after=timedelta(seconds=settings.homeassistant.cache_duration),
             ),
         )
-        self.entities: dict[str, dict] = dict()
+        self.entities = dict()
+        self.state = dict()
 
     def handle_event(self, event: Event) -> None:
         if event.type == EVENT_HASS_ENTITY_UPDATE:
@@ -63,10 +65,10 @@ class HASSManager:
                 for entity in self.entities.values()
                 if "command_topic" in entity["config"]
             ]
-            if event.topic.startswith(f"{settings.homeassistant.topic_prefix}/"):
-                logger.debug(
-                    f"mqtt:statestream topic={event.topic} payload={event.payload}"
-                )
+            if event.topic.startswith(
+                f"{settings.homeassistant.topic_prefix}/"
+            ) and event.topic.endswith("/state"):
+                self.parse_statestream_message(event.topic, event.payload)
             else:
                 for entity in command_entities:
                     config, event_trigger = entity["config"], entity["event"]
@@ -79,6 +81,25 @@ class HASSManager:
                                 f"mqtt:event entity={config['name']} event={event_trigger} payload={event.payload}"
                             )
                             post_event(event_trigger, payload=event.payload)
+
+    def parse_statestream_message(self, topic, payload) -> None:
+        logger.debug(f"mqtt:statestream:parse topic={topic} payload={payload}")
+        topic_exploded = topic.split("/")
+        if len(topic_exploded) < 3:
+            return None
+        device_class, device_id = topic_exploded[1:3]
+        entity_id = f"{device_class}.{device_id}"
+        payload_cast: Any = None
+        if payload.lower() in ["on", "true"]:
+            payload_cast = True
+        elif payload.lower() in ["off", "false"]:
+            payload_cast = False
+        else:
+            try:
+                payload_cast = float(payload)
+            except ValueError:
+                payload_cast = payload
+        self.state[entity_id] = payload_cast
 
     def advertise_entities(self, entities: list[HASSEntity]) -> None:
         for entity in entities:
