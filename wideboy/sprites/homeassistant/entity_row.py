@@ -9,9 +9,47 @@ from wideboy.constants import (
 
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.image_helpers import render_text, render_material_icon
+from wideboy.sprites.image_helpers import (
+    MaterialIcons,
+    render_text,
+    render_material_icon,
+)
 
 logger = logging.getLogger("sprite.hass_entity_row")
+
+
+class HomeAssistantEntityTile:
+    visible: bool = True
+    icon: int = MaterialIcons.MDI_DELETE
+    icon_color: Color = Color(255, 255, 255, 255)
+    label: str = ""
+    label_color: Color = Color(255, 255, 255, 255)
+
+    def set_options(
+        self,
+        visible: bool,
+        icon: int,
+        icon_color: Color,
+        label: str,
+        label_color: Color,
+    ) -> None:
+        self.visible = visible
+        self.icon = icon
+        self.icon_color = icon_color
+        self.label = label
+        self.label_color = label_color
+
+    def process(self, state) -> None:
+        pass
+
+    def to_dict(self) -> dict:
+        return {
+            "visible": self.visible,
+            "icon": self.icon,
+            "icon_color": self.icon_color,
+            "label": self.label,
+            "label_color": self.label_color,
+        }
 
 
 class HomeAssistantEntityRowSprite(BaseSprite):
@@ -22,7 +60,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         self,
         scene: BaseScene,
         rect: Rect,
-        entities: List[Dict],
+        entities: List[HomeAssistantEntityTile],
         font_name: str = "fonts/bitstream-vera.ttf",
         font_size: int = 12,
         color_fg: Color = Color(255, 255, 255, 255),
@@ -61,36 +99,15 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         w, h = 1, 2
         surfaces = []
         for entity in self.entities:
-            callback = entity.get("cb_active", lambda e: True)
-            template = entity.get("template", "")
-            label = ""
-            display = False
+            entity.process(self.scene.hass.state)
             try:
-                try:
-                    display = self.show_all or callback(self.scene.hass.state)
-                except KeyError as e:
-                    pass
-                except Exception as e:
-                    logger.warn(f"hass:entity_row callback error={e}", exc_info=e)
-
-                try:
-                    if isinstance(template, types.LambdaType):
-                        label = template(self.scene.hass.state)
-                    else:
-                        label = template.format(state=self.scene.hass.state)
-                except KeyError as e:
-                    pass
-                except Exception as e:
-                    logger.warn(f"hass:entity_row template={template} error={e}")
-
-                if not display:
+                if not entity.visible:
                     continue
-
                 entity_surface = render_hass_tile(
-                    icon_codepoint=entity.get("icon", None),
-                    icon_color=entity.get("icon_color", None),
-                    label_color=entity.get("label_color", Color(255, 255, 255, 255)),
-                    label_text=label,
+                    icon_codepoint=entity.icon,
+                    icon_color=entity.icon_color,
+                    label_text=entity.label,
+                    label_color=entity.label_color,
                     padding_right=self.padding_right,
                 )
                 w += entity_surface.get_rect().width

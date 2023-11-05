@@ -6,13 +6,38 @@ from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.calendar import CalendarSprite
 from wideboy.sprites.clock import DateSprite, TimeSprite
-from wideboy.sprites.homeassistant.entity_row import HomeAssistantEntityRowSprite
+from wideboy.sprites.homeassistant.entity_row import (
+    HomeAssistantEntityRowSprite,
+    HomeAssistantEntityTile,
+)
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.weather.animation import WeatherAnimationSprite
 from wideboy.sprites.weather.temperature import WeatherTemperatureSprite
 from wideboy.sprites.weather.wind import WeatherWindSprite
 from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
+from wideboy.scenes.default.tiles import (
+    TileStepsLouis,
+    TileVPN,
+    TileTransmission,
+    TileDS920Plus,
+    TileSpeedtestDownload,
+    TileSpeedtestUpload,
+    TileSpeedtestPing,
+    TileBackDoor,
+    TileFrontDoor,
+    TileHouseManual,
+    TileSwitchLoungeFans,
+    TileElectricityCurrentDemand,
+    TileElectricityCurrentRate,
+    TileElectricityHourlyRate,
+    TileElectricityCurrentAccumulativeCost,
+    TileBatteryLevel,
+    TileBatteryCycles,
+    TileBatteryDischargeRemainingTime,
+    TileBatteryChargeRemainingTime,
+    TileBatteryAcInPower,
+)
 
 from wideboy.config import settings
 
@@ -114,98 +139,17 @@ class DefaultScene(BaseScene):
         # =====================================================================
 
         hass_row_main_entities = [
-            dict(
-                icon=MaterialIcons.MDI_DIRECTIONS_WALK,
-                icon_color=Color(255, 0, 255, 255),
-                template="{state[sensor.steps_louis]:.0f}",
-                watch_entities=["sensor.steps_louis"],
-            ),
-            # active when public IP is home IP
-            dict(
-                icon=MaterialIcons.MDI_LOCK,
-                icon_color=Color(255, 0, 0, 255),
-                template="VPN DOWN ({state[sensor.privacy_ip_info]})",
-                cb_active=lambda state: state["sensor.privacy_ip_info"]
-                == settings.secrets.home_ip,
-                watch_entities=["sensor.privacy_ip_info"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_VPN_LOCK,
-                icon_color=Color(255, 255, 255, 255),
-                template="{state[sensor.transmission_down_speed]:.0f}Mbps",
-                cb_active=lambda state: state["sensor.transmission_down_speed"] > 0,
-                watch_entities=["sensor.transmission_down_speed"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_DNS,
-                icon_color=Color(255, 255, 0, 255),
-                template="{state[sensor.ds920plus_volume_used]:.0f}%",
-                cb_active=lambda state: state["sensor.ds920plus_volume_used"] > 66.66,
-                watch_entities=["sensor.ds920plus_volume_used"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_DOWNLOAD,
-                icon_color=Color(0, 255, 0, 255),
-                template="{state[sensor.speedtest_download_average]:.0f}Mbps",
-                cb_active=lambda state: state["sensor.speedtest_download_average"]
-                < 600,
-                watch_entities=["sensor.speedtest_download_average"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_UPLOAD,
-                icon_color=Color(255, 0, 0, 255),
-                template="{state[sensor.speedtest_upload_average]:.0f}Mbps",
-                cb_active=lambda state: state["sensor.speedtest_upload_average"] < 600,
-                watch_entities=["sensor.speedtest_upload_average"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_WIFI,
-                icon_color=Color(0, 0, 255, 255),
-                template="{state[sensor.speedtest_ping_average]:.0f}ms",
-                cb_active=lambda state: state["sensor.speedtest_ping_average"] > 10,
-                watch_entities=["sensor.speedtest_ping_average"],
-            ),
-            # dict(
-            #    icon=MaterialIcons.MDI_DELETE,
-            #    icon_color=Color(192, 192, 192, 255),
-            #    template="{{ state_attr('calendar.bin_collection', 'message') }}",
-            #    cb_active=lambda state: float(state.state) <= 1,
-            #    watch_entities=["sensor.bin_collection_days"],
-            # ),
-            dict(
-                icon=MaterialIcons.MDI_DOOR,
-                icon_color=Color(255, 64, 64, 255),
-                template="Back",
-                cb_active=lambda state: state[
-                    "binary_sensor.back_door_contact_sensor_contact"
-                ]
-                == "on",
-                watch_entities=["binary_sensor.back_door_contact_sensor_contact"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_DOOR,
-                icon_color=Color(255, 64, 64, 255),
-                template="Front",
-                cb_active=lambda state: state[
-                    "binary_sensor.front_door_contact_sensor_contact"
-                ]
-                == "on",
-                watch_entities=["binary_sensor.front_door_contact_sensor_contact"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_TOGGLE_ON,
-                icon_color=Color(255, 0, 0, 255),
-                template="MANUAL",
-                cb_active=lambda state: state["input_boolean.house_manual"] == "on",
-                watch_entities=["input_boolean.house_manual"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_AC_UNIT,
-                icon_color=Color(196, 196, 255, 255),
-                template="ON",
-                cb_active=lambda state: state["switch.lounge_fans"] == "on",
-                watch_entities=["switch.lounge_fans"],
-            ),
+            TileStepsLouis(),
+            TileVPN(),
+            TileTransmission(),
+            TileDS920Plus(),
+            TileSpeedtestDownload(),
+            TileSpeedtestUpload(),
+            TileSpeedtestPing(),
+            TileBackDoor(),
+            TileFrontDoor(),
+            TileHouseManual(),
+            TileSwitchLoungeFans(),
         ]
 
         self.hass_row_main = HomeAssistantEntityRowSprite(
@@ -217,34 +161,10 @@ class DefaultScene(BaseScene):
         self.group.add(self.hass_row_main)
 
         hass_row_power_entities = [
-            dict(
-                icon=MaterialIcons.MDI_BOLT,
-                icon_color=Color(192, 192, 192, 255),
-                template="{state[sensor.octopus_energy_electricity_current_demand]:.0f}w",
-                watch_entities=["sensor.octopus_energy_electricity_current_demand"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_SYMBOL_AT,
-                icon_color=Color(192, 192, 192, 255),
-                template="£{state[sensor.octopus_energy_electricity_current_rate]:.2f}",
-                watch_entities=["sensor.octopus_energy_electricity_current_rate"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_CURRENCY_DOLLAR,
-                icon_color=Color(255, 64, 64, 255),
-                template="£{state[sensor.electricity_hourly_rate]:.2f}",
-                watch_entities=[
-                    "sensor.electricity_hourly_rate",
-                ],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_SCHEDULE,
-                icon_color=Color(255, 64, 64, 255),
-                template="£{state[sensor.octopus_energy_electricity_current_accumulative_cost]:.2f}",
-                watch_entities=[
-                    "sensor.octopus_energy_electricity_current_accumulative_cost"
-                ],
-            ),
+            TileElectricityCurrentDemand(),
+            TileElectricityCurrentRate(),
+            TileElectricityHourlyRate(),
+            TileElectricityCurrentAccumulativeCost(),
         ]
 
         self.hass_row_power = HomeAssistantEntityRowSprite(
@@ -256,50 +176,11 @@ class DefaultScene(BaseScene):
         self.group.add(self.hass_row_power)
 
         hass_row_battery_entities = [
-            dict(
-                icon=MaterialIcons.MDI_BATTERY,
-                icon_color=Color(192, 192, 192, 255),
-                template="{state[sensor.delta_2_max_downstairs_battery_level]:.0f}%",
-                watch_entities=["sensor.delta_2_max_downstairs_battery_level"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_LOOP,
-                icon_color=Color(192, 192, 192, 255),
-                template="{state[sensor.delta_2_max_downstairs_cycles]:.0f}",
-                watch_entities=["sensor.delta_2_max_downstairs_cycles"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_HOURGLASS,
-                icon_color=Color(255, 64, 64, 255),
-                template=lambda state: f"{int(state['sensor.delta_2_max_downstairs_discharge_remaining_time']//60)}h{int(state['sensor.delta_2_max_downstairs_discharge_remaining_time']%60)}m",
-                cb_active=lambda state: state[
-                    "sensor.delta_2_max_downstairs_discharge_remaining_time"
-                ]
-                or 0 > 0,
-                watch_entities=[
-                    "sensor.delta_2_max_downstairs_discharge_remaining_time"
-                ],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_HOURGLASS,
-                icon_color=Color(64, 255, 64, 255),
-                template=lambda state: f"{int(state['sensor.delta_2_max_downstairs_charge_remaining_time']//60)}h{int(state['sensor.delta_2_max_downstairs_charge_remaining_time']%60)}m",
-                cb_active=lambda state: state[
-                    "sensor.delta_2_max_downstairs_charge_remaining_time"
-                ]
-                or 0 > 0,
-                watch_entities=["sensor.delta_2_max_downstairs_charge_remaining_time"],
-            ),
-            dict(
-                icon=MaterialIcons.MDI_POWER,
-                icon_color=Color(255, 64, 64, 255),
-                template="{state[sensor.delta_2_max_downstairs_ac_in_power]:.0f}w",
-                cb_active=lambda state: state[
-                    "sensor.delta_2_max_downstairs_ac_in_power"
-                ]
-                or 0 > 0,
-                watch_entities=["sensor.delta_2_max_downstairs_ac_in_power"],
-            ),
+            TileBatteryLevel(),
+            TileBatteryCycles(),
+            TileBatteryDischargeRemainingTime(),
+            TileBatteryChargeRemainingTime(),
+            TileBatteryAcInPower(),
         ]
 
         self.hass_row_battery = HomeAssistantEntityRowSprite(

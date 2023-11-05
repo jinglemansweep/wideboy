@@ -81,7 +81,9 @@ class NightScene(BaseScene):
         # HASS ENTITY ROW WIDGETS
         # =====================================================================
 
-        hass_row_entities = [
+        hass_row_entities = []
+
+        hass_row_entities_old = [
             dict(
                 entity_id="binary_sensor.back_door_contact_sensor_contact",
                 icon=MaterialIcons.MDI_DOOR,
