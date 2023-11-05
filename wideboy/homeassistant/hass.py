@@ -63,17 +63,22 @@ class HASSManager:
                 for entity in self.entities.values()
                 if "command_topic" in entity["config"]
             ]
-            for entity in command_entities:
-                config, event_trigger = entity["config"], entity["event"]
-                if event.topic == config["command_topic"]:
-                    logger.debug(
-                        f"mqtt:command entity={config['name']} topic={event.topic} payload={event.payload}"
-                    )
-                    if event_trigger:
+            if event.topic.startswith(f"{settings.homeassistant.topic_prefix}/"):
+                logger.debug(
+                    f"mqtt:statestream topic={event.topic} payload={event.payload}"
+                )
+            else:
+                for entity in command_entities:
+                    config, event_trigger = entity["config"], entity["event"]
+                    if event.topic == config["command_topic"]:
                         logger.debug(
-                            f"mqtt:event entity={config['name']} event={event_trigger} payload={event.payload}"
+                            f"mqtt:command entity={config['name']} topic={event.topic} payload={event.payload}"
                         )
-                        post_event(event_trigger, payload=event.payload)
+                        if event_trigger:
+                            logger.debug(
+                                f"mqtt:event entity={config['name']} event={event_trigger} payload={event.payload}"
+                            )
+                            post_event(event_trigger, payload=event.payload)
 
     def advertise_entities(self, entities: list[HASSEntity]) -> None:
         for entity in entities:

@@ -168,7 +168,7 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_WIFI,
                 icon_color=Color(0, 0, 255, 255),
-                template="{{ states['sensor.speedtest_ping_average' ] }}ms",
+                template="{{ states['sensor.speedtest_ping_average'] | int }}ms",
                 cb_active=lambda states: float(states["sensor.speedtest_ping_average"])
                 > 10,
                 watch_entities=["sensor.speedtest_ping_average"],
@@ -293,15 +293,12 @@ class DefaultScene(BaseScene):
             dict(
                 icon=MaterialIcons.MDI_HOURGLASS,
                 icon_color=Color(64, 255, 64, 255),
-                template="{{ ( states['sensor.delta_2_max_downstairs_discharge_remaining_time'] | int ) }}m",
+                template="{{ ( states['sensor.delta_2_max_downstairs_charge_remaining_time'] | int ) }}m",
                 cb_active=lambda states: float(
-                    states["sensor.delta_2_max_downstairs_discharge_remaining_time"]
-                    or 0
+                    states["sensor.delta_2_max_downstairs_charge_remaining_time"] or 0
                 )
                 > 0,
-                watch_entities=[
-                    "sensor.delta_2_max_downstairs_discharge_remaining_time"
-                ],
+                watch_entities=["sensor.delta_2_max_downstairs_charge_remaining_time"],
             ),
             dict(
                 icon=MaterialIcons.MDI_POWER,
