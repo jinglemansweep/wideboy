@@ -202,8 +202,9 @@ class TileBatteryDischargeRemainingTime(HomeAssistantEntityTile):
 
     def process(self, state):
         value = state.get("sensor.delta_2_max_downstairs_discharge_remaining_time", 0)
+        hours, mins = value // 60, value % 60
         self.visible = value > 0
-        self.label = f"{value:.0f}m"
+        self.label = f"{hours:.0f}m{mins:.0f}m"
 
 
 class TileBatteryChargeRemainingTime(HomeAssistantEntityTile):
@@ -212,8 +213,9 @@ class TileBatteryChargeRemainingTime(HomeAssistantEntityTile):
 
     def process(self, state):
         value = state.get("sensor.delta_2_max_downstairs_charge_remaining_time", 0)
+        hours, mins = value // 60, value % 60
         self.visible = value > 0
-        self.label = f"{value:.0f}m"
+        self.label = f"{hours:.0f}m{mins:.0f}m"
 
 
 class TileBatteryAcInPower(HomeAssistantEntityTile):
