@@ -139,6 +139,9 @@ class TileElectricityCurrentDemand(HomeAssistantEntityTile):
         value = state.get("sensor.octopus_energy_electricity_current_demand", 0)
         self.visible = value > 0
         self.label = f"{value:.0f}w"
+        self.icon_color = (
+            Color(255, 64, 64, 255) if value > 500 else Color(64, 255, 64, 255)
+        )
 
 
 class TileElectricityCurrentRate(HomeAssistantEntityTile):
@@ -149,6 +152,9 @@ class TileElectricityCurrentRate(HomeAssistantEntityTile):
         value = state.get("sensor.octopus_energy_electricity_current_rate", 0)
         self.visible = value > 0
         self.label = f"£{value:.2f}"
+        self.icon_color = (
+            Color(255, 64, 64, 255) if value > 0.30 else Color(64, 255, 64, 255)
+        )
 
 
 class TileElectricityHourlyRate(HomeAssistantEntityTile):
@@ -159,6 +165,9 @@ class TileElectricityHourlyRate(HomeAssistantEntityTile):
         value = state.get("sensor.electricity_hourly_rate", 0)
         self.visible = value > 0
         self.label = f"{value:.2f}"
+        self.icon_color = (
+            Color(255, 64, 64, 255) if value > 0.50 else Color(64, 255, 64, 255)
+        )
 
 
 class TileElectricityCurrentAccumulativeCost(HomeAssistantEntityTile):
@@ -171,6 +180,9 @@ class TileElectricityCurrentAccumulativeCost(HomeAssistantEntityTile):
         )
         self.visible = value > 0
         self.label = f"{value:.2f}"
+        self.icon_color = (
+            Color(255, 64, 64, 255) if value > 2.50 else Color(64, 255, 64, 255)
+        )
 
 
 # BATTERY
@@ -184,6 +196,9 @@ class TileBatteryLevel(HomeAssistantEntityTile):
         value = state.get("sensor.delta_2_max_downstairs_battery_level", 0)
         self.visible = value > 0
         self.label = f"{value:.0f}%"
+        self.icon_color = (
+            Color(255, 64, 64, 255) if value < 30 else Color(64, 255, 64, 255)
+        )
 
 
 class TileBatteryCycles(HomeAssistantEntityTile):
