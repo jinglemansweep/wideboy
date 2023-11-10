@@ -9,6 +9,7 @@ from typing import Any
 
 
 class TileStepsLouis(HomeAssistantEntityTile):
+    label_font_size = 12
     icon = MaterialIcons.MDI_DIRECTIONS_WALK
     icon_color = Color(255, 0, 255, 255)
 
@@ -164,7 +165,7 @@ class TileElectricityHourlyRate(HomeAssistantEntityTile):
     def process(self, state):
         value = state.get("sensor.electricity_hourly_rate", 0)
         self.visible = value > 0
-        self.label = f"{value:.2f}"
+        self.label = f"£{value:.2f}"
         self.icon_color = (
             Color(255, 64, 64, 255) if value > 0.50 else Color(64, 255, 64, 255)
         )
@@ -179,7 +180,7 @@ class TileElectricityCurrentAccumulativeCost(HomeAssistantEntityTile):
             "sensor.octopus_energy_electricity_current_accumulative_cost", 0
         )
         self.visible = value > 0
-        self.label = f"{value:.2f}"
+        self.label = f"£{value:.2f}"
         self.icon_color = (
             Color(255, 64, 64, 255) if value > 2.50 else Color(64, 255, 64, 255)
         )

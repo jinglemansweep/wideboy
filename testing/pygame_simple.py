@@ -1,32 +1,48 @@
-import numpy as np
 import pygame
-from pprint import pprint
+import pygame_gui
+
 
 pygame.init()
-screen = pygame.display.set_mode((12, 1), pygame.RESIZABLE | pygame.SCALED)
-clock = pygame.time.Clock()
-running = True
 
-while running:
+pygame.display.set_caption("Quick Start")
+window_surface = pygame.display.set_mode((800, 600))
+
+background = pygame.Surface((800, 600))
+background.fill(pygame.Color("#000000"))
+
+manager = pygame_gui.UIManager((800, 600))
+
+hello_button = pygame_gui.elements.UIButton(
+    relative_rect=pygame.Rect((350, 275), (100, 50)), text="Say Hello", manager=manager
+)
+
+text_box = pygame_gui.elements.ui_text_box.UITextBox(
+    html_text="This is an <effect id=test>EARTHQUAKE</effect>",
+    relative_rect=pygame.Rect(0, 0, 200, 50),
+    manager=manager,
+)
+
+clock = pygame.time.Clock()
+is_running = True
+
+while is_running:
+    time_delta = clock.tick(60) / 1000.0
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            is_running = False
 
-    screen.fill((128, 0, 0))
-    screen.set_at((0, 0), (255, 0, 0))
-    screen.set_at((4, 0), (0, 255, 0))
-    screen.set_at((8, 0), (0, 0, 255))
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.ui_element == hello_button:
+                print("Hello World!")
+                text_box.set_active_effect(
+                    pygame_gui.TEXT_EFFECT_BOUNCE, effect_tag="test"
+                )
 
-    original = pygame.surfarray.pixels3d(screen)
-    reshaped = np.reshape(original, (4, 3, -1), order="F")
+        manager.process_events(event)
 
-    print("original", original.shape)
-    print("reshaped", reshaped.shape)
-    assert (original[0, 0] == reshaped[0, 0]).all()
-    assert (original[4, 0] == reshaped[0, 1]).all()
-    assert (original[8, 0] == reshaped[0, 2]).all()
+    manager.update(time_delta)
 
-    pygame.display.flip()
-    clock.tick(1)
+    window_surface.blit(background, (0, 0))
+    manager.draw_ui(window_surface)
 
-pygame.quit()
+    pygame.display.update()
