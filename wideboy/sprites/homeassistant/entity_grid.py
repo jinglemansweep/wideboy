@@ -142,6 +142,7 @@ class HomeAssistantEntityGridSprite(BaseSprite):
                 self.font_name,
                 self.font_size,
                 color_fg=Color(255, 255, 255, 255),
+                color_outline=Color(0, 0, 0, 255),
             )
             self.image.blit(title_surface, (cx + 1, cy - 1))
             by += title_surface.get_rect().height
