@@ -220,6 +220,10 @@ class MaterialIcons:
     MDI_LIGHT_MODE = 0xE518
     MDI_SCHEDULE = 0xE8B5
     MDI_LOOP = 0xE028
+    MDI_HOME = 0xE88A
+    MDI_SOFA = 0xE16B
+    MDI_BED = 0xE53A
+    MDI_KITCHEN = 0xEB47
 
 
 def render_material_icon(

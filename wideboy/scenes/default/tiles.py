@@ -139,6 +139,43 @@ class GridTileFrontDoor(HomeAssistantEntityGridTile):
         )
 
 
+class GridTileTemperatureOutside(HomeAssistantEntityGridTile):
+    icon = MaterialIcons.MDI_HOME
+
+    def process(self, state):
+        self.visible = True
+        value = float(state.get("sensor.blink_back_temperature", 0))
+        print(value)
+        self.label = f"{value:.0f}°C"
+
+
+class GridTileTemperatureLounge(HomeAssistantEntityGridTile):
+    icon = MaterialIcons.MDI_SOFA
+
+    def process(self, state):
+        self.visible = True
+        value = float(state.get("sensor.hue_motion_sensor_1_temperature", 0))
+        self.label = f"{value:.0f}°C"
+
+
+class GridTileTemperatureKitchen(HomeAssistantEntityGridTile):
+    icon = MaterialIcons.MDI_KITCHEN
+
+    def process(self, state):
+        self.visible = True
+        value = float(state.get("sensor.kitchen_temperature_sensor_temperature", 0))
+        self.label = f"{value:.0f}°C"
+
+
+class GridTileTemperatureBedroom(HomeAssistantEntityGridTile):
+    icon = MaterialIcons.MDI_BED
+
+    def process(self, state):
+        self.visible = True
+        value = float(state.get("sensor.bedroom_temperature_sensor_temperature", 0))
+        self.label = f"{value:.0f}°C"
+
+
 # SWITCHES
 
 

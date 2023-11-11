@@ -29,6 +29,10 @@ from wideboy.scenes.default.tiles import (
     GridTileFrontDoor,
     GridTileHouseManual,
     GridTileSwitchLoungeFans,
+    GridTileTemperatureOutside,
+    GridTileTemperatureLounge,
+    GridTileTemperatureKitchen,
+    GridTileTemperatureBedroom,
     GridTileElectricityCurrentDemand,
     GridTileElectricityCurrentRate,
     GridTileElectricityHourlyRate,
@@ -141,10 +145,23 @@ class DefaultScene(BaseScene):
 
         GRID_ENTITY_ALPHA = 220
         GRID_ENTITY_WIDTH = 50
-        GRID_ENTITY_START_X = self.width - 384
+        GRID_ENTITY_START_X = self.width - 432
         GRID_ENTITY_MARGIN_X = 1
 
+        GRID_ENTITY_COLORS = [
+            Color(255, 0, 0, GRID_ENTITY_ALPHA),
+            Color(255, 255, 0, GRID_ENTITY_ALPHA),
+            Color(0, 255, 0, GRID_ENTITY_ALPHA),
+            Color(0, 0, 255, GRID_ENTITY_ALPHA),
+            Color(255, 0, 255, GRID_ENTITY_ALPHA),
+            Color(0, 255, 255, GRID_ENTITY_ALPHA),
+            Color(255, 255, 255, GRID_ENTITY_ALPHA),
+        ]
+
         grid_entity_cx = GRID_ENTITY_START_X
+        grid_entity_color_idx = 0
+
+        # HOME
 
         hass_grid_home_entities = [
             GridTileBackDoor(),
@@ -160,30 +177,60 @@ class DefaultScene(BaseScene):
             padding=(0, 0),
             title="Home",
             cells=hass_grid_home_entities,
-            accent_color=Color(255, 0, 255, 255),
+            accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
             alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_home)
 
         grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
+        grid_entity_color_idx += 1
 
-        hass_grid_main_entities = [
-            GridTileDS920Plus(),
+        # TEMPERATURES
+
+        hass_grid_temp_entities = [
+            GridTileTemperatureOutside(),
+            GridTileTemperatureLounge(),
+            GridTileTemperatureKitchen(),
+            GridTileTemperatureBedroom(),
         ]
 
-        self.hass_grid_main = HomeAssistantEntityGridSprite(
+        self.hass_grid_temp = HomeAssistantEntityGridSprite(
             self,
             Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
             cell_size=(GRID_ENTITY_WIDTH, 12),
             padding=(0, 0),
-            title="Main",
-            cells=hass_grid_main_entities,
-            accent_color=Color(255, 0, 0, 255),
+            title="Temp",
+            cells=hass_grid_temp_entities,
+            accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
             alpha=GRID_ENTITY_ALPHA,
         )
-        self.group.add(self.hass_grid_main)
+        self.group.add(self.hass_grid_temp)
 
         grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
+        grid_entity_color_idx += 1
+
+        # SENSORS
+
+        hass_grid_sensors_entities = [
+            GridTileDS920Plus(),
+        ]
+
+        self.hass_grid_sensors = HomeAssistantEntityGridSprite(
+            self,
+            Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
+            cell_size=(GRID_ENTITY_WIDTH, 12),
+            padding=(0, 0),
+            title="Sensors",
+            cells=hass_grid_sensors_entities,
+            accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
+            alpha=GRID_ENTITY_ALPHA,
+        )
+        self.group.add(self.hass_grid_sensors)
+
+        grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
+        grid_entity_color_idx += 1
+
+        # NETWORK
 
         hass_grid_network_entities = [
             GridTileVPN(),
@@ -200,12 +247,15 @@ class DefaultScene(BaseScene):
             padding=(0, 0),
             title="Network",
             cells=hass_grid_network_entities,
-            accent_color=Color(255, 255, 0, 255),
+            accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
             alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_network)
 
         grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
+        grid_entity_color_idx += 1
+
+        # BATTERIES
 
         hass_grid_battery_entities = [
             GridTileBatteryLevel(),
@@ -222,12 +272,15 @@ class DefaultScene(BaseScene):
             padding=(0, 0),
             title="Battery",
             cells=hass_grid_battery_entities,
-            accent_color=Color(0, 0, 255, 255),
+            accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
             alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_battery)
 
         grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
+        grid_entity_color_idx += 1
+
+        # ELECTRICITY
 
         hass_grid_electricity_entities = [
             GridTileElectricityCurrentDemand(),
@@ -243,7 +296,7 @@ class DefaultScene(BaseScene):
             padding=(0, 0),
             title="Power",
             cells=hass_grid_electricity_entities,
-            accent_color=Color(0, 255, 0, 255),
+            accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
             alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_electricity)

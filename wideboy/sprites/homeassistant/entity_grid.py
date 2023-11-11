@@ -185,9 +185,9 @@ def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityGridTi
                 size[1],
                 cell.icon_color_fg,
             )
-        surface.blit(icon_surface, (ix, iy))
+        surface.blit(icon_surface, (ix + 1, iy))
     cx, cy = 0, 0
-    cx += icon_width
+    cx += icon_width + 1
     label_background_surface = Surface(
         ((size[0] - icon_width) * cell.progress, size[1]), SRCALPHA
     )
