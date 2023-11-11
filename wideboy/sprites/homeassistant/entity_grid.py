@@ -1,4 +1,5 @@
 import logging
+import random
 import types
 from enum import Enum
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
@@ -21,14 +22,29 @@ logger = logging.getLogger("sprite.hass_entity_grid")
 
 class HomeAssistantEntityTile:
     visible: bool = True
-    icon: int = MaterialIcons.MDI_DELETE
-    icon_color: Color = Color(255, 255, 255, 255)
+    icon: Optional[int] = None
+    icon_color_bg: Color = Color(128, 0, 0, 255)
+    icon_color_fg: Color = Color(255, 255, 255, 255)
     label: str = ""
-    label_color: Color = Color(255, 255, 255, 255)
-    label_font_size: Optional[int] = None
+    label_align: str = "left"
+    label_color_bg: Color = Color(255, 255, 255, 0)
+    label_color_fg: Color = Color(255, 255, 255, 255)
+    label_color_outline: Color = Color(0, 0, 0, 255)
+    label_font: str = "fonts/bitstream-vera.ttf"
+    label_font_size: int = 10
 
     def process(self, state) -> None:
         pass
+
+
+class TestTile(HomeAssistantEntityTile):
+    icon = MaterialIcons.MDI_DOWNLOAD
+    label_align = "right"
+
+    def process(self, state):
+        value = state.get("sensor.speedtest_download_average", 0)
+        self.label = f"{value:.0f}M"
+        self.label_align = random.choice(["left", "center", "right"])
 
 
 class HomeAssistantEntityGridSprite(BaseSprite):
@@ -42,7 +58,7 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         grid_size: Tuple[int, int] = (1, 5),
         cell_size: Tuple[int, int] = (64, 12),
         title: Optional[str] = None,
-        cells: List[List[int]] = [],
+        cells: List[List[HomeAssistantEntityTile]] = [],
         alpha: int = 192,
         accent_color: Color = Color(255, 0, 0, 255),
         padding: Tuple[int, int] = (0, 0),
@@ -53,7 +69,10 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         self.grid_size = grid_size
         self.cell_size = cell_size
         self.title = title
-        self.cells = cells
+        # self.cells = cells
+        self.cells = [
+            [TestTile() for _ in range(grid_size[1])] for _ in range(grid_size[0])
+        ]
         self.alpha = alpha
         self.accent_color = accent_color
         self.padding = padding
@@ -91,32 +110,58 @@ class HomeAssistantEntityGridSprite(BaseSprite):
             self.image.blit(title_surface, (cx + 1, cy - 1))
             by += title_surface.get_rect().height
         self.image.fill(self.accent_color, (bx, by, self.rect.width, 1))
-        cy = by + 1
+        by += 2
+        cy = by
         for col_idx, col in enumerate(self.cells):
             if col_idx + 1 > self.grid_size[0]:
                 continue
             for cell_idx, cell in enumerate(col):
                 if cell_idx + 1 > self.grid_size[1]:
                     continue
+                cell.process(self.scene.hass.state)
                 self.image.blit(
-                    render_hass_tile(
-                        icon_codepoint=MaterialIcons.MDI_DELETE,
-                        icon_color=Color(255, 255, 255, 255),
-                        icon_size=11,
-                        label_text=f"{cell}",
-                        label_font_name="fonts/bitstream-vera.ttf",
-                        label_font_size=10,
-                        label_color=Color(255, 255, 255, 255),
-                        bg_color=Color(0, 0, 0, 0),
-                        outline_color=Color(0, 0, 0, 255),
-                        padding_right=0,
-                    ),
+                    render_hass_tile_cell(self.cell_size, cell),
                     (cx, cy),
                 )
                 cy += self.cell_size[1]
             cy = by
             cx += self.cell_size[0]
         self.dirty = 1
+
+
+def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityTile):
+    surface = Surface(size, SRCALPHA)
+    cx, cy = 0, 0
+    icon_width = 0
+    if cell.icon is not None:
+        icon_surface = render_material_icon(
+            cell.icon,
+            size[1],
+            cell.icon_color_fg,
+        )
+        icon_bg_surface = Surface((size[1], size[1]), SRCALPHA)
+        icon_bg_surface.fill(cell.icon_color_bg)
+        surface.blit(icon_bg_surface, (cx, cy))
+        surface.blit(icon_surface, (cx, cy))
+        icon_width = icon_surface.get_rect().width
+        cx += icon_width
+    label_surface = render_text(
+        cell.label,
+        font_filename=cell.label_font,
+        font_size=cell.label_font_size,
+        color_fg=cell.label_color_fg,
+        color_bg=cell.label_color_bg,
+        color_outline=cell.label_color_outline,
+    )
+
+    if cell.label_align == "right":
+        label_x = size[0] - label_surface.get_rect().width
+    elif cell.label_align == "center":
+        label_x = cx + (label_surface.get_rect().width // 2)
+    else:
+        label_x = cx
+    surface.blit(label_surface, (label_x, -2))
+    return surface
 
 
 def render_hass_tile(
