@@ -206,6 +206,17 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.hass_grid_test)
 
+        self.hass_grid_test_alt = HomeAssistantEntityGridSprite(
+            self,
+            Rect(128, 0, 96, 64),
+            grid_size=(2, 4),
+            cell_size=(48, 12),
+            padding=(0, 0),
+            title="Battery",
+            cells=[[1, 2, 3, 4], [5, 6, 7, 8]],
+        )
+        self.group.add(self.hass_grid_test_alt)
+
         # =====================================================================
         # NOTIFICATION WIDGET
         # =====================================================================

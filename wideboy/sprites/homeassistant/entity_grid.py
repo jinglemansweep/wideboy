@@ -22,7 +22,7 @@ logger = logging.getLogger("sprite.hass_entity_grid")
 
 class HomeAssistantEntityTile:
     visible: bool = True
-    icon: Optional[int] = None
+    icon: Optional[Union[int | str]] = None
     icon_color_bg: Color = Color(128, 0, 0, 255)
     icon_color_fg: Color = Color(255, 255, 255, 255)
     label: str = ""
@@ -32,6 +32,7 @@ class HomeAssistantEntityTile:
     label_color_outline: Color = Color(0, 0, 0, 255)
     label_font: str = "fonts/bitstream-vera.ttf"
     label_font_size: int = 10
+    progress: float = 1.0
 
     def process(self, state) -> None:
         pass
@@ -39,12 +40,24 @@ class HomeAssistantEntityTile:
 
 class TestTile(HomeAssistantEntityTile):
     icon = MaterialIcons.MDI_DOWNLOAD
-    label_align = "right"
 
     def process(self, state):
         value = state.get("sensor.speedtest_download_average", 0)
         self.label = f"{value:.0f}M"
-        self.label_align = random.choice(["left", "center", "right"])
+        # self.label_align = random.choice(["left", "right"])
+        self.icon = random.choice(
+            [MaterialIcons.MDI_DOWNLOAD, MaterialIcons.MDI_UPLOAD, None, "A", "b", "1"]
+        )
+        self.progress = random.random()
+        self.label_color_bg = Color(255, 255, 0, 255)
+
+        invert = random.choice([True, False])
+        self.icon_color_fg = (
+            Color(255, 255, 255, 255) if invert else Color(0, 0, 0, 255)
+        )
+        self.icon_color_bg = (
+            Color(0, 0, 0, 255) if invert else Color(255, 255, 255, 255)
+        )
 
 
 class HomeAssistantEntityGridSprite(BaseSprite):
@@ -131,29 +144,42 @@ class HomeAssistantEntityGridSprite(BaseSprite):
 
 def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityTile):
     surface = Surface(size, SRCALPHA)
-    cx, cy = 0, 0
-    icon_width = 0
+    icon_width = 12
     if cell.icon is not None:
-        icon_surface = render_material_icon(
-            cell.icon,
-            size[1],
-            cell.icon_color_fg,
-        )
         icon_bg_surface = Surface((size[1], size[1]), SRCALPHA)
         icon_bg_surface.fill(cell.icon_color_bg)
-        surface.blit(icon_bg_surface, (cx, cy))
-        surface.blit(icon_surface, (cx, cy))
-        icon_width = icon_surface.get_rect().width
-        cx += icon_width
+        surface.blit(icon_bg_surface, (0, 0))
+        ix, iy = 0, 0
+        if isinstance(cell.icon, str):
+            icon_surface = render_text(
+                cell.icon.upper(),
+                cell.label_font,
+                cell.label_font_size,
+                color_fg=cell.icon_color_fg,
+                color_bg=cell.icon_color_bg,
+            )
+            ix += icon_surface.get_rect().width // 2
+        else:
+            icon_surface = render_material_icon(
+                cell.icon,
+                size[1],
+                cell.icon_color_fg,
+            )
+        surface.blit(icon_surface, (ix, iy))
+    cx, cy = 0, 0
+    cx += icon_width
+    label_background_surface = Surface(
+        ((size[0] - icon_width) * cell.progress, size[1]), SRCALPHA
+    )
+    label_background_surface.fill(cell.label_color_bg)
+    surface.blit(label_background_surface, (cx, cy))
     label_surface = render_text(
         cell.label,
         font_filename=cell.label_font,
         font_size=cell.label_font_size,
         color_fg=cell.label_color_fg,
-        color_bg=cell.label_color_bg,
         color_outline=cell.label_color_outline,
     )
-
     if cell.label_align == "right":
         label_x = size[0] - label_surface.get_rect().width
     elif cell.label_align == "center":
