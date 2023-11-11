@@ -139,6 +139,7 @@ class DefaultScene(BaseScene):
         # HASS ENTITY ROW WIDGETS
         # =====================================================================
 
+        GRID_ENTITY_ALPHA = 220
         GRID_ENTITY_WIDTH = 50
         GRID_ENTITY_START_X = self.width - 384
         GRID_ENTITY_MARGIN_X = 1
@@ -160,6 +161,7 @@ class DefaultScene(BaseScene):
             title="Home",
             cells=hass_grid_home_entities,
             accent_color=Color(255, 0, 255, 255),
+            alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_home)
 
@@ -177,6 +179,7 @@ class DefaultScene(BaseScene):
             title="Main",
             cells=hass_grid_main_entities,
             accent_color=Color(255, 0, 0, 255),
+            alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_main)
 
@@ -198,6 +201,7 @@ class DefaultScene(BaseScene):
             title="Network",
             cells=hass_grid_network_entities,
             accent_color=Color(255, 255, 0, 255),
+            alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_network)
 
@@ -219,6 +223,7 @@ class DefaultScene(BaseScene):
             title="Battery",
             cells=hass_grid_battery_entities,
             accent_color=Color(0, 0, 255, 255),
+            alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_battery)
 
@@ -239,6 +244,7 @@ class DefaultScene(BaseScene):
             title="Power",
             cells=hass_grid_electricity_entities,
             accent_color=Color(0, 255, 0, 255),
+            alpha=GRID_ENTITY_ALPHA,
         )
         self.group.add(self.hass_grid_electricity)
 
