@@ -22,7 +22,7 @@ logger = logging.getLogger("sprite.hass_entity_grid")
 
 class HomeAssistantEntityGridTile:
     visible: bool = True
-    icon: Optional[Union[int | str]] = None
+    icon: Optional[Union[int, str]] = None
     icon_color_bg: Color = Color(0, 0, 0, 255)
     icon_color_fg: Color = Color(255, 255, 255, 255)
     label: str = ""
