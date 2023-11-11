@@ -94,10 +94,9 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         self,
         scene: BaseScene,
         rect: Rect,
-        grid_size: Tuple[int, int] = (1, 5),
         cell_size: Tuple[int, int] = (64, 12),
         title: Optional[str] = None,
-        cells: List[List[HomeAssistantEntityGridTile]] = [],
+        cells: List[HomeAssistantEntityGridTile] = [],
         alpha: int = 192,
         accent_color: Color = Color(255, 0, 0, 255),
         padding: Tuple[int, int] = (0, 0),
@@ -105,7 +104,6 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         font_size: int = 10,
     ) -> None:
         super().__init__(scene, rect)
-        self.grid_size = grid_size
         self.cell_size = cell_size
         self.title = title
         self.cells = cells
@@ -144,27 +142,22 @@ class HomeAssistantEntityGridSprite(BaseSprite):
                 color_fg=Color(255, 255, 255, 255),
                 color_outline=Color(0, 0, 0, 255),
             )
-            self.image.blit(title_surface, (cx + 1, cy - 1))
-            by += title_surface.get_rect().height
+            self.image.blit(title_surface, (cx + 1, cy - 2))
+            by += title_surface.get_rect().height - 3
         self.image.fill(self.accent_color, (bx, by, self.rect.width, 1))
         by += 2
         cy = by
-        for col_idx, col in enumerate(self.cells):
-            if col_idx + 1 > self.grid_size[0]:
+        for cell_idx, cell in enumerate(self.cells):
+            cell.process(self.scene.hass.state)
+            if not cell.visible:
                 continue
-            for cell_idx, cell in enumerate(col):
-                if cell_idx + 1 > self.grid_size[1]:
-                    continue
-                cell.process(self.scene.hass.state)
-                if not cell.visible:
-                    continue
-                self.image.blit(
-                    render_hass_tile_cell(self.cell_size, cell),
-                    (cx, cy),
-                )
-                cy += self.cell_size[1]
-            cy = by
-            cx += self.cell_size[0]
+            self.image.blit(
+                render_hass_tile_cell(self.cell_size, cell),
+                (cx, cy),
+            )
+            cy += self.cell_size[1] + 1
+        cy = by
+        cx += self.cell_size[0]
         self.dirty = 1
 
 
@@ -184,7 +177,8 @@ def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityGridTi
                 color_fg=cell.icon_color_fg,
                 color_bg=cell.icon_color_bg,
             )
-            ix += icon_surface.get_rect().width // 2
+            ix += (icon_surface.get_rect().width // 2) - 2
+            iy -= 1
         else:
             icon_surface = render_material_icon(
                 cell.icon,

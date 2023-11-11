@@ -5,7 +5,7 @@ import os
 import pygame
 from PIL import Image, ImageFilter, ImageEnhance
 from pygame import Color, Surface, Vector2, SRCALPHA
-from typing import Optional
+from typing import Optional, List
 
 logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
 logger = logging.getLogger("sprites.image_helpers")
@@ -129,6 +129,29 @@ def render_arrow(
         [(length + tip_pos[0], length + tip_pos[1]), base_point1, base_point2],
     )
     return surface
+
+
+def number_to_color(
+    number: float,
+    ranges=[0.3, 0.6],
+    colors: Optional[List[Color]] = None,
+    color_default: Color = Color(0, 0, 0, 255),
+    invert=False,
+) -> Color:
+    if colors is None:
+        colors = [
+            Color(0, 255, 0, 255),
+            Color(255, 255, 0, 255),
+            Color(255, 0, 0, 255),
+        ]
+    if number < ranges[0]:
+        return colors[0] if not invert else colors[2]
+    elif ranges[0] <= number < ranges[1]:
+        return colors[1]
+    elif number > ranges[1]:
+        return colors[2] if not invert else colors[0]
+    else:
+        return color_default
 
 
 def render_grid(

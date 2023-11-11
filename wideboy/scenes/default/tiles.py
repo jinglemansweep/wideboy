@@ -1,30 +1,21 @@
 from pygame import Color
-from wideboy.sprites.image_helpers import MaterialIcons
+from wideboy.sprites.image_helpers import MaterialIcons, number_to_color
 from wideboy.sprites.homeassistant.entity_grid import HomeAssistantEntityGridTile
 from wideboy.sprites.homeassistant.entity_row import HomeAssistantEntityTile
 from wideboy.config import settings
 
-from typing import Any
+from typing import Any, Optional, List
 
 
-def number_to_color(
-    number: float, ranges=[0.3, 0.6], brightness=255, invert=False
-) -> Color:
-    color_low = Color(brightness, 0, 0, 255)
-    color_mid = Color(brightness, brightness, 0, 255)
-    color_high = Color(0, brightness, 0, 255)
-    color_default = Color(0, 0, 0, 255)
-    if invert:
-        color_low, color_high = color_high, color_low
-    if number < ranges[0]:
-        return color_low
-    elif ranges[0] <= number < ranges[1]:
-        return color_mid
-    elif number > ranges[1]:
-        return color_high
-    else:
-        return Color(0, 0, 0, 255)
+# COLORS
 
+COLORS_DIM_BRIGHTNESS = 128
+COLORS_DIM_ALPHA = 255
+COLORS_TRAFFIC_LIGHT_DIM = [
+    Color(COLORS_DIM_BRIGHTNESS, 0, 0, COLORS_DIM_ALPHA),
+    Color(COLORS_DIM_BRIGHTNESS, COLORS_DIM_BRIGHTNESS, 0, COLORS_DIM_ALPHA),
+    Color(0, COLORS_DIM_BRIGHTNESS, 0, COLORS_DIM_ALPHA),
+]
 
 # GENERAL
 
@@ -38,9 +29,12 @@ class GridTileStepsLouis(HomeAssistantEntityGridTile):
         self.visible = value > 0
         self.label = f"{value:.0f}"
         self.label_color_bg = number_to_color(
-            value / self.steps_per_day, brightness=128
+            value / self.steps_per_day, colors=COLORS_TRAFFIC_LIGHT_DIM
         )
         self.progress = value / self.steps_per_day
+
+
+# NETWORK
 
 
 class GridTileVPN(HomeAssistantEntityGridTile):
@@ -68,7 +62,9 @@ class GridTileDS920Plus(HomeAssistantEntityGridTile):
         value = float(state.get("sensor.ds920plus_volume_used", 0))
         self.visible = value > 66.66
         self.label = f"{value:.0f}%"
-        self.label_color_bg = number_to_color(value / 100, brightness=128)
+        self.label_color_bg = number_to_color(
+            value / 100, colors=COLORS_TRAFFIC_LIGHT_DIM
+        )
         self.progress = value / 100
 
 
@@ -78,8 +74,10 @@ class GridTileSpeedtestDownload(HomeAssistantEntityGridTile):
     def process(self, state):
         self.visible = True
         value = float(state.get("sensor.speedtest_download_average", 0))
-        self.label = f"{value:.0f}Mbs"
-        self.label_color_bg = number_to_color(value / 900, brightness=128)
+        self.label = f"{value:.0f}M"
+        self.label_color_bg = number_to_color(
+            value / 900, colors=COLORS_TRAFFIC_LIGHT_DIM
+        )
         self.progress = value / 900
 
 
@@ -89,8 +87,10 @@ class GridTileSpeedtestUpload(HomeAssistantEntityGridTile):
     def process(self, state):
         self.visible = True
         value = float(state.get("sensor.speedtest_upload_average", 0))
-        self.label = f"{value:.0f}Mbs"
-        self.label_color_bg = number_to_color(value / 900, brightness=128)
+        self.label = f"{value:.0f}M"
+        self.label_color_bg = number_to_color(
+            value / 900, colors=COLORS_TRAFFIC_LIGHT_DIM
+        )
         self.progress = value / 900
 
 
@@ -102,9 +102,12 @@ class GridTileSpeedtestPing(HomeAssistantEntityGridTile):
         value = state.get("sensor.speedtest_ping_average", 0)
         self.label = f"{value:.0f}ms"
         self.label_color_bg = number_to_color(
-            value, [10, 20, 30], brightness=128, invert=True
+            value, [10, 20, 30], colors=COLORS_TRAFFIC_LIGHT_DIM, invert=True
         )
         self.progress = value / 30
+
+
+# SENSORS
 
 
 class GridTileBinCollection(HomeAssistantEntityGridTile):
@@ -136,9 +139,12 @@ class GridTileFrontDoor(HomeAssistantEntityGridTile):
         )
 
 
+# SWITCHES
+
+
 class GridTileHouseManual(HomeAssistantEntityGridTile):
-    icon = MaterialIcons.MDI_TOGGLE_ON
-    label = "MANUAL"
+    icon = "M"
+    label = "ON"
 
     def process(self, state):
         self.visible = state.get("input_boolean.house_manual") == True
@@ -162,12 +168,15 @@ class GridTileBatteryLevel(HomeAssistantEntityGridTile):
         value = float(state.get("sensor.delta_2_max_downstairs_battery_level", 0))
         self.visible = value > 0
         self.label = f"{value:.0f}%"
-        self.label_color_bg = number_to_color(value / 100, brightness=128)
+        self.label_color_bg = number_to_color(
+            value / 100, colors=COLORS_TRAFFIC_LIGHT_DIM
+        )
         self.progress = value / 100
 
 
 class GridTileBatteryDischargeRemainingTime(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_HOURGLASS
+    icon_color_fg = Color(255, 0, 0, 255)
 
     def process(self, state):
         value = float(
@@ -176,11 +185,11 @@ class GridTileBatteryDischargeRemainingTime(HomeAssistantEntityGridTile):
         hours, mins = value // 60, value % 60
         self.visible = value > 0
         self.label = f"{hours:.0f}h{mins:.0f}m"
-        self.label_color_bg = Color(128, 0, 0, 255)
 
 
 class GridTileBatteryChargeRemainingTime(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_HOURGLASS
+    icon_color_fg = Color(0, 255, 0, 255)
 
     def process(self, state):
         value = float(
@@ -189,30 +198,29 @@ class GridTileBatteryChargeRemainingTime(HomeAssistantEntityGridTile):
         hours, mins = value // 60, value % 60
         self.visible = value > 0
         self.label = f"{hours:.0f}h{mins:.0f}m"
-        self.label_color_bg = Color(0, 128, 0, 255)
 
 
 class GridTileBatteryAcInPower(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_POWER
+    icon_color_fg = Color(0, 255, 0, 255)
 
     def process(self, state):
-        value = state.get("sensor.delta_2_max_downstairs_ac_in_power", 0)
+        value = float(state.get("sensor.delta_2_max_downstairs_ac_in_power", 0))
         self.visible = value > 0
         self.label = f"{value:.0f}w"
-        self.icon_color_fg = Color(0, 128, 0, 255)
 
 
 class GridTileBatteryAcOutPower(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_POWER
+    icon_color_fg = Color(255, 0, 0, 255)
 
     def process(self, state):
-        value = state.get("sensor.delta_2_max_downstairs_ac_out_power", 0)
+        value = float(state.get("sensor.delta_2_max_downstairs_ac_out_power", 0))
         self.visible = value > 0
         self.label = f"{value:.0f}w"
-        self.icon_color_fg = Color(128, 0, 0, 255)
 
 
-# POWER
+# ELECTRICITY
 
 
 class GridTileElectricityCurrentDemand(HomeAssistantEntityGridTile):
@@ -224,7 +232,7 @@ class GridTileElectricityCurrentDemand(HomeAssistantEntityGridTile):
         self.visible = value > 0
         self.label = f"{value:.0f}w"
         self.label_color_bg = number_to_color(
-            value, [300, 600, 900], brightness=128, invert=True
+            value, [300, 600, 900], colors=COLORS_TRAFFIC_LIGHT_DIM, invert=True
         )
 
 
@@ -236,7 +244,10 @@ class GridTileElectricityCurrentRate(HomeAssistantEntityGridTile):
         self.visible = value > 0
         self.label = f"£{value:.2f}"
         self.label_color_bg = number_to_color(
-            value, [0.10, 0.30, 1.0], brightness=128, invert=True
+            value,
+            ranges=[0.10, 0.30, 1.0],
+            colors=COLORS_TRAFFIC_LIGHT_DIM,
+            invert=True,
         )
 
 

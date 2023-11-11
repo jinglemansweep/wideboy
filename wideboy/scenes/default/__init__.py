@@ -139,24 +139,40 @@ class DefaultScene(BaseScene):
         # HASS ENTITY ROW WIDGETS
         # =====================================================================
 
+        GRID_ENTITY_WIDTH = 50
+        GRID_ENTITY_START_X = self.width - 384
+        GRID_ENTITY_MARGIN_X = 1
+
+        grid_entity_cx = GRID_ENTITY_START_X
+
+        hass_grid_home_entities = [
+            GridTileBackDoor(),
+            GridTileFrontDoor(),
+            GridTileHouseManual(),
+            GridTileSwitchLoungeFans(),
+        ]
+
+        self.hass_grid_home = HomeAssistantEntityGridSprite(
+            self,
+            Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
+            cell_size=(GRID_ENTITY_WIDTH, 12),
+            padding=(0, 0),
+            title="Home",
+            cells=hass_grid_home_entities,
+            accent_color=Color(255, 0, 255, 255),
+        )
+        self.group.add(self.hass_grid_home)
+
+        grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
+
         hass_grid_main_entities = [
-            [
-                GridTileStepsLouis(),
-                GridTileDS920Plus(),
-            ],
-            [
-                GridTileBackDoor(),
-                GridTileFrontDoor(),
-                GridTileHouseManual(),
-                GridTileSwitchLoungeFans(),
-            ],
+            GridTileDS920Plus(),
         ]
 
         self.hass_grid_main = HomeAssistantEntityGridSprite(
             self,
-            Rect(self.width - 352, 0, 54, 64),
-            grid_size=(1, 4),
-            cell_size=(54, 12),
+            Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
+            cell_size=(GRID_ENTITY_WIDTH, 12),
             padding=(0, 0),
             title="Main",
             cells=hass_grid_main_entities,
@@ -164,68 +180,67 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.hass_grid_main)
 
+        grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
+
         hass_grid_network_entities = [
-            [
-                GridTileVPN(),
-                # GridTileTransmission(),
-                GridTileSpeedtestDownload(),
-                GridTileSpeedtestUpload(),
-                GridTileSpeedtestPing(),
-            ]
+            GridTileVPN(),
+            # GridTileTransmission(),
+            GridTileSpeedtestDownload(),
+            GridTileSpeedtestUpload(),
+            GridTileSpeedtestPing(),
         ]
 
         self.hass_grid_network = HomeAssistantEntityGridSprite(
             self,
-            Rect(self.width - 296, 0, 54, 64),
-            grid_size=(1, 4),
-            cell_size=(54, 12),
+            Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
+            cell_size=(GRID_ENTITY_WIDTH, 12),
             padding=(0, 0),
             title="Network",
             cells=hass_grid_network_entities,
-            accent_color=Color(255, 0, 255, 255),
+            accent_color=Color(255, 255, 0, 255),
         )
         self.group.add(self.hass_grid_network)
 
-        hass_grid_electricity_entities = [
-            [
-                GridTileElectricityCurrentDemand(),
-                GridTileElectricityCurrentRate(),
-                GridTileElectricityHourlyRate(),
-                GridTileElectricityCurrentAccumulativeCost(),
-            ]
-        ]
-
-        self.hass_grid_electricity = HomeAssistantEntityGridSprite(
-            self,
-            Rect(self.width - 183, 0, 54, 64),
-            grid_size=(1, 4),
-            padding=(0, 0),
-            title="Power",
-            cells=hass_grid_electricity_entities,
-            accent_color=Color(0, 255, 255, 255),
-        )
-        self.group.add(self.hass_grid_electricity)
+        grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
 
         hass_grid_battery_entities = [
-            [
-                GridTileBatteryLevel(),
-                GridTileBatteryDischargeRemainingTime(),
-                GridTileBatteryChargeRemainingTime(),
-                GridTileBatteryAcInPower(),
-                GridTileBatteryAcOutPower(),
-            ]
+            GridTileBatteryLevel(),
+            GridTileBatteryDischargeRemainingTime(),
+            GridTileBatteryChargeRemainingTime(),
+            GridTileBatteryAcInPower(),
+            GridTileBatteryAcOutPower(),
         ]
 
         self.hass_grid_battery = HomeAssistantEntityGridSprite(
             self,
-            Rect(self.width - 240, 0, 54, 64),
-            grid_size=(1, 4),
+            Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
+            cell_size=(GRID_ENTITY_WIDTH, 12),
             padding=(0, 0),
             title="Battery",
             cells=hass_grid_battery_entities,
             accent_color=Color(0, 0, 255, 255),
         )
         self.group.add(self.hass_grid_battery)
+
+        grid_entity_cx += GRID_ENTITY_WIDTH + GRID_ENTITY_MARGIN_X
+
+        hass_grid_electricity_entities = [
+            GridTileElectricityCurrentDemand(),
+            GridTileElectricityCurrentRate(),
+            GridTileElectricityHourlyRate(),
+            GridTileElectricityCurrentAccumulativeCost(),
+        ]
+
+        self.hass_grid_electricity = HomeAssistantEntityGridSprite(
+            self,
+            Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
+            cell_size=(GRID_ENTITY_WIDTH, 12),
+            padding=(0, 0),
+            title="Power",
+            cells=hass_grid_electricity_entities,
+            accent_color=Color(0, 255, 0, 255),
+        )
+        self.group.add(self.hass_grid_electricity)
 
         # =====================================================================
         # NOTIFICATION WIDGET
