@@ -53,7 +53,7 @@ class HomeAssistantEntityRowSprite(BaseSprite):
         color_fg: Color = Color(255, 255, 255, 255),
         color_bg: Color = Color(0, 0, 0, 255),
         color_outline: Optional[Color] = None,
-        padding_right: int = 3,
+        padding_right: int = 0,
         padding_bottom: int = 0,
         show_all: bool = False,
     ) -> None:

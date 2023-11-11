@@ -9,7 +9,6 @@ from typing import Any
 
 
 class TileStepsLouis(HomeAssistantEntityTile):
-    label_font_size = 12
     icon = MaterialIcons.MDI_DIRECTIONS_WALK
     icon_color = Color(255, 0, 255, 255)
 

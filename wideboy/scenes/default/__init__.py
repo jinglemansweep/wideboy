@@ -9,8 +9,8 @@ from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.homeassistant.entity_row import (
     HomeAssistantEntityRowSprite,
     HomeAssistantEntityTile,
-    HomeAssistantEntityTileOrientation,
 )
+from wideboy.sprites.homeassistant.entity_grid import HomeAssistantEntityGridSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.weather.animation import WeatherAnimationSprite
 from wideboy.sprites.weather.temperature import WeatherTemperatureSprite
@@ -170,13 +170,9 @@ class DefaultScene(BaseScene):
 
         self.hass_row_power = HomeAssistantEntityRowSprite(
             self,
-            Rect(700, 2, 128, 60),
+            Rect(512, 48, 128, 16),
             hass_row_power_entities,
-            min_size=(64, None),
             color_bg=Color(0, 0, 0, 196),
-            orientation=HomeAssistantEntityTileOrientation.VERTICAL,
-            font_size=11,
-            padding_bottom=2,
         )
         self.group.add(self.hass_row_power)
 
@@ -195,6 +191,20 @@ class DefaultScene(BaseScene):
             color_bg=Color(0, 0, 0, 196),
         )
         self.group.add(self.hass_row_battery)
+
+        # =====================================================================
+        # HASS ENTITY GRID WIDGETS
+        # =====================================================================
+
+        self.hass_grid_test = HomeAssistantEntityGridSprite(
+            self,
+            Rect(self.width - 460, 0, 128, 64),
+            grid_size=(2, 4),
+            padding=(0, 0),
+            title="Battery",
+            cells=[[1, 2, 3, 4], [5, 6, 7, 8]],
+        )
+        self.group.add(self.hass_grid_test)
 
         # =====================================================================
         # NOTIFICATION WIDGET
@@ -226,9 +236,9 @@ class DefaultScene(BaseScene):
         events: list[Event],
     ) -> None:
         super().update(clock, delta, events)
-        self.hass_row_main.rect.topright = self.width - 256 - 3, 2
-        self.hass_row_power.rect.topright = self.width - 68, 4
-        self.hass_row_battery.rect.topright = self.width - 256 - 3, 32
+        self.hass_row_main.rect.topright = self.width - 128 - 3, 2
+        self.hass_row_power.rect.topright = self.width - 128 - 3, 17
+        self.hass_row_battery.rect.topright = self.width - 128 - 3, 32
 
     # Handle Events
 
