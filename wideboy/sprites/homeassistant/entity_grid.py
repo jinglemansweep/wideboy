@@ -23,11 +23,11 @@ logger = logging.getLogger("sprite.hass_entity_grid")
 class HomeAssistantEntityTile:
     visible: bool = True
     icon: Optional[Union[int | str]] = None
-    icon_color_bg: Color = Color(128, 0, 0, 255)
+    icon_color_bg: Color = Color(0, 0, 0, 255)
     icon_color_fg: Color = Color(255, 255, 255, 255)
     label: str = ""
     label_align: str = "left"
-    label_color_bg: Color = Color(255, 255, 255, 0)
+    label_color_bg: Color = Color(0, 0, 0, 0)
     label_color_fg: Color = Color(255, 255, 255, 255)
     label_color_outline: Color = Color(0, 0, 0, 255)
     label_font: str = "fonts/bitstream-vera.ttf"
@@ -36,6 +36,30 @@ class HomeAssistantEntityTile:
 
     def process(self, state) -> None:
         pass
+
+
+class TestDemandTile(HomeAssistantEntityTile):
+    icon = MaterialIcons.MDI_DOWNLOAD
+    bg_brightness = 0.5
+
+    def process(self, state):
+        value = state.get("sensor.octopus_energy_electricity_current_demand", 0)
+        self.label = f"{value:.0f}w"
+        percent_float = float(min(value, 1000) / 1000)
+        percent_float = random.random()
+        self.icon_color_bg = Color(0, 0, 0, 255)
+        self.icon_color_fg = Color(255, 255, 255, 255)
+        if 0 < percent_float < 0.3:
+            self.label_color_bg = Color(0, 255 * self.bg_brightness, 0, 255)
+        elif 0.3 <= percent_float < 0.6:
+            self.label_color_bg = Color(
+                255 * self.bg_brightness, 255 * self.bg_brightness, 0, 255
+            )
+        elif 0.6 <= percent_float <= 1.0:
+            self.label_color_bg = Color(255 * self.bg_brightness, 0, 0, 255)
+            self.icon_color_bg = Color(255, 0, 0, 255)
+            self.icon_color_fg = Color(255, 255, 255, 255)
+        self.progress = percent_float
 
 
 class TestTile(HomeAssistantEntityTile):
@@ -84,7 +108,8 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         self.title = title
         # self.cells = cells
         self.cells = [
-            [TestTile() for _ in range(grid_size[1])] for _ in range(grid_size[0])
+            [random.choice([TestTile(), TestDemandTile()]) for _ in range(grid_size[1])]
+            for _ in range(grid_size[0])
         ]
         self.alpha = alpha
         self.accent_color = accent_color
