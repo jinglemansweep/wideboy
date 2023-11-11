@@ -18,26 +18,26 @@ from wideboy.sprites.weather.wind import WeatherWindSprite
 from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
 from wideboy.scenes.default.tiles import (
-    TileStepsLouis,
-    TileVPN,
-    TileTransmission,
-    TileDS920Plus,
-    TileSpeedtestDownload,
-    TileSpeedtestUpload,
-    TileSpeedtestPing,
-    TileBackDoor,
-    TileFrontDoor,
-    TileHouseManual,
-    TileSwitchLoungeFans,
-    TileElectricityCurrentDemand,
-    TileElectricityCurrentRate,
-    TileElectricityHourlyRate,
-    TileElectricityCurrentAccumulativeCost,
-    TileBatteryLevel,
-    TileBatteryCycles,
-    TileBatteryDischargeRemainingTime,
-    TileBatteryChargeRemainingTime,
-    TileBatteryAcInPower,
+    GridTileStepsLouis,
+    GridTileVPN,
+    GridTileTransmission,
+    GridTileDS920Plus,
+    GridTileSpeedtestDownload,
+    GridTileSpeedtestUpload,
+    GridTileSpeedtestPing,
+    GridTileBackDoor,
+    GridTileFrontDoor,
+    GridTileHouseManual,
+    GridTileSwitchLoungeFans,
+    GridTileElectricityCurrentDemand,
+    GridTileElectricityCurrentRate,
+    GridTileElectricityHourlyRate,
+    GridTileElectricityCurrentAccumulativeCost,
+    GridTileBatteryLevel,
+    GridTileBatteryCycles,
+    GridTileBatteryDischargeRemainingTime,
+    GridTileBatteryChargeRemainingTime,
+    GridTileBatteryAcInPower,
 )
 
 from wideboy.config import settings
@@ -139,83 +139,93 @@ class DefaultScene(BaseScene):
         # HASS ENTITY ROW WIDGETS
         # =====================================================================
 
-        hass_row_main_entities = [
-            TileStepsLouis(),
-            TileVPN(),
-            TileTransmission(),
-            TileDS920Plus(),
-            TileSpeedtestDownload(),
-            TileSpeedtestUpload(),
-            TileSpeedtestPing(),
-            TileBackDoor(),
-            TileFrontDoor(),
-            TileHouseManual(),
-            TileSwitchLoungeFans(),
+        hass_grid_main_entities = [
+            [
+                GridTileStepsLouis(),
+                GridTileDS920Plus(),
+            ],
+            [
+                GridTileBackDoor(),
+                GridTileFrontDoor(),
+                GridTileHouseManual(),
+                GridTileSwitchLoungeFans(),
+            ],
         ]
 
-        self.hass_row_main = HomeAssistantEntityRowSprite(
+        self.hass_grid_main = HomeAssistantEntityGridSprite(
             self,
-            Rect(512, 48, 128, 16),
-            hass_row_main_entities,
-            color_bg=Color(0, 0, 0, 196),
+            Rect(self.width - 352, 0, 54, 64),
+            grid_size=(1, 4),
+            cell_size=(54, 12),
+            padding=(0, 0),
+            title="Main",
+            cells=hass_grid_main_entities,
+            accent_color=Color(255, 0, 0, 255),
         )
-        self.group.add(self.hass_row_main)
+        self.group.add(self.hass_grid_main)
 
-        hass_row_power_entities = [
-            TileElectricityCurrentDemand(),
-            TileElectricityCurrentRate(),
-            TileElectricityHourlyRate(),
-            TileElectricityCurrentAccumulativeCost(),
+        hass_grid_network_entities = [
+            [
+                GridTileVPN(),
+                # GridTileTransmission(),
+                GridTileSpeedtestDownload(),
+                GridTileSpeedtestUpload(),
+                GridTileSpeedtestPing(),
+            ]
         ]
 
-        self.hass_row_power = HomeAssistantEntityRowSprite(
+        self.hass_grid_network = HomeAssistantEntityGridSprite(
             self,
-            Rect(512, 48, 128, 16),
-            hass_row_power_entities,
-            color_bg=Color(0, 0, 0, 196),
+            Rect(self.width - 296, 0, 54, 64),
+            grid_size=(1, 4),
+            cell_size=(54, 12),
+            padding=(0, 0),
+            title="Network",
+            cells=hass_grid_network_entities,
+            accent_color=Color(255, 0, 255, 255),
         )
-        self.group.add(self.hass_row_power)
+        self.group.add(self.hass_grid_network)
 
-        hass_row_battery_entities = [
-            TileBatteryLevel(),
-            TileBatteryCycles(),
-            TileBatteryDischargeRemainingTime(),
-            TileBatteryChargeRemainingTime(),
-            TileBatteryAcInPower(),
+        hass_grid_electricity_entities = [
+            [
+                GridTileElectricityCurrentDemand(),
+                GridTileElectricityCurrentRate(),
+                GridTileElectricityHourlyRate(),
+                GridTileElectricityCurrentAccumulativeCost(),
+            ]
         ]
 
-        self.hass_row_battery = HomeAssistantEntityRowSprite(
+        self.hass_grid_electricity = HomeAssistantEntityGridSprite(
             self,
-            Rect(512, 48, 128, 16),
-            hass_row_battery_entities,
-            color_bg=Color(0, 0, 0, 196),
+            Rect(self.width - 183, 0, 54, 64),
+            grid_size=(1, 4),
+            padding=(0, 0),
+            title="Power",
+            cells=hass_grid_electricity_entities,
+            accent_color=Color(0, 255, 255, 255),
         )
-        self.group.add(self.hass_row_battery)
+        self.group.add(self.hass_grid_electricity)
 
-        # =====================================================================
-        # HASS ENTITY GRID WIDGETS
-        # =====================================================================
+        hass_grid_battery_entities = [
+            [
+                GridTileBatteryLevel(),
+                GridTileBatteryCycles(),
+                GridTileBatteryDischargeRemainingTime(),
+                GridTileBatteryChargeRemainingTime(),
+                GridTileBatteryAcInPower(),
+            ]
+        ]
 
-        self.hass_grid_test = HomeAssistantEntityGridSprite(
+        self.hass_grid_battery = HomeAssistantEntityGridSprite(
             self,
-            Rect(self.width - 460, 0, 128, 64),
-            grid_size=(2, 4),
+            Rect(self.width - 240, 0, 54, 64),
+            grid_size=(1, 4),
             padding=(0, 0),
             title="Battery",
-            cells=[[1, 2, 3, 4], [5, 6, 7, 8]],
+            cells=hass_grid_battery_entities,
+            accent_color=Color(0, 0, 255, 255),
         )
-        self.group.add(self.hass_grid_test)
-
-        self.hass_grid_test_alt = HomeAssistantEntityGridSprite(
-            self,
-            Rect(128, 0, 96, 64),
-            grid_size=(2, 4),
-            cell_size=(48, 12),
-            padding=(0, 0),
-            title="Battery",
-            cells=[[1, 2, 3, 4], [5, 6, 7, 8]],
-        )
-        self.group.add(self.hass_grid_test_alt)
+        self.group.add(self.hass_grid_battery)
 
         # =====================================================================
         # NOTIFICATION WIDGET
@@ -247,9 +257,6 @@ class DefaultScene(BaseScene):
         events: list[Event],
     ) -> None:
         super().update(clock, delta, events)
-        self.hass_row_main.rect.topright = self.width - 128 - 3, 2
-        self.hass_row_power.rect.topright = self.width - 128 - 3, 17
-        self.hass_row_battery.rect.topright = self.width - 128 - 3, 32
 
     # Handle Events
 

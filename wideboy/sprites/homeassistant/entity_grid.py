@@ -20,7 +20,7 @@ from wideboy.sprites.image_helpers import (
 logger = logging.getLogger("sprite.hass_entity_grid")
 
 
-class HomeAssistantEntityTile:
+class HomeAssistantEntityGridTile:
     visible: bool = True
     icon: Optional[Union[int | str]] = None
     icon_color_bg: Color = Color(0, 0, 0, 255)
@@ -38,7 +38,8 @@ class HomeAssistantEntityTile:
         pass
 
 
-class TestDemandTile(HomeAssistantEntityTile):
+"""
+class TestDemandTile(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_DOWNLOAD
     bg_brightness = 0.5
 
@@ -62,7 +63,7 @@ class TestDemandTile(HomeAssistantEntityTile):
         self.progress = percent_float
 
 
-class TestTile(HomeAssistantEntityTile):
+class TestTile(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_DOWNLOAD
 
     def process(self, state):
@@ -82,6 +83,7 @@ class TestTile(HomeAssistantEntityTile):
         self.icon_color_bg = (
             Color(0, 0, 0, 255) if invert else Color(255, 255, 255, 255)
         )
+"""
 
 
 class HomeAssistantEntityGridSprite(BaseSprite):
@@ -95,7 +97,7 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         grid_size: Tuple[int, int] = (1, 5),
         cell_size: Tuple[int, int] = (64, 12),
         title: Optional[str] = None,
-        cells: List[List[HomeAssistantEntityTile]] = [],
+        cells: List[List[HomeAssistantEntityGridTile]] = [],
         alpha: int = 192,
         accent_color: Color = Color(255, 0, 0, 255),
         padding: Tuple[int, int] = (0, 0),
@@ -106,11 +108,7 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         self.grid_size = grid_size
         self.cell_size = cell_size
         self.title = title
-        # self.cells = cells
-        self.cells = [
-            [random.choice([TestTile(), TestDemandTile()]) for _ in range(grid_size[1])]
-            for _ in range(grid_size[0])
-        ]
+        self.cells = cells
         self.alpha = alpha
         self.accent_color = accent_color
         self.padding = padding
@@ -157,6 +155,8 @@ class HomeAssistantEntityGridSprite(BaseSprite):
                 if cell_idx + 1 > self.grid_size[1]:
                     continue
                 cell.process(self.scene.hass.state)
+                if not cell.visible:
+                    continue
                 self.image.blit(
                     render_hass_tile_cell(self.cell_size, cell),
                     (cx, cy),
@@ -167,7 +167,7 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         self.dirty = 1
 
 
-def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityTile):
+def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityGridTile):
     surface = Surface(size, SRCALPHA)
     icon_width = 12
     if cell.icon is not None:
