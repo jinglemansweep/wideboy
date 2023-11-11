@@ -8,7 +8,7 @@ from typing import Any
 
 
 def number_to_color(
-    number: float, ranges=[0.3, 0.6, 1.0], brightness=255, invert=False
+    number: float, ranges=[0.3, 0.6], brightness=255, invert=False
 ) -> Color:
     color_low = Color(brightness, 0, 0, 255)
     color_mid = Color(brightness, brightness, 0, 255)
@@ -20,7 +20,7 @@ def number_to_color(
         return color_low
     elif ranges[0] <= number < ranges[1]:
         return color_mid
-    elif ranges[1] <= number <= ranges[2]:
+    elif number > ranges[1]:
         return color_high
     else:
         return Color(0, 0, 0, 255)
