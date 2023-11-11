@@ -34,10 +34,10 @@ from wideboy.scenes.default.tiles import (
     GridTileElectricityHourlyRate,
     GridTileElectricityCurrentAccumulativeCost,
     GridTileBatteryLevel,
-    GridTileBatteryCycles,
     GridTileBatteryDischargeRemainingTime,
     GridTileBatteryChargeRemainingTime,
     GridTileBatteryAcInPower,
+    GridTileBatteryAcOutPower,
 )
 
 from wideboy.config import settings
@@ -209,10 +209,10 @@ class DefaultScene(BaseScene):
         hass_grid_battery_entities = [
             [
                 GridTileBatteryLevel(),
-                GridTileBatteryCycles(),
                 GridTileBatteryDischargeRemainingTime(),
                 GridTileBatteryChargeRemainingTime(),
                 GridTileBatteryAcInPower(),
+                GridTileBatteryAcOutPower(),
             ]
         ]
 
