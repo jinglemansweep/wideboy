@@ -144,7 +144,7 @@ class DefaultScene(BaseScene):
         # =====================================================================
 
         GRID_ENTITY_ALPHA = 220
-        GRID_ENTITY_TITLE_BRIGHTNESS = 96
+        GRID_ENTITY_TITLE_BRIGHTNESS = 255
         GRID_ENTITY_WIDTH = 72
         GRID_ENTITY_START_X = self.width - 560
         GRID_ENTITY_MARGIN_X = 0

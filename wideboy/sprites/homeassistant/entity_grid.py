@@ -83,13 +83,15 @@ class HomeAssistantEntityGridSprite(BaseSprite):
     def render(self) -> None:
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.image.fill(Color(0, 0, 0, self.alpha))
-        self.image.fill(self.accent_color, (0, 0, self.title_width, self.rect.height))
+        self.image.fill(
+            Color(0, 0, 0, self.alpha), (0, 0, self.title_width, self.rect.height)
+        )
         cx, cy = 0, 0
         title_surface = render_text(
             self.title.upper(),
             self.font_name,
             self.font_size,
-            color_fg=Color(255, 255, 255, 255),
+            color_fg=self.accent_color,
             color_outline=Color(0, 0, 0, 255),
         )
         self.image.blit(pygame.transform.rotate(title_surface, 90), (cx - 2, cy + 1))
