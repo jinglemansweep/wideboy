@@ -144,18 +144,24 @@ class DefaultScene(BaseScene):
         # =====================================================================
 
         GRID_ENTITY_ALPHA = 220
-        GRID_ENTITY_WIDTH = 50
-        GRID_ENTITY_START_X = self.width - 432
-        GRID_ENTITY_MARGIN_X = 1
+        GRID_ENTITY_TITLE_BRIGHTNESS = 96
+        GRID_ENTITY_WIDTH = 64
+        GRID_ENTITY_START_X = 256
+        GRID_ENTITY_MARGIN_X = 0
 
         GRID_ENTITY_COLORS = [
-            Color(255, 0, 0, GRID_ENTITY_ALPHA),
-            Color(255, 255, 0, GRID_ENTITY_ALPHA),
-            Color(0, 255, 0, GRID_ENTITY_ALPHA),
-            Color(0, 0, 255, GRID_ENTITY_ALPHA),
-            Color(255, 0, 255, GRID_ENTITY_ALPHA),
-            Color(0, 255, 255, GRID_ENTITY_ALPHA),
-            Color(255, 255, 255, GRID_ENTITY_ALPHA),
+            Color(GRID_ENTITY_TITLE_BRIGHTNESS, 0, 0, 255),
+            Color(GRID_ENTITY_TITLE_BRIGHTNESS, GRID_ENTITY_TITLE_BRIGHTNESS, 0, 255),
+            Color(0, GRID_ENTITY_TITLE_BRIGHTNESS, 0, 255),
+            Color(0, 0, GRID_ENTITY_TITLE_BRIGHTNESS, 255),
+            Color(GRID_ENTITY_TITLE_BRIGHTNESS, 0, GRID_ENTITY_TITLE_BRIGHTNESS, 255),
+            Color(0, GRID_ENTITY_TITLE_BRIGHTNESS, GRID_ENTITY_TITLE_BRIGHTNESS, 255),
+            Color(
+                GRID_ENTITY_TITLE_BRIGHTNESS,
+                GRID_ENTITY_TITLE_BRIGHTNESS,
+                GRID_ENTITY_TITLE_BRIGHTNESS,
+                255,
+            ),
         ]
 
         grid_entity_cx = GRID_ENTITY_START_X
@@ -173,8 +179,6 @@ class DefaultScene(BaseScene):
         self.hass_grid_home = HomeAssistantEntityGridSprite(
             self,
             Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
-            cell_size=(GRID_ENTITY_WIDTH, 12),
-            padding=(0, 0),
             title="Home",
             cells=hass_grid_home_entities,
             accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
@@ -197,8 +201,6 @@ class DefaultScene(BaseScene):
         self.hass_grid_temp = HomeAssistantEntityGridSprite(
             self,
             Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
-            cell_size=(GRID_ENTITY_WIDTH, 12),
-            padding=(0, 0),
             title="Temp",
             cells=hass_grid_temp_entities,
             accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
@@ -218,8 +220,6 @@ class DefaultScene(BaseScene):
         self.hass_grid_sensors = HomeAssistantEntityGridSprite(
             self,
             Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
-            cell_size=(GRID_ENTITY_WIDTH, 12),
-            padding=(0, 0),
             title="Sensors",
             cells=hass_grid_sensors_entities,
             accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
@@ -243,8 +243,6 @@ class DefaultScene(BaseScene):
         self.hass_grid_network = HomeAssistantEntityGridSprite(
             self,
             Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
-            cell_size=(GRID_ENTITY_WIDTH, 12),
-            padding=(0, 0),
             title="Network",
             cells=hass_grid_network_entities,
             accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
@@ -268,8 +266,6 @@ class DefaultScene(BaseScene):
         self.hass_grid_battery = HomeAssistantEntityGridSprite(
             self,
             Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
-            cell_size=(GRID_ENTITY_WIDTH, 12),
-            padding=(0, 0),
             title="Battery",
             cells=hass_grid_battery_entities,
             accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
@@ -292,8 +288,6 @@ class DefaultScene(BaseScene):
         self.hass_grid_electricity = HomeAssistantEntityGridSprite(
             self,
             Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
-            cell_size=(GRID_ENTITY_WIDTH, 12),
-            padding=(0, 0),
             title="Power",
             cells=hass_grid_electricity_entities,
             accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],

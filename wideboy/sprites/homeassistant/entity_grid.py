@@ -1,4 +1,5 @@
 import logging
+import pygame
 import random
 import types
 from enum import Enum
@@ -31,85 +32,35 @@ class HomeAssistantEntityGridTile:
     label_color_fg: Color = Color(255, 255, 255, 255)
     label_color_outline: Color = Color(0, 0, 0, 255)
     label_font: str = "fonts/bitstream-vera.ttf"
-    label_font_size: int = 10
+    label_font_size: int = 11
     progress: float = 1.0
 
     def process(self, state) -> None:
         pass
 
 
-"""
-class TestDemandTile(HomeAssistantEntityGridTile):
-    icon = MaterialIcons.MDI_DOWNLOAD
-    bg_brightness = 0.5
-
-    def process(self, state):
-        value = state.get("sensor.octopus_energy_electricity_current_demand", 0)
-        self.label = f"{value:.0f}w"
-        percent_float = float(min(value, 1000) / 1000)
-        percent_float = random.random()
-        self.icon_color_bg = Color(0, 0, 0, 255)
-        self.icon_color_fg = Color(255, 255, 255, 255)
-        if 0 < percent_float < 0.3:
-            self.label_color_bg = Color(0, 255 * self.bg_brightness, 0, 255)
-        elif 0.3 <= percent_float < 0.6:
-            self.label_color_bg = Color(
-                255 * self.bg_brightness, 255 * self.bg_brightness, 0, 255
-            )
-        elif 0.6 <= percent_float <= 1.0:
-            self.label_color_bg = Color(255 * self.bg_brightness, 0, 0, 255)
-            self.icon_color_bg = Color(255, 0, 0, 255)
-            self.icon_color_fg = Color(255, 255, 255, 255)
-        self.progress = percent_float
-
-
-class TestTile(HomeAssistantEntityGridTile):
-    icon = MaterialIcons.MDI_DOWNLOAD
-
-    def process(self, state):
-        value = state.get("sensor.speedtest_download_average", 0)
-        self.label = f"{value:.0f}M"
-        # self.label_align = random.choice(["left", "right"])
-        self.icon = random.choice(
-            [MaterialIcons.MDI_DOWNLOAD, MaterialIcons.MDI_UPLOAD, None, "A", "b", "1"]
-        )
-        self.progress = random.random()
-        self.label_color_bg = Color(255, 255, 0, 255)
-
-        invert = random.choice([True, False])
-        self.icon_color_fg = (
-            Color(255, 255, 255, 255) if invert else Color(0, 0, 0, 255)
-        )
-        self.icon_color_bg = (
-            Color(0, 0, 0, 255) if invert else Color(255, 255, 255, 255)
-        )
-"""
-
-
 class HomeAssistantEntityGridSprite(BaseSprite):
     rect: Rect
     image: Surface
+    row_height: int = 12
+    title_width: int = 11
 
     def __init__(
         self,
         scene: BaseScene,
         rect: Rect,
-        cell_size: Tuple[int, int] = (64, 12),
-        title: Optional[str] = None,
+        title: str = "",
         cells: List[HomeAssistantEntityGridTile] = [],
         alpha: int = 192,
         accent_color: Color = Color(255, 0, 0, 255),
-        padding: Tuple[int, int] = (0, 0),
         font_name: str = "fonts/bitstream-vera.ttf",
         font_size: int = 10,
     ) -> None:
         super().__init__(scene, rect)
-        self.cell_size = cell_size
         self.title = title
         self.cells = cells
         self.alpha = alpha
         self.accent_color = accent_color
-        self.padding = padding
         self.font_name = font_name
         self.font_size = font_size
         self.render()
@@ -132,32 +83,28 @@ class HomeAssistantEntityGridSprite(BaseSprite):
     def render(self) -> None:
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.image.fill(Color(0, 0, 0, self.alpha))
-        bx, by = self.padding[0], self.padding[1]
-        cx, cy = bx, by
-        if self.title is not None:
-            title_surface = render_text(
-                self.title,
-                self.font_name,
-                self.font_size,
-                color_fg=Color(255, 255, 255, 255),
-                color_outline=Color(0, 0, 0, 255),
-            )
-            self.image.blit(title_surface, (cx + 1, cy - 2))
-            by += title_surface.get_rect().height - 3
-        self.image.fill(self.accent_color, (bx, by, self.rect.width, 1))
-        by += 2
-        cy = by
+        self.image.fill(self.accent_color, (0, 0, self.title_width, self.rect.height))
+        cx, cy = 0, 0
+        title_surface = render_text(
+            self.title.upper(),
+            self.font_name,
+            self.font_size,
+            color_fg=Color(255, 255, 255, 255),
+            color_outline=Color(0, 0, 0, 255),
+        )
+        self.image.blit(pygame.transform.rotate(title_surface, 90), (cx - 2, cy + 1))
+        cx += self.title_width
         for cell_idx, cell in enumerate(self.cells):
             cell.process(self.scene.hass.state)
             if not cell.visible:
                 continue
             self.image.blit(
-                render_hass_tile_cell(self.cell_size, cell),
+                render_hass_tile_cell(
+                    (self.rect.width - self.title_width, self.row_height), cell
+                ),
                 (cx, cy),
             )
-            cy += self.cell_size[1] + 1
-        cy = by
-        cx += self.cell_size[0]
+            cy += self.row_height + 1
         self.dirty = 1
 
 
@@ -205,50 +152,6 @@ def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityGridTi
     elif cell.label_align == "center":
         label_x = cx + (label_surface.get_rect().width // 2)
     else:
-        label_x = cx
+        label_x = cx + 1
     surface.blit(label_surface, (label_x, -2))
-    return surface
-
-
-def render_hass_tile(
-    icon_codepoint: Optional[int] = None,
-    icon_color: Color = Color(255, 255, 255, 255),
-    icon_size: int = 11,
-    label_text: Optional[str] = None,
-    label_font_name: str = "fonts/bitstream-vera.ttf",
-    label_font_size: int = 10,
-    label_color: Color = Color(255, 255, 255, 255),
-    bg_color: Color = Color(0, 0, 0, 0),
-    outline_color: Color = Color(0, 0, 0, 255),
-    padding_right: int = 0,
-) -> Surface:
-    w, h = 0, 0
-    icon_surface = None
-    # logger.debug(f"render_hass_tile: state={state.dict()}")
-    if icon_codepoint:
-        icon_surface = render_material_icon(
-            icon_codepoint, icon_size, icon_color, outline_color
-        )
-        w += icon_surface.get_rect().width
-        h = icon_surface.get_rect().height
-    label_surface = None
-    if label_text:
-        label_surface = render_text(
-            label_text,
-            label_font_name,
-            label_font_size,
-            color_fg=label_color,
-            color_bg=bg_color,
-            color_outline=outline_color,
-        )
-        w += label_surface.get_rect().width
-        h = max(h, label_surface.get_rect().height)
-    surface = Surface((w + padding_right, h), SRCALPHA)
-    x = 0
-    if icon_surface is not None:
-        surface.blit(icon_surface, (x, 0))
-        x += icon_surface.get_rect().width
-    if label_surface is not None:
-        surface.blit(label_surface, (x, -1))
-        x += label_surface.get_rect().width
     return surface

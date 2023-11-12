@@ -146,7 +146,7 @@ class GridTileTemperatureOutside(HomeAssistantEntityGridTile):
         self.visible = True
         value = float(state.get("sensor.blink_back_temperature", 0))
         print(value)
-        self.label = f"{value:.0f}°C"
+        self.label = f"{value:.0f}°"
 
 
 class GridTileTemperatureLounge(HomeAssistantEntityGridTile):
@@ -155,7 +155,7 @@ class GridTileTemperatureLounge(HomeAssistantEntityGridTile):
     def process(self, state):
         self.visible = True
         value = float(state.get("sensor.hue_motion_sensor_1_temperature", 0))
-        self.label = f"{value:.0f}°C"
+        self.label = f"{value:.0f}°"
 
 
 class GridTileTemperatureKitchen(HomeAssistantEntityGridTile):
@@ -164,7 +164,7 @@ class GridTileTemperatureKitchen(HomeAssistantEntityGridTile):
     def process(self, state):
         self.visible = True
         value = float(state.get("sensor.kitchen_temperature_sensor_temperature", 0))
-        self.label = f"{value:.0f}°C"
+        self.label = f"{value:.0f}°"
 
 
 class GridTileTemperatureBedroom(HomeAssistantEntityGridTile):
@@ -173,7 +173,7 @@ class GridTileTemperatureBedroom(HomeAssistantEntityGridTile):
     def process(self, state):
         self.visible = True
         value = float(state.get("sensor.bedroom_temperature_sensor_temperature", 0))
-        self.label = f"{value:.0f}°C"
+        self.label = f"{value:.0f}°"
 
 
 # SWITCHES
