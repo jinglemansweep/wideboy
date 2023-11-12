@@ -43,13 +43,12 @@ class HomeAssistantEntityGridSprite(BaseSprite):
     rect: Rect
     image: Surface
     row_height: int = 14
-    title_width: int = 13
+    accent_bar_width: int = 4
 
     def __init__(
         self,
         scene: BaseScene,
         rect: Rect,
-        title: str = "",
         cells: List[HomeAssistantEntityGridTile] = [],
         alpha: int = 192,
         accent_color: Color = Color(255, 0, 0, 255),
@@ -57,7 +56,6 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         font_size: int = 12,
     ) -> None:
         super().__init__(scene, rect)
-        self.title = title
         self.cells = cells
         self.alpha = alpha
         self.accent_color = accent_color
@@ -84,26 +82,16 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.image.fill(Color(0, 0, 0, self.alpha))
         self.image.fill(
-            Color(0, 0, 0, self.alpha), (0, 0, self.title_width, self.rect.height)
+            self.accent_color, (0, 0, self.accent_bar_width, self.rect.height)
         )
-        self.image.fill(self.accent_color, (0, 0, self.title_width, 6))
-        cx, cy = 0, 0
-        title_surface = render_text(
-            self.title,
-            self.font_name,
-            self.font_size,
-            color_fg=Color(255, 255, 255, 255),
-            color_outline=Color(0, 0, 0, 255),
-        )
-        self.image.blit(pygame.transform.rotate(title_surface, 270), (cx - 1, cy + 7))
-        cx += self.title_width + 1
+        cx, cy = self.accent_bar_width, 0
         for cell_idx, cell in enumerate(self.cells):
             cell.process(self.scene.hass.state)
             if not cell.visible:
                 continue
             self.image.blit(
                 render_hass_tile_cell(
-                    (self.rect.width - self.title_width, self.row_height), cell
+                    (self.rect.width - self.accent_bar_width, self.row_height), cell
                 ),
                 (cx, cy),
             )
