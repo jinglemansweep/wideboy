@@ -32,7 +32,7 @@ class HomeAssistantEntityGridTile:
     label_color_fg: Color = Color(255, 255, 255, 255)
     label_color_outline: Color = Color(0, 0, 0, 255)
     label_font: str = "fonts/bitstream-vera.ttf"
-    label_font_size: int = 11
+    label_font_size: int = 12
     progress: float = 1.0
 
     def process(self, state) -> None:
@@ -42,8 +42,8 @@ class HomeAssistantEntityGridTile:
 class HomeAssistantEntityGridSprite(BaseSprite):
     rect: Rect
     image: Surface
-    row_height: int = 12
-    title_width: int = 11
+    row_height: int = 14
+    title_width: int = 13
 
     def __init__(
         self,
@@ -54,7 +54,7 @@ class HomeAssistantEntityGridSprite(BaseSprite):
         alpha: int = 192,
         accent_color: Color = Color(255, 0, 0, 255),
         font_name: str = "fonts/bitstream-vera.ttf",
-        font_size: int = 10,
+        font_size: int = 12,
     ) -> None:
         super().__init__(scene, rect)
         self.title = title
@@ -93,7 +93,7 @@ class HomeAssistantEntityGridSprite(BaseSprite):
             color_outline=Color(0, 0, 0, 255),
         )
         self.image.blit(pygame.transform.rotate(title_surface, 90), (cx - 2, cy + 1))
-        cx += self.title_width
+        cx += self.title_width + 1
         for cell_idx, cell in enumerate(self.cells):
             cell.process(self.scene.hass.state)
             if not cell.visible:
@@ -139,7 +139,7 @@ def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityGridTi
         ((size[0] - icon_width) * cell.progress, size[1]), SRCALPHA
     )
     label_background_surface.fill(cell.label_color_bg)
-    surface.blit(label_background_surface, (cx, cy))
+    surface.blit(label_background_surface, (cx + 3, cy))
     label_surface = render_text(
         cell.label,
         font_filename=cell.label_font,
@@ -152,6 +152,6 @@ def render_hass_tile_cell(size: Tuple[int, int], cell: HomeAssistantEntityGridTi
     elif cell.label_align == "center":
         label_x = cx + (label_surface.get_rect().width // 2)
     else:
-        label_x = cx + 1
+        label_x = cx + 4
     surface.blit(label_surface, (label_x, -2))
     return surface

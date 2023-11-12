@@ -145,8 +145,8 @@ class DefaultScene(BaseScene):
 
         GRID_ENTITY_ALPHA = 220
         GRID_ENTITY_TITLE_BRIGHTNESS = 96
-        GRID_ENTITY_WIDTH = 64
-        GRID_ENTITY_START_X = 256
+        GRID_ENTITY_WIDTH = 72
+        GRID_ENTITY_START_X = self.width - 560
         GRID_ENTITY_MARGIN_X = 0
 
         GRID_ENTITY_COLORS = [
@@ -243,7 +243,7 @@ class DefaultScene(BaseScene):
         self.hass_grid_network = HomeAssistantEntityGridSprite(
             self,
             Rect(grid_entity_cx, 0, GRID_ENTITY_WIDTH, 64),
-            title="Network",
+            title="Net",
             cells=hass_grid_network_entities,
             accent_color=GRID_ENTITY_COLORS[grid_entity_color_idx],
             alpha=GRID_ENTITY_ALPHA,
