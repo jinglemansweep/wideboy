@@ -3,21 +3,25 @@ import logging
 import pygame
 import random
 import time
+from typing import Tuple
 
 from .utils import render_text
+
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
+SCREEN_WIDTH = 256
+SCREEN_HEIGHT = 64
 
 pygame.init()
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SCALED)
 
 # Sprites
 
 FONT_FILENAME = "fonts/bitstream-vera.ttf"
-FONT_SIZE = 20
+FONT_SIZE = 12
 
 
 class CellStates(enum.Enum):
@@ -68,19 +72,33 @@ class CellRow(BaseSprite):
             cell.render()
             surface.blit(cell.image, (cx, 0))
             cx += cell.rect.width
+        print(([cell.evaluate() for cell in self.cells]))
         self.image = pygame.Surface((cx, self.height))
         self.image.blit(surface, (0, 0))
         self.rect = self.image.get_rect()
 
 
 class CellColumn(BaseSprite):
-    def __init__(self, x: int, y: int, width: int, height: int, cells: [BaseSprite]):
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        width: int,
+        height: int,
+        cells: [BaseSprite],
+        border_width: int = 1,
+        border_color: pygame.Color = pygame.Color(255, 255, 255),
+        border_padding: int = 2,
+    ):
         super().__init__()
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.cells = cells
+        self.border_width = border_width
+        self.border_color = border_color
+        self.border_padding = border_padding
         self.image = pygame.Surface((self.width, self.height))
         self.rect = self.image.get_rect()
         self.render()
@@ -90,15 +108,31 @@ class CellColumn(BaseSprite):
 
     def render(self):
         surface = pygame.Surface((self.width, self.height))
-        cy = 0
+        surface.fill(self.border_color), pygame.Rect(
+            0, 0, self.border_width, self.height
+        )
+        cx, cy = self.border_width + self.border_padding, 0
         for cell in self.cells:
             cell.update()
             cell.render()
-            surface.blit(cell.image, (0, cy))
-            cy += cell.rect.height
-        self.image = pygame.Surface((self.width, cy))
+            surface.blit(cell.image, (cx, cy))
+            cy += cell.rect.height if cell.rect.height > 1 else 0
+        surface.fill(
+            pygame.Color(0, 0, 0, 0),
+            pygame.Rect(
+                self.border_width + self.border_padding,
+                cy,
+                self.width,
+                self.height - cy,
+            ),
+        )
         self.image.blit(surface, (0, 0))
         self.rect = self.image.get_rect()
+
+    def evaluate(self):
+        test = lambda cell: cell.open_state == CellStates.OPEN
+        logger.debug(f"CellColumn.evaluate: {[test(cell) for cell in self.cells]}")
+        return any([test(cell) for cell in self.cells])
 
 
 class Cell(BaseSprite):
@@ -107,12 +141,13 @@ class Cell(BaseSprite):
         width: int,
         height: int,
         text: str,
-        font=FONT_FILENAME,
+        font: str = FONT_FILENAME,
         size: int = FONT_SIZE,
         color_fg=pygame.Color(255, 255, 255),
         color_bg=pygame.Color(0, 0, 0, 0),
         color_outline=None,
-        seed: int = 5,
+        padding: Tuple[int, int] = (0, -2),
+        seed_range: Tuple[int, int] = (1, 200),
     ):
         super().__init__()
         self.width = width
@@ -123,7 +158,8 @@ class Cell(BaseSprite):
         self.color_fg = color_fg
         self.color_bg = color_bg
         self.color_outline = color_outline
-        self.seed = seed
+        self.padding = padding
+        self.seed = random.randint(seed_range[0], seed_range[1])
         self.render()
 
     def render(self):
@@ -136,11 +172,10 @@ class Cell(BaseSprite):
             color_fg=self.color_fg,
             color_outline=self.color_outline,
         )
-        self.image.blit(text_surface, (0, 0))
+        self.image.blit(text_surface, (3 + self.padding[0], 0 + self.padding[1]))
 
     def evaluate(self):
-        current_second = time.localtime().tm_sec
-        return current_second % self.seed == 0
+        return time.time() % self.seed < self.seed / 2
 
 
 class Collapsible(BaseSprite):
@@ -151,8 +186,8 @@ class Collapsible(BaseSprite):
         width: int,
         height: int,
         sprite: BaseSprite,
-        width_closed: int = 2,
-        height_closed: int = 2,
+        width_closed: int = 0,
+        height_closed: int = 0,
         open: bool = True,
         collapse_style: CellCollapseStyle = CellCollapseStyle.HORIZONTAL,
         color_bg: pygame.Color = pygame.Color(0, 0, 0, 0),
@@ -223,6 +258,7 @@ class Collapsible(BaseSprite):
             self.image.fill(self.color_bg)
             self.rect = self.image.get_rect()
         if self.sprite.image is not None and self.image is not None:
+            self.sprite.update()
             self.image.blit(self.sprite.image, (0, 0))
             self.rect = self.image.get_rect()
 
@@ -245,12 +281,12 @@ class Collapsible(BaseSprite):
 
 clock = pygame.time.Clock()
 FPS = 50
-DEBUG = False
+DEBUG = True
 
 cell_group: CellGroup = CellGroup()
 
 CELL_WIDTH = 100
-CELL_HEIGHT = 50
+CELL_HEIGHT = 12
 
 colors = [
     pygame.Color(128, 0, 0, 255),
@@ -269,15 +305,14 @@ for i in range(9):
         CELL_WIDTH,
         CELL_HEIGHT,
         f"Content {i}",
-        color_bg=random.choice(colors),
-        seed=random.randint(5, 10),
+        color_bg=pygame.Color(0, 0, 0, 0),
     )
     contents.append(content)
 
 
 sprites = []
 
-for i in range(10):
+for i in range(1, 8):
     sprite = Collapsible(
         0 * CELL_WIDTH,
         0,
@@ -289,17 +324,46 @@ for i in range(10):
     )
     sprites.append(sprite)
 
-column1_sprites = sprites[0:5]
-column2_sprites = sprites[5:10]
+column_a_sprites = sprites[0:4]
+column_b_sprites = sprites[4:8]
 
-column1 = CellColumn(
-    0, 0, CELL_WIDTH, CELL_HEIGHT * len(column1_sprites), column1_sprites
+column_a = CellColumn(
+    0,
+    0,
+    CELL_WIDTH,
+    CELL_HEIGHT * len(column_a_sprites),
+    column_a_sprites,
+    border_color=colors[0],
 )
-column2 = CellColumn(
-    0, 0, CELL_WIDTH, CELL_HEIGHT * len(column2_sprites), column2_sprites
+column_a_collapse = Collapsible(
+    0,
+    0,
+    CELL_WIDTH,
+    CELL_HEIGHT * len(column_a_sprites),
+    column_a,
+    collapse_style=CellCollapseStyle.HORIZONTAL,
+    debug=DEBUG,
 )
 
-row = CellRow(0, 0, CELL_WIDTH * 2, 256, [column1, column2])
+column_b = CellColumn(
+    0,
+    0,
+    CELL_WIDTH,
+    CELL_HEIGHT * len(column_b_sprites),
+    column_b_sprites,
+    border_color=colors[1],
+)
+column_b_collapse = Collapsible(
+    0,
+    0,
+    CELL_WIDTH,
+    CELL_HEIGHT * len(column_b_sprites),
+    column_b,
+    collapse_style=CellCollapseStyle.HORIZONTAL,
+    debug=DEBUG,
+)
+
+row = CellRow(0, 0, CELL_WIDTH * 2, 256, [column_a_collapse, column_b_collapse])
 
 cell_group.add(row)
 
@@ -308,10 +372,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if pygame.K_0 <= event.key <= pygame.K_9:
-                numkey = event.key - pygame.K_0
-                sprites[numkey].toggle()
+        # if event.type == pygame.KEYDOWN:
+        #    if pygame.K_1 <= event.key <= pygame.K_8:
+        #        numkey = event.key - pygame.K_0 - 1
+        #        sprites[numkey].toggle()
 
     screen.fill((0, 0, 0, 255))
     cell_group.update()
