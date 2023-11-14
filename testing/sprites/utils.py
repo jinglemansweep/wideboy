@@ -9,7 +9,7 @@ def render_text(
     font_filename: str,
     font_size: int,
     color_fg: Color,
-    color_bg: Color = Color(0, 0, 0, 0),
+    color_bg: Optional[Color] = None,
     color_outline: Optional[Color] = None,
     antialias: bool = True,
 ) -> pygame.surface.Surface:
@@ -23,7 +23,8 @@ def render_text(
         ),
         SRCALPHA,
     )
-    surface_dest.fill(color_bg)
+    if color_bg is not None:
+        surface_dest.fill(color_bg)
     if color_outline:
         for offset in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
             surface_outline = font.render(
