@@ -45,7 +45,63 @@ class CellGroup(pygame.sprite.Group):
             cy += sprite.rect.height
 
 
-class CellContent(BaseSprite):
+class CellRow(BaseSprite):
+    def __init__(self, x: int, y: int, width: int, height: int, cells: [BaseSprite]):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.cells = cells
+        self.image = pygame.Surface((self.width, self.height))
+        self.rect = self.image.get_rect()
+        self.render()
+
+    def update(self):
+        self.render()
+
+    def render(self):
+        surface = pygame.Surface((self.width, self.height))
+        cx = 0
+        for cell in self.cells:
+            cell.update()
+            cell.render()
+            surface.blit(cell.image, (cx, 0))
+            cx += cell.rect.width
+        self.image = pygame.Surface((cx, self.height))
+        self.image.blit(surface, (0, 0))
+        self.rect = self.image.get_rect()
+
+
+class CellColumn(BaseSprite):
+    def __init__(self, x: int, y: int, width: int, height: int, cells: [BaseSprite]):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.cells = cells
+        self.image = pygame.Surface((self.width, self.height))
+        self.rect = self.image.get_rect()
+        self.render()
+
+    def update(self):
+        self.render()
+
+    def render(self):
+        surface = pygame.Surface((self.width, self.height))
+        cy = 0
+        for cell in self.cells:
+            cell.update()
+            cell.render()
+            surface.blit(cell.image, (0, cy))
+            cy += cell.rect.height
+        self.image = pygame.Surface((self.width, cy))
+        self.image.blit(surface, (0, 0))
+        self.rect = self.image.get_rect()
+
+
+class Cell(BaseSprite):
     def __init__(
         self,
         width: int,
@@ -87,7 +143,7 @@ class CellContent(BaseSprite):
         return current_second % self.seed == 0
 
 
-class Cell(BaseSprite):
+class Collapsible(BaseSprite):
     def __init__(
         self,
         x: int,
@@ -196,28 +252,6 @@ cell_group: CellGroup = CellGroup()
 CELL_WIDTH = 100
 CELL_HEIGHT = 50
 
-content_r = CellContent(
-    CELL_WIDTH,
-    CELL_HEIGHT,
-    "RED",
-    color_bg=pygame.Color(128, 0, 0, 255),
-    seed=random.randint(5, 10),
-)
-content_g = CellContent(
-    CELL_WIDTH,
-    CELL_HEIGHT,
-    "GREEN",
-    color_bg=pygame.Color(0, 128, 0, 255),
-    seed=random.randint(5, 10),
-)
-content_b = CellContent(
-    CELL_WIDTH,
-    CELL_HEIGHT,
-    "BLUE",
-    color_bg=pygame.Color(0, 0, 128, 255),
-    seed=random.randint(5, 10),
-)
-
 colors = [
     pygame.Color(128, 0, 0, 255),
     pygame.Color(0, 128, 0, 255),
@@ -231,7 +265,7 @@ colors = [
 contents = []
 
 for i in range(9):
-    content = CellContent(
+    content = Cell(
         CELL_WIDTH,
         CELL_HEIGHT,
         f"Content {i}",
@@ -243,8 +277,8 @@ for i in range(9):
 
 sprites = []
 
-for i in range(9):
-    sprite = Cell(
+for i in range(10):
+    sprite = Collapsible(
         0 * CELL_WIDTH,
         0,
         CELL_WIDTH,
@@ -255,8 +289,19 @@ for i in range(9):
     )
     sprites.append(sprite)
 
-for sprite in sprites:
-    cell_group.add(sprite)
+column1_sprites = sprites[0:5]
+column2_sprites = sprites[5:10]
+
+column1 = CellColumn(
+    0, 0, CELL_WIDTH, CELL_HEIGHT * len(column1_sprites), column1_sprites
+)
+column2 = CellColumn(
+    0, 0, CELL_WIDTH, CELL_HEIGHT * len(column2_sprites), column2_sprites
+)
+
+row = CellRow(0, 0, CELL_WIDTH * 2, 256, [column1, column2])
+
+cell_group.add(row)
 
 running = True
 while running:
