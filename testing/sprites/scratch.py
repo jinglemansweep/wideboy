@@ -20,45 +20,40 @@ class AnimatorState(enum.Enum):
 
 
 class Animator:
-    def __init__(self, range: Tuple[float, float], start: float, open=True, speed=1.0):
+    def __init__(self, range: Tuple[float, float], open=True, speed=1.0):
         self.range = range
-        self.start = start
         self.speed = speed
-        self._open = open
-        self._value = start
-
-    @property
-    def value(self):
-        return self._value
-
-    @property
-    def open(self):
-        return self._open
+        self.open = open
+        self.value = range[1] if open else range[0]
 
     @property
     def state(self):
-        if self._open:
+        if self.open:
             return (
                 AnimatorState.OPEN
-                if self._value == self.range[1]
+                if self.value == self.range[1]
                 else AnimatorState.OPENING
             )
         else:
             return (
                 AnimatorState.CLOSED
-                if self._value == self.range[0]
+                if self.value == self.range[0]
                 else AnimatorState.CLOSING
             )
 
     def toggle(self):
-        self._open = not self._open
+        self.open = not self.open
 
     def set(self, open: bool):
-        self._open = open
+        self.open = open
 
     def update(self):
-        value = self._value + self.speed if self.open else self._value - self.speed
-        self._value = clamp(value, self.range[0], self.range[1])
+        value = self.value + self.speed if self.open else self.value - self.speed
+        if value > self.range[1]:
+            value = self.range[1]
+        elif value < self.range[0]:
+            value = self.range[0]
+        self.value = value
 
     def __repr__(self):
         return f"Animator(value={self.value}, open={self.open}, state={self.state}, range={self.range}, speed={self.speed})"
@@ -89,7 +84,7 @@ class TileGridColumn(BaseSprite):
             cell.update(state)
 
     def __repr__(self):
-        return f"TileGridColumn(open={self.open}, cells={len(self.cells)}, visible={len(self.visible_cells)})"
+        return f"TileGridColumn(open={self.open}, cells={len(self.cells)})"
 
 
 class TileGrid(BaseSprite):
@@ -98,7 +93,7 @@ class TileGrid(BaseSprite):
     def __repr__(self):
         return f"TileGrid(columns={self.columns})"
 
-    def update(self, state):
+    def update(self, state=None):
         for column in self.columns:
             column.update(state)
 
@@ -108,25 +103,20 @@ class TileGrid(BaseSprite):
 
 class VerticalCollapseTileGridCell(TileGridCell):
     width: int = 100
-    height_animator: Animator = Animator(
-        range=(0.0, 12.0), start=12.0, open=True, speed=1.0
-    )
-
-    def update(self, state):
-        self.visible = state.get("visible", False)
-        self.height_animator.set(self.visible)
-        self.height_animator.update()
+    height: int = 12
+    height_animator: Animator
 
     @property
     def open(self):
         return self.height_animator.state != AnimatorState.CLOSED
 
+    def __repr__(self):
+        return f"VerticalCollapseTileGridCell(size=({self.width}x{self.height}), label='{self.label}', open={self.open}, height={self.height_animator.value})"
+
 
 class HorizontalCollapseTileGridColumn(TileGridColumn):
     height: int = 12
-    width_animator: Animator = Animator(
-        range=(2.0, 64.0), start=2.0, open=True, speed=1.0
-    )
+    width_animator: Animator = Animator(range=(2.0, 64.0), open=True, speed=1.0)
 
     def update(self, state):
         super().update(state)
@@ -134,15 +124,11 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
         self.width_animator.update()
 
     @property
-    def visible_cells(self):
-        return [cell for cell in self.cells if cell.visible]
-
-    @property
     def open(self):
         return any([cell.open for cell in self.cells])
 
     def __repr__(self):
-        return f"HorizontalCollapseTileGridColumn(open={self.open}, cells={len(self.cells)}, visible={len(self.visible_cells)})"
+        return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value} cells={len(self.cells)})"
 
 
 # CUSTOM TILES
@@ -151,12 +137,38 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
 class CellSpeedTestDownload(VerticalCollapseTileGridCell):
     label = "Download"
 
+    def __init__(self):
+        super().__init__()
+        self.height_animator = Animator(range=(2.0, 12.0), open=True, speed=1.0)
+
+    def update(self, state):
+        v = int(state.get("download", 0))
+        visible = v < 500
+        print("DV", visible, v)
+        self.height_animator.set(visible)
+        self.height_animator.update()
+
+
+class CellSpeedTestUpload(VerticalCollapseTileGridCell):
+    label = "Upload"
+
+    def __init__(self):
+        super().__init__()
+        self.height_animator = Animator(range=(2.0, 12.0), open=True, speed=1.0)
+
+    def update(self, state):
+        v = int(state.get("upload", 0))
+        visible = v < 500
+        print("UV", visible, v)
+        self.height_animator.set(visible)
+        self.height_animator.update()
+
 
 # CUSTOM COLUMNS
 
 
 class GridColumn1(HorizontalCollapseTileGridColumn):
-    cells = [CellSpeedTestDownload()]
+    cells = [CellSpeedTestDownload(), CellSpeedTestUpload()]
 
 
 # CUSTOM GRID
@@ -177,23 +189,19 @@ while True:
     now = datetime.now()
 
     if frame % 100 == 0:
-        state.update({"visible": not state.get("visible", False)})
+        state.update(
+            dict(download=random.randint(0, 1000), upload=random.randint(0, 1000))
+        )
         print(f"State: {state}")
+        time.sleep(1)
 
     my_tile_grid.update(state)
 
     col0 = my_tile_grid.columns[0]
-    cell = col0.cells[0]
+    cell0 = col0.cells[0]
+    cell1 = col0.cells[1]
 
-    if isinstance(col0, HorizontalCollapseTileGridColumn):
-        print(
-            f"COLUMN: value={col0.width_animator.value} state={col0.width_animator.state} open={col0.open}"
-        )
-
-    if isinstance(cell, VerticalCollapseTileGridCell):
-        print(
-            f"CELL: value={cell.height_animator.value} state={cell.height_animator.state} open={cell.open}"
-        )
+    print(f"COL0: {col0}, CELLS: {cell0}, {cell1}")
 
     time.sleep(0.05)
     frame += 1
