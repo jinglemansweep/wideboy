@@ -3,7 +3,7 @@ import logging
 import pygame
 import random
 import time
-from typing import Tuple
+from typing import List, Tuple
 
 from .utils import render_text
 
@@ -135,7 +135,7 @@ class Cell(BaseSprite):
         color_bg=pygame.Color(0, 0, 0, 0),
         color_outline=None,
         padding: Tuple[int, int] = (0, -2),
-        seed: int = 30,
+        evaluate_cb=lambda state: True,
     ):
         super().__init__()
         self.width = width
@@ -147,7 +147,7 @@ class Cell(BaseSprite):
         self.color_bg = color_bg
         self.color_outline = color_outline
         self.padding = padding
-        self.seed = seed
+        self.evaluate_cb = evaluate_cb
         self.render()
 
     def render(self):
@@ -165,8 +165,8 @@ class Cell(BaseSprite):
         self.image.blit(text_surface, (3 + self.padding[0], 0 + self.padding[1]))
 
     def evaluate(self):
-        x = int(time.time() % 60)
-        return 0 < x < self.seed
+        state = dict()
+        return self.evaluate_cb(state)
 
 
 class Collapsible(BaseSprite):
@@ -272,81 +272,55 @@ class Collapsible(BaseSprite):
 
 # Main Logic
 
-
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SCALED)
-
 
 clock = pygame.time.Clock()
 FPS = 50
 DEBUG = True
 
-cell_group: CellGroup = CellGroup()
+sprite_group: pygame.sprite.Group = pygame.sprite.Group()
 
 CELL_WIDTH = 64
 CELL_HEIGHT = 12
 
-COLUMN_COUNT = 4
+tile_speedtest_download = Cell(
+    CELL_WIDTH, CELL_HEIGHT, "Download", evaluate_cb=lambda v: True
+)
 
-colors = [
-    pygame.Color(128, 0, 0, 255),
-    pygame.Color(0, 128, 0, 255),
-    pygame.Color(0, 0, 128, 255),
-    pygame.Color(128, 128, 0, 255),
-    pygame.Color(128, 0, 128, 255),
-    pygame.Color(0, 128, 128, 255),
-    pygame.Color(128, 128, 128, 255),
-]
+column_tiles_internet = [tile_speedtest_download]
+columns = [column_tiles_internet]
 
-contents = []
-
-for i in range(9):
-    content = Cell(CELL_WIDTH, CELL_HEIGHT, f"Item {i}", seed=(i * 10) % 60)
-    contents.append(content)
-
-
-sprites = []
-for i in range(1, 20):
-    sprite = Collapsible(
-        0 * CELL_WIDTH,
-        0,
-        CELL_WIDTH,
-        CELL_HEIGHT,
-        contents[i % len(contents)],
-        collapse_style=CellCollapseStyle.VERTICAL,
-        debug=DEBUG,
-    )
-    sprites.append(sprite)
-
-columns = []
-
-for i in range(COLUMN_COUNT):
-    shuffled_sprites = sprites.copy()
-    random.shuffle(shuffled_sprites)
-    column_sprites = shuffled_sprites[:5]
-    cell_column = CellColumn(
+cell_columns = []
+for column in columns:
+    column_cells = []
+    for column_tile in column:
+        collapsible = Collapsible(
+            0,
+            0,
+            CELL_WIDTH,
+            CELL_HEIGHT,
+            column_tile,
+            collapse_style=CellCollapseStyle.VERTICAL,
+            debug=DEBUG,
+        )
+        column_cells.append(collapsible)
+    cell_column = CellColumn(0, 0, CELL_WIDTH, SCREEN_HEIGHT, column_cells)
+    cell_column_collapsible = Collapsible(
         0,
         0,
         CELL_WIDTH,
-        SCREEN_HEIGHT,
-        column_sprites,
-        border_color=colors[i % COLUMN_COUNT],
-    )
-    collapsible = Collapsible(
-        0,
-        0,
-        CELL_WIDTH,
-        CELL_HEIGHT * len(column_sprites),
+        CELL_HEIGHT * len(column_cells),
         cell_column,
         collapse_style=CellCollapseStyle.HORIZONTAL,
-        width_closed=3,
         debug=DEBUG,
     )
-    columns.append(collapsible)
+    cell_columns.append(cell_column_collapsible)
 
-row = CellRow(0, 0, CELL_WIDTH * len(columns), SCREEN_HEIGHT, columns)
+row = CellRow(0, 0, CELL_WIDTH * len(cell_columns), SCREEN_HEIGHT, cell_columns)
 
-cell_group.add(row)
+sprite_group.add(row)
+
 
 running = True
 while running:
@@ -359,8 +333,8 @@ while running:
         #        sprites[numkey].toggle()
 
     screen.fill((0, 0, 0, 255))
-    cell_group.update()
-    cell_group.draw(screen)
+    sprite_group.update()
+    sprite_group.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)
 pygame.quit()
