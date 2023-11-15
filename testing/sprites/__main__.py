@@ -15,9 +15,6 @@ logger.setLevel(logging.DEBUG)
 SCREEN_WIDTH = 256
 SCREEN_HEIGHT = 64
 
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SCALED)
-
 # Sprites
 
 FONT_FILENAME = "fonts/bitstream-vera.ttf"
@@ -88,7 +85,7 @@ class CellColumn(BaseSprite):
         cells: [BaseSprite],
         border_width: int = 1,
         border_color: pygame.Color = pygame.Color(255, 255, 255),
-        border_padding: int = 2,
+        border_padding: int = 0,
     ):
         super().__init__()
         self.x = x
@@ -108,8 +105,8 @@ class CellColumn(BaseSprite):
 
     def render(self):
         surface = pygame.Surface((self.width, self.height))
-        surface.fill(self.border_color), pygame.Rect(
-            0, 0, self.border_width, self.height
+        surface.fill(
+            self.border_color, pygame.Rect(0, 0, self.border_width, self.height)
         )
         cx, cy = self.border_width + self.border_padding, 0
         for cell in self.cells:
@@ -117,15 +114,6 @@ class CellColumn(BaseSprite):
             cell.render()
             surface.blit(cell.image, (cx, cy))
             cy += cell.rect.height if cell.rect.height > 1 else 0
-        surface.fill(
-            pygame.Color(0, 0, 0, 0),
-            pygame.Rect(
-                self.border_width + self.border_padding,
-                cy,
-                self.width,
-                self.height - cy,
-            ),
-        )
         self.image.blit(surface, (0, 0))
         self.rect = self.image.get_rect()
 
@@ -147,7 +135,7 @@ class Cell(BaseSprite):
         color_bg=pygame.Color(0, 0, 0, 0),
         color_outline=None,
         padding: Tuple[int, int] = (0, -2),
-        seed_range: Tuple[int, int] = (1, 200),
+        seed: int = 30,
     ):
         super().__init__()
         self.width = width
@@ -159,11 +147,13 @@ class Cell(BaseSprite):
         self.color_bg = color_bg
         self.color_outline = color_outline
         self.padding = padding
-        self.seed = random.randint(seed_range[0], seed_range[1])
+        self.seed = seed
         self.render()
 
     def render(self):
-        self.image = pygame.Surface((self.width, self.height))
+        self.image = pygame.Surface(
+            (self.width, self.height),
+        )
         self.image.fill(self.color_bg)
         text_surface = render_text(
             self.text,
@@ -175,7 +165,8 @@ class Cell(BaseSprite):
         self.image.blit(text_surface, (3 + self.padding[0], 0 + self.padding[1]))
 
     def evaluate(self):
-        return time.time() % self.seed < self.seed / 2
+        x = int(time.time() % 60)
+        return 0 < x < self.seed
 
 
 class Collapsible(BaseSprite):
@@ -190,6 +181,7 @@ class Collapsible(BaseSprite):
         height_closed: int = 0,
         open: bool = True,
         collapse_style: CellCollapseStyle = CellCollapseStyle.HORIZONTAL,
+        speed: int = 1,
         color_bg: pygame.Color = pygame.Color(0, 0, 0, 0),
         debug: bool = False,
     ):
@@ -205,6 +197,7 @@ class Collapsible(BaseSprite):
         self.sprite = sprite
         self.open_state = CellStates.OPEN if open else CellStates.CLOSED
         self.collapse_style = collapse_style
+        self.speed = speed
         self.color_bg = color_bg
         self.debug = debug
         self.image = pygame.Surface((self.width, self.height))
@@ -224,14 +217,14 @@ class Collapsible(BaseSprite):
         if self.open_state == CellStates.OPENING:
             # Open Vertical
             if self.collapse_style == CellCollapseStyle.VERTICAL:
-                self.height += 1
+                self.height += self.speed
                 if self.height >= self.height_open:
                     self.height = self.height_open
                 if self.height == self.height_open:
                     self.open_state = CellStates.OPEN
             # Open Horizontal
             if self.collapse_style == CellCollapseStyle.HORIZONTAL:
-                self.width += 1
+                self.width += self.speed
                 if self.width >= self.width_open:
                     self.width = self.width_open
                 if self.width == self.width_open:
@@ -239,14 +232,14 @@ class Collapsible(BaseSprite):
         elif self.open_state == CellStates.CLOSING:
             # Close Vertical
             if self.collapse_style == CellCollapseStyle.VERTICAL:
-                self.height -= 1
+                self.height -= self.speed
                 if self.height <= self.height_closed:
                     self.height = self.height_closed
                 if self.height == self.height_closed:
                     self.open_state = CellStates.CLOSED
             # Close Horizontal
             if self.collapse_style == CellCollapseStyle.HORIZONTAL:
-                self.width -= 1
+                self.width -= self.speed
                 if self.width <= self.width_closed:
                     self.width = self.width_closed
                 if self.width == self.width_closed:
@@ -279,14 +272,21 @@ class Collapsible(BaseSprite):
 
 # Main Logic
 
+
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SCALED)
+
+
 clock = pygame.time.Clock()
 FPS = 50
 DEBUG = True
 
 cell_group: CellGroup = CellGroup()
 
-CELL_WIDTH = 100
+CELL_WIDTH = 64
 CELL_HEIGHT = 12
+
+COLUMN_COUNT = 4
 
 colors = [
     pygame.Color(128, 0, 0, 255),
@@ -301,18 +301,12 @@ colors = [
 contents = []
 
 for i in range(9):
-    content = Cell(
-        CELL_WIDTH,
-        CELL_HEIGHT,
-        f"Content {i}",
-        color_bg=pygame.Color(0, 0, 0, 0),
-    )
+    content = Cell(CELL_WIDTH, CELL_HEIGHT, f"Item {i}", seed=(i * 10) % 60)
     contents.append(content)
 
 
 sprites = []
-
-for i in range(1, 8):
+for i in range(1, 20):
     sprite = Collapsible(
         0 * CELL_WIDTH,
         0,
@@ -324,46 +318,33 @@ for i in range(1, 8):
     )
     sprites.append(sprite)
 
-column_a_sprites = sprites[0:4]
-column_b_sprites = sprites[4:8]
+columns = []
 
-column_a = CellColumn(
-    0,
-    0,
-    CELL_WIDTH,
-    CELL_HEIGHT * len(column_a_sprites),
-    column_a_sprites,
-    border_color=colors[0],
-)
-column_a_collapse = Collapsible(
-    0,
-    0,
-    CELL_WIDTH,
-    CELL_HEIGHT * len(column_a_sprites),
-    column_a,
-    collapse_style=CellCollapseStyle.HORIZONTAL,
-    debug=DEBUG,
-)
+for i in range(COLUMN_COUNT):
+    shuffled_sprites = sprites.copy()
+    random.shuffle(shuffled_sprites)
+    column_sprites = shuffled_sprites[:5]
+    cell_column = CellColumn(
+        0,
+        0,
+        CELL_WIDTH,
+        SCREEN_HEIGHT,
+        column_sprites,
+        border_color=colors[i % COLUMN_COUNT],
+    )
+    collapsible = Collapsible(
+        0,
+        0,
+        CELL_WIDTH,
+        CELL_HEIGHT * len(column_sprites),
+        cell_column,
+        collapse_style=CellCollapseStyle.HORIZONTAL,
+        width_closed=3,
+        debug=DEBUG,
+    )
+    columns.append(collapsible)
 
-column_b = CellColumn(
-    0,
-    0,
-    CELL_WIDTH,
-    CELL_HEIGHT * len(column_b_sprites),
-    column_b_sprites,
-    border_color=colors[1],
-)
-column_b_collapse = Collapsible(
-    0,
-    0,
-    CELL_WIDTH,
-    CELL_HEIGHT * len(column_b_sprites),
-    column_b,
-    collapse_style=CellCollapseStyle.HORIZONTAL,
-    debug=DEBUG,
-)
-
-row = CellRow(0, 0, CELL_WIDTH * 2, 256, [column_a_collapse, column_b_collapse])
+row = CellRow(0, 0, CELL_WIDTH * len(columns), SCREEN_HEIGHT, columns)
 
 cell_group.add(row)
 
