@@ -73,39 +73,45 @@ class GridTileSpeedtestDownload(HomeAssistantEntityGridTile):
 
     def process(self, state):
         self.visible = True
-        value = float(state.get("sensor.speedtest_download_average", 0))
-        self.label = f"{value:.0f}M"
-        self.label_color_bg = number_to_color(
-            value / 900, colors=COLORS_TRAFFIC_LIGHT_DIM
-        )
-        self.progress = value / 900
-
+        try:
+            value = float(state.get("sensor.speedtest_download_average", 0))
+            self.label = f"{value:.0f}M"
+            self.label_color_bg = number_to_color(
+                value / 900, colors=COLORS_TRAFFIC_LIGHT_DIM
+            )
+            self.progress = value / 900
+        except Exception as ex:
+            self.visible = False
 
 class GridTileSpeedtestUpload(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_UPLOAD
 
     def process(self, state):
         self.visible = True
-        value = float(state.get("sensor.speedtest_upload_average", 0))
-        self.label = f"{value:.0f}M"
-        self.label_color_bg = number_to_color(
-            value / 900, colors=COLORS_TRAFFIC_LIGHT_DIM
-        )
-        self.progress = value / 900
-
+        try:
+            value = float(state.get("sensor.speedtest_upload_average", 0))
+            self.label = f"{value:.0f}M"
+            self.label_color_bg = number_to_color(
+                value / 900, colors=COLORS_TRAFFIC_LIGHT_DIM
+            ) 
+            self.progress = value / 900
+        except Exception as ex:
+            self.visible = False
 
 class GridTileSpeedtestPing(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_WIFI
 
     def process(self, state):
         self.visible = True
-        value = state.get("sensor.speedtest_ping_average", 0)
-        self.label = f"{value:.0f}ms"
-        self.label_color_bg = number_to_color(
-            value, [10, 20, 30], colors=COLORS_TRAFFIC_LIGHT_DIM, invert=True
-        )
-        self.progress = value / 30
-
+        try:
+            value = state.get("sensor.speedtest_ping_average", 0)
+            self.label = f"{value:.0f}ms"
+            self.label_color_bg = number_to_color(
+                value, [10, 20, 30], colors=COLORS_TRAFFIC_LIGHT_DIM, invert=True
+            )
+            self.progress = value / 30
+        except Exception as ex:
+            self.visible = False
 
 # SENSORS
 
