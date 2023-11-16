@@ -45,6 +45,4 @@ class GridColumn2(HorizontalCollapseTileGridColumn):
 
 
 class CustomTileGrid(TileGrid):
-    x = 0
-    y = 0
     columns = [GridColumn1(), GridColumn2()]

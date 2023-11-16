@@ -84,6 +84,9 @@ class Animator:
 
 # TILE GRID
 
+TILE_GRID_CELL_WIDTH = 64
+TILE_GRID_CELL_HEIGHT = 12
+
 
 class BaseGroup(pygame.sprite.Group):
     pass
@@ -93,37 +96,34 @@ class BaseSprite(pygame.sprite.Sprite):
     pass
 
 
-# should be a pygame.sprite.Sprite
 class TileGridCell(BaseSprite):
     color_background: pygame.Color = pygame.Color(0, 0, 0, 0)
-    width: int = 64
-    height: int = 12
+    width: int = TILE_GRID_CELL_WIDTH
+    height: int = TILE_GRID_CELL_HEIGHT
     visible: bool = True
     label: str = ""
 
     def __init__(self):
         super().__init__()
-        self.setup_surface()
-
-    def update(self, state):
-        self.render(state)
-
-    def setup_surface(self):
         self.image = pygame.Surface((self.width, self.height))
         self.image.fill(self.color_background)
         self.rect = self.image.get_rect()
 
+    def update(self, state):
+        self.render(state)
+
     def render(self, state):
-        self.setup_surface()
+        self.image = pygame.Surface((self.rect.width, self.rect.height))
+        self.image.fill(self.color_background)
+        self.rect = self.image.get_rect()
 
     def __repr__(self):
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
 
 
-# should be a pygame.sprite.Group
 class TileGridColumn(BaseSprite):
-    width: int = 64
-    height: int = 1
+    width: int = TILE_GRID_CELL_WIDTH
+    height: int = 0
     cells: List[TileGridCell]
 
     def __init__(self):
@@ -148,7 +148,6 @@ class TileGridColumn(BaseSprite):
         return f"TileGridColumn(open={self.open}, cells={len(self.cells)})"
 
 
-# should be a pygame.sprite.Group
 class TileGrid(BaseSprite):
     columns: List[TileGridColumn]
     state: Dict = dict()
@@ -170,7 +169,9 @@ class TileGrid(BaseSprite):
         mw = sum([column.image.get_width() for column in self.columns])
         mh = max([column.image.get_width() for column in self.columns])
         self.image = pygame.Surface((mw, mh))
-        self.image.fill((0, 0, 0, 255))
+        self.rect.width = mw
+        self.rect.height = mh
+        self.image.fill((0, 0, 0, 0))
         for column in self.columns:
             column.update(self.state)
             self.image.blit(column.image, (cw, 0))
@@ -181,12 +182,12 @@ class TileGrid(BaseSprite):
 
 
 class VerticalCollapseTileGridCell(TileGridCell):
-    width: int = 64
+    width: int = TILE_GRID_CELL_WIDTH
     height_animator: Animator
 
     def __init__(self):
         super().__init__()
-        self.height_animator = Animator(range=(2.0, 12.0), open=True, speed=1.0)
+        self.height_animator = Animator(range=(0.0, 12.0), open=True, speed=1.0)
 
     def update(self, state):
         self.height_animator.update()
@@ -202,7 +203,7 @@ class VerticalCollapseTileGridCell(TileGridCell):
 
 
 class HorizontalCollapseTileGridColumn(TileGridColumn):
-    height: int = 12
+    height: int = TILE_GRID_CELL_HEIGHT
     width_animator: Animator
 
     def __init__(self):

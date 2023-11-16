@@ -56,6 +56,7 @@ while running:
     screen.fill((0, 0, 0, 255))
     sprite_group.update()
     sprite_group.draw(screen)
+    # tile_grid.rect.topright = (SCREEN_WIDTH, 0)
     pygame.display.flip()
     clock.tick(FPS)
     if frame % 100 == 0:
