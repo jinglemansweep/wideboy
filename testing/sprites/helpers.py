@@ -1,4 +1,6 @@
 import enum
+import logging
+import pygame
 import random
 import time
 from datetime import datetime
@@ -25,6 +27,10 @@ from typing import Callable, List, Dict, Tuple, cast
 # | | +---------------+ | | +---------------+ |          |
 # | +-------------------+ +-------------------+          |
 # +------------------------------------------------------+
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
 
 
 class AnimatorState(enum.Enum):
@@ -77,60 +83,113 @@ class Animator:
 # TILE GRID
 
 
-class BaseSprite:
+class BaseGroup(pygame.sprite.Group):
     pass
 
 
-class BaseGroup:
+class BaseSprite(pygame.sprite.Sprite):
     pass
 
 
 # should be a pygame.sprite.Sprite
 class TileGridCell(BaseSprite):
-    width: int
-    height: int
+    width: int = 64
+    height: int = 12
     visible: bool = True
     label: str = ""
+
+    def __init__(self, x=0, y=0):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill((0, random.randint(1, 32), 32))
+        self.rect = self.image.get_rect()
+
+    def update(self, state):
+        self.render(state)
+
+    def render(self, state):
+        self.image = pygame.Surface((self.rect.width, self.rect.height))
+        self.image.fill((0, random.randint(1, 32), 32))
+        self.rect = self.image.get_rect()
 
     def __repr__(self):
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
 
 
 # should be a pygame.sprite.Group
-class TileGridColumn(BaseGroup):
-    cells: List[TileGridCell] = []
+class TileGridColumn(BaseSprite):
+    width: int = 64
+    height: int = 1
+    cells: List[TileGridCell]
+
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((self.width, self.height))
+        self.rect = self.image.get_rect()
 
     def update(self, state):
+        self.render(state)
+
+    def render(self, state):
+        ch = 0
+        mh = sum([cell.image.get_height() for cell in self.cells])
+        self.image = pygame.Surface((self.rect.width, mh))
+        self.image.fill((0, 0, 0))
         for cell in self.cells:
             cell.update(state)
+            self.image.blit(cell.image, (0, ch))
+            ch += cell.image.get_height()
 
     def __repr__(self):
         return f"TileGridColumn(open={self.open}, cells={len(self.cells)})"
 
 
 # should be a pygame.sprite.Group
-class TileGrid(BaseGroup):
-    columns: List[TileGridColumn] = []
+class TileGrid(BaseSprite):
+    columns: List[TileGridColumn]
     state: Dict = dict()
 
-    def __init__(self, state):
+    def __init__(self, state, x=0, y=0):
+        super().__init__()
         self.state = state
+        self.image = pygame.Surface((0, 0))
+        self.rect = self.image.get_rect()
 
     def __repr__(self):
-        return f"TileGrid(columns={self.columns})"
+        return f"TileGrid(columns={self.groups})"
 
     def update(self):
+        self.render()
+
+    def render(self):
+        cw = 0
+        mw = sum([column.image.get_width() for column in self.columns])
+        mh = max([column.image.get_width() for column in self.columns])
+        self.image = pygame.Surface((mw, mh))
+        self.image.fill((0, 0, 0, 255))
         for column in self.columns:
             column.update(self.state)
+            self.image.blit(column.image, (cw, 0))
+            cw += column.image.get_width()
 
 
 # CUSTOM SUBCLASSES
 
 
 class VerticalCollapseTileGridCell(TileGridCell):
-    width: int = 100
-    height: int = 12
+    width: int = 64
     height_animator: Animator
+
+    def __init__(self):
+        super().__init__()
+        self.height_animator = Animator(range=(2.0, 12.0), open=True, speed=1.0)
+
+    def update(self, state):
+        self.height_animator.update()
+        self.rect.height = self.height_animator.value
+        super().update(state)
 
     @property
     def open(self):
@@ -142,12 +201,17 @@ class VerticalCollapseTileGridCell(TileGridCell):
 
 class HorizontalCollapseTileGridColumn(TileGridColumn):
     height: int = 12
-    width_animator: Animator = Animator(range=(2.0, 64.0), open=True, speed=1.0)
+    width_animator: Animator
+
+    def __init__(self):
+        super().__init__()
+        self.width_animator = Animator(range=(2.0, 64.0), open=True, speed=1.0)
 
     def update(self, state):
-        super().update(state)
         self.width_animator.set(self.open)
         self.width_animator.update()
+        self.rect.width = self.width_animator.value
+        super().update(state)
 
     @property
     def open(self):
@@ -168,10 +232,10 @@ class CellSpeedTestDownload(VerticalCollapseTileGridCell):
         self.height_animator = Animator(range=(2.0, 12.0), open=True, speed=1.0)
 
     def update(self, state):
+        super().update(state)
         v = int(state.get("download", 0))
-        open = v < 500
+        open = v > 500
         self.height_animator.set(open)
-        self.height_animator.update()
 
 
 class CellSpeedTestUpload(VerticalCollapseTileGridCell):
@@ -182,17 +246,21 @@ class CellSpeedTestUpload(VerticalCollapseTileGridCell):
         self.height_animator = Animator(range=(2.0, 12.0), open=True, speed=1.0)
 
     def update(self, state):
+        super().update(state)
         v = int(state.get("upload", 0))
-        open = v < 500
+        open = v > 500
         self.height_animator.set(open)
-        self.height_animator.update()
 
 
 # CUSTOM COLUMNS
 
 
 class GridColumn1(HorizontalCollapseTileGridColumn):
-    cells = [CellSpeedTestDownload(), CellSpeedTestUpload()]
+    cells = [CellSpeedTestUpload()]
+
+
+class GridColumn2(HorizontalCollapseTileGridColumn):
+    cells = [CellSpeedTestDownload()]
 
 
 # CUSTOM GRID
@@ -201,31 +269,4 @@ class GridColumn1(HorizontalCollapseTileGridColumn):
 class MyTileGrid(TileGrid):
     x = 0
     y = 0
-    columns = [GridColumn1()]
-
-
-state: Dict = dict()
-frame = 0
-
-my_tile_grid = MyTileGrid(state)
-
-while True:
-    now = datetime.now()
-
-    if frame % 100 == 0:
-        state.update(
-            dict(download=random.randint(0, 1000), upload=random.randint(0, 1000))
-        )
-        print(f"State: {state}")
-        time.sleep(1)
-
-    my_tile_grid.update()
-
-    col0 = my_tile_grid.columns[0]
-    cell0 = col0.cells[0]
-    cell1 = col0.cells[1]
-
-    print(f"COL0: {col0}, CELLS: {cell0}, {cell1}")
-
-    time.sleep(0.05)
-    frame += 1
+    columns = [GridColumn1(), GridColumn2()]
