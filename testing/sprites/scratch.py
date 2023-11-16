@@ -4,12 +4,14 @@ import time
 from datetime import datetime
 from typing import Callable, List, Dict, Tuple, cast
 
-# COLLAPSIBLE MIXINS
+# NOTES
 
-
-def clamp(value, min_value, max_value):
-    """Clamp value to the range [min_value, max_value]."""
-    return max(min_value, min(value, max_value))
+# TODO
+#
+# - Use pygame.sprite.Groups in TileGridColumn to position TileGridCells
+# - Use pygame.sprite.Group in TileGrid to position TileGridColumns
+# - Add these to another group for blitting
+# - Only TileGrid should have a surface that gets blitted from the composite group
 
 
 class AnimatorState(enum.Enum):
