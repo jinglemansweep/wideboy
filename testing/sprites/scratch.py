@@ -128,7 +128,7 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
         return any([cell.open for cell in self.cells])
 
     def __repr__(self):
-        return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value} cells={len(self.cells)})"
+        return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value}, cells={len(self.cells)})"
 
 
 # CUSTOM TILES
@@ -143,9 +143,8 @@ class CellSpeedTestDownload(VerticalCollapseTileGridCell):
 
     def update(self, state):
         v = int(state.get("download", 0))
-        visible = v < 500
-        print("DV", visible, v)
-        self.height_animator.set(visible)
+        open = v < 500
+        self.height_animator.set(open)
         self.height_animator.update()
 
 
@@ -158,9 +157,8 @@ class CellSpeedTestUpload(VerticalCollapseTileGridCell):
 
     def update(self, state):
         v = int(state.get("upload", 0))
-        visible = v < 500
-        print("UV", visible, v)
-        self.height_animator.set(visible)
+        open = v < 500
+        self.height_animator.set(open)
         self.height_animator.update()
 
 
