@@ -6,20 +6,14 @@ import random
 import time
 from typing import Dict, List, Tuple
 
-from .helpers import (
-    Animator,
-    AnimatorState,
-    TileGrid,
-    TileGridColumn,
-    TileGridCell,
-    MyTileGrid,
-)
+from .tiles import CustomTileGrid
 from .utils import render_text
-
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
+
+# Setup
 
 SCREEN_WIDTH = 256
 SCREEN_HEIGHT = 64
@@ -27,7 +21,8 @@ SCREEN_HEIGHT = 64
 FONT_FILENAME = "fonts/bitstream-vera.ttf"
 FONT_SIZE = 12
 
-# Sprites
+
+# Main Loop
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SCALED)
@@ -36,13 +31,14 @@ clock = pygame.time.Clock()
 FPS = 50
 DEBUG = True
 
-
 frame = 0
 state: Dict = dict()
 running = True
 
+
+tile_grid = CustomTileGrid(state)
+
 sprite_group: pygame.sprite.Group = pygame.sprite.Group()
-tile_grid = MyTileGrid(state)
 sprite_group.add(tile_grid)
 
 while running:

@@ -32,6 +32,8 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
+# ANIMATION HELPERS
+
 
 class AnimatorState(enum.Enum):
     OPEN = 1
@@ -93,26 +95,26 @@ class BaseSprite(pygame.sprite.Sprite):
 
 # should be a pygame.sprite.Sprite
 class TileGridCell(BaseSprite):
+    color_background: pygame.Color = pygame.Color(0, 0, 0, 0)
     width: int = 64
     height: int = 12
     visible: bool = True
     label: str = ""
 
-    def __init__(self, x=0, y=0):
+    def __init__(self):
         super().__init__()
-        self.x = x
-        self.y = y
-        self.image = pygame.Surface((self.width, self.height))
-        self.image.fill((0, random.randint(1, 32), 32))
-        self.rect = self.image.get_rect()
+        self.setup_surface()
 
     def update(self, state):
         self.render(state)
 
-    def render(self, state):
-        self.image = pygame.Surface((self.rect.width, self.rect.height))
-        self.image.fill((0, random.randint(1, 32), 32))
+    def setup_surface(self):
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill(self.color_background)
         self.rect = self.image.get_rect()
+
+    def render(self, state):
+        self.setup_surface()
 
     def __repr__(self):
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
@@ -219,54 +221,3 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
 
     def __repr__(self):
         return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value}, cells={len(self.cells)})"
-
-
-# CUSTOM TILES
-
-
-class CellSpeedTestDownload(VerticalCollapseTileGridCell):
-    label = "Download"
-
-    def __init__(self):
-        super().__init__()
-        self.height_animator = Animator(range=(2.0, 12.0), open=True, speed=1.0)
-
-    def update(self, state):
-        super().update(state)
-        v = int(state.get("download", 0))
-        open = v > 500
-        self.height_animator.set(open)
-
-
-class CellSpeedTestUpload(VerticalCollapseTileGridCell):
-    label = "Upload"
-
-    def __init__(self):
-        super().__init__()
-        self.height_animator = Animator(range=(2.0, 12.0), open=True, speed=1.0)
-
-    def update(self, state):
-        super().update(state)
-        v = int(state.get("upload", 0))
-        open = v > 500
-        self.height_animator.set(open)
-
-
-# CUSTOM COLUMNS
-
-
-class GridColumn1(HorizontalCollapseTileGridColumn):
-    cells = [CellSpeedTestUpload()]
-
-
-class GridColumn2(HorizontalCollapseTileGridColumn):
-    cells = [CellSpeedTestDownload()]
-
-
-# CUSTOM GRID
-
-
-class MyTileGrid(TileGrid):
-    x = 0
-    y = 0
-    columns = [GridColumn1(), GridColumn2()]
