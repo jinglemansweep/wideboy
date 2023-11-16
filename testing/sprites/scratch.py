@@ -13,6 +13,19 @@ from typing import Callable, List, Dict, Tuple, cast
 # - Add these to another group for blitting
 # - Only TileGrid should have a surface that gets blitted from the composite group
 
+# +------------------------------------------------------+
+# | TileGrid                                             |
+# | +-------------------+ +-------------------+          |
+# | | TileGridColumn    | | TileGridColumn    |          |
+# | | +---------------+ | | +---------------+ |          |
+# | | | TileGridCell  | | | | TileGridCell  | |          |
+# | | +---------------+ | | +---------------+ |          |
+# | | +---------------+ | | +---------------+ |          |
+# | | | TileGridCell  | | | | TileGridCell  | |          |
+# | | +---------------+ | | +---------------+ |          |
+# | +-------------------+ +-------------------+          |
+# +------------------------------------------------------+
+
 
 class AnimatorState(enum.Enum):
     OPEN = 1
@@ -68,6 +81,11 @@ class BaseSprite:
     pass
 
 
+class BaseGroup:
+    pass
+
+
+# should be a pygame.sprite.Sprite
 class TileGridCell(BaseSprite):
     width: int
     height: int
@@ -78,7 +96,8 @@ class TileGridCell(BaseSprite):
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
 
 
-class TileGridColumn(BaseSprite):
+# should be a pygame.sprite.Group
+class TileGridColumn(BaseGroup):
     cells: List[TileGridCell] = []
 
     def update(self, state):
@@ -89,15 +108,20 @@ class TileGridColumn(BaseSprite):
         return f"TileGridColumn(open={self.open}, cells={len(self.cells)})"
 
 
-class TileGrid(BaseSprite):
+# should be a pygame.sprite.Group
+class TileGrid(BaseGroup):
     columns: List[TileGridColumn] = []
+    state: Dict = dict()
+
+    def __init__(self, state):
+        self.state = state
 
     def __repr__(self):
         return f"TileGrid(columns={self.columns})"
 
-    def update(self, state=None):
+    def update(self):
         for column in self.columns:
-            column.update(state)
+            column.update(self.state)
 
 
 # CUSTOM SUBCLASSES
@@ -183,7 +207,7 @@ class MyTileGrid(TileGrid):
 state: Dict = dict()
 frame = 0
 
-my_tile_grid = MyTileGrid()
+my_tile_grid = MyTileGrid(state)
 
 while True:
     now = datetime.now()
@@ -195,7 +219,7 @@ while True:
         print(f"State: {state}")
         time.sleep(1)
 
-    my_tile_grid.update(state)
+    my_tile_grid.update()
 
     col0 = my_tile_grid.columns[0]
     cell0 = col0.cells[0]
