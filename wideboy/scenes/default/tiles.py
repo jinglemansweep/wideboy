@@ -154,7 +154,6 @@ class GridTileTemperatureOutside(HomeAssistantEntityGridTile):
     def process(self, state):
         self.visible = True
         value = float(state.get("sensor.blink_back_temperature", 0))
-        print(value)
         self.label = f"{value:.0f}°"
 
 
