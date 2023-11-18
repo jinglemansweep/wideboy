@@ -22,6 +22,7 @@ from wideboy.scenes.default.tiles import (
     GridTileVPN,
     GridTileTransmission,
     GridTileDS920Plus,
+    GridTileLoungeAirPM2,
     GridTileSpeedtestDownload,
     GridTileSpeedtestUpload,
     GridTileSpeedtestPing,
@@ -212,6 +213,7 @@ class DefaultScene(BaseScene):
         # SENSORS
 
         hass_grid_sensors_entities = [
+            GridTileLoungeAirPM2(),
             GridTileDS920Plus(),
         ]
 

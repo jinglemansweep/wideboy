@@ -110,6 +110,15 @@ class GridTileSpeedtestPing(HomeAssistantEntityGridTile):
 # SENSORS
 
 
+class GridTileLoungeAirPM2(HomeAssistantEntityGridTile):
+    icon = MaterialIcons.MDI_AC_UNIT
+
+    def process(self, state):
+        value = int(state.get("sensor.core_300s_pm2_5", 0))
+        self.visible = value > 0
+        self.label = f"{value}"
+
+
 class GridTileBinCollection(HomeAssistantEntityGridTile):
     icon = MaterialIcons.MDI_DELETE
 
