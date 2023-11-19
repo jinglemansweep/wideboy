@@ -4,7 +4,7 @@ import pygame
 import random
 import time
 from datetime import datetime
-from typing import Callable, List, Dict, Tuple, cast
+from typing import Any, Callable, List, Dict, Tuple, Type, TypeVar, cast
 
 # NOTES
 
@@ -103,14 +103,15 @@ class TileGridCell(BaseSprite):
     visible: bool = True
     label: str = ""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, state):
+        super().__init__(state)
+        self.state = state
         self.image = pygame.Surface((self.width, self.height))
         self.image.fill(self.color_background)
         self.rect = self.image.get_rect()
 
-    def update(self, state):
-        self.render(state)
+    def update(self):
+        self.render(self.state)
 
     def render(self, state):
         self.image = pygame.Surface((self.rect.width, self.rect.height))
@@ -124,23 +125,25 @@ class TileGridCell(BaseSprite):
 class TileGridColumn(BaseSprite):
     width: int = TILE_GRID_CELL_WIDTH
     height: int = 0
-    cells: List[TileGridCell]
+    cells: List[Any]
 
-    def __init__(self):
+    def __init__(self, state):
         super().__init__()
+        self.state = state
+        self.cells_inst = [cell(self.state) for cell in self.cells]
         self.image = pygame.Surface((self.width, self.height))
         self.rect = self.image.get_rect()
 
-    def update(self, state):
-        self.render(state)
+    def update(self):
+        self.render()
 
-    def render(self, state):
+    def render(self):
         ch = 0
-        mh = sum([cell.image.get_height() for cell in self.cells])
+        mh = sum([cell.image.get_height() for cell in self.cells_inst])
         self.image = pygame.Surface((self.rect.width, mh))
         self.image.fill((0, 0, 0))
-        for cell in self.cells:
-            cell.update(state)
+        for cell in self.cells_inst:
+            cell.update()
             self.image.blit(cell.image, (0, ch))
             ch += cell.image.get_height()
 
@@ -149,12 +152,13 @@ class TileGridColumn(BaseSprite):
 
 
 class TileGrid(BaseSprite):
-    columns: List[TileGridColumn]
+    columns: List[Any]
     state: Dict = dict()
 
     def __init__(self, state, x=0, y=0):
         super().__init__()
         self.state = state
+        self.columns_inst = [column(self.state) for column in self.columns]
         self.image = pygame.Surface((0, 0))
         self.rect = self.image.get_rect()
 
@@ -166,14 +170,14 @@ class TileGrid(BaseSprite):
 
     def render(self):
         cw = 0
-        mw = sum([column.image.get_width() for column in self.columns])
-        mh = max([column.image.get_width() for column in self.columns])
+        mw = sum([column.image.get_width() for column in self.columns_inst])
+        mh = max([column.image.get_width() for column in self.columns_inst])
         self.image = pygame.Surface((mw, mh))
         self.rect.width = mw
         self.rect.height = mh
         self.image.fill((0, 0, 0, 0))
-        for column in self.columns:
-            column.update(self.state)
+        for column in self.columns_inst:
+            column.update()
             self.image.blit(column.image, (cw, 0))
             cw += column.image.get_width()
 
@@ -185,14 +189,14 @@ class VerticalCollapseTileGridCell(TileGridCell):
     width: int = TILE_GRID_CELL_WIDTH
     height_animator: Animator
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, state):
+        super().__init__(state)
         self.height_animator = Animator(range=(0.0, 12.0), open=True, speed=1.0)
 
-    def update(self, state):
+    def update(self):
         self.height_animator.update()
         self.rect.height = self.height_animator.value
-        super().update(state)
+        super().update()
 
     @property
     def open(self):
@@ -206,15 +210,15 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
     height: int = TILE_GRID_CELL_HEIGHT
     width_animator: Animator
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, state):
+        super().__init__(state)
         self.width_animator = Animator(range=(2.0, 64.0), open=True, speed=1.0)
 
-    def update(self, state):
+    def update(self):
         self.width_animator.set(self.open)
         self.width_animator.update()
         self.rect.width = self.width_animator.value
-        super().update(state)
+        super().update()
 
     @property
     def open(self):

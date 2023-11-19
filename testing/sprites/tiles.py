@@ -12,9 +12,9 @@ class CellSpeedTestDownload(VerticalCollapseTileGridCell):
     label = "Download"
     color_background = pygame.Color(32, 0, 0, 255)
 
-    def update(self, state):
-        super().update(state)
-        v = int(state.get("download", 0))
+    def update(self):
+        super().update()
+        v = int(self.state.get("download", 0))
         open = v > 500
         self.height_animator.set(open)
 
@@ -23,9 +23,9 @@ class CellSpeedTestUpload(VerticalCollapseTileGridCell):
     label = "Upload"
     color_background = pygame.Color(0, 32, 0, 255)
 
-    def update(self, state):
-        super().update(state)
-        v = int(state.get("upload", 0))
+    def update(self):
+        super().update()
+        v = int(self.state.get("upload", 0))
         open = v > 500
         self.height_animator.set(open)
 
@@ -34,15 +34,15 @@ class CellSpeedTestUpload(VerticalCollapseTileGridCell):
 
 
 class GridColumn1(HorizontalCollapseTileGridColumn):
-    cells = [CellSpeedTestUpload(), CellSpeedTestDownload()]
+    cells = [CellSpeedTestUpload, CellSpeedTestDownload]
 
 
 class GridColumn2(HorizontalCollapseTileGridColumn):
-    cells = [CellSpeedTestDownload()]
+    cells = [CellSpeedTestDownload]
 
 
 # CUSTOM GRID
 
 
 class CustomTileGrid(TileGrid):
-    columns = [GridColumn1(), GridColumn2()]
+    columns = [GridColumn1, GridColumn2]
