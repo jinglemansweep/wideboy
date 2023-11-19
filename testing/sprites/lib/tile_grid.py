@@ -4,7 +4,8 @@ import pygame
 import random
 import time
 from datetime import datetime
-from typing import Any, Callable, List, Dict, Tuple, Type, TypeVar, cast
+from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, cast
+
 
 # NOTES
 
@@ -31,6 +32,15 @@ from typing import Any, Callable, List, Dict, Tuple, Type, TypeVar, cast
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
+
+# CONSTANTS
+
+FONT_FILENAME = "fonts/bitstream-vera.ttf"
+FONT_SIZE = 11
+
+TILE_GRID_CELL_WIDTH = 64
+TILE_GRID_CELL_HEIGHT = 12
+
 
 # ANIMATION HELPERS
 
@@ -82,10 +92,63 @@ class Animator:
         return f"Animator(value={self.value}, open={self.open}, state={self.state}, range={self.range}, speed={self.speed})"
 
 
-# TILE GRID
+# STYLING
 
-TILE_GRID_CELL_WIDTH = 64
-TILE_GRID_CELL_HEIGHT = 12
+
+class CellStyle:
+    alpha: int = 255
+    color_background: pygame.Color = pygame.Color(32, 32, 32, 255)
+    color_border: pygame.Color = pygame.Color(0, 0, 0, 0)
+    color_text: pygame.Color = pygame.Color(255, 255, 255, 255)
+    color_text_outline: pygame.Color = pygame.Color(0, 0, 0, 255)
+    text_font: str = FONT_FILENAME
+    text_size: int = FONT_SIZE
+    text_padding: Tuple[int, int] = (0, 0)
+    text_outline: bool = True
+    text_antialias: bool = True
+
+
+# HELPER FUNCTIONS
+
+
+def render_text(
+    text: str,
+    style: CellStyle,
+) -> pygame.surface.Surface:
+    font = pygame.font.Font(style.text_font, style.text_size)
+    surface_orig = font.render(text, style.text_antialias, style.color_text)
+    padding_outline = 2 if style.text_outline else 0
+    surface_dest = pygame.Surface(
+        (
+            surface_orig.get_rect().width + padding_outline,
+            surface_orig.get_rect().height + padding_outline,
+        )
+    )
+    if style.color_background is not None:
+        surface_dest.fill(style.color_background)
+    text_padding_adj = (style.text_padding[0], style.text_padding[1] - 3)
+    if style.text_outline:
+        for offset in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
+            surface_outline = font.render(
+                text, style.text_antialias, style.color_text_outline
+            )
+            surface_dest.blit(
+                surface_outline,
+                (
+                    text_padding_adj[0] + offset[0] + 1,
+                    text_padding_adj[1] + offset[1] + 1,
+                ),
+            )
+        surface_dest.blit(
+            surface_orig, (text_padding_adj[0] + 1, text_padding_adj[1] + 1)
+        )
+    else:
+        surface_dest.blit(surface_orig, text_padding_adj)
+    surface_dest.set_alpha(style.alpha)
+    return surface_dest
+
+
+# TILE GRID
 
 
 class BaseGroup(pygame.sprite.Group):
@@ -97,7 +160,7 @@ class BaseSprite(pygame.sprite.Sprite):
 
 
 class TileGridCell(BaseSprite):
-    color_background: pygame.Color = pygame.Color(0, 0, 0, 0)
+    style: CellStyle = CellStyle()
     width: int = TILE_GRID_CELL_WIDTH
     height: int = TILE_GRID_CELL_HEIGHT
     visible: bool = True
@@ -107,7 +170,7 @@ class TileGridCell(BaseSprite):
         super().__init__(state)
         self.state = state
         self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(self.color_background)
+        self.image.fill(self.style.color_background)
         self.rect = self.image.get_rect()
 
     def update(self):
@@ -115,7 +178,9 @@ class TileGridCell(BaseSprite):
 
     def render(self, state):
         self.image = pygame.Surface((self.rect.width, self.rect.height))
-        self.image.fill(self.color_background)
+        self.image.fill(self.style.color_background)
+        label_surface = render_text(self.label, self.style)
+        self.image.blit(label_surface, (0, 0))
         self.rect = self.image.get_rect()
 
     def __repr__(self):
@@ -212,7 +277,7 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
 
     def __init__(self, state):
         super().__init__(state)
-        self.width_animator = Animator(range=(2.0, 64.0), open=True, speed=1.0)
+        self.width_animator = Animator(range=(0.0, 64.0), open=True, speed=1.0)
 
     def update(self):
         self.width_animator.set(self.open)
@@ -225,4 +290,4 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
         return any([cell.open for cell in self.cells_inst])
 
     def __repr__(self):
-        return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value}, cells={len(self.cells)})"
+        return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value}, cells={len(self.cells_inst)})"
