@@ -222,7 +222,7 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
 
     @property
     def open(self):
-        return any([cell.open for cell in self.cells])
+        return any([cell.open for cell in self.cells_inst])
 
     def __repr__(self):
         return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value}, cells={len(self.cells)})"
