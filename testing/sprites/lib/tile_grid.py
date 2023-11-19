@@ -108,6 +108,15 @@ class CellStyle:
     text_antialias: bool = True
 
 
+class IconStyle:
+    visible: bool = True
+    icon: str = ""
+    width: int = TILE_GRID_CELL_HEIGHT  # should be height
+    height: int = TILE_GRID_CELL_HEIGHT
+    color_background: pygame.Color = pygame.Color(255, 255, 0, 255)
+    color_foreground: pygame.Color = pygame.Color(255, 255, 255, 255)
+
+
 # HELPER FUNCTIONS
 
 
@@ -161,6 +170,7 @@ class BaseSprite(pygame.sprite.Sprite):
 
 class TileGridCell(BaseSprite):
     style: CellStyle = CellStyle()
+    icon: IconStyle = IconStyle()
     width: int = TILE_GRID_CELL_WIDTH
     height: int = TILE_GRID_CELL_HEIGHT
     visible: bool = True
@@ -179,8 +189,14 @@ class TileGridCell(BaseSprite):
     def render(self, state):
         self.image = pygame.Surface((self.rect.width, self.rect.height))
         self.image.fill(self.style.color_background)
+        cx, cy = 0, 0
+        if self.icon.visible:
+            icon_surface = pygame.surface.Surface((self.icon.width, self.icon.height))
+            icon_surface.fill(self.icon.color_background)
+            self.image.blit(icon_surface, (0, 0))
+            cx += self.icon.width
         label_surface = render_text(self.label, self.style)
-        self.image.blit(label_surface, (0, 0))
+        self.image.blit(label_surface, (cx, 0))
         self.rect = self.image.get_rect()
 
     def __repr__(self):

@@ -25,34 +25,34 @@ class StyleBlueBackground(CellStyle):
 
 
 class CellSpeedTestDownload(VerticalCollapseTileGridCell):
-    label = "Download"
     style = StyleRedBackground()
 
     def update(self):
         super().update()
         v = int(self.state.get("download", 0))
+        self.label = f"{v}Mb"
         open = v > 500
         self.height_animator.set(open)
 
 
 class CellSpeedTestUpload(VerticalCollapseTileGridCell):
-    label = "Upload"
     style = StyleGreenBackground()
 
     def update(self):
         super().update()
         v = int(self.state.get("upload", 0))
+        self.label = f"{v}Mb"
         open = v > 500
         self.height_animator.set(open)
 
 
 class CellSpeedTestPing(VerticalCollapseTileGridCell):
-    label = "Ping"
     style = StyleBlueBackground()
 
     def update(self):
         super().update()
         v = int(self.state.get("ping", 0))
+        self.label = f"{v}ms"
         open = v > 25
         self.height_animator.set(open)
 
