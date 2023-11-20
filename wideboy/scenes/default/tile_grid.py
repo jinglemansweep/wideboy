@@ -2,7 +2,8 @@ import datetime
 import enum
 import pygame
 import random
-from .lib.tile_grid import (
+
+from wideboy.sprites.tile_grid import (
     TileGrid,
     HorizontalCollapseTileGridColumn,
     VerticalCollapseTileGridCell,

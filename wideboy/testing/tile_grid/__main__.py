@@ -6,6 +6,7 @@ import random
 import time
 from typing import Dict, List, Tuple
 
+from wideboy.scenes.base import BaseScene
 from .tiles import CustomTileGrid
 
 logger = logging.getLogger(__name__)
@@ -101,9 +102,17 @@ state: Dict = dict()
 running = True
 
 
-tile_grid = CustomTileGrid(state)
+class MockScene:
+    class engine:
+        class hass:
+            state: Dict = state
 
-sprite_group: pygame.sprite.Group = pygame.sprite.Group()
+
+rect = pygame.Rect(0, 0, 1, 1)
+
+tile_grid = CustomTileGrid(MockScene(), rect)  # type: ignore
+
+sprite_group: pygame.sprite.LayeredDirty = pygame.sprite.LayeredDirty()
 sprite_group.add(tile_grid)
 
 while running:
@@ -120,7 +129,7 @@ while running:
         print(f"State: {state}")
 
     screen.fill((0, 0, 0, 255))
-    sprite_group.update()
+    sprite_group.update(frame, clock, 0, [])
     if tile_grid.rect:
         tile_grid.rect.topleft = (SCREEN_WIDTH - tile_grid.rect.width, 0)
     sprite_group.draw(screen)

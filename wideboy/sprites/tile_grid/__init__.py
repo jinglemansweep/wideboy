@@ -6,7 +6,9 @@ import time
 from datetime import datetime
 from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, cast
 
-from .helpers import (
+from wideboy.scenes.base import BaseScene
+from wideboy.sprites.base import BaseSprite
+from wideboy.sprites.tile_grid.helpers import (
     Animator,
     AnimatorState,
     FontAwesomeIcons,
@@ -24,22 +26,12 @@ logger.setLevel(logging.DEBUG)
 
 # CONSTANTS
 
-TILE_GRID_CELL_WIDTH = 64
+TILE_GRID_CELL_WIDTH = 96
 TILE_GRID_CELL_HEIGHT = 12
 TILE_GRID_CELL_ICON_WIDTH = 15
 TILE_GRID_CELL_ICON_HEIGHT = 12
 
 # TILE GRID
-
-# Base Classes
-
-
-class BaseGroup(pygame.sprite.Group):
-    pass
-
-
-class BaseSprite(pygame.sprite.Sprite):
-    pass
 
 
 # Mixins
@@ -47,7 +39,7 @@ class BaseSprite(pygame.sprite.Sprite):
 
 class StyleMixin:
     # Cell
-    cell_color_background: pygame.Color = pygame.Color(16, 16, 16, 255)
+    cell_color_background: pygame.Color = pygame.Color(16, 16, 16, 64)
     # Label
     label_antialias: bool = True
     label_outline: bool = True
@@ -65,7 +57,7 @@ class StyleMixin:
 # Tile Grid Cell Sprites
 
 
-class TileGridCell(BaseSprite, StyleMixin):
+class TileGridCell(pygame.sprite.Sprite, StyleMixin):
     style: Dict
     width: int = TILE_GRID_CELL_WIDTH
     height: int = TILE_GRID_CELL_HEIGHT
@@ -73,7 +65,7 @@ class TileGridCell(BaseSprite, StyleMixin):
     label: str = ""
 
     def __init__(self, state):
-        super().__init__(state)
+        super().__init__()
         self.state = state
         self.image = pygame.Surface((self.width, self.height))
         self.image.fill(self.cell_color_background)
@@ -114,7 +106,7 @@ class TileGridCell(BaseSprite, StyleMixin):
 # Tile Grid Column Sprites
 
 
-class TileGridColumn(BaseSprite):
+class TileGridColumn(pygame.sprite.Sprite):
     width: int = TILE_GRID_CELL_WIDTH
     height: int = 0
     border_width: int = 0
@@ -130,7 +122,8 @@ class TileGridColumn(BaseSprite):
             (
                 self.width + self.border_padding,
                 self.height,
-            )
+            ),
+            pygame.SRCALPHA,
         )
         self.rect = self.image.get_rect()
 
@@ -141,7 +134,7 @@ class TileGridColumn(BaseSprite):
         ch = 0
         mh = sum([cell.image.get_height() for cell in self.cells_inst])
         self.image = pygame.Surface((self.rect.width, mh))
-        self.image.fill(pygame.Color(0, 0, 0))
+        self.image.fill(pygame.Color(0, 0, 0, 0))
         for cell in self.cells_inst:
             cell.update()
             self.image.blit(cell.image, (self.border_padding, ch))
@@ -159,26 +152,28 @@ class TileGrid(BaseSprite):
     columns: List[Any]
     state: Dict = dict()
 
-    def __init__(self, state, x=0, y=0):
-        super().__init__()
-        self.state = state
+    def __init__(self, scene: BaseScene, rect: pygame.Rect):
+        super().__init__(scene, rect)
+        self.state = self.scene.engine.hass.state
         self.columns_inst = [column(self.state) for column in self.columns]
-        self.image = pygame.Surface((0, 0))
+        self.image = pygame.Surface((0, 0), pygame.SRCALPHA)
+        self.image.fill(pygame.Color(0, 0, 0, 0))
         self.rect = self.image.get_rect()
 
     def __repr__(self):
         return f"TileGrid(columns={self.groups})"
 
-    def update(self):
+    def update(self, frame, clock, delta, events):
+        self.dirty = 1  # TODO: Optimise
         self.render()
 
     def render(self):
         cw = 0
         mw = sum([column.image.get_width() for column in self.columns_inst])
         mh = max([column.image.get_width() for column in self.columns_inst])
-        self.image = pygame.Surface((mw, mh))
+        self.image = pygame.Surface((mw, mh), pygame.SRCALPHA)
         self.rect.height = mh
-        self.image.fill((0, 0, 0, 0))
+        self.image.fill(pygame.Color(0, 0, 0, 0))
         for column in self.columns_inst:
             column.update()
             self.image.blit(column.image, (cw, 0))

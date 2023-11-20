@@ -9,7 +9,7 @@ ICON_FONT_FILENAME = "fonts/fontawesome-solid.otf"
 ICON_FONT_SIZE = 9
 
 LABEL_FONT_FILENAME = "fonts/bitstream-vera.ttf"
-LABEL_FONT_SIZE = 10
+LABEL_FONT_SIZE = 11
 
 # CUSTOM COLORS
 
