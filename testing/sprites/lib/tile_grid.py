@@ -41,6 +41,28 @@ FONT_SIZE = 11
 TILE_GRID_CELL_WIDTH = 64
 TILE_GRID_CELL_HEIGHT = 12
 
+# STYLE CLASSES
+
+TILE_GRID_STYLE_DEFAULT = {
+    "cell_alpha": 255,
+    "cell_color_background": pygame.Color(16, 16, 16, 255),
+    "cell_color_border": pygame.Color(0, 0, 0, 0),
+    "label_color_text": pygame.Color(255, 255, 255, 255),
+    "label_color_outline": pygame.Color(0, 0, 0, 255),
+    "label_font": FONT_FILENAME,
+    "label_size": FONT_SIZE,
+    "label_padding": (0, 0),
+    "label_outline": True,
+    "label_antialias": True,
+    "icon_visible": True,
+    "icon_width": TILE_GRID_CELL_HEIGHT,
+    "icon_height": TILE_GRID_CELL_HEIGHT,
+    "icon_padding": (2, 2),
+    "icon_color_background": pygame.Color(32, 32, 32, 255),
+    "icon_color_foreground": pygame.Color(255, 255, 255, 255),
+    "icon_content": "",
+}
+
 
 # ANIMATION HELPERS
 
@@ -92,55 +114,59 @@ class Animator:
         return f"Animator(value={self.value}, open={self.open}, state={self.state}, range={self.range}, speed={self.speed})"
 
 
-# STYLING
-
-
-class CellStyle:
-    alpha: int = 255
-    color_background: pygame.Color = pygame.Color(32, 32, 32, 255)
-    color_border: pygame.Color = pygame.Color(0, 0, 0, 0)
-    color_text: pygame.Color = pygame.Color(255, 255, 255, 255)
-    color_text_outline: pygame.Color = pygame.Color(0, 0, 0, 255)
-    text_font: str = FONT_FILENAME
-    text_size: int = FONT_SIZE
-    text_padding: Tuple[int, int] = (0, 0)
-    text_outline: bool = True
-    text_antialias: bool = True
-
-
-class IconStyle:
-    visible: bool = True
-    icon: str = ""
-    width: int = TILE_GRID_CELL_HEIGHT  # should be height
-    height: int = TILE_GRID_CELL_HEIGHT
-    color_background: pygame.Color = pygame.Color(255, 255, 0, 255)
-    color_foreground: pygame.Color = pygame.Color(255, 255, 255, 255)
-
-
 # HELPER FUNCTIONS
+
+ICON_TEXT_SIZE = 9
+
+
+def render_icon(
+    width: int,
+    height: int,
+    content: str,
+    padding: Tuple[int, int],
+    color_background: pygame.Color,
+    color_foreground: pygame.Color,
+) -> pygame.surface.Surface:
+    surface = pygame.Surface((width, height), pygame.SRCALPHA)
+    surface.fill(color_background)
+    label_surface = render_text(
+        content,
+        text_size=ICON_TEXT_SIZE,
+        color_text=color_foreground,
+        text_padding=padding,
+    )
+    surface.blit(label_surface, (0, 0))
+    return surface
 
 
 def render_text(
     text: str,
-    style: CellStyle,
+    text_font: str = FONT_FILENAME,
+    text_size: int = FONT_SIZE,
+    text_antialias: bool = True,
+    color_text: pygame.Color = pygame.Color(255, 255, 255, 255),
+    color_text_outline: pygame.Color = pygame.Color(0, 0, 0, 0),
+    color_background: pygame.Color = pygame.Color(0, 0, 0, 0),
+    text_padding: Tuple[int, int] = (0, 0),
+    text_outline: bool = True,
+    alpha: int = 255,
 ) -> pygame.surface.Surface:
-    font = pygame.font.Font(style.text_font, style.text_size)
-    surface_orig = font.render(text, style.text_antialias, style.color_text)
-    padding_outline = 2 if style.text_outline else 0
+    font = pygame.font.Font(text_font, text_size)
+    surface_orig = font.render(text, text_antialias, color_text)
+    padding_outline = 2 if text_outline else 0
     surface_dest = pygame.Surface(
         (
             surface_orig.get_rect().width + padding_outline,
             surface_orig.get_rect().height + padding_outline,
-        )
+        ),
+        pygame.SRCALPHA,
     )
-    if style.color_background is not None:
-        surface_dest.fill(style.color_background)
-    text_padding_adj = (style.text_padding[0], style.text_padding[1] - 3)
-    if style.text_outline:
+    if color_background is not None:
+        surface_dest.fill(color_background)
+    text_padding_adj = (text_padding[0], text_padding[1] - 3)
+    if text_outline:
         for offset in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
-            surface_outline = font.render(
-                text, style.text_antialias, style.color_text_outline
-            )
+            surface_outline = font.render(text, text_antialias, color_text_outline)
             surface_dest.blit(
                 surface_outline,
                 (
@@ -153,11 +179,13 @@ def render_text(
         )
     else:
         surface_dest.blit(surface_orig, text_padding_adj)
-    surface_dest.set_alpha(style.alpha)
+    surface_dest.set_alpha(alpha)
     return surface_dest
 
 
 # TILE GRID
+
+# Base Classes
 
 
 class BaseGroup(pygame.sprite.Group):
@@ -168,9 +196,11 @@ class BaseSprite(pygame.sprite.Sprite):
     pass
 
 
+# Tile Grid Cell Sprites
+
+
 class TileGridCell(BaseSprite):
-    style: CellStyle = CellStyle()
-    icon: IconStyle = IconStyle()
+    style: Dict
     width: int = TILE_GRID_CELL_WIDTH
     height: int = TILE_GRID_CELL_HEIGHT
     visible: bool = True
@@ -179,23 +209,39 @@ class TileGridCell(BaseSprite):
     def __init__(self, state):
         super().__init__(state)
         self.state = state
+        self.style = TILE_GRID_STYLE_DEFAULT.copy()
         self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(self.style.color_background)
+        self.image.fill(self.style["cell_color_background"])
         self.rect = self.image.get_rect()
 
     def update(self):
-        self.render(self.state)
+        self.render()
 
-    def render(self, state):
+    def render(self):
         self.image = pygame.Surface((self.rect.width, self.rect.height))
-        self.image.fill(self.style.color_background)
+        self.image.fill(self.style["cell_color_background"])
         cx, cy = 0, 0
-        if self.icon.visible:
-            icon_surface = pygame.surface.Surface((self.icon.width, self.icon.height))
-            icon_surface.fill(self.icon.color_background)
+        if self.style["icon_visible"]:
+            icon_surface = render_icon(
+                self.style["icon_width"],
+                self.style["icon_height"],
+                self.style["icon_content"],
+                self.style["icon_padding"],
+                self.style["icon_color_background"],
+                self.style["icon_color_foreground"],
+            )
             self.image.blit(icon_surface, (0, 0))
-            cx += self.icon.width
-        label_surface = render_text(self.label, self.style)
+            cx += icon_surface.get_width()
+        label_surface = render_text(
+            self.label,
+            text_font=self.style["label_font"],
+            text_size=self.style["label_size"],
+            text_antialias=self.style["label_antialias"],
+            color_text=self.style["label_color_text"],
+            color_text_outline=self.style["label_color_outline"],
+            text_padding=self.style["label_padding"],
+            text_outline=self.style["label_outline"],
+        )
         self.image.blit(label_surface, (cx, 0))
         self.rect = self.image.get_rect()
 
@@ -203,16 +249,27 @@ class TileGridCell(BaseSprite):
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
 
 
+# Tile Grid Column Sprites
+
+
 class TileGridColumn(BaseSprite):
     width: int = TILE_GRID_CELL_WIDTH
     height: int = 0
+    border_width: int = 0
+    border_color: pygame.Color = pygame.Color(96, 96, 96, 255)
     cells: List[Any]
 
     def __init__(self, state):
         super().__init__()
         self.state = state
         self.cells_inst = [cell(self.state) for cell in self.cells]
-        self.image = pygame.Surface((self.width, self.height))
+        self.border_padding = self.border_width + 1 if self.border_width else 0
+        self.image = pygame.Surface(
+            (
+                self.width + self.border_padding,
+                self.height,
+            )
+        )
         self.rect = self.image.get_rect()
 
     def update(self):
@@ -222,14 +279,18 @@ class TileGridColumn(BaseSprite):
         ch = 0
         mh = sum([cell.image.get_height() for cell in self.cells_inst])
         self.image = pygame.Surface((self.rect.width, mh))
-        self.image.fill((0, 0, 0))
+        self.image.fill(pygame.Color(0, 0, 0))
         for cell in self.cells_inst:
             cell.update()
-            self.image.blit(cell.image, (0, ch))
+            self.image.blit(cell.image, (self.border_padding, ch))
             ch += cell.image.get_height()
+        self.image.fill(self.border_color, (0, 0, self.border_width, mh))
 
     def __repr__(self):
         return f"TileGridColumn(open={self.open}, cells={len(self.cells)})"
+
+
+# Tile Grid Sprite
 
 
 class TileGrid(BaseSprite):
@@ -254,13 +315,13 @@ class TileGrid(BaseSprite):
         mw = sum([column.image.get_width() for column in self.columns_inst])
         mh = max([column.image.get_width() for column in self.columns_inst])
         self.image = pygame.Surface((mw, mh))
-        self.rect.width = mw
         self.rect.height = mh
         self.image.fill((0, 0, 0, 0))
         for column in self.columns_inst:
             column.update()
             self.image.blit(column.image, (cw, 0))
             cw += column.image.get_width()
+        self.rect.width = cw
 
 
 # CUSTOM SUBCLASSES
