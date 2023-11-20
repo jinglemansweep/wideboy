@@ -4,42 +4,29 @@ import pygame
 import random
 from .lib.tile_grid import (
     TileGrid,
-    FontAwesomeIcons,
     HorizontalCollapseTileGridColumn,
     VerticalCollapseTileGridCell,
+    CommonColors,
+    FontAwesomeIcons,
 )
-
-# CUSTOM COLORS
-
-
-class CustomColor(enum.Enum):
-    RED_DARK = pygame.Color(64, 0, 0, 255)
-    RED = pygame.Color(255, 0, 0, 255)
-    BLUE_DARK = pygame.Color(0, 0, 64, 255)
-    BLUE = pygame.Color(0, 0, 255, 255)
-    GREEN_DARK = pygame.Color(0, 64, 0, 255)
-    GREEN = pygame.Color(0, 255, 0, 255)
-    YELLOW_DARK = pygame.Color(64, 64, 0, 255)
-    YELLOW = pygame.Color(255, 255, 0, 255)
-    ORANGE_DARK = pygame.Color(64, 32, 0, 255)
-    ORANGE = pygame.Color(255, 128, 0, 255)
-    PURPLE_DARK = pygame.Color(64, 0, 64, 255)
-    PURPLE = pygame.Color(255, 0, 255, 255)
-    PINK_DARK = pygame.Color(64, 0, 32, 255)
-    PINK = pygame.Color(255, 0, 128, 255)
-    CYAN_DARK = pygame.Color(0, 64, 64, 255)
-    CYAN = pygame.Color(0, 255, 255, 255)
-    WHITE = pygame.Color(255, 255, 255, 255)
-    BLACK = pygame.Color(0, 0, 0, 255)
-    TRANSPARENT = pygame.Color(0, 0, 0, 0)
 
 
 # CUSTOM SUBCLASSES
 
 
 class GridCell(VerticalCollapseTileGridCell):
-    pass
+    cell_color_background = CommonColors.COLOR_GREY_DARK
+    icon_color_background = CommonColors.COLOR_GREY
 
+
+# CUSTOM FUNCTIONS
+
+
+def format_watts(watts: int):
+    return "{:.0f}W".format(watts) if watts < 1000 else "{:.1f}kW".format(watts / 1000)
+
+
+# TILE DEFINITIONS
 
 # Electricity Tiles
 
@@ -54,20 +41,24 @@ class CellElectricityDemand(GridCell):
         )
 
     @property
+    def open(self):
+        return self.value > 500
+
+    @property
     def label(self):
-        return f"{self.value}"
+        return format_watts(self.value)
+
+    @property
+    def cell_color_background(self):
+        return (
+            CommonColors.COLOR_RED_DARK
+            if self.value > 1000
+            else CommonColors.COLOR_GREY_DARK
+        )
 
     @property
     def icon_color_background(self):
-        return (
-            CustomColor.RED.value
-            if self.value > 1000
-            else CustomColor.TRANSPARENT.value
-        )
-
-    def update(self):
-        super().update()
-        self.height_animator.set(self.value > 500)
+        return CommonColors.COLOR_RED if self.value > 1000 else CommonColors.COLOR_GREY
 
 
 class CellElectricityRate(GridCell):
@@ -81,7 +72,7 @@ class CellElectricityRate(GridCell):
 
     @property
     def label(self):
-        return f"{self.value}"
+        return f"£{self.value:.2f}"
 
 
 class CellElectricityAccumulativeCost(GridCell):
@@ -97,7 +88,7 @@ class CellElectricityAccumulativeCost(GridCell):
 
     @property
     def label(self):
-        return f"{self.value}"
+        return f"£{self.value:.2f}"
 
 
 # Battery Tiles
@@ -112,7 +103,7 @@ class CellBatteryLevel(GridCell):
 
     @property
     def label(self):
-        return f"{self.value}"
+        return f"{self.value}%"
 
 
 class CellBatteryACInput(GridCell):
@@ -123,12 +114,12 @@ class CellBatteryACInput(GridCell):
         return int(self.state.get("sensor.delta_2_max_downstairs_ac_in_power", 0))
 
     @property
-    def label(self):
-        return f"{self.value}"
+    def open(self):
+        return self.value > 100
 
-    def update(self):
-        super().update()
-        self.height_animator.set(self.value > 100)
+    @property
+    def label(self):
+        return format_watts(self.value)
 
 
 class CellBatteryACOutput(GridCell):
@@ -139,12 +130,12 @@ class CellBatteryACOutput(GridCell):
         return int(self.state.get("sensor.delta_2_max_downstairs_ac_out_power", 0))
 
     @property
-    def label(self):
-        return f"{self.value}"
+    def open(self):
+        return self.value > 100
 
-    def update(self):
-        super().update()
-        self.height_animator.set(self.value > 100)
+    @property
+    def label(self):
+        return format_watts(self.value)
 
 
 # Network Tiles
@@ -158,12 +149,12 @@ class CellSpeedTestDownload(GridCell):
         return int(self.state.get("sensor.speedtest_download_average", 0))
 
     @property
+    def open(self):
+        return self.value > 500
+
+    @property
     def label(self):
         return f"{self.value}Mb"
-
-    def update(self):
-        super().update()
-        self.height_animator.set(self.value > 500)
 
 
 class CellSpeedTestUpload(GridCell):
@@ -174,12 +165,12 @@ class CellSpeedTestUpload(GridCell):
         return int(self.state.get("sensor.speedtest_upload_average", 0))
 
     @property
+    def open(self):
+        return self.value > 500
+
+    @property
     def label(self):
         return f"{self.value}Mb"
-
-    def update(self):
-        super().update()
-        self.height_animator.set(self.value > 500)
 
 
 class CellSpeedTestPing(GridCell):
@@ -190,12 +181,12 @@ class CellSpeedTestPing(GridCell):
         return int(self.state.get("sensor.speedtest_ping_average", 0))
 
     @property
+    def open(self):
+        return self.value > 25
+
+    @property
     def label(self):
         return f"{self.value}ms"
-
-    def update(self):
-        super().update()
-        self.height_animator.set(self.value > 25)
 
 
 class CellDS920VolumeUsage(GridCell):
@@ -206,12 +197,12 @@ class CellDS920VolumeUsage(GridCell):
         return int(self.state.get("sensor.ds920plus_volume_used", 0))
 
     @property
-    def label(self):
-        return f"{self.value}"
+    def open(self):
+        return self.value > 60
 
-    def update(self):
-        super().update()
-        self.height_animator.set(self.value > 60)
+    @property
+    def label(self):
+        return f"{self.value}%"
 
 
 # Test Tiles
@@ -225,12 +216,12 @@ class CellTestRandom(GridCell):
         return datetime.datetime.now().second
 
     @property
+    def open(self):
+        return 0 <= self.value % 5 <= 2
+
+    @property
     def label(self):
         return f"{self.value}"
-
-    def update(self):
-        super().update()
-        self.height_animator.set(0 <= self.value % 5 <= 2)
 
 
 # Switch Tiles
@@ -242,36 +233,40 @@ class CellSwitchLoungeFan(GridCell):
 
     @property
     def value(self):
-        return self.state.get("fan", 0)
+        return self.state.get("fan", "off")
 
-    def update(self):
-        super().update()
-        self.height_animator.set(self.value > 90)
+    @property
+    def open(self):
+        return self.value == "on"
 
 
 # CUSTOM COLUMNS
 
+rainbox_colors = [
+    CommonColors.COLOR_RED,
+    CommonColors.COLOR_ORANGE,
+    CommonColors.COLOR_YELLOW,
+    CommonColors.COLOR_GREEN,
+    CommonColors.COLOR_BLUE,
+    CommonColors.COLOR_PURPLE,
+    CommonColors.COLOR_PINK,
+]
 
-class GridColumnNetwork(HorizontalCollapseTileGridColumn):
+
+class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
     border_width = 1
-    border_color = CustomColor.RED.value
+    border_color = rainbox_colors[0]
     cells = [
+        CellDS920VolumeUsage,
         CellSpeedTestDownload,
         CellSpeedTestUpload,
-        # CellSpeedTestPing,
-        # CellDS920VolumeUsage,
+        CellSpeedTestPing,
     ]
-
-
-class GridColumnTest(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = CustomColor.GREEN.value
-    cells = [CellTestRandom]
 
 
 class GridColumnBattery(HorizontalCollapseTileGridColumn):
     border_width = 1
-    border_color = CustomColor.BLUE.value
+    border_color = rainbox_colors[1]
     cells = [
         CellBatteryLevel,
         CellBatteryACInput,
@@ -281,7 +276,7 @@ class GridColumnBattery(HorizontalCollapseTileGridColumn):
 
 class GridColumnElectricity(HorizontalCollapseTileGridColumn):
     border_width = 1
-    border_color = CustomColor.YELLOW.value
+    border_color = rainbox_colors[2]
     cells = [
         CellElectricityDemand,
         CellElectricityRate,
@@ -289,13 +284,19 @@ class GridColumnElectricity(HorizontalCollapseTileGridColumn):
     ]
 
 
+class GridColumnTest(HorizontalCollapseTileGridColumn):
+    border_width = 1
+    border_color = rainbox_colors[3]
+    cells = [CellTestRandom]
+
+
 # CUSTOM GRID
 
 
 class CustomTileGrid(TileGrid):
     columns = [
-        GridColumnNetwork,
-        GridColumnTest,
+        GridColumnHomeLab,
+        # GridColumnTest,
         GridColumnBattery,
         GridColumnElectricity,
     ]

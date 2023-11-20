@@ -91,6 +91,7 @@ def randomise_state_rare(state: Dict):
             "sensor.speedtest_upload_average": speedtest_upload,
             "sensor.speedtest_ping_average": speedtest_ping,
             "sensor.ds920plus_volume_used": ds920plus_volume_used,
+            "switch.lounge_fans": "on" if random.choice([True, False]) else "off",
         }
     )
 
@@ -111,16 +112,17 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    if frame % 100 == 0:
+    if frame % 300 == 0:
         randomise_state_common(state)
         print(f"State: {state}")
-    if frame % 300 == 0:
+    if frame % 1000 == 0:
         randomise_state_rare(state)
         print(f"State: {state}")
 
     screen.fill((0, 0, 0, 255))
     sprite_group.update()
-    tile_grid.rect.topleft = (SCREEN_WIDTH - tile_grid.rect.width, 0)
+    if tile_grid.rect:
+        tile_grid.rect.topleft = (SCREEN_WIDTH - tile_grid.rect.width, 0)
     sprite_group.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)

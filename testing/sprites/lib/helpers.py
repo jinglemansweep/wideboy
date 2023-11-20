@@ -11,6 +11,32 @@ ICON_FONT_SIZE = 9
 LABEL_FONT_FILENAME = "fonts/bitstream-vera.ttf"
 LABEL_FONT_SIZE = 10
 
+# CUSTOM COLORS
+
+
+class CommonColors:
+    COLOR_RED_DARK = pygame.Color(64, 0, 0, 255)
+    COLOR_RED = pygame.Color(255, 0, 0, 255)
+    COLOR_BLUE_DARK = pygame.Color(0, 0, 64, 255)
+    COLOR_BLUE = pygame.Color(0, 0, 255, 255)
+    COLOR_GREEN_DARK = pygame.Color(0, 64, 0, 255)
+    COLOR_GREEN = pygame.Color(0, 255, 0, 255)
+    COLOR_YELLOW_DARK = pygame.Color(64, 64, 0, 255)
+    COLOR_YELLOW = pygame.Color(255, 255, 0, 255)
+    COLOR_ORANGE_DARK = pygame.Color(64, 32, 0, 255)
+    COLOR_ORANGE = pygame.Color(255, 128, 0, 255)
+    COLOR_PURPLE_DARK = pygame.Color(64, 0, 64, 255)
+    COLOR_PURPLE = pygame.Color(255, 0, 255, 255)
+    COLOR_PINK_DARK = pygame.Color(64, 0, 32, 255)
+    COLOR_PINK = pygame.Color(255, 0, 128, 255)
+    COLOR_CYAN_DARK = pygame.Color(0, 64, 64, 255)
+    COLOR_CYAN = pygame.Color(0, 255, 255, 255)
+    COLOR_WHITE = pygame.Color(255, 255, 255, 255)
+    COLOR_BLACK = pygame.Color(0, 0, 0, 255)
+    COLOR_GREY = pygame.Color(64, 64, 64, 255)
+    COLOR_GREY_DARK = pygame.Color(16, 16, 16, 255)
+    COLOR_TRANSPARENT = pygame.Color(0, 0, 0, 0)
+
 
 # FONTAWESOME CODEPOINTS
 

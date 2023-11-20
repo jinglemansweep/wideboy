@@ -6,8 +6,14 @@ import time
 from datetime import datetime
 from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, cast
 
-from .helpers import Animator, AnimatorState, FontAwesomeIcons, render_icon, render_text
-from .helpers import LABEL_FONT_FILENAME, LABEL_FONT_SIZE  # TO BE REMOVED
+from .helpers import (
+    Animator,
+    AnimatorState,
+    FontAwesomeIcons,
+    CommonColors,
+    render_icon,
+    render_text,
+)
 
 # NOTES
 
@@ -15,28 +21,6 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
-
-# STYLE CLASSES
-
-"""
-TILE_GRID_STYLE_DEFAULT = {
-    "cell_color_background": pygame.Color(16, 16, 16, 255),
-    "cell_color_border": pygame.Color(0, 0, 0, 0),
-    "label_color_text": pygame.Color(255, 255, 255, 255),
-    "label_color_outline": pygame.Color(0, 0, 0, 255),
-    "label_font": LABEL_FONT_FILENAME,
-    "label_size": LABEL_FONT_SIZE,
-    "label_padding": (2, 1),
-    "label_outline": True,
-    "label_antialias": True,
-    "icon_visible": True,
-    "icon_width": TILE_GRID_CELL_ICON_WIDTH,
-    "icon_height": TILE_GRID_CELL_ICON_HEIGHT,
-    "icon_color_background": pygame.Color(32, 32, 32, 255),
-    "icon_color_foreground": pygame.Color(255, 255, 255, 255),
-    "icon_codepoint": None,
-}
-"""
 
 # CONSTANTS
 
@@ -206,20 +190,22 @@ class TileGrid(BaseSprite):
 
 
 class VerticalCollapseTileGridCell(TileGridCell):
+    open: bool = True
     width: int = TILE_GRID_CELL_WIDTH
     height_animator: Animator
 
     def __init__(self, state):
         super().__init__(state)
-        self.height_animator = Animator(range=(0.0, 12.0), open=True, speed=1.0)
+        self.height_animator = Animator(range=(0.0, 12.0), open=self.open, speed=1.0)
 
     def update(self):
+        self.height_animator.set(self.open)
         self.height_animator.update()
         self.rect.height = self.height_animator.value
         super().update()
 
     @property
-    def open(self):
+    def open_finished(self):
         return self.height_animator.state != AnimatorState.CLOSED
 
     def __repr__(self):
@@ -242,7 +228,7 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
 
     @property
     def open(self):
-        return any([cell.open for cell in self.cells_inst])
+        return any([cell.open_finished for cell in self.cells_inst])
 
     def __repr__(self):
         return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value}, cells={len(self.cells_inst)})"
