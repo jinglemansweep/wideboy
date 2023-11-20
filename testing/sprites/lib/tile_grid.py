@@ -6,40 +6,21 @@ import time
 from datetime import datetime
 from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, cast
 
+from .helpers import Animator, AnimatorState, FontAwesomeIcons, render_icon, render_text
+from .helpers import LABEL_FONT_FILENAME, LABEL_FONT_SIZE  # TO BE REMOVED
 
 # NOTES
-
-# TODO
-#
-# - Use pygame.sprite.Groups in TileGridColumn to position TileGridCells
-# - Use pygame.sprite.Group in TileGrid to position TileGridColumns
-# - Add these to another group for blitting
-# - Only TileGrid should have a surface that gets blitted from the composite group
-
-# +------------------------------------------------------+
-# | TileGrid                                             |
-# | +-------------------+ +-------------------+          |
-# | | TileGridColumn    | | TileGridColumn    |          |
-# | | +---------------+ | | +---------------+ |          |
-# | | | TileGridCell  | | | | TileGridCell  | |          |
-# | | +---------------+ | | +---------------+ |          |
-# | | +---------------+ | | +---------------+ |          |
-# | | | TileGridCell  | | | | TileGridCell  | |          |
-# | | +---------------+ | | +---------------+ |          |
-# | +-------------------+ +-------------------+          |
-# +------------------------------------------------------+
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
-# CONSTANTS
-
-FONT_FILENAME = "fonts/bitstream-vera.ttf"
-FONT_SIZE = 11
 
 TILE_GRID_CELL_WIDTH = 64
 TILE_GRID_CELL_HEIGHT = 12
+
+TILE_GRID_CELL_ICON_WIDTH = 14
+TILE_GRID_CELL_ICON_HEIGHT = 12
 
 # STYLE CLASSES
 
@@ -49,138 +30,18 @@ TILE_GRID_STYLE_DEFAULT = {
     "cell_color_border": pygame.Color(0, 0, 0, 0),
     "label_color_text": pygame.Color(255, 255, 255, 255),
     "label_color_outline": pygame.Color(0, 0, 0, 255),
-    "label_font": FONT_FILENAME,
-    "label_size": FONT_SIZE,
-    "label_padding": (0, 0),
+    "label_font": LABEL_FONT_FILENAME,
+    "label_size": LABEL_FONT_SIZE,
+    "label_padding": (2, 1),
     "label_outline": True,
     "label_antialias": True,
     "icon_visible": True,
-    "icon_width": TILE_GRID_CELL_HEIGHT,
-    "icon_height": TILE_GRID_CELL_HEIGHT,
-    "icon_padding": (2, 2),
+    "icon_width": TILE_GRID_CELL_ICON_WIDTH,
+    "icon_height": TILE_GRID_CELL_ICON_HEIGHT,
     "icon_color_background": pygame.Color(32, 32, 32, 255),
     "icon_color_foreground": pygame.Color(255, 255, 255, 255),
-    "icon_content": "",
+    "icon_codepoint": None,
 }
-
-
-# ANIMATION HELPERS
-
-
-class AnimatorState(enum.Enum):
-    OPEN = 1
-    CLOSED = 2
-    OPENING = 3
-    CLOSING = 4
-
-
-class Animator:
-    def __init__(self, range: Tuple[float, float], open=True, speed=1.0):
-        self.range = range
-        self.speed = speed
-        self.open = open
-        self.value = range[1] if open else range[0]
-
-    @property
-    def state(self):
-        if self.open:
-            return (
-                AnimatorState.OPEN
-                if self.value == self.range[1]
-                else AnimatorState.OPENING
-            )
-        else:
-            return (
-                AnimatorState.CLOSED
-                if self.value == self.range[0]
-                else AnimatorState.CLOSING
-            )
-
-    def toggle(self):
-        self.open = not self.open
-
-    def set(self, open: bool):
-        self.open = open
-
-    def update(self):
-        value = self.value + self.speed if self.open else self.value - self.speed
-        if value > self.range[1]:
-            value = self.range[1]
-        elif value < self.range[0]:
-            value = self.range[0]
-        self.value = value
-
-    def __repr__(self):
-        return f"Animator(value={self.value}, open={self.open}, state={self.state}, range={self.range}, speed={self.speed})"
-
-
-# HELPER FUNCTIONS
-
-ICON_TEXT_SIZE = 9
-
-
-def render_icon(
-    width: int,
-    height: int,
-    content: str,
-    padding: Tuple[int, int],
-    color_background: pygame.Color,
-    color_foreground: pygame.Color,
-) -> pygame.surface.Surface:
-    surface = pygame.Surface((width, height), pygame.SRCALPHA)
-    surface.fill(color_background)
-    label_surface = render_text(
-        content,
-        text_size=ICON_TEXT_SIZE,
-        color_text=color_foreground,
-        text_padding=padding,
-    )
-    surface.blit(label_surface, (0, 0))
-    return surface
-
-
-def render_text(
-    text: str,
-    text_font: str = FONT_FILENAME,
-    text_size: int = FONT_SIZE,
-    text_antialias: bool = True,
-    color_text: pygame.Color = pygame.Color(255, 255, 255, 255),
-    color_text_outline: pygame.Color = pygame.Color(0, 0, 0, 0),
-    color_background: pygame.Color = pygame.Color(0, 0, 0, 0),
-    text_padding: Tuple[int, int] = (0, 0),
-    text_outline: bool = True,
-    alpha: int = 255,
-) -> pygame.surface.Surface:
-    font = pygame.font.Font(text_font, text_size)
-    surface_orig = font.render(text, text_antialias, color_text)
-    padding_outline = 2 if text_outline else 0
-    surface_dest = pygame.Surface(
-        (
-            surface_orig.get_rect().width + padding_outline,
-            surface_orig.get_rect().height + padding_outline,
-        ),
-        pygame.SRCALPHA,
-    )
-    if color_background is not None:
-        surface_dest.fill(color_background)
-    text_padding_adj = (text_padding[0], text_padding[1] - 3)
-    if text_outline:
-        for offset in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
-            surface_outline = font.render(text, text_antialias, color_text_outline)
-            surface_dest.blit(
-                surface_outline,
-                (
-                    text_padding_adj[0] + offset[0] + 1,
-                    text_padding_adj[1] + offset[1] + 1,
-                ),
-            )
-        surface_dest.blit(
-            surface_orig, (text_padding_adj[0] + 1, text_padding_adj[1] + 1)
-        )
-    else:
-        surface_dest.blit(surface_orig, text_padding_adj)
-    surface_dest.set_alpha(alpha)
-    return surface_dest
 
 
 # TILE GRID
@@ -225,22 +86,21 @@ class TileGridCell(BaseSprite):
             icon_surface = render_icon(
                 self.style["icon_width"],
                 self.style["icon_height"],
-                self.style["icon_content"],
-                self.style["icon_padding"],
+                self.style["icon_codepoint"],
                 self.style["icon_color_background"],
                 self.style["icon_color_foreground"],
             )
             self.image.blit(icon_surface, (0, 0))
             cx += icon_surface.get_width()
         label_surface = render_text(
-            self.label,
-            text_font=self.style["label_font"],
-            text_size=self.style["label_size"],
-            text_antialias=self.style["label_antialias"],
-            color_text=self.style["label_color_text"],
-            color_text_outline=self.style["label_color_outline"],
-            text_padding=self.style["label_padding"],
-            text_outline=self.style["label_outline"],
+            text=self.label,
+            font_filename=self.style["label_font"],
+            font_size=self.style["label_size"],
+            antialias=self.style["label_antialias"],
+            color_foreground=self.style["label_color_text"],
+            color_outline=self.style["label_color_outline"],
+            padding=self.style["label_padding"],
+            outline=self.style["label_outline"],
         )
         self.image.blit(label_surface, (cx, 0))
         self.rect = self.image.get_rect()
@@ -324,7 +184,7 @@ class TileGrid(BaseSprite):
         self.rect.width = cw
 
 
-# CUSTOM SUBCLASSES
+# USEFUL SUBCLASSES
 
 
 class VerticalCollapseTileGridCell(TileGridCell):
