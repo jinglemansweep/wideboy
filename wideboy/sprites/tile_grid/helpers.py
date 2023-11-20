@@ -168,6 +168,10 @@ class Animator:
                 else AnimatorState.CLOSING
             )
 
+    @property
+    def animating(self):
+        return self.range[0] < self.value < self.range[1]
+
     def toggle(self):
         self.open = not self.open
 

@@ -6,6 +6,9 @@ import time
 from datetime import datetime
 from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, cast
 
+from wideboy.constants import (
+    EVENT_HASS_STATESTREAM_UPDATE,
+)
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.tile_grid.helpers import (
@@ -164,7 +167,12 @@ class TileGrid(BaseSprite):
         return f"TileGrid(columns={self.groups})"
 
     def update(self, frame, clock, delta, events):
-        self.dirty = 1  # TODO: Optimise
+        super().update(frame, clock, delta, events)
+        for event in events:
+            if event.type == EVENT_HASS_STATESTREAM_UPDATE:
+                self.dirty = 1
+        if any([column.animating for column in self.columns_inst]):
+            self.dirty = 1
         self.render()
 
     def render(self):
@@ -203,6 +211,10 @@ class VerticalCollapseTileGridCell(TileGridCell):
     def open_finished(self):
         return self.height_animator.state != AnimatorState.CLOSED
 
+    @property
+    def animating(self):
+        return self.height_animator.animating
+
     def __repr__(self):
         return f"VerticalCollapseTileGridCell(size=({self.width}x{self.height}), label='{self.label}', open={self.open}, height={self.height_animator.value})"
 
@@ -224,6 +236,12 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
     @property
     def open(self):
         return any([cell.open_finished for cell in self.cells_inst])
+
+    @property
+    def animating(self):
+        return self.width_animator.animating or any(
+            [cell.animating for cell in self.cells_inst]
+        )
 
     def __repr__(self):
         return f"HorizontalCollapseTileGridColumn(open={self.open}, width={self.width_animator.value}, cells={len(self.cells_inst)})"
