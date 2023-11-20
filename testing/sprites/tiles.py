@@ -47,37 +47,57 @@ class GridCell(VerticalCollapseTileGridCell):
 class CellElectricityDemand(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_BOLT
 
+    @property
+    def value(self):
+        return float(
+            self.state.get("sensor.octopus_energy_electricity_current_demand", 0)
+        )
+
+    @property
+    def label(self):
+        return f"{self.value}"
+
+    @property
+    def icon_color_background(self):
+        return (
+            CustomColor.RED.value
+            if self.value > 1000
+            else CustomColor.TRANSPARENT.value
+        )
+
     def update(self):
         super().update()
-        v = int(self.state.get("sensor.octopus_energy_electricity_current_demand", 0))
-        self.label = f"{v}"
-        open = v > 500
-        self.height_animator.set(open)
-        self.icon_color_background = (
-            CustomColor.RED_DARK.value if v > 1000 else CustomColor.TRANSPARENT.value
-        )
+        self.height_animator.set(self.value > 500)
 
 
 class CellElectricityRate(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_HOURGLASS
 
-    def update(self):
-        super().update()
-        v = float(self.state.get("sensor.octopus_energy_electricity_current_rate", 0))
-        self.label = f"{v}"
+    @property
+    def value(self):
+        return float(
+            self.state.get("sensor.octopus_energy_electricity_current_rate", 0)
+        )
+
+    @property
+    def label(self):
+        return f"{self.value}"
 
 
 class CellElectricityAccumulativeCost(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CLOCK
 
-    def update(self):
-        super().update()
-        v = float(
+    @property
+    def value(self):
+        return float(
             self.state.get(
                 "sensor.octopus_energy_electricity_current_accumulative_cost", 0
             )
         )
-        self.label = f"{v}"
+
+    @property
+    def label(self):
+        return f"{self.value}"
 
 
 # Battery Tiles
@@ -86,33 +106,45 @@ class CellElectricityAccumulativeCost(GridCell):
 class CellBatteryLevel(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_BATTERY_FULL
 
-    def update(self):
-        super().update()
-        v = int(self.state.get("sensor.delta_2_max_downstairs_battery_level", 0))
-        self.label = f"{v}"
+    @property
+    def value(self):
+        return int(self.state.get("sensor.delta_2_max_downstairs_battery_level", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}"
 
 
 class CellBatteryACInput(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_PLUS
 
+    @property
+    def value(self):
+        return int(self.state.get("sensor.delta_2_max_downstairs_ac_in_power", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}"
+
     def update(self):
         super().update()
-        v = int(self.state.get("sensor.delta_2_max_downstairs_ac_in_power", 0))
-        self.label = f"{v}"
-
-        open = v > 100
-        self.height_animator.set(open)
+        self.height_animator.set(self.value > 100)
 
 
 class CellBatteryACOutput(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
 
+    @property
+    def value(self):
+        return int(self.state.get("sensor.delta_2_max_downstairs_ac_out_power", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}"
+
     def update(self):
         super().update()
-        v = int(self.state.get("sensor.delta_2_max_downstairs_ac_out_power", 0))
-        self.label = f"{v}"
-        open = v > 100
-        self.height_animator.set(open)
+        self.height_animator.set(self.value > 100)
 
 
 # Network Tiles
@@ -121,47 +153,65 @@ class CellBatteryACOutput(GridCell):
 class CellSpeedTestDownload(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_ARROW_DOWN
 
+    @property
+    def value(self):
+        return int(self.state.get("sensor.speedtest_download_average", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}Mb"
+
     def update(self):
         super().update()
-        v = int(self.state.get("sensor.speedtest_download_average", 0))
-        self.label = f"{v}Mb"
-        open = v > 500
-        self.height_animator.set(open)
+        self.height_animator.set(self.value > 500)
 
 
 class CellSpeedTestUpload(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_ARROW_UP
 
+    @property
+    def value(self):
+        return int(self.state.get("sensor.speedtest_upload_average", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}Mb"
+
     def update(self):
         super().update()
-        v = int(self.state.get("sensor.speedtest_upload_average", 0))
-        self.label = f"{v}Mb"
-
-        open = v > 500
-        self.height_animator.set(open)
+        self.height_animator.set(self.value > 500)
 
 
 class CellSpeedTestPing(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_HEART_PULSE
 
+    @property
+    def value(self):
+        return int(self.state.get("sensor.speedtest_ping_average", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}ms"
+
     def update(self):
         super().update()
-        v = int(self.state.get("sensor.speedtest_ping_average", 0))
-        self.label = f"{v}ms"
-        open = v > 25
-        self.height_animator.set(open)
+        self.height_animator.set(self.value > 25)
 
 
 class CellDS920VolumeUsage(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_HARD_DRIVE
 
+    @property
+    def value(self):
+        return int(self.state.get("sensor.ds920plus_volume_used", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}"
+
     def update(self):
         super().update()
-        v = int(self.state.get("sensor.ds920plus_volume_used", 0))
-        self.label = f"{v}"
-
-        open = v > 25
-        self.height_animator.set(open)
+        self.height_animator.set(self.value > 60)
 
 
 # Test Tiles
@@ -170,13 +220,17 @@ class CellDS920VolumeUsage(GridCell):
 class CellTestRandom(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_DICE_THREE
 
+    @property
+    def value(self):
+        return datetime.datetime.now().second
+
+    @property
+    def label(self):
+        return f"{self.value}"
+
     def update(self):
         super().update()
-        v = datetime.datetime.now().second
-        self.label = f"{v}"
-
-        open = 0 <= v % 5 <= 2
-        self.height_animator.set(open)
+        self.height_animator.set(0 <= self.value % 5 <= 2)
 
 
 # Switch Tiles
@@ -186,12 +240,13 @@ class CellSwitchLoungeFan(GridCell):
     label = "Fan"
     icon_codepoint = FontAwesomeIcons.ICON_FA_FAN
 
+    @property
+    def value(self):
+        return self.state.get("fan", 0)
+
     def update(self):
         super().update()
-        v = int(self.state.get("fan", 0))
-
-        open = v > 90
-        self.height_animator.set(open)
+        self.height_animator.set(self.value > 90)
 
 
 # CUSTOM COLUMNS
