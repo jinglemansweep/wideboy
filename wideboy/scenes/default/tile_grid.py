@@ -218,7 +218,7 @@ class CellTestRandom(GridCell):
 
     @property
     def open(self):
-        return 0 <= self.value % 5 <= 2
+        return self.value < 45
 
     @property
     def label(self):
@@ -234,11 +234,11 @@ class CellSwitchLoungeFan(GridCell):
 
     @property
     def value(self):
-        return self.state.get("fan", "off")
+        return self.state.get("switch.lounge_fans", False)
 
     @property
     def open(self):
-        return self.value == "on"
+        return self.value == True
 
 
 # CUSTOM COLUMNS
@@ -288,7 +288,7 @@ class GridColumnElectricity(HorizontalCollapseTileGridColumn):
 class GridColumnTest(HorizontalCollapseTileGridColumn):
     border_width = 1
     border_color = rainbox_colors[3]
-    cells = [CellTestRandom]
+    cells = [CellTestRandom, CellSwitchLoungeFan]
 
 
 # CUSTOM GRID
@@ -297,7 +297,7 @@ class GridColumnTest(HorizontalCollapseTileGridColumn):
 class CustomTileGrid(TileGrid):
     columns = [
         GridColumnHomeLab,
-        # GridColumnTest,
+        GridColumnTest,
         GridColumnBattery,
         GridColumnElectricity,
     ]
