@@ -60,7 +60,8 @@ class WeatherAnimationSprite(BaseSprite):
                 self.dirty = 1
 
         if frame % 3 == 0:
-            self.render()
+            pass
+            # self.render()
 
     def update_state(self) -> None:
         try:
@@ -117,6 +118,7 @@ class WeatherAnimationSprite(BaseSprite):
                 self.dirty = 1
         except Exception as e:
             logger.warn(f"image:render error={e}")
+
 
 def convert_weather_code_to_image_name(weather_code: str) -> List[str]:
     return IMAGE_MAPPING[int(weather_code)]
