@@ -331,9 +331,15 @@ rainbox_colors = [
 ]
 
 
-class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
+class GridColumnSwitches(HorizontalCollapseTileGridColumn):
     border_width = 1
     border_color = rainbox_colors[0]
+    cells = [CellSwitchLoungeFan]
+
+
+class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
+    border_width = 1
+    border_color = rainbox_colors[1]
     cells = [
         CellDS920VolumeUsage,
         CellSpeedTestDownload,
@@ -369,6 +375,7 @@ class GridColumnTemperature(HorizontalCollapseTileGridColumn):
 
 class CustomTileGrid(TileGrid):
     columns = [
+        GridColumnSwitches,
         GridColumnHomeLab,
         GridColumnTemperature,
         GridColumnElectricity,
