@@ -171,7 +171,8 @@ class TileGrid(BaseSprite):
                 self.dirty = 1
         if any([column.animating for column in self.columns_inst]):
             self.dirty = 1
-        self.render()
+        if self.dirty:
+            self.render()
 
     def render(self):
         cw = 0
