@@ -302,6 +302,80 @@ class CellTestRandom(GridCell):
         return f"{self.value}"
 
 
+# Sensor Tiles
+
+
+class CellSensorStepsLouis(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_PERSON_WALKING
+
+    @property
+    def value(self):
+        return int(self.state.get("sensor.steps_louis", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}"
+
+
+class CellSensorLoungeAirPM(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_WIND
+    limit_high = 50
+
+    @property
+    def value(self):
+        return int(self.state.get("sensor.core_300s_pm2_5", 0))
+
+    @property
+    def label(self):
+        return f"{self.value}"
+
+    @property
+    def cell_color_background(self):
+        return (
+            CommonColors.COLOR_RED_DARK
+            if self.value > self.limit_high
+            else CommonColors.COLOR_GREY_DARK
+        )
+
+    @property
+    def icon_color_background(self):
+        return (
+            CommonColors.COLOR_RED
+            if self.value > self.limit_high
+            else CommonColors.COLOR_GREY
+        )
+
+
+class CellSensorDoorFront(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
+    label = "Front"
+    cell_color_background = CommonColors.COLOR_RED_DARK
+    icon_color_background = CommonColors.COLOR_RED
+
+    @property
+    def value(self):
+        return self.state.get("binary_sensor.front_door_contact_sensor_contact", False)
+
+    @property
+    def open(self):
+        return self.value
+
+
+class CellSensorBackFront(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
+    label = "Back"
+    cell_color_background = CommonColors.COLOR_RED_DARK
+    icon_color_background = CommonColors.COLOR_RED
+
+    @property
+    def value(self):
+        return self.state.get("binary_sensor.back_door_contact_sensor_contact", False)
+
+    @property
+    def open(self):
+        return self.value
+
+
 # Switch Tiles
 
 
@@ -333,8 +407,19 @@ rainbox_colors = [
 
 class GridColumnSwitches(HorizontalCollapseTileGridColumn):
     border_width = 1
-    border_color = rainbox_colors[0]
+    border_color = rainbox_colors[1]
     cells = [CellSwitchLoungeFan]
+
+
+class GridColumnSensors(HorizontalCollapseTileGridColumn):
+    border_width = 1
+    border_color = rainbox_colors[0]
+    cells = [
+        CellSensorStepsLouis,
+        CellSensorLoungeAirPM,
+        CellSensorDoorFront,
+        CellSensorBackFront,
+    ]
 
 
 class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
@@ -348,25 +433,25 @@ class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
     ]
 
 
-class GridColumnElectricity(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[2]
-    cells = [
-        CellElectricityDemand,
-        CellElectricityRate,
-        CellElectricityAccumulativeCost,
-        CellBatteryLevel,
-    ]
-
-
 class GridColumnTemperature(HorizontalCollapseTileGridColumn):
     border_width = 1
-    border_color = rainbox_colors[3]
+    border_color = rainbox_colors[2]
     cells = [
         CellTemperatureOutside,
         CellTemperatureLounge,
         CellTemperatureKitchen,
         CellTemperatureBedroom,
+    ]
+
+
+class GridColumnElectricity(HorizontalCollapseTileGridColumn):
+    border_width = 1
+    border_color = rainbox_colors[3]
+    cells = [
+        CellElectricityDemand,
+        CellElectricityRate,
+        CellElectricityAccumulativeCost,
+        CellBatteryLevel,
     ]
 
 
@@ -376,6 +461,7 @@ class GridColumnTemperature(HorizontalCollapseTileGridColumn):
 class CustomTileGrid(TileGrid):
     columns = [
         GridColumnSwitches,
+        GridColumnSensors,
         GridColumnHomeLab,
         GridColumnTemperature,
         GridColumnElectricity,
