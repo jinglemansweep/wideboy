@@ -168,7 +168,7 @@ class TileGrid(BaseSprite):
         super().update(frame, clock, delta, events)
         dirty = False
         for event in events:
-            if event.type in [EVENT_HASS_STATESTREAM_UPDATE]:
+            if event.type in [EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND]:
                 dirty = True
         if any([column.animating for column in self.columns_inst]):
             dirty = True
@@ -226,7 +226,7 @@ class HorizontalCollapseTileGridColumn(TileGridColumn):
 
     def __init__(self, state):
         super().__init__(state)
-        self.width_animator = Animator(range=(0.0, 64.0), open=True, speed=1.0)
+        self.width_animator = Animator(range=(0.0, 64.0), open=True, speed=2.0)
 
     def update(self):
         self.width_animator.set(self.open)
