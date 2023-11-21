@@ -34,6 +34,7 @@ def format_watts(watts: int):
 
 class CellElectricityDemand(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_BOLT
+    limit_high = 500
 
     @property
     def value(self):
@@ -43,7 +44,7 @@ class CellElectricityDemand(GridCell):
 
     @property
     def open(self):
-        return self.value > 500
+        return self.value > self.limit_high
 
     @property
     def label(self):
@@ -53,17 +54,22 @@ class CellElectricityDemand(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if self.value > 1000
+            if self.value > self.limit_high
             else CommonColors.COLOR_GREY_DARK
         )
 
     @property
     def icon_color_background(self):
-        return CommonColors.COLOR_RED if self.value > 1000 else CommonColors.COLOR_GREY
+        return (
+            CommonColors.COLOR_RED
+            if self.value > self.limit_high
+            else CommonColors.COLOR_GREY
+        )
 
 
 class CellElectricityRate(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_HOURGLASS
+    limit_high = 0.30
 
     @property
     def value(self):
@@ -74,6 +80,22 @@ class CellElectricityRate(GridCell):
     @property
     def label(self):
         return f"£{self.value:.2f}"
+
+    @property
+    def cell_color_background(self):
+        return (
+            CommonColors.COLOR_RED_DARK
+            if self.value > self.limit_high
+            else CommonColors.COLOR_GREY_DARK
+        )
+
+    @property
+    def icon_color_background(self):
+        return (
+            CommonColors.COLOR_RED
+            if self.value > self.limit_high
+            else CommonColors.COLOR_GREY
+        )
 
 
 class CellElectricityAccumulativeCost(GridCell):
@@ -144,6 +166,7 @@ class CellBatteryACOutput(GridCell):
 
 class CellSpeedTestDownload(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_ARROW_DOWN
+    limit_low = 500
 
     @property
     def value(self):
@@ -151,7 +174,7 @@ class CellSpeedTestDownload(GridCell):
 
     @property
     def open(self):
-        return self.value > 500
+        return self.value < self.limit_low
 
     @property
     def label(self):
@@ -160,6 +183,7 @@ class CellSpeedTestDownload(GridCell):
 
 class CellSpeedTestUpload(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_ARROW_UP
+    limit_low = 500
 
     @property
     def value(self):
@@ -167,7 +191,7 @@ class CellSpeedTestUpload(GridCell):
 
     @property
     def open(self):
-        return self.value > 500
+        return self.value < self.limit_low
 
     @property
     def label(self):
@@ -176,6 +200,7 @@ class CellSpeedTestUpload(GridCell):
 
 class CellSpeedTestPing(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_HEART_PULSE
+    limit_high = 10
 
     @property
     def value(self):
@@ -183,7 +208,7 @@ class CellSpeedTestPing(GridCell):
 
     @property
     def open(self):
-        return self.value > 25
+        return self.value > self.limit_high
 
     @property
     def label(self):
@@ -192,6 +217,7 @@ class CellSpeedTestPing(GridCell):
 
 class CellDS920VolumeUsage(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_HARD_DRIVE
+    limit_high = 70
 
     @property
     def value(self):
@@ -199,11 +225,62 @@ class CellDS920VolumeUsage(GridCell):
 
     @property
     def open(self):
-        return self.value > 60
+        return self.value > self.limit_high
 
     @property
     def label(self):
         return f"{self.value}%"
+
+
+# Temperature Tiles
+
+
+class CellTemperatureOutside(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_HOUSE
+
+    @property
+    def value(self):
+        return float(self.state.get("sensor.openweathermap_temperature", 0))
+
+    @property
+    def label(self):
+        return f"{self.value:.1f}°"
+
+
+class CellTemperatureLounge(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_COUCH
+
+    @property
+    def value(self):
+        return float(self.state.get("sensor.hue_motion_sensor_1_temperature", 0))
+
+    @property
+    def label(self):
+        return f"{self.value:.1f}°"
+
+
+class CellTemperatureBedroom(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_BED
+
+    @property
+    def value(self):
+        return float(self.state.get("sensor.bedroom_temperature_sensor_temperature", 0))
+
+    @property
+    def label(self):
+        return f"{self.value:.1f}°"
+
+
+class CellTemperatureKitchen(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_SINK
+
+    @property
+    def value(self):
+        return float(self.state.get("sensor.kitchen_temperature_sensor_temperature", 0))
+
+    @property
+    def label(self):
+        return f"{self.value:.1f}°"
 
 
 # Test Tiles
@@ -265,16 +342,6 @@ class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
     ]
 
 
-class GridColumnBattery(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[1]
-    cells = [
-        CellBatteryLevel,
-        CellBatteryACInput,
-        CellBatteryACOutput,
-    ]
-
-
 class GridColumnElectricity(HorizontalCollapseTileGridColumn):
     border_width = 1
     border_color = rainbox_colors[2]
@@ -282,13 +349,19 @@ class GridColumnElectricity(HorizontalCollapseTileGridColumn):
         CellElectricityDemand,
         CellElectricityRate,
         CellElectricityAccumulativeCost,
+        CellBatteryLevel,
     ]
 
 
-class GridColumnTest(HorizontalCollapseTileGridColumn):
+class GridColumnTemperature(HorizontalCollapseTileGridColumn):
     border_width = 1
     border_color = rainbox_colors[3]
-    cells = [CellTestRandom, CellSwitchLoungeFan]
+    cells = [
+        CellTemperatureOutside,
+        CellTemperatureLounge,
+        CellTemperatureKitchen,
+        CellTemperatureBedroom,
+    ]
 
 
 # CUSTOM GRID
@@ -297,7 +370,6 @@ class GridColumnTest(HorizontalCollapseTileGridColumn):
 class CustomTileGrid(TileGrid):
     columns = [
         GridColumnHomeLab,
-        GridColumnTest,
-        GridColumnBattery,
+        GridColumnTemperature,
         GridColumnElectricity,
     ]
