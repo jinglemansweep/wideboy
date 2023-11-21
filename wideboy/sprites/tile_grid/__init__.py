@@ -166,12 +166,14 @@ class TileGrid(BaseSprite):
 
     def update(self, frame, clock, delta, events):
         super().update(frame, clock, delta, events)
+        dirty = False
         for event in events:
             if event.type in [EVENT_HASS_STATESTREAM_UPDATE]:
-                self.dirty = 1
+                dirty = True
         if any([column.animating for column in self.columns_inst]):
+            dirty = True
+        if dirty:
             self.dirty = 1
-        if self.dirty:
             self.render()
 
     def render(self):
