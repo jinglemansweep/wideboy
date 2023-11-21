@@ -6,9 +6,7 @@ import time
 from datetime import datetime
 from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, cast
 
-from wideboy.constants import (
-    EVENT_HASS_STATESTREAM_UPDATE,
-)
+from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.tile_grid.helpers import (
@@ -169,11 +167,10 @@ class TileGrid(BaseSprite):
     def update(self, frame, clock, delta, events):
         super().update(frame, clock, delta, events)
         for event in events:
-            if event.type == EVENT_HASS_STATESTREAM_UPDATE:
+            if event.type in [EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND]:
                 self.dirty = 1
         if any([column.animating for column in self.columns_inst]):
             self.dirty = 1
-        self.dirty = 1
         self.render()
 
     def render(self):
