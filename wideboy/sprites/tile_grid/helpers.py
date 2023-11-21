@@ -170,7 +170,7 @@ class Animator:
 
     @property
     def animating(self):
-        return self.range[0] < self.value < self.range[1]
+        return self.value != self.range[0] and self.value != self.range[1]
 
     def toggle(self):
         self.open = not self.open
