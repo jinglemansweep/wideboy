@@ -43,10 +43,6 @@ class CellElectricityDemand(GridCell):
         )
 
     @property
-    def open(self):
-        return self.value > self.limit_high
-
-    @property
     def label(self):
         return format_watts(self.value)
 
