@@ -156,6 +156,35 @@ class CellBatteryACOutput(GridCell):
     def label(self):
         return format_watts(self.value)
 
+class CellBatteryChargeRemainingTime(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
+
+    @property
+    def value(self):
+        return int(self.state.get("sensor.delta_2_max_downstairs_charge_remaining_time", 0))
+
+    @property
+    def open(self):
+        return self.value > 0
+
+    @property
+    def label(self):
+        return self.value
+
+class CellBatteryDischargeRemainingTime(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
+
+    @property
+    def value(self):
+        return int(self.state.get("sensor.delta_2_max_downstairs_discharge_remaining_time", 0))
+
+    @property
+    def open(self):
+        return self.value > 0
+
+    @property
+    def label(self):
+        return self.value
 
 # Network Tiles
 
@@ -448,6 +477,8 @@ class GridColumnElectricity(HorizontalCollapseTileGridColumn):
         CellElectricityRate,
         CellElectricityAccumulativeCost,
         CellBatteryLevel,
+        CellBatteryChargeRemainingTime,
+        CellBatteryDischargeRemainingTime,
     ]
 
 
