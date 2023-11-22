@@ -55,6 +55,9 @@ rainbox_colors = [
     CommonColors.COLOR_PINK,
 ]
 
+# CONSTANTS
+
+HOUR_EVENING = 20
 
 # TILE DEFINITIONS
 
@@ -100,6 +103,10 @@ class CellSensorStepsLouis(GridCell):
     @property
     def label(self):
         return f"{self.value}"
+
+    @property
+    def open(self):
+        return datetime.datetime.now().hour < HOUR_EVENING
 
 
 class CellSensorLoungeAirPM(GridCell):
@@ -249,8 +256,6 @@ class CellDS920VolumeUsage(GridCell):
 
 
 class BaseCellTemperate(GridCell):
-    width = 60
-
     @property
     def label(self):
         return f"{round(self.value)}°"
@@ -263,6 +268,10 @@ class CellTemperatureLounge(BaseCellTemperate):
     def value(self):
         return float(self.state.get("sensor.hue_motion_sensor_1_temperature", 0))
 
+    @property
+    def open(self):
+        return datetime.datetime.now().hour < HOUR_EVENING
+
 
 class CellTemperatureBedroom(BaseCellTemperate):
     icon_codepoint = FontAwesomeIcons.ICON_FA_BED
@@ -270,6 +279,10 @@ class CellTemperatureBedroom(BaseCellTemperate):
     @property
     def value(self):
         return float(self.state.get("sensor.bedroom_temperature_sensor_temperature", 0))
+
+    @property
+    def open(self):
+        return datetime.datetime.now().hour < HOUR_EVENING
 
 
 # Weather Tiles
@@ -281,6 +294,10 @@ class CellWeatherTemperature(BaseCellTemperate):
     @property
     def value(self):
         return float(self.state.get("sensor.openweathermap_temperature", 0))
+
+    @property
+    def open(self):
+        return datetime.datetime.now().hour < HOUR_EVENING
 
 
 class CellWeatherWindSpeed(GridCell):
