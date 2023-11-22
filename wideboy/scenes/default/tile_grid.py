@@ -410,6 +410,20 @@ class CellSensorBackFront(GridCell):
 # Switch Tiles
 
 
+
+
+class CellSwitchBooleanManual(GridCell):
+    label = "Manual"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_TOGGLE_OFF
+
+    @property
+    def value(self):
+        return self.state.get("input_boolean.house_manual", False)
+
+    @property
+    def open(self):
+        return self.value == True
+
 class CellSwitchLoungeFan(GridCell):
     label = "Fan"
     icon_codepoint = FontAwesomeIcons.ICON_FA_FAN
@@ -439,7 +453,7 @@ rainbox_colors = [
 class GridColumnSwitches(HorizontalCollapseTileGridColumn):
     border_width = 1
     border_color = rainbox_colors[1]
-    cells = [CellSwitchLoungeFan]
+    cells = [CellSwitchLoungeFan, CellSwitchBooleanManual]
 
 
 class GridColumnSensors(HorizontalCollapseTileGridColumn):
