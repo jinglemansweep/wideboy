@@ -155,7 +155,7 @@ class TileGrid(BaseSprite):
 
     def __init__(self, scene: BaseScene, rect: pygame.Rect):
         super().__init__(scene, rect)
-        self.state = self.scene.engine.hass.state
+        self.state = self.scene.engine.state
         self.columns_inst = [column(self.state) for column in self.columns]
         self.image = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.image.fill(pygame.Color(0, 0, 0, 0))

@@ -5,7 +5,7 @@ import pygame
 from datetime import datetime
 from pygame import Clock, Surface, RESIZABLE, SCALED, QUIT
 
-from typing import Any, TYPE_CHECKING
+from typing import Any, Dict, TYPE_CHECKING
 
 from wideboy.config import settings
 from wideboy.constants import (
@@ -39,15 +39,17 @@ class Engine:
     def __init__(
         self,
         display: "Display",
+        state: Dict,
         mqtt: "MQTTClient",
         hass: "HASSManager",
     ):
         self.display = display
+        self.state = state
         self.mqtt = mqtt
         self.hass = hass
         self.fps = settings.general.fps
         logger.debug(
-            f"engine:init display={display} mqtt={mqtt} hass={hass} fps={self.fps}"
+            f"engine:init display={display} state={state} mqtt={mqtt} hass={hass} fps={self.fps}"
         )
         self.scene_manager = SceneManager(engine=self)
         self.joysticks: dict[int, Any] = dict()

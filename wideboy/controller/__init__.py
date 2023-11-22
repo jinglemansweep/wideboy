@@ -1,5 +1,5 @@
 import logging
-from typing import List, Type
+from typing import Dict, List, Type
 from wideboy.constants import (
     AppMetadata,
     EVENT_MASTER,
@@ -28,9 +28,10 @@ class Controller:
             f"controller:init device_id={self.device_id} scenes_count={len(scenes)} entities_count={len(entities)}"
         )
         self.display = Display()
+        self.state: Dict = dict()
         self.mqtt = MQTTClient(device_id=self.device_id)
-        self.hass = HASSManager(self.mqtt, device_id=self.device_id)
-        self.engine = Engine(self.display, self.mqtt, self.hass)
+        self.hass = HASSManager(self.mqtt, self.state, device_id=self.device_id)
+        self.engine = Engine(self.display, self.state, self.mqtt, self.hass)
         self.setup(scenes, entities)
         self.log_intro()
 

@@ -2,7 +2,7 @@ import logging
 from datetime import timedelta
 from pygame import Event
 from requests_cache import CachedSession
-from typing import Optional, Tuple, Any, Union
+from typing import Optional, Dict, Tuple, Any, Union
 from homeassistant_api import Client, State
 from wideboy.config import settings
 from wideboy.constants import (
@@ -35,9 +35,8 @@ class HASSEntity:
 
 class HASSManager:
     entities: dict[str, dict]
-    state: dict[str, Any]
 
-    def __init__(self, mqtt: MQTTClient, device_id: str):
+    def __init__(self, mqtt: MQTTClient, state: Dict, device_id: str):
         self.mqtt = mqtt
         self.device_id = device_id
         self.client = Client(
@@ -48,8 +47,8 @@ class HASSManager:
                 expire_after=timedelta(seconds=settings.homeassistant.cache_duration),
             ),
         )
+        self.state = state
         self.entities = dict()
-        self.state = dict()
 
     def handle_event(self, event: Event) -> None:
         if event.type == EVENT_HASS_ENTITY_UPDATE:
