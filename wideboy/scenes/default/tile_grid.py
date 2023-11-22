@@ -26,6 +26,10 @@ class GridCell(VerticalCollapseTileGridCell):
 def format_watts(watts: int):
     return "{:.0f}W".format(watts) if watts < 1000 else "{:.1f}kW".format(watts / 1000)
 
+def format_duration(seconds: int):
+    hours = seconds // 3600
+    minutes = seconds % 3600 // 60
+    return f"{hours}:{minutes:02d}"
 
 # TILE DEFINITIONS
 
@@ -170,7 +174,7 @@ class CellBatteryChargeRemainingTime(GridCell):
 
     @property
     def label(self):
-        return f"{self.value}"
+        return format_duration(self.value)
 
 class CellBatteryDischargeRemainingTime(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
@@ -186,7 +190,7 @@ class CellBatteryDischargeRemainingTime(GridCell):
 
     @property
     def label(self):
-        return f"{self.value}"
+        return format_duration(self.value)
 
 # Network Tiles
 
