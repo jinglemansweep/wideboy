@@ -169,9 +169,9 @@ class TileGrid(BaseSprite):
         super().update(frame, clock, delta, events)
         for event in events:
             if event.type == EVENT_HASS_STATESTREAM_UPDATE:
-                self.frames_to_update += 2
+                self.frames_to_update = 2
         if any([column.animating for column in self.columns_inst]):
-            self.frames_to_update += 2
+            self.frames_to_update = 2
         if self.frames_to_update > 0:
             self.frames_to_update -= 1
             self.dirty = 1
