@@ -160,6 +160,7 @@ class TileGrid(BaseSprite):
         self.image = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.image.fill(pygame.Color(0, 0, 0, 0))
         self.rect = self.image.get_rect()
+        self.frames_to_update = 0
 
     def __repr__(self):
         return f"TileGrid(columns={self.groups})"
@@ -169,10 +170,11 @@ class TileGrid(BaseSprite):
         dirty = False
         for event in events:
             if event.type in [EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND]:
-                dirty = True
+                self.frames_to_update += 1
         if any([column.animating for column in self.columns_inst]):
-            dirty = True
-        if dirty:
+            self.frames_to_update += 1
+        if self.frames_to_update > 0:
+            self.frames_to_update -= 1
             self.dirty = 1
             self.render()
 
