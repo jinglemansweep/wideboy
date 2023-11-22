@@ -20,7 +20,7 @@ class CommonColors:
     COLOR_BLUE_DARK = pygame.Color(0, 0, 64, 255)
     COLOR_BLUE = pygame.Color(0, 0, 255, 255)
     COLOR_GREEN_DARK = pygame.Color(0, 64, 0, 255)
-    COLOR_GREEN = pygame.Color(0, 255, 0, 255)
+    COLOR_GREEN = pygame.Color(0, 196, 0, 255)
     COLOR_YELLOW_DARK = pygame.Color(64, 64, 0, 255)
     COLOR_YELLOW = pygame.Color(255, 255, 0, 255)
     COLOR_ORANGE_DARK = pygame.Color(64, 32, 0, 255)
@@ -78,6 +78,8 @@ class FontAwesomeIcons:
     ICON_FA_LEAF = 0xF06C
     ICON_FA_CIRCLE_HALF_STROKE = 0xF042
     ICON_FA_CALENDAR = 0xF133
+    ICON_FA_PLUG = 0xF1E6
+    ICON_FA_FIRE_FLAME_SIMPLE = 0xF46A
 
 
 # HELPER FUNCTIONS

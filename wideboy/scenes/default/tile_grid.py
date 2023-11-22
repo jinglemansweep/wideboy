@@ -104,31 +104,44 @@ class CellSensorStepsLouis(GridCell):
 
 class CellSensorLoungeAirPM(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_SMOKING
-    limit_high = 50
 
     @property
     def value(self):
         return int(self.state.get("sensor.core_300s_pm2_5", 0))
 
     @property
+    def value_quality(self):
+        return int(self.state.get("sensor.core_300s_air_quality", 0))
+
+    @property
     def label(self):
         return f"{self.value}"
 
     @property
+    def open(self):
+        return self.value_quality > 1
+
+    @property
     def cell_color_background(self):
-        return (
-            CommonColors.COLOR_RED_DARK
-            if self.value > self.limit_high
-            else CommonColors.COLOR_GREY_DARK
-        )
+        if self.value_quality == 1:
+            return CommonColors.COLOR_BLUE_DARK
+        elif self.value_quality == 2:
+            return CommonColors.COLOR_GREEN_DARK
+        elif self.value_quality == 3:
+            return CommonColors.COLOR_ORANGE_DARK
+        else:
+            return CommonColors.COLOR_RED_DARK
 
     @property
     def icon_color_background(self):
-        return (
-            CommonColors.COLOR_RED
-            if self.value > self.limit_high
-            else CommonColors.COLOR_GREY
-        )
+        if self.value_quality == 1:
+            return CommonColors.COLOR_BLUE
+        elif self.value_quality == 2:
+            return CommonColors.COLOR_GREEN
+        elif self.value_quality == 3:
+            return CommonColors.COLOR_ORANGE
+        else:
+            return CommonColors.COLOR_RED
 
 
 class CellSensorDoorFront(GridCell):
@@ -166,7 +179,7 @@ class CellSensorBackFront(GridCell):
 
 class CellSpeedTestDownload(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_ARROW_DOWN
-    limit_low = 500
+    limit = 500
 
     @property
     def value(self):
@@ -174,7 +187,7 @@ class CellSpeedTestDownload(GridCell):
 
     @property
     def open(self):
-        return self.value < self.limit_low
+        return self.value < self.limit
 
     @property
     def label(self):
@@ -183,7 +196,7 @@ class CellSpeedTestDownload(GridCell):
 
 class CellSpeedTestUpload(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_ARROW_UP
-    limit_low = 500
+    limit = 500
 
     @property
     def value(self):
@@ -191,7 +204,7 @@ class CellSpeedTestUpload(GridCell):
 
     @property
     def open(self):
-        return self.value < self.limit_low
+        return self.value < self.limit
 
     @property
     def label(self):
@@ -200,7 +213,7 @@ class CellSpeedTestUpload(GridCell):
 
 class CellSpeedTestPing(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_HEART_PULSE
-    limit_high = 10
+    limit = 10
 
     @property
     def value(self):
@@ -208,7 +221,7 @@ class CellSpeedTestPing(GridCell):
 
     @property
     def open(self):
-        return self.value > self.limit_high
+        return self.value > self.limit
 
     @property
     def label(self):
@@ -217,7 +230,7 @@ class CellSpeedTestPing(GridCell):
 
 class CellDS920VolumeUsage(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_HARD_DRIVE
-    limit_high = 70
+    limit = 70
 
     @property
     def value(self):
@@ -225,7 +238,7 @@ class CellDS920VolumeUsage(GridCell):
 
     @property
     def open(self):
-        return self.value > self.limit_high
+        return self.value > self.limit
 
     @property
     def label(self):
@@ -304,12 +317,12 @@ class CellWeatherRainProbability(GridCell):
         return self.value > 0
 
 
-# Electricity / Battery Tiles
+# Energy Tiles
 
 
 class CellElectricityDemand(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_BOLT
-    limit_high = 600
+    limit = 600
 
     @property
     def value(self):
@@ -323,13 +336,13 @@ class CellElectricityDemand(GridCell):
 
     @property
     def open(self):
-        return self.value > self.limit_high
+        return self.value > self.limit
 
     @property
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if self.value > self.limit_high
+            if self.value > self.limit
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -337,14 +350,13 @@ class CellElectricityDemand(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if self.value > self.limit_high
+            if self.value > self.limit
             else CommonColors.COLOR_GREY
         )
 
 
 class CellElectricityRate(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_HALF_STROKE
-    limit_high = 0.30
 
     @property
     def value(self):
@@ -358,24 +370,30 @@ class CellElectricityRate(GridCell):
 
     @property
     def cell_color_background(self):
-        return (
-            CommonColors.COLOR_RED_DARK
-            if self.value > self.limit_high
-            else CommonColors.COLOR_GREY_DARK
-        )
+        if self.value < 0.00:
+            return CommonColors.COLOR_BLUE_DARK
+        elif self.value <= 0.20:
+            return CommonColors.COLOR_GREEN_DARK
+        elif self.value <= 0.30:
+            return CommonColors.COLOR_ORANGE_DARK
+        else:
+            return CommonColors.COLOR_RED_DARK
 
     @property
     def icon_color_background(self):
-        return (
-            CommonColors.COLOR_RED
-            if self.value > self.limit_high
-            else CommonColors.COLOR_GREY
-        )
+        if self.value < 0.00:
+            return CommonColors.COLOR_BLUE
+        elif self.value <= 0.20:
+            return CommonColors.COLOR_GREEN
+        elif self.value <= 0.30:
+            return CommonColors.COLOR_ORANGE
+        else:
+            return CommonColors.COLOR_RED
 
 
 class CellElectricityAccumulativeCost(GridCell):
-    icon_codepoint = FontAwesomeIcons.ICON_FA_CALENDAR
-    limit_high = 2.50
+    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG
+    limit = 3.00
 
     @property
     def value(self):
@@ -390,10 +408,14 @@ class CellElectricityAccumulativeCost(GridCell):
         return f"£{self.value:.2f}"
 
     @property
+    def open(self):
+        return self.value > self.limit
+
+    @property
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if self.value > self.limit_high
+            if self.value > self.limit
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -401,13 +423,48 @@ class CellElectricityAccumulativeCost(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if self.value > self.limit_high
+            if self.value > self.limit
+            else CommonColors.COLOR_GREY
+        )
+
+
+class CellGasAccumulativeCost(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_FIRE_FLAME_SIMPLE
+    limit = 3.00
+
+    @property
+    def value(self):
+        return float(
+            self.state.get("sensor.octopus_energy_gas_current_accumulative_cost", 0)
+        )
+
+    @property
+    def label(self):
+        return f"£{self.value:.2f}"
+
+    @property
+    def open(self):
+        return self.value > self.limit
+
+    @property
+    def cell_color_background(self):
+        return (
+            CommonColors.COLOR_RED_DARK
+            if self.value > self.limit
+            else CommonColors.COLOR_GREY_DARK
+        )
+
+    @property
+    def icon_color_background(self):
+        return (
+            CommonColors.COLOR_RED
+            if self.value > self.limit
             else CommonColors.COLOR_GREY
         )
 
 
 class CellBatteryLevel(GridCell):
-    limit_low = 30
+    limit = 30
 
     @property
     def value(self):
@@ -438,7 +495,7 @@ class CellBatteryLevel(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if self.value < self.limit_low
+            if self.value > self.limit
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -446,7 +503,7 @@ class CellBatteryLevel(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if self.value < self.limit_low
+            if self.value < self.limit
             else CommonColors.COLOR_GREY
         )
 
@@ -585,6 +642,7 @@ class GridColumnElectricity(HorizontalCollapseTileGridColumn):
         CellElectricityDemand,
         CellElectricityRate,
         CellElectricityAccumulativeCost,
+        CellGasAccumulativeCost,
         CellBatteryLevel,
         CellBatteryDischargeRemainingTime,
     ]
