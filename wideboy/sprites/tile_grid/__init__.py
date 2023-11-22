@@ -195,7 +195,7 @@ class TileGrid(BaseSprite):
 
 
 class VerticalCollapseTileGridCell(TileGridCell):
-    open: bool = False
+    open: bool = True
     width: int = TILE_GRID_CELL_WIDTH
     height_animator: Animator
 
