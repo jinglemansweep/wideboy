@@ -249,6 +249,8 @@ class CellDS920VolumeUsage(GridCell):
 
 
 class BaseCellTemperate(GridCell):
+    width = 60
+
     @property
     def label(self):
         return f"{round(self.value)}°"

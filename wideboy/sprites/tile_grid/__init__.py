@@ -62,7 +62,6 @@ class TileGridCell(pygame.sprite.Sprite, StyleMixin):
     style: Dict
     width: int = TILE_GRID_CELL_WIDTH
     height: int = TILE_GRID_CELL_HEIGHT
-    visible: bool = True
     label: str = ""
 
     def __init__(self, state):
