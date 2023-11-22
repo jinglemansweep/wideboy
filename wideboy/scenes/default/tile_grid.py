@@ -29,7 +29,7 @@ def format_watts(watts: int):
 def format_minutes(minutes: int):
     hours = minutes // 60
     minutes = minutes % 60
-    return f"{hours}:{minutes:02d}"
+    return f"{hours}h{minutes:02d}m"
 
 # TILE DEFINITIONS
 
