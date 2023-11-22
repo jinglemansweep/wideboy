@@ -157,7 +157,8 @@ class CellBatteryACOutput(GridCell):
         return format_watts(self.value)
 
 class CellBatteryChargeRemainingTime(GridCell):
-    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
+    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_PLUS
+    icon_color_background = CommonColors.COLOR_GREEN_DARK
 
     @property
     def value(self):
@@ -173,6 +174,7 @@ class CellBatteryChargeRemainingTime(GridCell):
 
 class CellBatteryDischargeRemainingTime(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
+    icon_color_background = CommonColors.COLOR_RED_DARK
 
     @property
     def value(self):
