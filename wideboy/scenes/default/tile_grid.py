@@ -169,7 +169,7 @@ class CellBatteryChargeRemainingTime(GridCell):
 
     @property
     def label(self):
-        return self.value
+        return f"{self.value}"
 
 class CellBatteryDischargeRemainingTime(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
@@ -184,7 +184,7 @@ class CellBatteryDischargeRemainingTime(GridCell):
 
     @property
     def label(self):
-        return self.value
+        return f"{self.value}"
 
 # Network Tiles
 
