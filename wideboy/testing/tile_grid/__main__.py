@@ -7,6 +7,7 @@ import time
 from typing import Dict, List, Tuple
 
 from wideboy.scenes.base import BaseScene
+from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
 from .tiles import CustomTileGrid
 
 logger = logging.getLogger(__name__)
@@ -102,15 +103,22 @@ state: Dict = dict()
 running = True
 
 
+class MockEngine:
+    state: Dict
+
+    def __init__(self, state):
+        self.state = state
+
+
 class MockScene:
-    class engine:
-        class hass:
-            state: Dict = state
+    def __init__(self, state: Dict):
+        self.engine = MockEngine(state)
 
 
-rect = pygame.Rect(0, 0, 1, 1)
+rect = pygame.Rect(0, 0, 0, 0)
 
-tile_grid = CustomTileGrid(MockScene(), rect)  # type: ignore
+scene = MockScene(state)
+tile_grid = CustomTileGrid(scene, rect)  # type: ignore
 
 sprite_group: pygame.sprite.LayeredDirty = pygame.sprite.LayeredDirty()
 sprite_group.add(tile_grid)
@@ -128,10 +136,12 @@ while running:
         randomise_state_rare(state)
         print(f"State: {state}")
 
-    screen.fill((0, 0, 0, 255))
-    sprite_group.update(frame, clock, 0, [])
+    screen.fill(pygame.Color(0, 0, 0, 255))
+    sprite_group.update(
+        frame, clock, 0, [pygame.event.Event(EVENT_HASS_STATESTREAM_UPDATE)]
+    )
     if tile_grid.rect:
-        tile_grid.rect.topleft = (SCREEN_WIDTH - tile_grid.rect.width, 0)
+        tile_grid.rect.topright = SCREEN_WIDTH, 0
     sprite_group.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)
