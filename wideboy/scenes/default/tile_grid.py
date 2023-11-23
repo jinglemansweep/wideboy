@@ -346,18 +346,30 @@ class BaseCellTemperate(GridCell):
 
 class CellTemperatureLounge(BaseCellTemperate):
     icon_codepoint = FontAwesomeIcons.ICON_FA_COUCH
+    limit_min = 20
+    limit_max = 28
 
     @property
     def value(self):
         return float(self.state.get("sensor.hue_motion_sensor_1_temperature", 0))
 
+    @property
+    def open(self):
+        return self.value < self.limit_min or self.value > self.limit_max
+
 
 class CellTemperatureBedroom(BaseCellTemperate):
     icon_codepoint = FontAwesomeIcons.ICON_FA_BED
+    limit_min = 20
+    limit_max = 28
 
     @property
     def value(self):
         return float(self.state.get("sensor.bedroom_temperature_sensor_temperature", 0))
+
+    @property
+    def open(self):
+        return self.value < self.limit_min or self.value > self.limit_max
 
 
 # Energy Tiles
