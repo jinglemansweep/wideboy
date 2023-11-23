@@ -104,6 +104,10 @@ class CellSensorStepsLouis(GridCell):
     def label(self):
         return f"{self.value}"
 
+    @property
+    def open(self):
+        return self.value > 500
+
 
 class CellSensorLoungeAirPM(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_SMOKING
@@ -122,7 +126,7 @@ class CellSensorLoungeAirPM(GridCell):
 
     @property
     def open(self):
-        return self.value_quality > 1
+        return self.value_quality > 2
 
     @property
     def cell_color_background(self):
@@ -249,14 +253,6 @@ class CellDS920VolumeUsage(GridCell):
 
 
 # Motion Tiles
-
-"""
-- binary_sensor.front_door_motion
-- binary_sensor.blink_front_motion_detected
-- binary_sensor.blink_back_motion_detected
-- binary_sensor.blink_side_motion_detected
-- binary_sensor.blink_garage_motion_detected
-"""
 
 
 class CellMotionFrontDoor(GridCell):
