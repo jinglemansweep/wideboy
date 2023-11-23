@@ -364,53 +364,6 @@ class CellTemperatureBedroom(BaseCellTemperate):
         return float(self.state.get("sensor.bedroom_temperature_sensor_temperature", 0))
 
 
-# Weather Tiles
-
-
-class CellWeatherTemperature(BaseCellTemperate):
-    icon_codepoint = FontAwesomeIcons.ICON_FA_HOUSE
-
-    @property
-    def value(self):
-        return float(self.state.get("sensor.openweathermap_temperature", 0))
-
-
-class CellWeatherWindSpeed(GridCell):
-    icon_codepoint = FontAwesomeIcons.ICON_FA_WIND
-
-    @property
-    def value(self):
-        return int(self.state.get("sensor.openweathermap_wind_speed", 0))
-
-    @property
-    def label(self):
-        return f"{convert_ms_to_mph(self.value)}mph"
-
-    @property
-    def open(self):
-        return self.value > 10
-
-
-class CellWeatherRainProbability(GridCell):
-    icon_codepoint = FontAwesomeIcons.ICON_FA_UMBRELLA
-
-    @property
-    def value(self):
-        return int(
-            self.state.get(
-                "sensor.openweathermap_forecast_precipitation_probability", 0
-            )
-        )
-
-    @property
-    def label(self):
-        return f"{self.value}%"
-
-    @property
-    def open(self):
-        return self.value > 0
-
-
 # Energy Tiles
 
 
@@ -672,6 +625,53 @@ class CellBatteryDischargeRemainingTime(GridCell):
         return format_minutes(self.value)
 
 
+# Weather Tiles
+
+
+class CellWeatherTemperature(BaseCellTemperate):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_HOUSE
+
+    @property
+    def value(self):
+        return float(self.state.get("sensor.openweathermap_temperature", 0))
+
+
+class CellWeatherWindSpeed(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_WIND
+
+    @property
+    def value(self):
+        return int(self.state.get("sensor.openweathermap_wind_speed", 0))
+
+    @property
+    def label(self):
+        return f"{convert_ms_to_mph(self.value)}mph"
+
+    @property
+    def open(self):
+        return self.value > 10
+
+
+class CellWeatherRainProbability(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_UMBRELLA
+
+    @property
+    def value(self):
+        return int(
+            self.state.get(
+                "sensor.openweathermap_forecast_precipitation_probability", 0
+            )
+        )
+
+    @property
+    def label(self):
+        return f"{self.value}%"
+
+    @property
+    def open(self):
+        return self.value > 0
+
+
 rainbox_idx = 0
 
 
@@ -729,21 +729,6 @@ class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
 rainbox_idx += 1
 
 
-class GridColumnWeather(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
-    cells = [
-        CellWeatherTemperature,
-        CellTemperatureLounge,
-        CellTemperatureBedroom,
-        CellWeatherWindSpeed,
-        CellWeatherRainProbability,
-    ]
-
-
-rainbox_idx += 1
-
-
 class GridColumnElectricity(HorizontalCollapseTileGridColumn):
     border_width = 1
     border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
@@ -757,6 +742,20 @@ class GridColumnElectricity(HorizontalCollapseTileGridColumn):
     ]
 
 
+class GridColumnWeather(HorizontalCollapseTileGridColumn):
+    border_width = 1
+    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
+    cells = [
+        CellWeatherTemperature,
+        CellWeatherWindSpeed,
+        CellWeatherRainProbability,
+        CellTemperatureLounge,
+        CellTemperatureBedroom,
+    ]
+
+
+rainbox_idx += 1
+
 # CUSTOM GRID
 
 
@@ -765,6 +764,6 @@ class CustomTileGrid(TileGrid):
         GridColumnSensors,
         GridColumnMotion,
         GridColumnHomeLab,
-        GridColumnWeather,
         GridColumnElectricity,
+        GridColumnWeather,
     ]
