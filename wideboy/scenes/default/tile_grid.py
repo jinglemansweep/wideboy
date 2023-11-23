@@ -104,10 +104,6 @@ class CellSensorStepsLouis(GridCell):
     def label(self):
         return f"{self.value}"
 
-    @property
-    def open(self):
-        return datetime.datetime.now().hour < HOUR_EVENING
-
 
 class CellSensorLoungeAirPM(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_SMOKING
@@ -252,6 +248,97 @@ class CellDS920VolumeUsage(GridCell):
         return f"{self.value}%"
 
 
+# Motion Tiles
+
+"""
+- binary_sensor.front_door_motion
+- binary_sensor.blink_front_motion_detected
+- binary_sensor.blink_back_motion_detected
+- binary_sensor.blink_side_motion_detected
+- binary_sensor.blink_garage_motion_detected
+"""
+
+
+class CellMotionFrontDoor(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
+
+    @property
+    def value(self):
+        return self.state.get("binary_sensor.front_door_motion", False)
+
+    @property
+    def open(self):
+        return self.value
+
+    @property
+    def label(self):
+        return f"Front"
+
+
+class CellMotionFrontGarden(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_ROAD
+
+    @property
+    def value(self):
+        return self.state.get("blink_front_motion_detected", False)
+
+    @property
+    def open(self):
+        return self.value
+
+    @property
+    def label(self):
+        return f"Front"
+
+
+class CellMotionBackGarden(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_LEAF
+
+    @property
+    def value(self):
+        return self.state.get("blink_back_motion_detected", False)
+
+    @property
+    def open(self):
+        return self.value
+
+    @property
+    def label(self):
+        return f"Back"
+
+
+class CellMotionHouseSide(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_CAR
+
+    @property
+    def value(self):
+        return self.state.get("blink_side_motion_detected", False)
+
+    @property
+    def open(self):
+        return self.value
+
+    @property
+    def label(self):
+        return f"Side"
+
+
+class CellMotionGarage(GridCell):
+    icon_codepoint = FontAwesomeIcons.ICON_FA_WAREHOUSE
+
+    @property
+    def value(self):
+        return self.state.get("blink_side_motion_detected", False)
+
+    @property
+    def open(self):
+        return self.value
+
+    @property
+    def label(self):
+        return f"Garage"
+
+
 # Temperature Tiles
 
 
@@ -268,10 +355,6 @@ class CellTemperatureLounge(BaseCellTemperate):
     def value(self):
         return float(self.state.get("sensor.hue_motion_sensor_1_temperature", 0))
 
-    @property
-    def open(self):
-        return datetime.datetime.now().hour < HOUR_EVENING
-
 
 class CellTemperatureBedroom(BaseCellTemperate):
     icon_codepoint = FontAwesomeIcons.ICON_FA_BED
@@ -279,10 +362,6 @@ class CellTemperatureBedroom(BaseCellTemperate):
     @property
     def value(self):
         return float(self.state.get("sensor.bedroom_temperature_sensor_temperature", 0))
-
-    @property
-    def open(self):
-        return datetime.datetime.now().hour < HOUR_EVENING
 
 
 # Weather Tiles
@@ -294,10 +373,6 @@ class CellWeatherTemperature(BaseCellTemperate):
     @property
     def value(self):
         return float(self.state.get("sensor.openweathermap_temperature", 0))
-
-    @property
-    def open(self):
-        return datetime.datetime.now().hour < HOUR_EVENING
 
 
 class CellWeatherWindSpeed(GridCell):
@@ -625,6 +700,21 @@ class GridColumnSensors(HorizontalCollapseTileGridColumn):
 rainbox_idx += 1
 
 
+class GridColumnMotion(HorizontalCollapseTileGridColumn):
+    border_width = 1
+    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
+    cells = [
+        CellMotionFrontDoor,
+        CellMotionFrontGarden,
+        CellMotionBackGarden,
+        CellMotionHouseSide,
+        CellMotionGarage,
+    ]
+
+
+rainbox_idx += 1
+
+
 class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
     border_width = 1
     border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
@@ -673,6 +763,7 @@ class GridColumnElectricity(HorizontalCollapseTileGridColumn):
 class CustomTileGrid(TileGrid):
     columns = [
         GridColumnSensors,
+        GridColumnMotion,
         GridColumnHomeLab,
         GridColumnWeather,
         GridColumnElectricity,
