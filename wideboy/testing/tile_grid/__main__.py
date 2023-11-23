@@ -8,62 +8,18 @@ from typing import Dict, List, Tuple
 
 from wideboy.scenes.base import BaseScene
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
-from .tiles import CustomTileGrid
+from .tiles import (
+    CustomTileGrid,
+    CellSpeedTestDownload,
+    CellSpeedTestUpload,
+    CellSpeedTestPing,
+)
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.DEBUG)
 
-# Setup
-
-SCREEN_WIDTH = 256
-SCREEN_HEIGHT = 64
-
-
-# Main Loop
-
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SCALED)
-
-clock = pygame.time.Clock()
-FPS = 50
-DEBUG = True
-
-"""
-- sensor.privacy_ip_info
-- sensor.transmission_down_speed
-- sensor.ds920plus_volume_used
-- sensor.speedtest_download_average
-- sensor.speedtest_upload_average
-- sensor.speedtest_ping_average
-- binary_sensor.back_door_contact_sensor_contact
-- binary_sensor.front_door_contact_sensor_contact
-- input_boolean.house_manual
-- switch.lounge_fans
-- sensor.octopus_energy_electricity_current_demand
-- sensor.octopus_energy_electricity_current_rate
-- sensor.octopus_energy_electricity_current_accumulative_cost
-- sensor.electricity_hourly_rate
-- sensor.delta_2_max_downstairs_battery_level
-- sensor.delta_2_max_downstairs_cycles
-- sensor.delta_2_max_downstairs_discharge_remaining_time
-- sensor.delta_2_max_downstairs_charge_remaining_time
-- sensor.delta_2_max_downstairs_ac_in_power
-- sensor.delta_2_max_downstairs_ac_out_power
-- sensor.openweathermap_wind_bearing
-- sensor.openweathermap_wind_speed
-- sensor.openweathermap_temperature
-- sensor.openweathermap_weather_code
-- sensor.hue_motion_sensor_1_temperature
-- sensor.kitchen_temperature_sensor_temperature
-- sensor.bedroom_temperature_sensor_temperature
-- sensor.blink_garage_temperature
-- sensor.blink_back_temperature
-- sensor.blink_front_temperature
-- sensor.blink_side_temperature
-- sensor.steps_louis
-- sensor.core_300s_pm2_5
-"""
+# Helper Functions
 
 
 def randomise_state_common(state: Dict):
@@ -98,6 +54,28 @@ def randomise_state_rare(state: Dict):
     )
 
 
+# Setup
+
+SCREEN_WIDTH = 256
+SCREEN_HEIGHT = 64
+
+FPS = 50
+DEBUG = True
+
+CELLS = [
+    [CellSpeedTestDownload, CellSpeedTestUpload],
+    [CellSpeedTestPing, CellSpeedTestPing, CellSpeedTestDownload],
+    [CellSpeedTestDownload, CellSpeedTestPing],
+]
+
+# Main Loop
+
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SCALED)
+
+clock = pygame.time.Clock()
+
+
 frame = 0
 state: Dict = dict()
 running = True
@@ -115,13 +93,12 @@ class MockScene:
         self.engine = MockEngine(state)
 
 
-rect = pygame.Rect(0, 0, 0, 0)
+rect = pygame.Rect(0, 0, 256, 64)
+
 
 scene = MockScene(state)
-tile_grid = CustomTileGrid(scene, rect)  # type: ignore
+tile_grid = CustomTileGrid(scene, CELLS)  # type: ignore
 
-sprite_group: pygame.sprite.LayeredDirty = pygame.sprite.LayeredDirty()
-sprite_group.add(tile_grid)
 
 while running:
     now = datetime.datetime.now()
@@ -132,17 +109,15 @@ while running:
     if frame % 300 == 0:
         randomise_state_common(state)
         print(f"State: {state}")
-    if frame % 1000 == 0:
+    if frame % 400 == 0:
         randomise_state_rare(state)
         print(f"State: {state}")
 
     screen.fill(pygame.Color(0, 0, 0, 255))
-    sprite_group.update(
+    tile_grid.update(
         frame, clock, 0, [pygame.event.Event(EVENT_HASS_STATESTREAM_UPDATE)]
     )
-    if tile_grid.rect:
-        tile_grid.rect.topright = SCREEN_WIDTH, 0
-    sprite_group.draw(screen)
+    tile_grid.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)
     if frame % 100 == 0:
