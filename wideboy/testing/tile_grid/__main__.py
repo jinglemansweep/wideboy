@@ -56,16 +56,17 @@ def randomise_state_rare(state: Dict):
 
 # Setup
 
-SCREEN_WIDTH = 256
+SCREEN_WIDTH = 512
 SCREEN_HEIGHT = 64
 
 FPS = 50
 DEBUG = True
 
 CELLS = [
-    [CellSpeedTestDownload, CellSpeedTestUpload],
-    [CellSpeedTestPing, CellSpeedTestPing, CellSpeedTestDownload],
-    [CellSpeedTestDownload, CellSpeedTestPing],
+    [CellSpeedTestDownload],
+    [CellSpeedTestUpload],
+    [CellSpeedTestPing],
+    [CellSpeedTestUpload, CellSpeedTestPing],
 ]
 
 # Main Loop
@@ -100,24 +101,26 @@ scene = MockScene(state)
 tile_grid = CustomTileGrid(scene, CELLS)  # type: ignore
 
 
+group: pygame.sprite.Group = pygame.sprite.Group()
+group.add(tile_grid)
+
+
 while running:
     now = datetime.datetime.now()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    if frame % 300 == 0:
+    if frame % 50 == 0:
         randomise_state_common(state)
         print(f"State: {state}")
-    if frame % 400 == 0:
+    if frame % 200 == 0:
         randomise_state_rare(state)
         print(f"State: {state}")
 
     screen.fill(pygame.Color(0, 0, 0, 255))
-    tile_grid.update(
-        frame, clock, 0, [pygame.event.Event(EVENT_HASS_STATESTREAM_UPDATE)]
-    )
-    tile_grid.draw(screen)
+    group.update(frame, clock, 0, [pygame.event.Event(EVENT_HASS_STATESTREAM_UPDATE)])
+    group.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)
     if frame % 100 == 0:
