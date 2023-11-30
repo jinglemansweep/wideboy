@@ -664,7 +664,7 @@ class CellWeatherWindSpeed(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value > 10
+        return is_defined(self.value) and self.value > 5
 
 
 class CellWeatherRainProbability(GridCell):
@@ -678,7 +678,7 @@ class CellWeatherRainProbability(GridCell):
 
     @property
     def label(self):
-        return template_if_defined(self.value, "{}%")
+        return template_if_defined(self.value, "{:.0f}%")
 
     @property
     def open(self):

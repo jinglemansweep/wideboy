@@ -153,7 +153,7 @@ class DefaultScene(BaseScene):
         events: list[Event],
     ) -> None:
         super().update(clock, delta, events)
-        self.tile_grid.rect.topright = (self.width - 128, 0)
+        self.tile_grid.rect.topright = (self.width - 130, 0)
 
     # Handle Events
 

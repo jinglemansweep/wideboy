@@ -108,7 +108,7 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
     def __init__(self, *sprites: TileGridCell):
         super().__init__()
         self.add(sprites)
-        self.animator = Animator(range=(0.0, 64.0), open=True, speed=1.0)
+        self.animator = Animator(range=(0.0, 64.0), open=False, speed=1.0)
 
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
