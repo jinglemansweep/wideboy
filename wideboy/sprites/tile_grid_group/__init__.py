@@ -9,7 +9,7 @@ from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, ca
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.tile_grid.helpers import (
+from wideboy.sprites.tile_grid_group.helpers import (
     Animator,
     AnimatorState,
     FontAwesomeIcons,
@@ -102,7 +102,7 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
 # Tile Grid Column Group
 
 
-class TileGridColumn(pygame.sprite.Group):
+class TileGridColumn(pygame.sprite.LayeredDirty):
     animator: Animator
 
     def __init__(self, *sprites: TileGridCell):
@@ -115,12 +115,20 @@ class TileGridColumn(pygame.sprite.Group):
         open = any([sprite for sprite in self.sprites() if sprite.open])
         self.animator.set(open)
         self.animator.update()
+        if self.animating:
+            self.dirty = 1
+
+    @property
+    def animating(self):
+        return self.animator.animating or any(
+            [cell.animating for cell in self.sprites()]
+        )
 
 
 # Tile Grid Sprite
 
 
-class TileGrid(pygame.sprite.Sprite):
+class TileGrid(pygame.sprite.DirtySprite):
     state: Dict
     columns: List
 
@@ -144,25 +152,27 @@ class TileGrid(pygame.sprite.Sprite):
         return f"TileGrid(columns={self.columns})"
 
     def update(self, frame, clock, delta, events):
-        # print("TILE GRID UPDATE")
         super().update(frame, clock, delta, events)
         for event in events:
             pass
         cx, cy = 0, 0
         width, height = self.calculate_size()
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
+        self.image.fill(pygame.Color(0, 0, 0, 0))
         for column in self.columns:
             column.update()
             cy = 0
             for cell in column.sprites():
                 cell.rect.width = column.animator.value
+                cell.update()
                 cell.rect.x = cx
                 cell.rect.y = cy
-                cell.update()
                 cy += cell.rect.height
             cx += column.animator.value
-
             column.draw(self.image)
+        self.dirty = 1
+        self.rect.width = cx
+        self.rect.height = cy
 
     def calculate_size(self):
         width = 0
@@ -189,6 +199,9 @@ class VerticalCollapseTileGridCell(TileGridCell):
         self.height_animator.set(self.open)
         self.height_animator.update()
         self.rect.height = self.height_animator.value
+        crop_surface = pygame.Surface((self.width, self.rect.height), pygame.SRCALPHA)
+        crop_surface.blit(self.image, (0, 0, self.width, self.rect.height))
+        self.image = crop_surface
         super().update()
 
     @property

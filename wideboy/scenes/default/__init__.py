@@ -12,12 +12,13 @@ from wideboy.sprites.homeassistant.entity_row import (
 )
 from wideboy.sprites.homeassistant.entity_grid import HomeAssistantEntityGridSprite
 from wideboy.sprites.notification import NotificationSprite
+from wideboy.sprites.tile_grid_group import TileGrid
 from wideboy.sprites.weather.animation import WeatherAnimationSprite
 from wideboy.sprites.weather.temperature import WeatherTemperatureSprite
 from wideboy.sprites.weather.wind import WeatherWindSprite
 from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
-from wideboy.scenes.default.tile_grid import CustomTileGrid
+from wideboy.scenes.default.tile_grid import CELLS
 
 
 from wideboy.config import settings
@@ -119,7 +120,7 @@ class DefaultScene(BaseScene):
         # TILE GRID WIDGET
         # =====================================================================
 
-        self.tile_grid = CustomTileGrid(self, Rect(0, 0, 0, 0))
+        self.tile_grid = TileGrid(self, CELLS)
         self.group.add(self.tile_grid)
 
         # =====================================================================
@@ -152,7 +153,7 @@ class DefaultScene(BaseScene):
         events: list[Event],
     ) -> None:
         super().update(clock, delta, events)
-        self.tile_grid.rect.topright = (self.width - 130, 0)
+        self.tile_grid.rect.topright = (self.width - 128, 0)
 
     # Handle Events
 

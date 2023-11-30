@@ -3,14 +3,8 @@ import enum
 import pygame
 import random
 
-from wideboy.sprites.tile_grid import (
-    TileGrid,
-    HorizontalCollapseTileGridColumn,
-    VerticalCollapseTileGridCell,
-    CommonColors,
-    FontAwesomeIcons,
-)
-
+from wideboy.sprites.tile_grid_group import VerticalCollapseTileGridCell, TileGrid
+from wideboy.sprites.tile_grid_group.helpers import CommonColors, FontAwesomeIcons
 
 # CUSTOM SUBCLASSES
 
@@ -276,7 +270,7 @@ class CellMotionFrontGarden(GridCell):
 
     @property
     def value(self):
-        return self.state.get("blink_front_motion_detected", False)
+        return self.state.get("binary_sensor.blink_front_motion_detected", False)
 
     @property
     def open(self):
@@ -292,7 +286,7 @@ class CellMotionBackGarden(GridCell):
 
     @property
     def value(self):
-        return self.state.get("blink_back_motion_detected", False)
+        return self.state.get("binary_sensor.blink_back_motion_detected", False)
 
     @property
     def open(self):
@@ -308,7 +302,7 @@ class CellMotionHouseSide(GridCell):
 
     @property
     def value(self):
-        return self.state.get("blink_side_motion_detected", False)
+        return self.state.get("binary_sensor.blink_side_motion_detected", False)
 
     @property
     def open(self):
@@ -324,7 +318,7 @@ class CellMotionGarage(GridCell):
 
     @property
     def value(self):
-        return self.state.get("blink_side_motion_detected", False)
+        return self.state.get("binary_sensor.blink_side_motion_detected", False)
 
     @property
     def open(self):
@@ -680,98 +674,41 @@ class CellWeatherRainProbability(GridCell):
         return self.value > 0
 
 
-rainbox_idx = 0
-
-
-class GridColumnSwitches(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
-    cells = []
-
-
-rainbox_idx += 1
-
-
-class GridColumnSensors(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
-    cells = [
+CELLS = [
+    [
         CellSensorStepsLouis,
         CellSensorLoungeAirPM,
         CellSensorDoorFront,
         CellSensorBackFront,
         CellSwitchLoungeFan,
         CellSwitchBooleanManual,
-    ]
-
-
-rainbox_idx += 1
-
-
-class GridColumnMotion(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
-    cells = [
+    ],
+    [
         CellMotionFrontDoor,
         CellMotionFrontGarden,
         CellMotionBackGarden,
         CellMotionHouseSide,
         CellMotionGarage,
-    ]
-
-
-rainbox_idx += 1
-
-
-class GridColumnHomeLab(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
-    cells = [
+    ],
+    [
         CellDS920VolumeUsage,
         CellSpeedTestDownload,
         CellSpeedTestUpload,
         CellSpeedTestPing,
-    ]
-
-
-rainbox_idx += 1
-
-
-class GridColumnElectricity(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
-    cells = [
+    ],
+    [
         CellElectricityDemand,
         CellElectricityRate,
         CellElectricityAccumulativeCost,
         CellGasAccumulativeCost,
         CellBatteryLevel,
         CellBatteryDischargeRemainingTime,
-    ]
-
-
-class GridColumnWeather(HorizontalCollapseTileGridColumn):
-    border_width = 1
-    border_color = rainbox_colors[rainbox_idx % len(rainbox_colors)]
-    cells = [
+    ],
+    [
         CellWeatherTemperature,
         CellWeatherWindSpeed,
         CellWeatherRainProbability,
         CellTemperatureLounge,
         CellTemperatureBedroom,
-    ]
-
-
-rainbox_idx += 1
-
-# CUSTOM GRID
-
-
-class CustomTileGrid(TileGrid):
-    columns = [
-        GridColumnSensors,
-        GridColumnMotion,
-        GridColumnHomeLab,
-        GridColumnElectricity,
-        GridColumnWeather,
-    ]
+    ],
+]

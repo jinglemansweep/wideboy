@@ -8,11 +8,38 @@ from typing import Dict, List, Tuple
 
 from wideboy.scenes.base import BaseScene
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
-from .tiles import (
-    CustomTileGrid,
+from wideboy.sprites.tile_grid_group import TileGrid
+from wideboy.scenes.default.tile_grid import (
+    CellSensorStepsLouis,
+    CellSensorLoungeAirPM,
+    CellSensorDoorFront,
+    CellSensorBackFront,
+    CellSwitchLoungeFan,
+    CellSwitchBooleanManual,
+    # --
+    CellMotionFrontDoor,
+    CellMotionFrontGarden,
+    CellMotionBackGarden,
+    CellMotionHouseSide,
+    CellMotionGarage,
+    # --
+    CellDS920VolumeUsage,
     CellSpeedTestDownload,
     CellSpeedTestUpload,
     CellSpeedTestPing,
+    # --
+    CellElectricityDemand,
+    CellElectricityRate,
+    CellElectricityAccumulativeCost,
+    CellGasAccumulativeCost,
+    CellBatteryLevel,
+    CellBatteryDischargeRemainingTime,
+    # --
+    CellWeatherTemperature,
+    CellWeatherWindSpeed,
+    CellWeatherRainProbability,
+    CellTemperatureLounge,
+    CellTemperatureBedroom,
 )
 
 logger = logging.getLogger(__name__)
@@ -23,33 +50,62 @@ logger.setLevel(logging.DEBUG)
 
 
 def randomise_state_common(state: Dict):
-    electricity_current_demand = random.randint(0, 3000)
     state.update(
         {
-            "sensor.octopus_energy_electricity_current_demand": electricity_current_demand,
+            "sensor.octopus_energy_electricity_current_demand": random.randint(0, 3000),
         }
     )
 
 
 def randomise_state_rare(state: Dict):
-    electricity_current_rate = random.randint(0, 100) / 100
-    electricity_current_accumulative_cost = random.randint(0, 100) / 100
-    speedtest_download = random.randint(0, 1000)
-    speedtest_upload = random.randint(0, 1000)
-    speedtest_ping = random.randint(0, 100)
-    ds920plus_volume_used = random.randint(0, 100)
     state.update(
         {
+            "binary_sensor.blink_front_motion_detected": random.choice([True, False]),
+            "binary_sensor.blink_back_motion_detected": random.choice([True, False]),
+            "binary_sensor.blink_side_motion_detected": random.choice([True, False]),
+            "binary_sensor.blink_side_motion_detected": random.choice([True, False]),
+            "binary_sensor.front_door_contact_sensor_contact": random.choice(
+                [True, False]
+            ),
+            "binary_sensor.front_door_motion": random.choice([True, False]),
+            "binary_sensor.back_door_contact_sensor_contact": random.choice(
+                [True, False]
+            ),
+            "sensor.bedroom_temperature_sensor_temperature": random.randint(10, 30),
             "sensor.delta_2_max_downstairs_battery_level": random.randint(0, 100),
             "sensor.delta_2_max_downstairs_ac_in_power": random.randint(0, 1000),
             "sensor.delta_2_max_downstairs_ac_out_power": random.randint(0, 1000),
-            "sensor.octopus_energy_electricity_current_rate": electricity_current_rate,
-            "sensor.octopus_energy_electricity_current_rate": electricity_current_accumulative_cost,
-            "sensor.speedtest_download_average": speedtest_download,
-            "sensor.speedtest_upload_average": speedtest_upload,
-            "sensor.speedtest_ping_average": speedtest_ping,
-            "sensor.ds920plus_volume_used": ds920plus_volume_used,
-            "switch.lounge_fans": "on" if random.choice([True, False]) else "off",
+            "sensor.delta_2_max_downstairs_charge_remaining_time": random.randint(
+                0, 60 * 5
+            ),
+            "sensor.delta_2_max_downstairs_discharge_remaining_time": random.randint(
+                0, 60 * 5
+            ),
+            "sensor.hue_motion_sensor_1_temperature": random.randint(10, 30),
+            "sensor.octopus_energy_electricity_current_rate": random.randint(0, 100)
+            / 100,
+            "sensor.octopus_energy_electricity_current_accumulative_cost": random.randint(
+                0, 100
+            )
+            / 100,
+            "sensor.octopus_energy_gas_current_accumulative_cost": random.randint(
+                0, 100
+            )
+            / 100,
+            "sensor.core_300s_pm2_5": random.randint(0, 300),
+            "sensor.core_300s_air_quality": random.randint(1, 4),
+            "sensor.speedtest_download_average": random.randint(0, 1000),
+            "sensor.speedtest_upload_average": random.randint(0, 1000),
+            "sensor.speedtest_ping_average": random.randint(0, 100),
+            "sensor.ds920plus_volume_used": random.randint(0, 100),
+            "sensor.openweathermap_temperature": random.randint(1, 30),
+            "sensor.openweathermap_wind_speed": random.randint(0, 60),
+            "sensor.openweathermap_forecast_precipitation_probability": random.randint(
+                0, 100
+            ),
+            "sensor.steps_louis": random.randint(0, 5000),
+            "switch.lounge_fans": random.choice([True, False]),
+            "input_boolean.house_manual": random.choice([True, False]),
         }
     )
 
@@ -63,10 +119,42 @@ FPS = 50
 DEBUG = True
 
 CELLS = [
-    [CellSpeedTestDownload],
-    [CellSpeedTestUpload],
-    [CellSpeedTestPing],
-    [CellSpeedTestUpload, CellSpeedTestPing],
+    [
+        CellSensorStepsLouis,
+        CellSensorLoungeAirPM,
+        CellSensorDoorFront,
+        CellSensorBackFront,
+        CellSwitchLoungeFan,
+        CellSwitchBooleanManual,
+    ],
+    [
+        CellMotionFrontDoor,
+        CellMotionFrontGarden,
+        CellMotionBackGarden,
+        CellMotionHouseSide,
+        CellMotionGarage,
+    ],
+    [
+        CellDS920VolumeUsage,
+        CellSpeedTestDownload,
+        CellSpeedTestUpload,
+        CellSpeedTestPing,
+    ],
+    [
+        CellElectricityDemand,
+        CellElectricityRate,
+        CellElectricityAccumulativeCost,
+        CellGasAccumulativeCost,
+        CellBatteryLevel,
+        CellBatteryDischargeRemainingTime,
+    ],
+    [
+        CellWeatherTemperature,
+        CellWeatherWindSpeed,
+        CellWeatherRainProbability,
+        CellTemperatureLounge,
+        CellTemperatureBedroom,
+    ],
 ]
 
 # Main Loop
@@ -98,7 +186,7 @@ rect = pygame.Rect(0, 0, 256, 64)
 
 
 scene = MockScene(state)
-tile_grid = CustomTileGrid(scene, CELLS)  # type: ignore
+tile_grid = TileGrid(scene, CELLS)  # type: ignore
 
 
 group: pygame.sprite.Group = pygame.sprite.Group()
