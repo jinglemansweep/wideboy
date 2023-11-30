@@ -153,14 +153,18 @@ class TileGrid(pygame.sprite.DirtySprite):
 
     def update(self, frame, clock, delta, events):
         super().update(frame, clock, delta, events)
+        dirty = False
         for event in events:
-            pass
+            if event.type in [EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND]:
+                dirty = True
         cx, cy = 0, 0
         width, height = self.calculate_size()
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
         self.image.fill(pygame.Color(0, 0, 0, 0))
         for column in self.columns:
             column.update()
+            if column.animating:
+                dirty = True
             cy = 0
             for cell in column.sprites():
                 cell.rect.width = column.animator.value
@@ -170,7 +174,7 @@ class TileGrid(pygame.sprite.DirtySprite):
                 cy += cell.rect.height
             cx += column.animator.value
             column.draw(self.image)
-        self.dirty = 1
+        self.dirty = 1 if dirty else 0
         self.rect.width = cx
         self.rect.height = cy
 
