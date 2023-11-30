@@ -59,6 +59,7 @@ class StyleMixin:
 
 
 class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
+    image: pygame.Surface
     style: Dict
     width: int = TILE_GRID_CELL_WIDTH
     height: int = TILE_GRID_CELL_HEIGHT
@@ -71,8 +72,11 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
         self.image.fill(self.cell_color_background)
         self.rect = self.image.get_rect()
 
-    def update(self):
+    def update(self, dirty=False):
+        if not dirty:
+            return None
         self.dirty = 1
+        # logger.debug(f"rendering cell")
         self.image.fill(self.cell_color_background)
         cx, cy = 0, 0
         if self.icon_visible:
@@ -168,7 +172,7 @@ class TileGrid(pygame.sprite.DirtySprite):
             cy = 0
             for cell in column.sprites():
                 cell.rect.width = column.animator.value
-                cell.update()
+                cell.update(dirty=dirty)
                 cell.rect.x = cx
                 cell.rect.y = cy
                 cy += cell.rect.height
@@ -206,7 +210,7 @@ class VerticalCollapseTileGridCell(TileGridCell):
         crop_surface = pygame.Surface((self.width, self.rect.height), pygame.SRCALPHA)
         crop_surface.blit(self.image, (0, 0, self.width, self.rect.height))
         self.image = crop_surface
-        super().update()
+        super().update(*args, **kwargs)
 
     @property
     def open_finished(self):
