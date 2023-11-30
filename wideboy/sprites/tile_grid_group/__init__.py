@@ -191,7 +191,7 @@ class TileGrid(pygame.sprite.DirtySprite):
 
 
 class VerticalCollapseTileGridCell(TileGridCell):
-    open: bool = True
+    open: bool = False
     width: int = TILE_GRID_CELL_WIDTH
     height_animator: Animator
 

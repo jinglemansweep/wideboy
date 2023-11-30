@@ -3,8 +3,15 @@ import enum
 import pygame
 import random
 
+from typing import Optional
+
 from wideboy.sprites.tile_grid_group import VerticalCollapseTileGridCell, TileGrid
-from wideboy.sprites.tile_grid_group.helpers import CommonColors, FontAwesomeIcons
+from wideboy.sprites.tile_grid_group.helpers import (
+    CommonColors,
+    FontAwesomeIcons,
+    is_defined,
+    template_if_defined,
+)
 
 # CUSTOM SUBCLASSES
 
@@ -17,23 +24,31 @@ class GridCell(VerticalCollapseTileGridCell):
 # CUSTOM FUNCTIONS
 
 
-def format_watts(watts: int):
+def format_watts(watts: Optional[int] = None):
+    if watts is None:
+        return "N/A"
     return "{:.0f}W".format(watts) if watts < 1000 else "{:.1f}kW".format(watts / 1000)
 
 
-def format_minutes(minutes: int):
-    hours = minutes // 60
-    minutes = minutes % 60
+def format_minutes(minutes: Optional[int] = None):
+    if minutes is None:
+        return "N/A"
+    hours = int(minutes) // 60
+    minutes = int(minutes) % 60
     return f"{hours}h{minutes:02d}m"
 
 
-def format_compass_bearing(bearing: int):
+def format_compass_bearing(bearing: Optional[int] = None):
+    if bearing is None:
+        return "N/A"
     return ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][
         int(((bearing + 22.5) % 360) / 45)
     ]
 
 
-def convert_ms_to_mph(ms: int):
+def convert_ms_to_mph(ms: Optional[int] = None):
+    if ms is None:
+        return 0
     return round(ms * 2.237)
 
 
@@ -64,7 +79,7 @@ class CellSwitchBooleanManual(GridCell):
 
     @property
     def value(self):
-        return self.state.get("input_boolean.house_manual", False)
+        return self.state.get("input_boolean.house_manual")
 
     @property
     def open(self):
@@ -77,7 +92,7 @@ class CellSwitchLoungeFan(GridCell):
 
     @property
     def value(self):
-        return self.state.get("switch.lounge_fans", False)
+        return self.state.get("switch.lounge_fans")
 
     @property
     def open(self):
@@ -92,15 +107,15 @@ class CellSensorStepsLouis(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.steps_louis", 0))
+        return self.state.get("sensor.steps_louis")
 
     @property
     def label(self):
-        return f"{self.value}"
+        return template_if_defined(self.value, "{:.0f}")
 
     @property
     def open(self):
-        return self.value > 500
+        return is_defined(self.value) and self.value > 500
 
 
 class CellSensorLoungeAirPM(GridCell):
@@ -108,19 +123,19 @@ class CellSensorLoungeAirPM(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.core_300s_pm2_5", 0))
+        return self.state.get("sensor.core_300s_pm2_5")
 
     @property
     def value_quality(self):
-        return int(self.state.get("sensor.core_300s_air_quality", 0))
+        return self.state.get("sensor.core_300s_air_quality")
 
     @property
     def label(self):
-        return f"{self.value}"
+        return template_if_defined(self.value, "{:.0f}")
 
     @property
     def open(self):
-        return self.value_quality > 2
+        return is_defined(self.value_quality) and self.value_quality > 2
 
     @property
     def cell_color_background(self):
@@ -153,7 +168,7 @@ class CellSensorDoorFront(GridCell):
 
     @property
     def value(self):
-        return self.state.get("binary_sensor.front_door_contact_sensor_contact", False)
+        return self.state.get("binary_sensor.front_door_contact_sensor_contact")
 
     @property
     def open(self):
@@ -168,7 +183,7 @@ class CellSensorBackFront(GridCell):
 
     @property
     def value(self):
-        return self.state.get("binary_sensor.back_door_contact_sensor_contact", False)
+        return self.state.get("binary_sensor.back_door_contact_sensor_contact")
 
     @property
     def open(self):
@@ -184,15 +199,15 @@ class CellSpeedTestDownload(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.speedtest_download_average", 0))
+        return self.state.get("sensor.speedtest_download_average")
 
     @property
     def open(self):
-        return self.value < self.limit
+        return is_defined(self.value) and self.value < self.limit
 
     @property
     def label(self):
-        return f"{self.value}Mb"
+        return template_if_defined(self.value, "{:.0f}Mb")
 
 
 class CellSpeedTestUpload(GridCell):
@@ -201,15 +216,15 @@ class CellSpeedTestUpload(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.speedtest_upload_average", 0))
+        return self.state.get("sensor.speedtest_upload_average")
 
     @property
     def open(self):
-        return self.value < self.limit
+        return is_defined(self.value) and self.value < self.limit
 
     @property
     def label(self):
-        return f"{self.value}Mb"
+        return template_if_defined(self.value, "{:.0f}Mb")
 
 
 class CellSpeedTestPing(GridCell):
@@ -218,15 +233,15 @@ class CellSpeedTestPing(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.speedtest_ping_average", 0))
+        return self.state.get("sensor.speedtest_ping_average")
 
     @property
     def open(self):
-        return self.value > self.limit
+        return is_defined(self.value) and self.value > self.limit
 
     @property
     def label(self):
-        return f"{self.value}ms"
+        return template_if_defined(self.value, "{:.0f}ms")
 
 
 class CellDS920VolumeUsage(GridCell):
@@ -235,15 +250,15 @@ class CellDS920VolumeUsage(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.ds920plus_volume_used", 0))
+        return self.state.get("sensor.ds920plus_volume_used")
 
     @property
     def open(self):
-        return self.value > self.limit
+        return is_defined(self.value) and self.value > self.limit
 
     @property
     def label(self):
-        return f"{self.value}%"
+        return template_if_defined(self.value, "{:.0f}%")
 
 
 # Motion Tiles
@@ -254,7 +269,7 @@ class CellMotionFrontDoor(GridCell):
 
     @property
     def value(self):
-        return self.state.get("binary_sensor.front_door_motion", False)
+        return self.state.get("binary_sensor.front_door_motion")
 
     @property
     def open(self):
@@ -270,7 +285,7 @@ class CellMotionFrontGarden(GridCell):
 
     @property
     def value(self):
-        return self.state.get("binary_sensor.blink_front_motion_detected", False)
+        return self.state.get("binary_sensor.blink_front_motion_detected")
 
     @property
     def open(self):
@@ -286,7 +301,7 @@ class CellMotionBackGarden(GridCell):
 
     @property
     def value(self):
-        return self.state.get("binary_sensor.blink_back_motion_detected", False)
+        return self.state.get("binary_sensor.blink_back_motion_detected")
 
     @property
     def open(self):
@@ -302,7 +317,7 @@ class CellMotionHouseSide(GridCell):
 
     @property
     def value(self):
-        return self.state.get("binary_sensor.blink_side_motion_detected", False)
+        return self.state.get("binary_sensor.blink_side_motion_detected")
 
     @property
     def open(self):
@@ -318,7 +333,7 @@ class CellMotionGarage(GridCell):
 
     @property
     def value(self):
-        return self.state.get("binary_sensor.blink_side_motion_detected", False)
+        return self.state.get("binary_sensor.blink_side_motion_detected")
 
     @property
     def open(self):
@@ -335,7 +350,7 @@ class CellMotionGarage(GridCell):
 class BaseCellTemperate(GridCell):
     @property
     def label(self):
-        return f"{round(self.value)}°"
+        return template_if_defined(self.value, "{:.0f}°")
 
 
 class CellTemperatureLounge(BaseCellTemperate):
@@ -345,11 +360,13 @@ class CellTemperatureLounge(BaseCellTemperate):
 
     @property
     def value(self):
-        return float(self.state.get("sensor.hue_motion_sensor_1_temperature", 0))
+        return self.state.get("sensor.hue_motion_sensor_1_temperature")
 
     @property
     def open(self):
-        return self.value < self.limit_min or self.value > self.limit_max
+        return is_defined(self.value) and (
+            self.value < self.limit_min or self.value > self.limit_max
+        )
 
 
 class CellTemperatureBedroom(BaseCellTemperate):
@@ -359,11 +376,13 @@ class CellTemperatureBedroom(BaseCellTemperate):
 
     @property
     def value(self):
-        return float(self.state.get("sensor.bedroom_temperature_sensor_temperature", 0))
+        return self.state.get("sensor.bedroom_temperature_sensor_temperature")
 
     @property
     def open(self):
-        return self.value < self.limit_min or self.value > self.limit_max
+        return is_defined(self.value) and (
+            self.value < self.limit_min or self.value > self.limit_max
+        )
 
 
 # Energy Tiles
@@ -375,9 +394,7 @@ class CellElectricityDemand(GridCell):
 
     @property
     def value(self):
-        return float(
-            self.state.get("sensor.octopus_energy_electricity_current_demand", 0)
-        )
+        return self.state.get("sensor.octopus_energy_electricity_current_demand")
 
     @property
     def label(self):
@@ -385,13 +402,13 @@ class CellElectricityDemand(GridCell):
 
     @property
     def open(self):
-        return self.value > self.limit
+        return is_defined(self.value) and self.value > self.limit
 
     @property
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -399,7 +416,7 @@ class CellElectricityDemand(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit
             else CommonColors.COLOR_GREY
         )
 
@@ -409,17 +426,17 @@ class CellElectricityRate(GridCell):
 
     @property
     def value(self):
-        return float(
-            self.state.get("sensor.octopus_energy_electricity_current_rate", 0)
-        )
+        return self.state.get("sensor.octopus_energy_electricity_current_rate")
 
     @property
     def label(self):
-        return f"£{self.value:.2f}"
+        return template_if_defined(self.value, "£{:.2f}")
 
     @property
     def cell_color_background(self):
-        if self.value < 0.00:
+        if self.value is None:
+            return CommonColors.COLOR_GREY_DARK
+        elif self.value < 0.00:
             return CommonColors.COLOR_BLUE_DARK
         elif self.value <= 0.20:
             return CommonColors.COLOR_GREEN_DARK
@@ -430,6 +447,8 @@ class CellElectricityRate(GridCell):
 
     @property
     def icon_color_background(self):
+        if self.value is None:
+            return CommonColors.COLOR_GREY
         if self.value < 0.00:
             return CommonColors.COLOR_BLUE
         elif self.value <= 0.20:
@@ -446,25 +465,23 @@ class CellElectricityAccumulativeCost(GridCell):
 
     @property
     def value(self):
-        return float(
-            self.state.get(
-                "sensor.octopus_energy_electricity_current_accumulative_cost", 0
-            )
+        return self.state.get(
+            "sensor.octopus_energy_electricity_current_accumulative_cost"
         )
 
     @property
     def label(self):
-        return f"£{self.value:.2f}"
+        return template_if_defined(self.value, "£{:.2f}")
 
     @property
     def open(self):
-        return self.value > self.limit
+        return is_defined(self.value) and self.value > self.limit
 
     @property
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -472,7 +489,7 @@ class CellElectricityAccumulativeCost(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit
             else CommonColors.COLOR_GREY
         )
 
@@ -483,23 +500,21 @@ class CellGasAccumulativeCost(GridCell):
 
     @property
     def value(self):
-        return float(
-            self.state.get("sensor.octopus_energy_gas_current_accumulative_cost", 0)
-        )
+        return self.state.get("sensor.octopus_energy_gas_current_accumulative_cost")
 
     @property
     def label(self):
-        return f"£{self.value:.2f}"
+        return template_if_defined(self.value, "£{:.2f}")
 
     @property
     def open(self):
-        return self.value > self.limit
+        return is_defined(self.value) and self.value > self.limit
 
     @property
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -507,7 +522,7 @@ class CellGasAccumulativeCost(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit
             else CommonColors.COLOR_GREY
         )
 
@@ -517,18 +532,20 @@ class CellBatteryLevel(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.delta_2_max_downstairs_battery_level", 0))
+        return self.state.get("sensor.delta_2_max_downstairs_battery_level")
 
     @property
     def label(self):
-        return f"{self.value}%"
+        return template_if_defined(self.value, "{}%")
 
     @property
     def open(self):
-        return self.value < 50
+        return is_defined(self.value) and self.value < 50
 
     @property
     def icon_codepoint(self):
+        if self.value is None:
+            return None
         if self.value < 20:
             return FontAwesomeIcons.ICON_FA_BATTERY_EMPTY
         elif self.value < 40:
@@ -544,7 +561,7 @@ class CellBatteryLevel(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -552,7 +569,7 @@ class CellBatteryLevel(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if self.value < self.limit
+            if is_defined(self.value) and self.value < self.limit
             else CommonColors.COLOR_GREY
         )
 
@@ -562,11 +579,11 @@ class CellBatteryACInput(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.delta_2_max_downstairs_ac_in_power", 0))
+        return self.state.get("sensor.delta_2_max_downstairs_ac_in_power")
 
     @property
     def open(self):
-        return self.value > 0
+        return is_defined(self.value) and self.value > 0
 
     @property
     def label(self):
@@ -578,11 +595,11 @@ class CellBatteryACOutput(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.delta_2_max_downstairs_ac_out_power", 0))
+        return self.state.get("sensor.delta_2_max_downstairs_ac_out_power")
 
     @property
     def open(self):
-        return self.value > 0
+        return is_defined(self.value) and self.value > 0
 
     @property
     def label(self):
@@ -595,13 +612,11 @@ class CellBatteryChargeRemainingTime(GridCell):
 
     @property
     def value(self):
-        return int(
-            self.state.get("sensor.delta_2_max_downstairs_charge_remaining_time", 0)
-        )
+        return self.state.get("sensor.delta_2_max_downstairs_charge_remaining_time")
 
     @property
     def open(self):
-        return self.value > 0
+        return is_defined(self.value) and self.value > 0
 
     @property
     def label(self):
@@ -614,13 +629,11 @@ class CellBatteryDischargeRemainingTime(GridCell):
 
     @property
     def value(self):
-        return int(
-            self.state.get("sensor.delta_2_max_downstairs_discharge_remaining_time", 0)
-        )
+        return self.state.get("sensor.delta_2_max_downstairs_discharge_remaining_time")
 
     @property
     def open(self):
-        return self.value > 0
+        return is_defined(self.value) and self.value > 0
 
     @property
     def label(self):
@@ -635,7 +648,7 @@ class CellWeatherTemperature(BaseCellTemperate):
 
     @property
     def value(self):
-        return float(self.state.get("sensor.openweathermap_temperature", 0))
+        return self.state.get("sensor.openweathermap_temperature")
 
 
 class CellWeatherWindSpeed(GridCell):
@@ -643,7 +656,7 @@ class CellWeatherWindSpeed(GridCell):
 
     @property
     def value(self):
-        return int(self.state.get("sensor.openweathermap_wind_speed", 0))
+        return self.state.get("sensor.openweathermap_wind_speed")
 
     @property
     def label(self):
@@ -651,7 +664,7 @@ class CellWeatherWindSpeed(GridCell):
 
     @property
     def open(self):
-        return self.value > 10
+        return is_defined(self.value) and self.value > 10
 
 
 class CellWeatherRainProbability(GridCell):
@@ -659,19 +672,17 @@ class CellWeatherRainProbability(GridCell):
 
     @property
     def value(self):
-        return int(
-            self.state.get(
-                "sensor.openweathermap_forecast_precipitation_probability", 0
-            )
+        return self.state.get(
+            "sensor.openweathermap_forecast_precipitation_probability"
         )
 
     @property
     def label(self):
-        return f"{self.value}%"
+        return template_if_defined(self.value, "{}%")
 
     @property
     def open(self):
-        return self.value > 0
+        return is_defined(self.value) and self.value > 0
 
 
 CELLS = [

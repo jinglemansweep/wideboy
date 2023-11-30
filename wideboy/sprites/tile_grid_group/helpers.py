@@ -11,6 +11,8 @@ ICON_FONT_SIZE = 9
 LABEL_FONT_FILENAME = "fonts/bitstream-vera.ttf"
 LABEL_FONT_SIZE = 11
 
+NOT_APPLICABLE = "N/A"
+
 # CUSTOM COLORS
 
 
@@ -85,6 +87,14 @@ class FontAwesomeIcons:
 
 
 # HELPER FUNCTIONS
+
+
+def is_defined(value):
+    return value is not None
+
+
+def template_if_defined(value, template):
+    return template.format(value) if is_defined(value) else NOT_APPLICABLE
 
 
 def render_icon(
