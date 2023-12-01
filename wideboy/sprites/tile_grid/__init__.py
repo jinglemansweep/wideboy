@@ -141,6 +141,7 @@ class TileGrid(pygame.sprite.DirtySprite):
     state: Dict
     columns: List
     tile_surface_cache: Dict[str, pygame.Surface] = dict()
+    update_frames: int = 0
 
     def __init__(self, scene: BaseScene, cells: List[List[Type[TileGridCell]]]):
         super().__init__()
@@ -175,8 +176,8 @@ class TileGrid(pygame.sprite.DirtySprite):
         animating = any([column.animating for column in self.columns])
         if animating:
             dirty = True
-        if not dirty:
-            return
+        if dirty:
+            self.update_frames = 2
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
         self.image.fill(pygame.Color(0, 0, 0, 0))
         for column in self.columns:
@@ -199,7 +200,8 @@ class TileGrid(pygame.sprite.DirtySprite):
             column.draw(self.image)
         self.rect.width = cx
         self.rect.height = cy
-        self.dirty = 1
+        self.dirty = 1 if self.update_frames > 0 else 0
+        self.update_frames -= 1
 
     def calculate_size(self):
         width = 0
