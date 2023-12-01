@@ -165,6 +165,7 @@ class TileGrid(pygame.sprite.DirtySprite):
         width, height = self.calculate_size()
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
         self.image.fill(pygame.Color(0, 0, 0, 0))
+        animating = any([column.animating for column in self.columns])
         for column in self.columns:
             column.update()
             if column.animating:
@@ -172,7 +173,7 @@ class TileGrid(pygame.sprite.DirtySprite):
             cy = 0
             for cell in column.sprites():
                 cell.rect.width = column.animator.value
-                cell.update(dirty=dirty)
+                cell.update(dirty=True)
                 cell.rect.x = cx
                 cell.rect.y = cy
                 cy += cell.rect.height
