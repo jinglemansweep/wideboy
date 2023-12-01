@@ -18,7 +18,7 @@ from wideboy.sprites.weather.temperature import WeatherTemperatureSprite
 from wideboy.sprites.weather.wind import WeatherWindSprite
 from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
-from wideboy.scenes.default.tile_grid import CELLS
+from wideboy.scenes.default.tiles import CELLS
 
 
 from wideboy.config import settings

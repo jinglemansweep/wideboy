@@ -9,7 +9,7 @@ from typing import Dict, List, Tuple
 from wideboy.scenes.base import BaseScene
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
 from wideboy.sprites.tile_grid import TileGrid
-from wideboy.scenes.default.tile_grid import (
+from wideboy.scenes.default.tiles import (
     CellSensorStepsLouis,
     CellSensorLoungeAirPM,
     CellSensorDoorFront,
