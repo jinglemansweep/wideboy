@@ -12,7 +12,7 @@ from wideboy.sprites.homeassistant.entity_row import (
 )
 from wideboy.sprites.homeassistant.entity_grid import HomeAssistantEntityGridSprite
 from wideboy.sprites.notification import NotificationSprite
-from wideboy.sprites.tile_grid_group import TileGrid
+from wideboy.sprites.tile_grid import TileGrid
 from wideboy.sprites.weather.animation import WeatherAnimationSprite
 from wideboy.sprites.weather.temperature import WeatherTemperatureSprite
 from wideboy.sprites.weather.wind import WeatherWindSprite

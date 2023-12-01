@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple
 
 from wideboy.scenes.base import BaseScene
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
-from wideboy.sprites.tile_grid_group import TileGrid
+from wideboy.sprites.tile_grid import TileGrid
 from wideboy.scenes.default.tile_grid import (
     CellSensorStepsLouis,
     CellSensorLoungeAirPM,
@@ -207,7 +207,12 @@ while running:
         print(f"State: {state}")
 
     screen.fill(pygame.Color(0, 0, 0, 255))
-    group.update(frame, clock, 0, [pygame.event.Event(EVENT_HASS_STATESTREAM_UPDATE)])
+    group.update(
+        frame,
+        clock,
+        0,
+        [pygame.event.Event(EVENT_HASS_STATESTREAM_UPDATE, dict(payload=dict()))],
+    )
     group.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)

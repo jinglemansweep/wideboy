@@ -5,8 +5,8 @@ import random
 
 from typing import Optional
 
-from wideboy.sprites.tile_grid_group import VerticalCollapseTileGridCell, TileGrid
-from wideboy.sprites.tile_grid_group.helpers import (
+from wideboy.sprites.tile_grid import VerticalCollapseTileGridCell, TileGrid
+from wideboy.sprites.tile_grid.helpers import (
     CommonColors,
     FontAwesomeIcons,
     is_defined,
@@ -74,12 +74,9 @@ HOUR_EVENING = 20
 
 
 class CellSwitchBooleanManual(GridCell):
+    entity_id = "input_boolean.house_manual"
     label = "Manual"
     icon_codepoint = FontAwesomeIcons.ICON_FA_TOGGLE_OFF
-
-    @property
-    def value(self):
-        return self.state.get("input_boolean.house_manual")
 
     @property
     def open(self):
@@ -87,12 +84,9 @@ class CellSwitchBooleanManual(GridCell):
 
 
 class CellSwitchLoungeFan(GridCell):
+    entity_id = "switch.lounge_fans"
     label = "Fan"
     icon_codepoint = FontAwesomeIcons.ICON_FA_FAN
-
-    @property
-    def value(self):
-        return self.state.get("switch.lounge_fans")
 
     @property
     def open(self):
@@ -103,11 +97,8 @@ class CellSwitchLoungeFan(GridCell):
 
 
 class CellSensorStepsLouis(GridCell):
+    entity_id = "sensor.steps_louis"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PERSON_WALKING
-
-    @property
-    def value(self):
-        return self.state.get("sensor.steps_louis")
 
     @property
     def label(self):
@@ -119,11 +110,8 @@ class CellSensorStepsLouis(GridCell):
 
 
 class CellSensorLoungeAirPM(GridCell):
+    entity_id = "sensor.core_300s_pm2_5"
     icon_codepoint = FontAwesomeIcons.ICON_FA_SMOKING
-
-    @property
-    def value(self):
-        return self.state.get("sensor.core_300s_pm2_5")
 
     @property
     def value_quality(self):
@@ -161,14 +149,11 @@ class CellSensorLoungeAirPM(GridCell):
 
 
 class CellSensorDoorFront(GridCell):
+    entity_id = "binary_sensor.front_door_contact_sensor_contact"
     icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
     label = "Front"
     cell_color_background = CommonColors.COLOR_RED_DARK
     icon_color_background = CommonColors.COLOR_RED
-
-    @property
-    def value(self):
-        return self.state.get("binary_sensor.front_door_contact_sensor_contact")
 
     @property
     def open(self):
@@ -176,14 +161,11 @@ class CellSensorDoorFront(GridCell):
 
 
 class CellSensorBackFront(GridCell):
+    entity_id = "binary_sensor.back_door_contact_sensor_contact"
     icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
     label = "Back"
     cell_color_background = CommonColors.COLOR_RED_DARK
     icon_color_background = CommonColors.COLOR_RED
-
-    @property
-    def value(self):
-        return self.state.get("binary_sensor.back_door_contact_sensor_contact")
 
     @property
     def open(self):
@@ -194,12 +176,9 @@ class CellSensorBackFront(GridCell):
 
 
 class CellSpeedTestDownload(GridCell):
+    entity_id = "sensor.speedtest_download_average"
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_ARROW_DOWN
     limit = 500
-
-    @property
-    def value(self):
-        return self.state.get("sensor.speedtest_download_average")
 
     @property
     def open(self):
@@ -211,12 +190,9 @@ class CellSpeedTestDownload(GridCell):
 
 
 class CellSpeedTestUpload(GridCell):
+    entity_id = "sensor.speedtest_upload_average"
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_ARROW_UP
     limit = 500
-
-    @property
-    def value(self):
-        return self.state.get("sensor.speedtest_upload_average")
 
     @property
     def open(self):
@@ -228,12 +204,9 @@ class CellSpeedTestUpload(GridCell):
 
 
 class CellSpeedTestPing(GridCell):
+    entity_id = "sensor.speedtest_ping_average"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HEART_PULSE
     limit = 10
-
-    @property
-    def value(self):
-        return self.state.get("sensor.speedtest_ping_average")
 
     @property
     def open(self):
@@ -245,12 +218,9 @@ class CellSpeedTestPing(GridCell):
 
 
 class CellDS920VolumeUsage(GridCell):
+    entity_id = "sensor.ds920plus_volume_used"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HARD_DRIVE
     limit = 70
-
-    @property
-    def value(self):
-        return self.state.get("sensor.ds920plus_volume_used")
 
     @property
     def open(self):
@@ -265,11 +235,8 @@ class CellDS920VolumeUsage(GridCell):
 
 
 class CellMotionFrontDoor(GridCell):
+    entity_id = "binary_sensor.front_door_motion"
     icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
-
-    @property
-    def value(self):
-        return self.state.get("binary_sensor.front_door_motion")
 
     @property
     def open(self):
@@ -281,11 +248,8 @@ class CellMotionFrontDoor(GridCell):
 
 
 class CellMotionFrontGarden(GridCell):
+    entity_id = "binary_sensor.blink_front_motion_detected"
     icon_codepoint = FontAwesomeIcons.ICON_FA_ROAD
-
-    @property
-    def value(self):
-        return self.state.get("binary_sensor.blink_front_motion_detected")
 
     @property
     def open(self):
@@ -297,11 +261,8 @@ class CellMotionFrontGarden(GridCell):
 
 
 class CellMotionBackGarden(GridCell):
+    entity_id = "binary_sensor.blink_back_motion_detected"
     icon_codepoint = FontAwesomeIcons.ICON_FA_LEAF
-
-    @property
-    def value(self):
-        return self.state.get("binary_sensor.blink_back_motion_detected")
 
     @property
     def open(self):
@@ -313,11 +274,8 @@ class CellMotionBackGarden(GridCell):
 
 
 class CellMotionHouseSide(GridCell):
+    entity_id = "binary_sensor.blink_side_motion_detected"
     icon_codepoint = FontAwesomeIcons.ICON_FA_CAR
-
-    @property
-    def value(self):
-        return self.state.get("binary_sensor.blink_side_motion_detected")
 
     @property
     def open(self):
@@ -329,11 +287,8 @@ class CellMotionHouseSide(GridCell):
 
 
 class CellMotionGarage(GridCell):
+    entity_id = "binary_sensor.blink_side_motion_detected"
     icon_codepoint = FontAwesomeIcons.ICON_FA_WAREHOUSE
-
-    @property
-    def value(self):
-        return self.state.get("binary_sensor.blink_side_motion_detected")
 
     @property
     def open(self):
@@ -354,13 +309,10 @@ class BaseCellTemperate(GridCell):
 
 
 class CellTemperatureLounge(BaseCellTemperate):
+    entity_id = "sensor.lounge_temperature_sensor_temperature"
     icon_codepoint = FontAwesomeIcons.ICON_FA_COUCH
     limit_min = 20
     limit_max = 28
-
-    @property
-    def value(self):
-        return self.state.get("sensor.hue_motion_sensor_1_temperature")
 
     @property
     def open(self):
@@ -370,13 +322,10 @@ class CellTemperatureLounge(BaseCellTemperate):
 
 
 class CellTemperatureBedroom(BaseCellTemperate):
+    entity_id = "sensor.bedroom_temperature_sensor_temperature"
     icon_codepoint = FontAwesomeIcons.ICON_FA_BED
     limit_min = 20
     limit_max = 28
-
-    @property
-    def value(self):
-        return self.state.get("sensor.bedroom_temperature_sensor_temperature")
 
     @property
     def open(self):
@@ -389,12 +338,9 @@ class CellTemperatureBedroom(BaseCellTemperate):
 
 
 class CellElectricityDemand(GridCell):
+    entity_id = "sensor.octopus_energy_electricity_current_demand"
     icon_codepoint = FontAwesomeIcons.ICON_FA_BOLT
     limit = 600
-
-    @property
-    def value(self):
-        return self.state.get("sensor.octopus_energy_electricity_current_demand")
 
     @property
     def label(self):
@@ -422,11 +368,8 @@ class CellElectricityDemand(GridCell):
 
 
 class CellElectricityRate(GridCell):
+    entity_id = "sensor.octopus_energy_electricity_current_rate"
     icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_HALF_STROKE
-
-    @property
-    def value(self):
-        return self.state.get("sensor.octopus_energy_electricity_current_rate")
 
     @property
     def label(self):
@@ -460,14 +403,9 @@ class CellElectricityRate(GridCell):
 
 
 class CellElectricityAccumulativeCost(GridCell):
+    entity_id = "sensor.octopus_energy_electricity_current_accumulative_cost"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG
     limit = 3.00
-
-    @property
-    def value(self):
-        return self.state.get(
-            "sensor.octopus_energy_electricity_current_accumulative_cost"
-        )
 
     @property
     def label(self):
@@ -495,12 +433,9 @@ class CellElectricityAccumulativeCost(GridCell):
 
 
 class CellGasAccumulativeCost(GridCell):
+    entity_id = "sensor.octopus_energy_gas_current_accumulative_cost"
     icon_codepoint = FontAwesomeIcons.ICON_FA_FIRE_FLAME_SIMPLE
     limit = 3.00
-
-    @property
-    def value(self):
-        return self.state.get("sensor.octopus_energy_gas_current_accumulative_cost")
 
     @property
     def label(self):
@@ -528,11 +463,8 @@ class CellGasAccumulativeCost(GridCell):
 
 
 class CellBatteryLevel(GridCell):
+    entity_id = "sensor.delta_2_max_downstairs_battery_level"
     limit = 30
-
-    @property
-    def value(self):
-        return self.state.get("sensor.delta_2_max_downstairs_battery_level")
 
     @property
     def label(self):
@@ -575,11 +507,8 @@ class CellBatteryLevel(GridCell):
 
 
 class CellBatteryACInput(GridCell):
+    entity_id = "sensor.delta_2_max_downstairs_ac_in_power"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_PLUS
-
-    @property
-    def value(self):
-        return self.state.get("sensor.delta_2_max_downstairs_ac_in_power")
 
     @property
     def open(self):
@@ -591,11 +520,8 @@ class CellBatteryACInput(GridCell):
 
 
 class CellBatteryACOutput(GridCell):
+    entity_id = "sensor.delta_2_max_downstairs_ac_out_power"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
-
-    @property
-    def value(self):
-        return self.state.get("sensor.delta_2_max_downstairs_ac_out_power")
 
     @property
     def open(self):
@@ -607,12 +533,9 @@ class CellBatteryACOutput(GridCell):
 
 
 class CellBatteryChargeRemainingTime(GridCell):
+    entity_id = "sensor.delta_2_max_downstairs_charge_remaining_time"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_PLUS
     icon_color_background = CommonColors.COLOR_GREEN_DARK
-
-    @property
-    def value(self):
-        return self.state.get("sensor.delta_2_max_downstairs_charge_remaining_time")
 
     @property
     def open(self):
@@ -624,12 +547,9 @@ class CellBatteryChargeRemainingTime(GridCell):
 
 
 class CellBatteryDischargeRemainingTime(GridCell):
+    entity_id = "sensor.delta_2_max_downstairs_discharge_remaining_time"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
     icon_color_background = CommonColors.COLOR_RED_DARK
-
-    @property
-    def value(self):
-        return self.state.get("sensor.delta_2_max_downstairs_discharge_remaining_time")
 
     @property
     def open(self):
@@ -644,19 +564,13 @@ class CellBatteryDischargeRemainingTime(GridCell):
 
 
 class CellWeatherTemperature(BaseCellTemperate):
+    entity_id = "sensor.openweathermap_temperature"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HOUSE
-
-    @property
-    def value(self):
-        return self.state.get("sensor.openweathermap_temperature")
 
 
 class CellWeatherWindSpeed(GridCell):
+    entity_id = "sensor.openweathermap_wind_speed"
     icon_codepoint = FontAwesomeIcons.ICON_FA_WIND
-
-    @property
-    def value(self):
-        return self.state.get("sensor.openweathermap_wind_speed")
 
     @property
     def label(self):
@@ -668,13 +582,8 @@ class CellWeatherWindSpeed(GridCell):
 
 
 class CellWeatherRainProbability(GridCell):
+    entity_id = "sensor.openweathermap_forecast_precipitation_probability"
     icon_codepoint = FontAwesomeIcons.ICON_FA_UMBRELLA
-
-    @property
-    def value(self):
-        return self.state.get(
-            "sensor.openweathermap_forecast_precipitation_probability"
-        )
 
     @property
     def label(self):

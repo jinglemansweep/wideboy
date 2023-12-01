@@ -9,7 +9,7 @@ from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, ca
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.tile_grid_group.helpers import (
+from wideboy.sprites.tile_grid.helpers import (
     Animator,
     AnimatorState,
     FontAwesomeIcons,
@@ -20,10 +20,7 @@ from wideboy.sprites.tile_grid_group.helpers import (
 
 # NOTES
 
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.DEBUG)
-
+logger = logging.getLogger("sprite.tile_grid_group")
 
 # CONSTANTS
 
@@ -61,6 +58,7 @@ class StyleMixin:
 class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
     image: pygame.Surface
     style: Dict
+    entity_id: str = ""
     width: int = TILE_GRID_CELL_WIDTH
     height: int = TILE_GRID_CELL_HEIGHT
     label: str = ""
@@ -101,6 +99,10 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
 
     def __repr__(self):
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
+
+    @property
+    def value(self):
+        return self.state.get(self.entity_id, None)
 
 
 # Tile Grid Column Group
@@ -159,8 +161,8 @@ class TileGrid(pygame.sprite.DirtySprite):
         super().update(frame, clock, delta, events)
         dirty = True
         for event in events:
-            if event.type in [EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND]:
-                dirty = True
+            if event.type == EVENT_HASS_STATESTREAM_UPDATE:
+                logger.debug(f"statestream update: {event.payload}")
         cx, cy = 0, 0
         width, height = self.calculate_size()
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
