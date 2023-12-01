@@ -157,7 +157,7 @@ class TileGrid(pygame.sprite.DirtySprite):
 
     def update(self, frame, clock, delta, events):
         super().update(frame, clock, delta, events)
-        dirty = False
+        dirty = True
         for event in events:
             if event.type in [EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND]:
                 dirty = True
