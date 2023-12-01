@@ -78,19 +78,11 @@ class CellSwitchBooleanManual(GridCell):
     label = "Manual"
     icon_codepoint = FontAwesomeIcons.ICON_FA_TOGGLE_OFF
 
-    @property
-    def open(self):
-        return self.value == True
-
 
 class CellSwitchLoungeFan(GridCell):
     entity_id = "switch.lounge_fans"
     label = "Fan"
     icon_codepoint = FontAwesomeIcons.ICON_FA_FAN
-
-    @property
-    def open(self):
-        return self.value == True
 
 
 # Sensor Tiles
@@ -155,10 +147,6 @@ class CellSensorDoorFront(GridCell):
     cell_color_background = CommonColors.COLOR_RED_DARK
     icon_color_background = CommonColors.COLOR_RED
 
-    @property
-    def open(self):
-        return self.value
-
 
 class CellSensorBackFront(GridCell):
     entity_id = "binary_sensor.back_door_contact_sensor_contact"
@@ -166,10 +154,6 @@ class CellSensorBackFront(GridCell):
     label = "Back"
     cell_color_background = CommonColors.COLOR_RED_DARK
     icon_color_background = CommonColors.COLOR_RED
-
-    @property
-    def open(self):
-        return self.value
 
 
 # Home Lab Tiles
@@ -239,10 +223,6 @@ class CellMotionFrontDoor(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
 
     @property
-    def open(self):
-        return self.value
-
-    @property
     def label(self):
         return f"Front"
 
@@ -250,10 +230,6 @@ class CellMotionFrontDoor(GridCell):
 class CellMotionFrontGarden(GridCell):
     entity_id = "binary_sensor.blink_front_motion_detected"
     icon_codepoint = FontAwesomeIcons.ICON_FA_ROAD
-
-    @property
-    def open(self):
-        return self.value
 
     @property
     def label(self):
@@ -265,10 +241,6 @@ class CellMotionBackGarden(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_LEAF
 
     @property
-    def open(self):
-        return self.value
-
-    @property
     def label(self):
         return f"Back"
 
@@ -278,10 +250,6 @@ class CellMotionHouseSide(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CAR
 
     @property
-    def open(self):
-        return self.value
-
-    @property
     def label(self):
         return f"Side"
 
@@ -289,10 +257,6 @@ class CellMotionHouseSide(GridCell):
 class CellMotionGarage(GridCell):
     entity_id = "binary_sensor.blink_side_motion_detected"
     icon_codepoint = FontAwesomeIcons.ICON_FA_WAREHOUSE
-
-    @property
-    def open(self):
-        return self.value
 
     @property
     def label(self):
