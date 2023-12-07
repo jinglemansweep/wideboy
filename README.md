@@ -36,9 +36,7 @@ Home Assistant MQTT Device:
 
 Home Assistant Entity Tile Grid:
 
-<a href="./docs/images/screenshot-sprite-tile-grid.png">
-  <img src="./docs/images/screenshot-sprite-tile-grid.png" width="50%" height="50%" alt="Home Assistant Entity Tile Grid">
-</a>
+![Home Assistant Entity Tile Grid](./docs/images/screenshot-sprite-tile-grid.png)
 
 Installation on living room shelf, accompanied by [WLED](https://kno.wled.ge/) controlled NeoPixel lighting strips:
 
