@@ -313,10 +313,3 @@ if driver_settings.daemon:
     matrix_options.daemon = driver_settings.daemon
 if driver_settings.no_drop_privs:
     matrix_options.drop_privileges = 0
-
-print(
-    matrix_options.chain_length,
-    matrix_options.parallel,
-    matrix_options.rows,
-    matrix_options.cols,
-)
