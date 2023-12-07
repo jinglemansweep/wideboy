@@ -2,7 +2,7 @@
 
 [![mypy](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml) [![flake8](https://github.com/jinglemansweep/wideboy/actions/workflows/flake8.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/flake8.yml) [![black](https://github.com/jinglemansweep/wideboy/actions/workflows/black.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/black.yml) [![codeql](https://github.com/jinglemansweep/wideboy/actions/workflows/codeql.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/codeql.yml) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
+<img src="./docs/images/logo-new.png" width="50%" height="50%" alt="WideBoy Logo">
 
 WideBoy was designed to act as a unique home dashboard. It is a custom PyGame application designed to be displayed on HUB75 LED matrix panels, powered by a modern Raspberry Pi.
 
