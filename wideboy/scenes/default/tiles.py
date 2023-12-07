@@ -250,7 +250,7 @@ class CellMotionHouseSide(GridCell):
 
 
 class CellMotionGarage(GridCell):
-    entity_id = "binary_sensor.blink_side_motion_detected"
+    entity_id = "binary_sensor.blink_garage_motion_detected"
     icon_codepoint = FontAwesomeIcons.ICON_FA_WAREHOUSE
 
     @property
@@ -270,7 +270,7 @@ class BaseCellTemperate(GridCell):
 class CellTemperatureLounge(BaseCellTemperate):
     entity_id = "sensor.lounge_temperature_sensor_temperature"
     icon_codepoint = FontAwesomeIcons.ICON_FA_COUCH
-    limit_min = 20
+    limit_min = 18
     limit_max = 28
 
     @property
@@ -283,7 +283,7 @@ class CellTemperatureLounge(BaseCellTemperate):
 class CellTemperatureBedroom(BaseCellTemperate):
     entity_id = "sensor.bedroom_temperature_sensor_temperature"
     icon_codepoint = FontAwesomeIcons.ICON_FA_BED
-    limit_min = 20
+    limit_min = 18
     limit_max = 28
 
     @property
@@ -364,7 +364,8 @@ class CellElectricityRate(GridCell):
 class CellElectricityAccumulativeCost(GridCell):
     entity_id = "sensor.octopus_energy_electricity_current_accumulative_cost"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG
-    limit = 2.50
+    limit = 2.00
+    limit_high = 3.00
 
     @property
     def label(self):
@@ -378,7 +379,7 @@ class CellElectricityAccumulativeCost(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit_high
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -386,7 +387,7 @@ class CellElectricityAccumulativeCost(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit_high
             else CommonColors.COLOR_GREY
         )
 
@@ -394,7 +395,8 @@ class CellElectricityAccumulativeCost(GridCell):
 class CellGasAccumulativeCost(GridCell):
     entity_id = "sensor.octopus_energy_gas_current_accumulative_cost"
     icon_codepoint = FontAwesomeIcons.ICON_FA_FIRE_FLAME_SIMPLE
-    limit = 2.50
+    limit = 2.00
+    limit_high = 3.00
 
     @property
     def label(self):
@@ -408,7 +410,7 @@ class CellGasAccumulativeCost(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit_high
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -416,7 +418,7 @@ class CellGasAccumulativeCost(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value > self.limit
+            if is_defined(self.value) and self.value > self.limit_high
             else CommonColors.COLOR_GREY
         )
 
@@ -452,7 +454,7 @@ class CellBatteryLevel(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value > self.limit
+            if is_defined(self.value) and self.value < self.limit
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -530,6 +532,7 @@ class CellWeatherTemperature(BaseCellTemperate):
 class CellWeatherWindSpeed(GridCell):
     entity_id = "sensor.openweathermap_wind_speed"
     icon_codepoint = FontAwesomeIcons.ICON_FA_WIND
+    limit = 10.0
 
     @property
     def label(self):
@@ -537,12 +540,13 @@ class CellWeatherWindSpeed(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value > 5
+        return is_defined(self.value) and self.value > self.limit
 
 
 class CellWeatherRainProbability(GridCell):
     entity_id = "sensor.openweathermap_forecast_precipitation_probability"
     icon_codepoint = FontAwesomeIcons.ICON_FA_UMBRELLA
+    limit = 30.0
 
     @property
     def label(self):
@@ -550,7 +554,7 @@ class CellWeatherRainProbability(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value > 0
+        return is_defined(self.value) and self.value > self.limit
 
 
 CELLS = [
