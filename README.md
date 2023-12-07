@@ -14,7 +14,7 @@ WideBoy has extensive [Home Assistant](https://www.home-assistant.io/) support i
 
 ## Features
 
-- :alarm_clock: Customisable dedicated Clock widget
+- :alarm_clock: Customisable dedicated clock widget
 - :calendar: Basic calendar with events and reminders
 - :sunny: Weather summary and next hour forecast
 - :camera: Background image slideshow (great with [ArtyFarty](https://github.com/jinglemansweep/artyfarty) AI art generator)
