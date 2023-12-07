@@ -4,6 +4,7 @@ from typing import List, Dict, Type
 
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
 from wideboy.scenes.base import BaseScene
+from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.tile_grid.helpers import (
     Animator,
     AnimatorState,
@@ -131,14 +132,14 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
 # Tile Grid Sprite
 
 
-class TileGrid(pygame.sprite.DirtySprite):
+class TileGrid(BaseSprite):
     state: Dict
     columns: List
     tile_surface_cache: Dict[str, pygame.Surface] = dict()
     update_frames: int = 0
 
     def __init__(self, scene: BaseScene, cells: List[List[Type[TileGridCell]]]):
-        super().__init__()
+        super().__init__(scene, pygame.Rect(0, 0, 0, 0))
         self.image = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
         self.scene = scene

@@ -14,9 +14,25 @@ Main installation on living room shelf, accompanied by [WLED](https://kno.wled.g
 
 ![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
 
-Idle background slideshow and clock displaying AI generated tiled chocolate bar imagery:
+Default scene showing background artwork carousel sprite as well as dynamic Home Assistant entity tile grid sprite:
 
-![Background Slideshow: Chocolate](./docs/images/screenshot-background-chocolate.jpg)
+![Default Scene](./docs/images/screenshot-scene-default.png)
+
+Default scene showing real-time incoming MQTT notification message:
+
+![Incoming Notification](./docs/images/screenshot-sprite-notification.png)
+
+Animated starfield scene:
+
+![Animated Starfied](./docs/images/screenshot-scene-starfield.png)
+
+Credits and debugging scene:
+
+![Animated Starfield](./docs/images/screenshot-scene-credits.png)
+
+Home Assistant MQTT Device:
+
+![Home Assistant Device](./docs/images/screenshot-hass-device.png)
 
 Another AI generated background slideshow example:
 
