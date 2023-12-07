@@ -58,7 +58,7 @@ Home Assistant Entity Tile Grid:
 
 By default, WideBoy subscribes and publishes to topics starting with `wideboy/<device-id>`. The device ID is automatically generated from the devices MAC address but can be overridden (see [`settings.toml`](./settings.toml)).
 
-If configured to use the same MQTT broker as Home Assistant, Wideboy will automatically advertise and configure itself using Home Assistant's MQTT Discovery mechanism.
+If configured to use the same MQTT broker as Home Assistant, WideBoy will automatically advertise and configure itself using Home Assistant's MQTT Discovery mechanism.
 
 Manual MQTT control is also possible, see below for example topic and message formats:
 
