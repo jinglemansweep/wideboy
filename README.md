@@ -10,6 +10,18 @@ It displays basic information such as the current date and time, weather informa
 
 WideBoy has extensive [Home Assistant](https://www.home-assistant.io/) support in that it is fully remotely controllable via the [MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery) integration. Also, a comprehensive animated dynamic Entity grid sprite is provided, where each tile can be configured with it's own style, icon and visibility rules.
 
+## Features
+
+- :alarm_clock: Customisable dedicated Clock widget
+- :calendar: Basic calendar with events and reminders
+- :sunny: Weather summary and next hour forecast
+- :camera: Background image slideshow (great with [ArtyFarty](https://github.com/jinglemansweep/artyfarty) AI art generator)
+- :house: Animated dynamic Home Assistant entity grid
+- :incoming_envelope: Announcements and notifications via [MQTT](https://en.wikipedia.org/wiki/MQTT)
+- :satellite: Remote control via MQTT and [Home Assistant](https://www.home-assistant.io/)
+- :white_square_button: QR code display for easy linking from mobile devices
+- :strawberry: Optimised for [DietPi](https://dietpi.com/) running on a Raspberry Pi 4
+
 ## Photos & Screenshots
 
 Default scene showing background artwork carousel sprite as well as dynamic Home Assistant entity tile grid sprite:
@@ -41,18 +53,6 @@ Home Assistant Entity Tile Grid:
 Installation on living room shelf, accompanied by [WLED](https://kno.wled.ge/) controlled NeoPixel lighting strips:
 
 ![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
-
-## Features
-
-- :alarm_clock: Customisable dedicated Clock widget
-- :calendar: Basic calendar with events and reminders
-- :sunny: Weather summary and next hour forecast
-- :camera: Background image slideshow (great with [ArtyFarty](https://github.com/jinglemansweep/artyfarty) AI art generator)
-- :house: Animated dynamic Home Assistant entity grid
-- :incoming_envelope: Announcements and notifications via [MQTT](https://en.wikipedia.org/wiki/MQTT)
-- :satellite: Remote control via MQTT and [Home Assistant](https://www.home-assistant.io/)
-- :white_square_button: QR code display for easy linking from mobile devices
-- :strawberry: Optimised for [DietPi](https://dietpi.com/) running on a Raspberry Pi 4
 
 ## Components
 
