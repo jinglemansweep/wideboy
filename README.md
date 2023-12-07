@@ -103,6 +103,25 @@ Manual MQTT control is also possible, see below for example topic and message fo
     # Current FPS
     mosquitto_sub -t "wideboy/example/fps/state"
 
+#### Entity Tile Grid
+
+The provided Tile Grid sprite relies on Home Assistant's [MQTT Statestream](https://www.home-assistant.io/integrations/mqtt_statestream/) integration which publishes specific entity state changes over MQTT. Each grid tile subscribes to specific entity states and will redraw on change.
+
+Enabling the Statestream integration requires manual changes to Home Assistant's YAML configuration files.
+
+If you have a large number of entities, it is advisable to only publish changes for entities you want to display in the tile grid to avoid overloading the MQTT service. Entities can be whitelisted or blacklisted using the `include` and `exclude` directives.
+
+The following snippet should be added to `configuration.yaml` or equivalent:
+
+    mqtt_statestream:
+      base_topic: homeassistant
+      publish_attributes: false
+      publish_timestamps: false
+      include:
+        entity_globs:
+          - sensor.speedtest_download_average
+          ...
+
 ## Components
 
 ### Hardware
