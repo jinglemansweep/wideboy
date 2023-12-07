@@ -32,11 +32,9 @@ Credits and debugging scene:
 
 Home Assistant MQTT Device:
 
-![Home Assistant Device](./docs/images/screenshot-hass-device.png)
-
-Another AI generated background slideshow example:
-
-![Background Slideshow: Alan Sugar](./docs/images/screenshot-background-alan-sugar.jpg)
+<a href="./docs/images/screenshot-hass-device.png">
+  <img src="./docs/images/screenshot-hass-device.png" width="25%" height="25%">
+</a>
 
 ## Features
 
