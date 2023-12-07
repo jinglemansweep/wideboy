@@ -60,7 +60,7 @@ class MQTTClient:
         logger.info(
             f"mqtt:connected connected={client.is_connected()} userdata={userdata} flags={flags} rc={str(rc)}"
         )
-        self.subscribe(f"homeassistant/#", 0)
+        self.subscribe("homeassistant/#", 0)
         # DISABLED, could be too slow
         # self.subscribe(f"{settings.mqtt.topic_prefix}/{self.device_id}/#", 0)
 

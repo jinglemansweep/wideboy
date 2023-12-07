@@ -1,11 +1,6 @@
-import datetime
-import enum
-import pygame
-import random
-
 from typing import Optional
 
-from wideboy.sprites.tile_grid import VerticalCollapseTileGridCell, TileGrid
+from wideboy.sprites.tile_grid import VerticalCollapseTileGridCell
 from wideboy.sprites.tile_grid.helpers import (
     CommonColors,
     FontAwesomeIcons,
@@ -224,7 +219,7 @@ class CellMotionFrontDoor(GridCell):
 
     @property
     def label(self):
-        return f"Front"
+        return "Front"
 
 
 class CellMotionFrontGarden(GridCell):
@@ -233,7 +228,7 @@ class CellMotionFrontGarden(GridCell):
 
     @property
     def label(self):
-        return f"Front"
+        return "Front"
 
 
 class CellMotionBackGarden(GridCell):
@@ -242,7 +237,7 @@ class CellMotionBackGarden(GridCell):
 
     @property
     def label(self):
-        return f"Back"
+        return "Back"
 
 
 class CellMotionHouseSide(GridCell):
@@ -251,7 +246,7 @@ class CellMotionHouseSide(GridCell):
 
     @property
     def label(self):
-        return f"Side"
+        return "Side"
 
 
 class CellMotionGarage(GridCell):
@@ -260,7 +255,7 @@ class CellMotionGarage(GridCell):
 
     @property
     def label(self):
-        return f"Garage"
+        return "Garage"
 
 
 # Temperature Tiles

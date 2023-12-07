@@ -11,7 +11,6 @@ from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.homeassistant.entity_row import HomeAssistantEntityRowSprite
 from wideboy.sprites.notification import NotificationSprite
-from wideboy.sprites.image_helpers import MaterialIcons
 from wideboy.scenes.base import BaseScene
 
 from wideboy.config import settings
@@ -82,33 +81,6 @@ class NightScene(BaseScene):
         # =====================================================================
 
         hass_row_entities = []
-
-        hass_row_entities_old = [
-            dict(
-                entity_id="binary_sensor.back_door_contact_sensor_contact",
-                icon=MaterialIcons.MDI_DOOR,
-                icon_color=Color(255, 255, 255, 255),
-                label_color=Color(128, 128, 128, 255),
-                template="Back",
-                cb_active=lambda state: state[
-                    "binary_sensor.back_door_contact_sensor_contact"
-                ]
-                == "on",
-                watch_entities=["binary_sensor.back_door_contact_sensor_contact"],
-            ),
-            dict(
-                entity_id="binary_sensor.front_door_contact_sensor_contact",
-                icon=MaterialIcons.MDI_DOOR,
-                icon_color=Color(255, 255, 255, 255),
-                label_color=Color(128, 128, 128, 128),
-                template="Front",
-                cb_active=lambda state: state[
-                    "binary_sensor.front_door_contact_sensor_contact"
-                ]
-                == "on",
-                watch_entities=["binary_sensor.front_door_contact_sensor_contact"],
-            ),
-        ]
 
         self.hass_row = HomeAssistantEntityRowSprite(
             self,

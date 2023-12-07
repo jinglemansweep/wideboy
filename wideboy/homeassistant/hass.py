@@ -2,8 +2,8 @@ import logging
 from datetime import timedelta
 from pygame import Event
 from requests_cache import CachedSession
-from typing import Optional, Dict, Tuple, Any, Union
-from homeassistant_api import Client, State
+from typing import Optional, Dict, Any
+from homeassistant_api import Client
 from wideboy.config import settings
 from wideboy.constants import (
     AppMetadata,
