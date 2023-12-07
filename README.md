@@ -103,7 +103,7 @@ Manual MQTT control is also possible, see below for example topic and message fo
     # Current FPS
     mosquitto_sub -t "wideboy/example/fps/state"
 
-#### Entity Tile Grid
+### Entity Tile Grid
 
 The provided Tile Grid sprite relies on Home Assistant's [MQTT Statestream](https://www.home-assistant.io/integrations/mqtt_statestream/) integration which publishes specific entity state changes over MQTT. Each grid tile subscribes to specific entity states and will redraw on change.
 
@@ -121,6 +121,8 @@ The following snippet should be added to `configuration.yaml` or equivalent:
         entity_globs:
           - sensor.speedtest_download_average
           ...
+
+Each Entity tile must be created as a Python class which can then be added to Column groups and finally rendered as a full grid. See [`wideboy/scenes/default/tiles.py`](./wideboy/scenes/default/tiles.py) for some examples.
 
 ## Components
 
