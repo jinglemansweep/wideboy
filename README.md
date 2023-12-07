@@ -4,9 +4,11 @@
 
 ![WideBoy: Ultra Wide Display System](./docs/images/logo-header.png)
 
-WideBoy is an experimental project that provides an ultra wide video wall display, serving dashboards, art/image slideshows and notification alerts. It is developed using Python and PyGame CE, providing smooth and fast animations, and is designed to run on Raspberry Pi single board computers for both energy-efficient and cost-effective operation.
+WideBoy was designed to act as a unique home dashboard. It is a custom PyGame application designed to be displayed on HUB75 LED matrix panels, powered by a modern Raspberry Pi.
 
-This project is perfect for delivering dynamic visual content that can entertain and keep your home or office informed, whether you want to convey important information, display beautiful visuals, or create an immersive experience.
+It displays basic information such as the current date and time, weather information and calendar events. An image carousel sprite is also included to showcase artwork or other images.
+
+WideBoy has extensive [Home Assistant](https://www.home-assistant.io/) support in that it is fully remotely controllable via the [MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery) integration. Also, a comprehensive animated dynamic Entity grid sprite is provided, where each tile can be configured with it's own style, icon and visibility rules.
 
 ## Photos & Screenshots
 
