@@ -52,6 +52,57 @@ Home Assistant Entity Tile Grid:
 
 ![Home Assistant Entity Tile Grid](./docs/images/screenshot-sprite-tile-grid.png)
 
+## Usage
+
+### MQTT
+
+By default, WideBoy subscribes and publishes to topics starting with `wideboy/<device-id>`. The device ID is automatically generated from the devices MAC address but can be overridden (see [`settings.toml`](./settings.toml)).
+
+If configured to use the same MQTT broker as Home Assistant, Wideboy will automatically advertise and configure itself using Home Assistant's MQTT Discovery mechanism.
+
+Manual MQTT control is also possible, see below for example topic and message formats:
+
+#### Power
+
+    # Turn on
+    mosquitto_pub -t "wideboy/example/master/set" -m '{"state": "ON"}'
+
+    # Turn off
+    mosquitto_pub -t "wideboy/example/master/set" -m '{"state": "OFF"}'
+
+    # Set display brightness to 50% (100% = 255)
+    mosquitto_pub -t "wideboy/example/master/set" -m '{"state": "ON", "brightness": 128}'
+
+#### Scene Control
+
+    # Advance to next scene
+    mosquitto_pub -t "wideboy/example/scene_next/set" -m '{"state": "PRESS"}'
+
+    # Switch to 'default' scene
+    mosquitto_pub -t "wideboy/example/scene_select/set" -m "default"
+
+    # Switch to 'starfield' scene
+    mosquitto_pub -t "wideboy/example/scene_select/set" -m "starfield"
+
+    # Trigger custom scene actions
+    mosquitto_pub -t "wideboy/example/action_a/set" -m '{"state": "PRESS"}'
+    mosquitto_pub -t "wideboy/example/action_b/set" -m '{"state": "PRESS"}'
+
+#### Notifications / Alerts
+
+    # Display 'Hello World' notification on display
+    mosquitto_pub -t "wideboy/example/message/set" -m "Hello World"
+
+#### Debugging
+
+    # Save screenshot (to 'images/screenshots' directory)
+    mosquitto_pub -t "wideboy/example/screenshot/set" -m '{"state": "PRESS"}'
+
+#### Sensors
+
+    # Current FPS
+    mosquitto_sub -t "wideboy/example/fps/state"
+
 ## Components
 
 ### Hardware
