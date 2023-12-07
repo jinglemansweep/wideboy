@@ -12,10 +12,6 @@ WideBoy has extensive [Home Assistant](https://www.home-assistant.io/) support i
 
 ## Photos & Screenshots
 
-Installation on living room shelf, accompanied by [WLED](https://kno.wled.ge/) controlled NeoPixel lighting strips:
-
-![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
-
 Default scene showing background artwork carousel sprite as well as dynamic Home Assistant entity tile grid sprite:
 
 ![Default Scene](./docs/images/screenshot-scene-default.png)
@@ -37,6 +33,16 @@ Home Assistant MQTT Device:
 <a href="./docs/images/screenshot-hass-device.png">
   <img src="./docs/images/screenshot-hass-device.png" width="50%" height="50%" alt="Home Assistant Device">
 </a>
+
+Home Assistant Entity Tile Grid:
+
+<a href="./docs/images/screenshot-sprite-tile-grid.png">
+  <img src="./docs/images/screenshot-sprite-tile-grid.png" width="50%" height="50%" alt="Home Assistant Entity Tile Grid">
+</a>
+
+Installation on living room shelf, accompanied by [WLED](https://kno.wled.ge/) controlled NeoPixel lighting strips:
+
+![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
 
 ## Features
 
