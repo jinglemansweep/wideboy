@@ -10,7 +10,7 @@ This project is perfect for delivering dynamic visual content that can entertain
 
 ## Photos & Screenshots
 
-Main installation on living room shelf, accompanied by [WLED](https://kno.wled.ge/) controlled NeoPixel lighting strips:
+Installation on living room shelf, accompanied by [WLED](https://kno.wled.ge/) controlled NeoPixel lighting strips:
 
 ![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
 
@@ -33,7 +33,7 @@ Credits and debugging scene:
 Home Assistant MQTT Device:
 
 <a href="./docs/images/screenshot-hass-device.png">
-  <img src="./docs/images/screenshot-hass-device.png" width="25%" height="25%">
+  <img src="./docs/images/screenshot-hass-device.png" width="50%" height="50%" alt="Home Assistant Device">
 </a>
 
 ## Features
