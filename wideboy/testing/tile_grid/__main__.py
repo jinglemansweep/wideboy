@@ -1,12 +1,9 @@
 import datetime
-import enum
 import logging
 import pygame
 import random
-import time
-from typing import Dict, List, Tuple
+from typing import Dict
 
-from wideboy.scenes.base import BaseScene
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
 from wideboy.sprites.tile_grid import TileGrid
 from wideboy.scenes.default.tiles import (
@@ -62,7 +59,6 @@ def randomise_state_rare(state: Dict):
         {
             "binary_sensor.blink_front_motion_detected": random.choice([True, False]),
             "binary_sensor.blink_back_motion_detected": random.choice([True, False]),
-            "binary_sensor.blink_side_motion_detected": random.choice([True, False]),
             "binary_sensor.blink_side_motion_detected": random.choice([True, False]),
             "binary_sensor.front_door_contact_sensor_contact": random.choice(
                 [True, False]

@@ -11,7 +11,6 @@ from wideboy.homeassistant.hass import HASSEntity
 from wideboy.scenes.base import BaseScene
 from wideboy.scenes.credits import CreditsScene
 from wideboy.scenes.default import DefaultScene
-from wideboy.scenes.night import NightScene
 from wideboy.scenes.starfield import StarfieldScene
 from wideboy.utils.logger import setup_logger
 
@@ -22,7 +21,7 @@ setup_logger(level=settings.general.log_level)
 logger = logging.getLogger(AppMetadata.NAME)
 
 # SCENES
-SCENES: List[Type[BaseScene]] = [DefaultScene, NightScene, StarfieldScene, CreditsScene]
+SCENES: List[Type[BaseScene]] = [DefaultScene, StarfieldScene, CreditsScene]
 
 # ENTITIES
 ENTITIES: List[Type[HASSEntity]] = []

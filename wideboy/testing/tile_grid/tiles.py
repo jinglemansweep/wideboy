@@ -1,15 +1,9 @@
-import datetime
-import enum
-import pygame
-import random
-
-from wideboy.sprites.tile_grid_group import (
+from wideboy.sprites.tile_grid import (
     TileGrid,
     VerticalCollapseTileGridCell,
-    CommonColors,
     FontAwesomeIcons,
 )
-
+from wideboy.sprites.tile_grid.helpers import CommonColors
 
 # CUSTOM SUBCLASSES
 

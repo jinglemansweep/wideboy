@@ -1,19 +1,13 @@
-import enum
 import logging
 import pygame
-import random
-import time
-from datetime import datetime
-from typing import Any, Callable, List, Dict, Optional, Tuple, Type, TypeVar, cast
+from typing import List, Dict, Type
 
-from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE, EVENT_EPOCH_SECOND
+from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
 from wideboy.scenes.base import BaseScene
-from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.tile_grid.helpers import (
     Animator,
     AnimatorState,
     FontAwesomeIcons,
-    CommonColors,
     render_icon,
     render_text,
     is_defined,
@@ -97,7 +91,7 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
             padding=(2, 1),
             outline=self.label_outline,
         )
-        image.blit(label_surface, (cx, 0))
+        image.blit(label_surface, (cx, cy))
         return image
 
     def __repr__(self):
