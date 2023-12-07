@@ -427,7 +427,7 @@ class CellBatteryLevel(GridCell):
 
     @property
     def label(self):
-        return template_if_defined(self.value, "{}%")
+        return template_if_defined(self.value, "{:.0f}%")
 
     @property
     def open(self):

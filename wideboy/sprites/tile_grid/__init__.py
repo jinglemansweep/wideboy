@@ -192,8 +192,7 @@ class TileGrid(pygame.sprite.DirtySprite):
             cx += column.animator.value
             column.update()
             column.draw(self.image)
-        self.rect.width = cx
-        self.rect.height = cy
+        self.rect.width, self.rect.height = self.calculate_size()
         self.dirty = 1 if self.update_frames > 0 else 0
         self.update_frames -= 1
 
