@@ -30,7 +30,7 @@ def format_minutes(minutes: Optional[int] = None):
         return "N/A"
     hours = int(minutes) // 60
     minutes = int(minutes) % 60
-    return f"{hours}h{minutes:02d}m"
+    return f"{hours}h{minutes:01d}m"
 
 
 def format_compass_bearing(bearing: Optional[int] = None):
@@ -364,7 +364,7 @@ class CellElectricityRate(GridCell):
 class CellElectricityAccumulativeCost(GridCell):
     entity_id = "sensor.octopus_energy_electricity_current_accumulative_cost"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG
-    limit = 3.00
+    limit = 2.50
 
     @property
     def label(self):
@@ -394,7 +394,7 @@ class CellElectricityAccumulativeCost(GridCell):
 class CellGasAccumulativeCost(GridCell):
     entity_id = "sensor.octopus_energy_gas_current_accumulative_cost"
     icon_codepoint = FontAwesomeIcons.ICON_FA_FIRE_FLAME_SIMPLE
-    limit = 3.00
+    limit = 2.50
 
     @property
     def label(self):
