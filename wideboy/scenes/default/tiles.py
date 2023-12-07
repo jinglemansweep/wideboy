@@ -215,7 +215,7 @@ class CellDS920VolumeUsage(GridCell):
 
 class CellMotionFrontDoor(GridCell):
     entity_id = "binary_sensor.front_door_motion"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
+    icon_codepoint = FontAwesomeIcons.ICON_FA_CAMERA
 
     @property
     def label(self):
@@ -224,7 +224,7 @@ class CellMotionFrontDoor(GridCell):
 
 class CellMotionFrontGarden(GridCell):
     entity_id = "binary_sensor.blink_front_motion_detected"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_ROAD
+    icon_codepoint = FontAwesomeIcons.ICON_FA_CAMERA
 
     @property
     def label(self):
@@ -233,7 +233,7 @@ class CellMotionFrontGarden(GridCell):
 
 class CellMotionBackGarden(GridCell):
     entity_id = "binary_sensor.blink_back_motion_detected"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_LEAF
+    icon_codepoint = FontAwesomeIcons.ICON_FA_CAMERA
 
     @property
     def label(self):
@@ -242,7 +242,7 @@ class CellMotionBackGarden(GridCell):
 
 class CellMotionHouseSide(GridCell):
     entity_id = "binary_sensor.blink_side_motion_detected"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_CAR
+    icon_codepoint = FontAwesomeIcons.ICON_FA_CAMERA
 
     @property
     def label(self):
@@ -251,7 +251,7 @@ class CellMotionHouseSide(GridCell):
 
 class CellMotionGarage(GridCell):
     entity_id = "binary_sensor.blink_garage_motion_detected"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_WAREHOUSE
+    icon_codepoint = FontAwesomeIcons.ICON_FA_CAMERA
 
     @property
     def label(self):
