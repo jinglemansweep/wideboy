@@ -38,10 +38,11 @@ Home Assistant MQTT Device:
 
 ## Features
 
-- :alarm_clock: Clock (NTP managed)
-- :calendar: Basic calendar (reminders coming soon)
+- :alarm_clock: Customisable dedicated Clock widget
+- :calendar: Basic calendar with events and reminders
 - :sunny: Weather summary and next hour forecast
 - :camera: Background image slideshow (great with [ArtyFarty](https://github.com/jinglemansweep/artyfarty) AI art generator)
+- :house: Animated dynamic Home Assistant entity grid
 - :incoming_envelope: Announcements and notifications via [MQTT](https://en.wikipedia.org/wiki/MQTT)
 - :satellite: Remote control via MQTT and [Home Assistant](https://www.home-assistant.io/)
 - :white_square_button: QR code display for easy linking from mobile devices
@@ -96,15 +97,3 @@ To run the project:
 
     . venv/bin/activate
     python3 -m wideboy
-
-## Technical Details
-
-### Surface Reshaping
-
-The actual PyGame "Game Surface" is comprised of 12 LED panels (64px x 64px each) in a 12 x 1 layout, with a total resolution of 768 pixels wide by 64 pixels high. To achieve reasonable frame rates, it is neccesary to drive the panels in three parallel chains. Each of the three chains consists of 4 panels each (256px x 64px).
-
-However, the RGB Matrix library expects to render each chain on a different row (e.g. 4 panels wide by 3 panels high). In order to workaround this, it is necessary to reshape the game surface on every frame before sending the pixel array to the LED panels. This is performed by converting the PyGame game surface into a Numpy `nparray`, and then transposing slices of the 2D pixel array into the required layout. The following diagram helps explain the process:
-
-![Diagram showing remapping of PyGame game surface into required 2D pixel array](./docs/images/technical-surface-reshape.png)
-
-Two implementations were attempted, the first utilised standard PyGame blitting techniques by creating a temporary surface and effectively blitting segments of the PyGame game surface onto the temporary surface in the correct geometry and then rendering the temporary surface. The latest and current implementation used array manipulation using Numpy and provided some performance gains.
