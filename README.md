@@ -10,6 +10,8 @@ It displays basic information such as the current date and time, weather informa
 
 WideBoy has extensive [Home Assistant](https://www.home-assistant.io/) support in that it is fully remotely controllable via the [MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery) integration. Also, a comprehensive animated dynamic Entity grid sprite is provided, where each tile can be configured with it's own style, icon and visibility rules.
 
+![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
+
 ## Features
 
 - :alarm_clock: Customisable dedicated Clock widget
@@ -22,7 +24,7 @@ WideBoy has extensive [Home Assistant](https://www.home-assistant.io/) support i
 - :white_square_button: QR code display for easy linking from mobile devices
 - :strawberry: Optimised for [DietPi](https://dietpi.com/) running on a Raspberry Pi 4
 
-## Photos & Screenshots
+## Screenshots
 
 Default scene showing background artwork carousel sprite as well as dynamic Home Assistant entity tile grid sprite:
 
@@ -49,10 +51,6 @@ Home Assistant MQTT Device:
 Home Assistant Entity Tile Grid:
 
 ![Home Assistant Entity Tile Grid](./docs/images/screenshot-sprite-tile-grid.png)
-
-Installation on living room shelf, accompanied by [WLED](https://kno.wled.ge/) controlled NeoPixel lighting strips:
-
-![Wideangle Photo of WideBoy Display](./docs/images/photo-wide-01.png)
 
 ## Components
 
