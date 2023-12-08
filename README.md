@@ -122,6 +122,8 @@ The following snippet should be added to `configuration.yaml` or equivalent:
           - sensor.speedtest_download_average
           ...
 
+The `statestream_topic_prefix` option in the `homeassistant` section of `settings.toml` will need updating to match the `base_topic` specified above.
+
 Each Entity tile must be created as a Python class which can then be added to Column groups and finally rendered as a full grid. See [`wideboy/scenes/default/tiles.py`](./wideboy/scenes/default/tiles.py) for some examples.
 
 ## Components
