@@ -254,8 +254,11 @@ class CellMotionFrontDoor(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_CAMERA
 
     @property
+    def open(self):
+        return is_defined(self.value) and self.value not in ["ringing"]
+
+    @property
     def label(self):
-        print(self.value)
         return "Front"
 
 
