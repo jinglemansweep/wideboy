@@ -255,6 +255,7 @@ class CellMotionFrontDoor(GridCell):
 
     @property
     def label(self):
+        print(self.value)
         return "Front"
 
 
