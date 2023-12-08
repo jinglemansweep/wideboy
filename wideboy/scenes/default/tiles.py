@@ -102,7 +102,12 @@ class CellSensorLoungeAirPM(GridCell):
 
     @property
     def value_quality(self):
-        return self.state.get("sensor.core_300s_air_quality")
+        try:
+            return int(
+                self.state.get("sensor.core_300s_air_quality", dict()).get("state", 0)
+            )
+        except ValueError:
+            return None
 
     @property
     def label(self):

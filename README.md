@@ -114,8 +114,8 @@ If you have a large number of entities, it is advisable to only publish changes 
 The following snippet should be added to `configuration.yaml` or equivalent:
 
     mqtt_statestream:
-      base_topic: homeassistant
-      publish_attributes: false
+      base_topic: homeassistant/statestream
+      publish_attributes: true
       publish_timestamps: false
       include:
         entity_globs:

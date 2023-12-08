@@ -99,8 +99,23 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
 
     @property
+    def entity_state(self):
+        return self.state.get(self.entity_id, dict())
+
+    @property
     def value(self):
-        return self.state.get(self.entity_id, None)
+        state = self.entity_state.get("state", None)
+        if state is None:
+            return None
+        elif state.lower() in ["on", "true"]:
+            return True
+        elif state.lower() in ["off", "false"]:
+            return False
+        else:
+            try:
+                return float(state)
+            except ValueError:
+                return state
 
 
 # Tile Grid Column Group

@@ -93,28 +93,13 @@ validators = [
     ),
     # HOME ASSISTANT
     Validator(
-        "HOMEASSISTANT__URL",
-        default="http://homeassistant.local:8123",
-        cast=str,
-    ),
-    Validator(
-        "HOMEASSISTANT__API_TOKEN",
-        default=None,
-        cast=str,
-    ),
-    Validator(
-        "HOMEASSISTANT__CACHE_BACKEND",
-        default="memory",
-        cast=str,
-    ),
-    Validator(
-        "HOMEASSISTANT__CACHE_DURATION",
-        default=60,
-        cast=int,
-    ),
-    Validator(
         "HOMEASSISTANT__TOPIC_PREFIX",
         default="homeassistant",
+        cast=str,
+    ),
+    Validator(
+        "HOMEASSISTANT__STATESTREAM_TOPIC_PREFIX",
+        default="homeassistant/statestream",
         cast=str,
     ),
     # PATHS

@@ -46,11 +46,8 @@
   # keepalive = 60
   
 [homeassistant]
-  # url = "http://homeassistant.local:8123"
-  # api_token = "my-long-lived-token"
-  # cache_backend = "memory"
-  # cache_duration = 10
   # topic_prefix = "homeassistant"
+  # statestream_topic_prefix = "homeassistant/statestream"
   
 [paths]
   # images_backgrounds = "images/background"
