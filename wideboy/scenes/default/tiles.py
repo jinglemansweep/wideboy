@@ -83,6 +83,37 @@ class CellSwitchLoungeFan(GridCell):
 # Sensor Tiles
 
 
+class CellSensorBinCollection(GridCell):
+    entity_id = "calendar.bin_collection"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
+
+    @property
+    def bin_type(self):
+        return self.entity_state.get("message", "")[1:-1].lower()
+
+    @property
+    def label(self):
+        return f"{self.bin_type.capitalize()}"
+
+    @property
+    def open(self):
+        return self.value is True
+
+    @property
+    def cell_color_background(self):
+        if self.bin_type == "blue":
+            return CommonColors.COLOR_BLUE_DARK
+        else:
+            return CommonColors.COLOR_GREY_DARK
+
+    @property
+    def icon_color_background(self):
+        if self.bin_type == "blue":
+            return CommonColors.COLOR_BLUE
+        else:
+            return CommonColors.COLOR_GREY
+
+
 class CellSensorStepsLouis(GridCell):
     entity_id = "sensor.steps_louis"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PERSON_WALKING
@@ -564,6 +595,7 @@ class CellWeatherRainProbability(GridCell):
 
 CELLS = [
     [
+        CellSensorBinCollection,
         CellSensorStepsLouis,
         CellSensorLoungeAirPM,
         CellSensorDoorFront,

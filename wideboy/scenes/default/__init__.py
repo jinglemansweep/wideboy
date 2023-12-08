@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
-from wideboy.sprites.calendar import CalendarSprite
 from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.notification import NotificationSprite
 from wideboy.sprites.tile_grid import TileGrid
@@ -58,25 +57,25 @@ class DefaultScene(BaseScene):
         # WEATHER WIDGETS
         # =====================================================================
 
-        self.weather_animation_widget = WeatherAnimationSprite(
-            self,
-            Rect(self.width - 128, -32, 128, 64),
-            demo=settings.general.demo,
-            size=Vector2(128, 128),
-        )
-        self.group.add(self.weather_animation_widget)
+        # self.weather_animation_widget = WeatherAnimationSprite(
+        #     self,
+        #     Rect(self.width - 128, -32, 128, 64),
+        #     demo=settings.general.demo,
+        #     size=Vector2(128, 128),
+        # )
+        # self.group.add(self.weather_animation_widget)
 
-        self.weather_temp_widget = WeatherTemperatureSprite(
-            self,
-            Rect(self.width - 128 + 4, 0, 32, 28),
-        )
-        self.group.add(self.weather_temp_widget)
+        # self.weather_temp_widget = WeatherTemperatureSprite(
+        #     self,
+        #     Rect(self.width - 128 + 4, 0, 32, 28),
+        # )
+        # self.group.add(self.weather_temp_widget)
 
-        self.weather_wind_widget = WeatherWindSprite(
-            self,
-            Rect(self.width - 128 + 6, 22, 32, 32),
-        )
-        self.group.add(self.weather_wind_widget)
+        # self.weather_wind_widget = WeatherWindSprite(
+        #     self,
+        #     Rect(self.width - 128 + 6, 22, 32, 32),
+        # )
+        # self.group.add(self.weather_wind_widget)
 
         # =====================================================================
         # CLOCK WIDGET
@@ -96,19 +95,6 @@ class DefaultScene(BaseScene):
             font_size=14,
         )
         self.group.add(self.clock_date_widget)
-
-        # =====================================================================
-        # CALENDAR WIDGET
-        # =====================================================================
-
-        self.calendar_widget = CalendarSprite(
-            self,
-            Rect(self.width - 96, 51, 96, 15),
-            "calendar.wideboy",
-            font_size=9,
-            color_fg=Color(255, 128, 255, 255),
-        )
-        self.group.add(self.calendar_widget)
 
         # =====================================================================
         # TILE GRID WIDGET
