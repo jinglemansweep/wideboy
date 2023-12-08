@@ -255,7 +255,7 @@ class CellMotionFrontDoor(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value not in ["ringing"]
+        return is_defined(self.value) and self.value not in ['"ringing"']
 
     @property
     def label(self):
