@@ -57,18 +57,9 @@ class WeatherWindSprite(BaseSprite):
 
     def update_state(self) -> None:
         try:
-            with self.scene.engine.hass.client as hass:
-                wind_direction = int(
-                    hass.get_state(entity_id=self.entity_wind_direction).state
-                )
-                wind_speed = float(
-                    hass.get_state(entity_id=self.entity_wind_speed).state
-                )
-            logger.debug(
-                f"weather:wind:state direction={wind_direction} speed={wind_speed}"
-            )
-            self.image = self.build_surface(wind_direction, wind_speed)
-            self.dirty = 1
+            # self.image = self.build_surface(wind_direction, wind_speed)
+            # self.dirty = 1
+            pass
         except Exception as e:
             logger.error("weather:wind:state:error", exc_info=e)
 

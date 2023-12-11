@@ -21,6 +21,7 @@ types-paho-mqtt = "^1.6.0.5"
 dynaconf = "^3.1.12"
 pyyaml = "^6.0"
 pygame-ce = "^2.2.1"
+types-pyyaml = "^6.0.12.12"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

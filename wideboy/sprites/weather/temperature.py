@@ -45,11 +45,9 @@ class WeatherTemperatureSprite(BaseSprite):
 
     def update_state(self) -> None:
         try:
-            with self.scene.engine.hass.client as hass:
-                temp = float(hass.get_state(entity_id=self.entity_temp).state)
-            logger.debug(f"state:update temp={temp}")
-            self.image = self.build_surface(temp)
-            self.dirty = 1
+            # self.image = self.build_surface(temp)
+            # self.dirty = 1
+            pass
         except Exception as e:
             logger.error("state:error", exc_info=e)
 

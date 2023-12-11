@@ -8,6 +8,6 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("charset_normalizer").setLevel(logging.WARNING)
 
 
-def setup_logger(level: int = logging.INFO) -> None:
+def setup_logger(level: str = "info") -> None:
     log_level = logging.DEBUG if level == "debug" else logging.INFO
     logging.basicConfig(level=log_level, format=LOG_FORMAT)

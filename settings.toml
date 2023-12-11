@@ -44,18 +44,17 @@
   # user = "user"
   # password = "password"
   # keepalive = 60
-  
+
 [homeassistant]
   # topic_prefix = "homeassistant"
   # statestream_topic_prefix = "homeassistant/statestream"
-  
+
 [paths]
   # images_backgrounds = "images/background"
   # images_backgrounds_night ="images/night"
   # images_weather = "images/icons"
   # images_icons = "images/icons"
   # images_screenshots = "images/screenshots"
-  
+
 [backgrounds]
   # change_interval_mins = 5
-  

@@ -59,7 +59,7 @@ class StarfieldSprite(BaseSprite):
                 star.rect.y = random.randint(0, self.rect.height)
                 star_group.add(star)
 
-    def update_stars(self, delta: float = 1.0):
+    def update_stars(self, delta: float = 1.0) -> None:
         for layer_index, star_group in enumerate(self.star_groups):
             for star in star_group:
                 star.rect.x -= (self.scroll_speed * (layer_index + 1)) * (1.0 + delta)

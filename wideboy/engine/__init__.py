@@ -83,7 +83,7 @@ class Engine:
 
     def clock_tick(self) -> float:
         self.mqtt.loop(0)
-        return self.clock.tick(self.fps) / 1000
+        return float(self.clock.tick(self.fps) / 1000)
 
     def update_sensors(self):
         post_event(

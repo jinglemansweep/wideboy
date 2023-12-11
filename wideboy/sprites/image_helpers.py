@@ -5,13 +5,13 @@ import os
 import pygame
 from PIL import Image, ImageFilter, ImageEnhance
 from pygame import Color, Surface, Vector2, SRCALPHA
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
 logger = logging.getLogger("sprites.image_helpers")
 
 
-def load_image(filename: str, convert_alpha=False) -> Surface:
+def load_image(filename: str, convert_alpha: bool = False) -> Surface:
     image = pygame.image.load(filename)
     if convert_alpha:
         image = image.convert_alpha()
@@ -104,7 +104,7 @@ def render_arrow(
     angle: int = 0,
     color: Color = Color(255, 255, 255, 255),
     adjust: int = 0,
-):
+) -> Surface:
     surface = pygame.Surface((length * 2, length * 2), pygame.SRCALPHA)
     rect = surface.get_rect()
     rect.center = start_pos
@@ -133,10 +133,10 @@ def render_arrow(
 
 def number_to_color(
     number: float,
-    ranges=[0.3, 0.6],
+    ranges: List[float] = [0.3, 0.6],
     colors: Optional[List[Color]] = None,
     color_default: Color = Color(0, 0, 0, 255),
-    invert=False,
+    invert: bool = False,
 ) -> Color:
     if colors is None:
         colors = [
@@ -245,7 +245,7 @@ def render_material_icon(
     return surface
 
 
-def rainbow_color(step: float, alpha: int = 255):
+def rainbow_color(step: float, alpha: int = 255) -> Tuple[int, int, int, int]:
     r = int(255 * (1 + math.sin(step)) / 2)
     g = int(255 * (1 + math.sin(step + (2 * math.pi / 3))) / 2)
     b = int(255 * (1 + math.sin(step + (4 * math.pi / 3))) / 2)
