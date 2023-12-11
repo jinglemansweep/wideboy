@@ -3,7 +3,7 @@ import logging
 import pygame
 
 from pygame import Event
-from typing import Any
+from typing import Any, Dict
 import paho.mqtt.client as mqtt
 
 from wideboy.config import settings
@@ -42,7 +42,7 @@ class MQTTClient:
     def publish(
         self,
         topic: str,
-        payload: dict,
+        payload: Dict[str, Any],
         retain: bool = True,
         qos: int = 1,
     ) -> mqtt.MQTTMessageInfo:
@@ -56,7 +56,9 @@ class MQTTClient:
         logger.debug(f"mqtt:subscribe topic={topic}")
         self.client.subscribe(topic, args)
 
-    def _on_connect(self, client: mqtt.Client, userdata, flags, rc):
+    def _on_connect(
+        self, client: mqtt.Client, userdata: Any, flags: Any, rc: Any
+    ) -> None:
         logger.info(
             f"mqtt:connected connected={client.is_connected()} userdata={userdata} flags={flags} rc={str(rc)}"
         )
@@ -64,7 +66,7 @@ class MQTTClient:
         # DISABLED, could be too slow
         # self.subscribe(f"{settings.mqtt.topic_prefix}/{self.device_id}/#", 0)
 
-    def _on_message(self, client: mqtt.Client, userdata, msg):
+    def _on_message(self, client: mqtt.Client, userdata: Any, msg: Any) -> None:
         topic, payload = str(msg.topic), msg.payload.decode("utf-8")
         # logger.debug(
         #     f"mqtt:message_received topic={topic} payload={payload} userdata={userdata}"

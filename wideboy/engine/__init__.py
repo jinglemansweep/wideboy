@@ -39,7 +39,7 @@ class Engine:
     def __init__(
         self,
         display: "Display",
-        state: Dict,
+        state: Dict[str, Any],
         mqtt: "MQTTClient",
         hass: "HASSManager",
     ):
@@ -68,13 +68,13 @@ class Engine:
             DISPLAY_FLAGS,
         )
 
-    def loop(self):
+    def loop(self) -> None:
         # Clock, Blitting, Display
         delta = self.clock_tick()
         events = pygame.event.get()
         self.process_events(events)
         updates = self.scene_manager.render(self.clock, delta, events)
-        if len(updates) > 0:
+        if updates and len(updates) > 0:
             logger.debug(f"updates={updates}")
         pygame.display.update(updates)
         self.display.render(self.screen)
@@ -85,14 +85,14 @@ class Engine:
         self.mqtt.loop(0)
         return float(self.clock.tick(self.fps) / 1000)
 
-    def update_sensors(self):
+    def update_sensors(self) -> None:
         post_event(
             EVENT_HASS_ENTITY_UPDATE,
             name="fps",
             state=dict(value=self.clock.get_fps()),
         )
 
-    def process_events(self, events: list[pygame.Event]):
+    def process_events(self, events: list[pygame.Event]) -> None:
         for event in events:
             handle_internal_event(event)
             handle_joystick_event(event, self.joysticks)

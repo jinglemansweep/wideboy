@@ -1,7 +1,7 @@
 import logging
 from pygame import Rect
 from pygame.sprite import DirtySprite
-
+from typing import Any
 from wideboy.scenes.base import BaseScene
 
 logger = logging.getLogger("sprites.base")
@@ -13,5 +13,5 @@ class BaseSprite(DirtySprite):
         self.scene = scene
         self.rect = rect
 
-    def update(self, *args, **kwargs) -> None:
+    def update(self, *args: Any, **kwargs: Any) -> None:
         super().update(*args, **kwargs)

@@ -1,6 +1,6 @@
 import logging
 from pygame import Event
-from typing import Optional, Dict
+from typing import Optional, Dict, Any
 from wideboy.config import settings
 from wideboy.constants import (
     AppMetadata,
@@ -19,8 +19,8 @@ class HASSEntity:
         self,
         device_class: str,
         name: str,
-        options: Optional[dict] = None,
-        initial_state: Optional[dict] = None,
+        options: Optional[Dict[str, Any]] = None,
+        initial_state: Optional[Dict[str, Any]] = None,
         event_type: Optional[int] = None,
     ):
         self.device_class = device_class
@@ -31,9 +31,9 @@ class HASSEntity:
 
 
 class HASSManager:
-    entities: dict[str, dict]
+    entities: Dict[str, Dict[str, Any]]
 
-    def __init__(self, mqtt: MQTTClient, state: Dict, device_id: str):
+    def __init__(self, mqtt: MQTTClient, state: Dict[str, Any], device_id: str):
         self.mqtt = mqtt
         self.device_id = device_id
         self.state = state
@@ -71,7 +71,7 @@ class HASSManager:
                             )
                             post_event(event_trigger, payload=event.payload)
 
-    def parse_statestream_message(self, topic, payload) -> None:
+    def parse_statestream_message(self, topic: str, payload: Dict[str, Any]) -> None:
         # logger.debug(f"mqtt:statestream:parse topic={topic} payload={payload}")
         topic_stripped = topic.replace(
             f"{settings.homeassistant.statestream_topic_prefix}/", ""
@@ -130,7 +130,7 @@ class HASSManager:
         logger.debug(f"hass:mqtt:subscribe topic={command_topic}")
         self.mqtt.subscribe(command_topic, 0)
 
-    def build_device_info(self) -> dict:
+    def build_device_info(self) -> Dict[str, Any]:
         full_device_id = f"{_get_app_id()}_{self.device_id}"
         return dict(
             identifiers=[full_device_id],
@@ -144,5 +144,5 @@ class HASSManager:
         return f"{_get_app_id()}_{self.device_id}_{name}"
 
 
-def _get_app_id():
+def _get_app_id() -> str:
     return AppMetadata.NAME.lower()

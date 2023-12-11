@@ -1,12 +1,13 @@
 import pygame
 import uuid
+from typing import Any
 
 
-def get_unique_device_id():
+def get_unique_device_id() -> str:
     return uuid.UUID(int=uuid.getnode()).hex[-8:]
 
 
-def post_event(event_type: int, **kwargs) -> None:
+def post_event(event_type: int, **kwargs: Any) -> None:
     pygame.event.post(pygame.event.Event(event_type, **kwargs))
 
 

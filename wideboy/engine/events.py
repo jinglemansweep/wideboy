@@ -19,7 +19,7 @@ from wideboy.constants import (
     EVENT_SCENE_MANAGER_NEXT,
     GAMEPAD,
 )
-from typing import Dict
+from typing import Any, Dict
 
 logger = logging.getLogger("events")
 
@@ -36,7 +36,7 @@ def handle_internal_event(event: Event) -> None:
                 pygame.event.post(Event(EVENT_EPOCH_HOUR, unit=now.hour, now=now))
 
 
-def handle_joystick_event(event: pygame.event.Event, joysticks: Dict) -> None:
+def handle_joystick_event(event: pygame.event.Event, joysticks: Dict[int, Any]) -> None:
     if event.type == JOYDEVICEADDED:
         joystick = Joystick(event.device_index)
         logger.debug(

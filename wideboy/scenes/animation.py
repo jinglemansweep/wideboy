@@ -1,7 +1,7 @@
 import logging
 import pygame
 from pytweening import easeInOutSine
-from typing import Optional, Any
+from typing import Optional, Any, Callable
 
 from wideboy.sprites.base import BaseSprite
 
@@ -53,7 +53,7 @@ class Animation:
         target: pygame.math.Vector2,
         duration: int,
         origin: Optional[pygame.math.Vector2] = None,
-        tweener=easeInOutSine,
+        tweener: Callable[[float], float] = easeInOutSine,
     ) -> None:
         self.sprite: BaseSprite = sprite
         self.tweener = tweener

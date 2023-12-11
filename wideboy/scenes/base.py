@@ -1,6 +1,6 @@
 import logging
-from pygame import Clock, Color, Event, Rect, FRect, Vector2
-from pygame.sprite import LayeredDirty, Group
+from pygame import Clock, Color, Event, Rect, FRect, Surface, Vector2
+from pygame.sprite import LayeredDirty, Group, DirtySprite
 from typing import List, Union, TYPE_CHECKING
 from wideboy.sprites.image_helpers import build_background
 
@@ -26,8 +26,8 @@ class BaseScene:
             Vector2(self.width, self.height),
             bg_color,
         )
-        self.group: LayeredDirty = LayeredDirty()
-        self.animation_group: Group = Group()
+        self.group: LayeredDirty[DirtySprite] = LayeredDirty()
+        self.animation_group: Group[DirtySprite] = Group()
         self.setup()
 
     def reset(self) -> None:
@@ -82,13 +82,13 @@ class BaseScene:
             )
 
     @property
-    def screen(self):
+    def screen(self) -> Surface:
         return self.engine.screen
 
     @property
-    def height(self):
+    def height(self) -> float:
         return self.screen.get_rect().height
 
     @property
-    def width(self):
+    def width(self) -> float:
         return self.screen.get_rect().width

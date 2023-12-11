@@ -18,7 +18,7 @@ class Display:
     buffer: Optional[Any] = None
     visible: bool = True
 
-    def __init__(self):
+    def __init__(self) -> None:
         logger.debug(
             f"display:init \
               canvas=({settings.display.canvas.width}x{settings.display.canvas.height} \
@@ -28,7 +28,7 @@ class Display:
             self.matrix = RGBMatrix(options=matrix_options)
             self.buffer = self.matrix.CreateFrameCanvas()
         self.black = build_black_surface(
-            (
+            Vector2(
                 settings.display.canvas.width,
                 settings.display.canvas.height,
             )
@@ -53,7 +53,7 @@ class Display:
             state=dict(state=bool_to_hass_state(self.visible), brightness=brightness),
         )
 
-    def render(self, surface: Surface):
+    def render(self, surface: Surface) -> None:
         if not settings.display.matrix.enabled:
             return
         surface = surface if self.visible else self.black
@@ -67,7 +67,7 @@ def surface_to_led_matrix(surface: Surface) -> Image.Image:
     return Image.frombytes("RGB", (surface.get_width(), surface.get_height()), pixels)
 
 
-def build_black_surface(size: Vector2):
+def build_black_surface(size: Vector2) -> Surface:
     surface = Surface(size)
     surface.fill(0)
     return surface
