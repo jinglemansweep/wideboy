@@ -1,8 +1,7 @@
 import logging
-from pygame import Clock, Color, Event, Rect, Vector2, JOYBUTTONUP
+from pygame import Clock, Color, Event, Rect, JOYBUTTONUP
 from typing import TYPE_CHECKING
 from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
-from wideboy.scenes.animation import Act, Animation
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.notification import NotificationSprite
@@ -49,7 +48,6 @@ class DefaultScene(BaseScene):
                 self.height,
             ),
             settings.paths.images_backgrounds,
-            255,
             shuffle=True,
         )
         self.group.add(self.background_widget)
@@ -118,13 +116,6 @@ class DefaultScene(BaseScene):
         )
         self.group.add(self.notification_widget)
 
-        # =====================================================================
-        # SCENE STARTUP
-        # =====================================================================
-
-        self.act_background_change = self.build_background_change_act()
-        self.act_background_change.start()
-
     # Update
 
     def update(
@@ -147,38 +138,8 @@ class DefaultScene(BaseScene):
                         settings.paths.images_backgrounds
                     )
                 if event.unit % settings.backgrounds.change_interval_mins == 0:
-                    self.run_background_change_act()
+                    self.background_widget.change_image()
             if event.type == EVENT_ACTION_A or (
                 event.type == JOYBUTTONUP and event.button == GAMEPAD["BUTTON_A"]
             ):
-                self.run_background_change_act()
-
-    def run_background_change_act(self) -> None:
-        self.animation_group.add(self.build_background_change_act())
-
-    # Acts
-
-    def build_background_change_act(self) -> Act:
-        return Act(
-            64,
-            [
-                (
-                    0,
-                    Animation(
-                        self.background_widget,
-                        Vector2(0, 0 - self.height),
-                        32,
-                    ),
-                ),
-                (32, lambda: self.background_widget.render_next_image()),
-                (
-                    32,
-                    Animation(
-                        self.background_widget,
-                        Vector2(0, 0),
-                        32,
-                        Vector2(0, 0 - self.height),
-                    ),
-                ),
-            ],
-        )
+                self.background_widget.change_image()

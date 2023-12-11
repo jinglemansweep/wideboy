@@ -5,9 +5,8 @@ from typing import List, Dict, Type
 from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
+from wideboy.sprites.animation_helpers import Animator, AnimatorState
 from wideboy.sprites.tile_grid.helpers import (
-    Animator,
-    AnimatorState,
     FontAwesomeIcons,
     render_icon,
     render_text,
@@ -131,7 +130,13 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
 
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
-        open = any([sprite for sprite in self.sprites() if sprite.open])
+        open = any(
+            [
+                sprite
+                for sprite in self.sprites()
+                if hasattr(sprite, "open") and sprite.open
+            ]
+        )
         self.animator.set(open)
         self.animator.update()
         if self.animating:
@@ -140,7 +145,7 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
     @property
     def animating(self):
         return self.animator.animating or any(
-            [cell.animating for cell in self.sprites()]
+            [cell.animating for cell in self.sprites() if hasattr(cell, "animating")]
         )
 
 
@@ -222,6 +227,19 @@ class TileGrid(BaseSprite):
 
 
 # USEFUL SUBCLASSES
+
+
+class TallGridCell(TileGridCell):
+    width: int = TILE_GRID_CELL_WIDTH
+    height: int = TILE_GRID_CELL_HEIGHT * 2
+    open: bool = True
+    icon_visible: bool = False
+
+    def __init__(self, state):
+        super().__init__(state)
+        self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        self.image.fill(pygame.Color(255, 255, 255, 255))
+        self.rect = self.image.get_rect()
 
 
 class VerticalCollapseTileGridCell(TileGridCell):

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from wideboy.sprites.tile_grid import VerticalCollapseTileGridCell
+from wideboy.sprites.tile_grid import VerticalCollapseTileGridCell, TallGridCell
 from wideboy.sprites.tile_grid.helpers import (
     CommonColors,
     FontAwesomeIcons,
@@ -597,7 +597,15 @@ class CellWeatherRainProbability(GridCell):
         return is_defined(self.value) and self.value > self.limit
 
 
+# Tall Cells
+
+
+class TestTallCell(TallGridCell):
+    pass
+
+
 CELLS = [
+    # [TestTallCell],
     [
         CellSensorBinCollection,
         CellSensorStepsLouis,
