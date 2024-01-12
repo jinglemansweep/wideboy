@@ -11,6 +11,15 @@ from wideboy.sprites.base import BaseSprite
 
 logger = logging.getLogger("sprite.clock")
 
+FONT_FILENAME = "fonts/white-rabbit.ttf"
+
+
+def time_to_color(hour: int) -> Color:
+    if hour > 6 and hour < 18:
+        return Color(255, 255, 0, 255)
+    else:
+        return Color(128, 255, 255, 255)
+
 
 class TimeSprite(BaseSprite):
     rect: Rect
@@ -23,7 +32,7 @@ class TimeSprite(BaseSprite):
         color_bg: Color = Color(0, 0, 0, 0),
         color_fg: Color = Color(255, 0, 255, 255),
         color_outline: Color = Color(0, 0, 0, 255),
-        font_name: str = "fonts/molot.otf",
+        font_name: str = FONT_FILENAME,
         font_size: int = 36,
         time_format: str = "%H:%M",
         align: str = "center",
@@ -66,7 +75,7 @@ class TimeSprite(BaseSprite):
             self.font_name,
             self.font_size,
             color_bg=self.color_bg,
-            color_fg=self.color_fg,
+            color_fg=time_to_color(now.hour),
             color_outline=self.color_outline,
         )
 
@@ -97,7 +106,7 @@ class DateSprite(BaseSprite):
         color_bg: Color = Color(0, 0, 0, 0),
         color_fg: Color = Color(192, 192, 255, 255),
         color_outline: Color = Color(0, 0, 0, 255),
-        font_name: str = "fonts/molot.otf",
+        font_name: str = FONT_FILENAME,
         font_size: int = 16,
         date_format: str = "%a %d %b",
         uppercase: bool = True,

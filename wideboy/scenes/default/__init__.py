@@ -5,11 +5,8 @@ from wideboy.constants import EVENT_EPOCH_MINUTE, EVENT_ACTION_A, GAMEPAD
 from wideboy.sprites.background import BackgroundSprite
 from wideboy.sprites.clock import DateSprite, TimeSprite
 from wideboy.sprites.notification import NotificationSprite
+from wideboy.sprites.rect import RectSprite
 from wideboy.sprites.tile_grid import TileGrid
-
-# from wideboy.sprites.weather.animation import WeatherAnimationSprite
-# from wideboy.sprites.weather.temperature import WeatherTemperatureSprite
-# from wideboy.sprites.weather.wind import WeatherWindSprite
 from wideboy.scenes.base import BaseScene
 from wideboy.scenes.default.tiles import CELLS
 
@@ -20,6 +17,8 @@ if TYPE_CHECKING:
     from wideboy.engine import Engine
 
 logger = logging.getLogger("scenes.scene.default")
+
+CLOCK_WIDTH = 96
 
 
 class DefaultScene(BaseScene):
@@ -44,7 +43,7 @@ class DefaultScene(BaseScene):
             Rect(
                 0,
                 0,
-                640,
+                self.width,
                 self.height,
             ),
             settings.paths.images_backgrounds,
@@ -53,43 +52,26 @@ class DefaultScene(BaseScene):
         self.group.add(self.background_widget)
 
         # =====================================================================
-        # WEATHER WIDGETS
-        # =====================================================================
-
-        # self.weather_animation_widget = WeatherAnimationSprite(
-        #     self,
-        #     Rect(self.width - 128, -32, 128, 64),
-        #     demo=settings.general.demo,
-        #     size=Vector2(128, 128),
-        # )
-        # self.group.add(self.weather_animation_widget)
-
-        # self.weather_temp_widget = WeatherTemperatureSprite(
-        #     self,
-        #     Rect(self.width - 128 + 4, 0, 32, 28),
-        # )
-        # self.group.add(self.weather_temp_widget)
-
-        # self.weather_wind_widget = WeatherWindSprite(
-        #     self,
-        #     Rect(self.width - 128 + 6, 22, 32, 32),
-        # )
-        # self.group.add(self.weather_wind_widget)
-
-        # =====================================================================
         # CLOCK WIDGET
         # =====================================================================
 
+        self.clock_background = RectSprite(
+            self,
+            Rect(self.width - CLOCK_WIDTH, 0, CLOCK_WIDTH, 48),
+            Color(0, 0, 0, 160),
+        )
+        self.group.add(self.clock_background)
+
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(self.width - 96, -7, 96, 39),
+            Rect(self.width - CLOCK_WIDTH, 4, CLOCK_WIDTH, 30),
             color_fg=Color(255, 255, 0, 255),
-            font_size=38,
+            font_size=30,
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(self.width - 96, 29, 96, 16),
+            Rect(self.width - CLOCK_WIDTH, 30, CLOCK_WIDTH, 16),
             color_fg=Color(255, 255, 255, 255),
             font_size=14,
         )
@@ -125,7 +107,7 @@ class DefaultScene(BaseScene):
         events: list[Event],
     ) -> None:
         super().update(clock, delta, events)
-        self.tile_grid.rect.topright = (self.width - 130, 0)
+        self.tile_grid.rect.topright = (self.width - CLOCK_WIDTH, 0)
 
     # Handle Events
 
