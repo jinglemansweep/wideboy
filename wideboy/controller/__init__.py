@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Type
 from wideboy.constants import (
     AppMetadata,
     EVENT_MASTER,
+    EVENT_NIGHT_MODE,
     EVENT_SCENE_MANAGER_NEXT,
     EVENT_SCENE_MANAGER_SELECT,
     EVENT_NOTIFICATION_RECEIVED,
@@ -83,6 +84,13 @@ class Controller:
                 EVENT_MASTER,
             ),
             HASSEntity("button", "scene_next", event_type=EVENT_SCENE_MANAGER_NEXT),
+            HASSEntity(
+                "switch",
+                "night_mode",
+                dict(),
+                dict(state="OFF"),
+                event_type=EVENT_NIGHT_MODE,
+            ),
             HASSEntity("button", "action_a", event_type=EVENT_ACTION_A),
             HASSEntity("button", "action_b", event_type=EVENT_ACTION_B),
             HASSEntity("button", "screenshot", event_type=EVENT_SCREENSHOT),

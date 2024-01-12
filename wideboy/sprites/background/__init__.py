@@ -3,8 +3,9 @@ import os
 
 import random
 import yaml
-from pygame import Color, Rect, Surface
+from pygame import Clock, Color, Event, Rect, Surface
 from typing import Any
+from wideboy.constants import EVENT_NIGHT_MODE
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
 from wideboy.sprites.animation_helpers import Animator, AnimatorState
@@ -20,6 +21,7 @@ logger = logging.getLogger("sprite.background")
 
 class BackgroundSprite(BaseSprite):
     alpha_animator: Animator
+    night_mode = False
 
     def __init__(
         self,
@@ -36,13 +38,26 @@ class BackgroundSprite(BaseSprite):
         self.render_next_image()
         logger.debug(f"sprite:image files={len(self.image_files)}")
 
-    def update(self, *args: Any, **kwargs: Any) -> None:
+    def update(
+        self,
+        frame: int,
+        clock: Clock,
+        delta: float,
+        events: list[Event],
+    ) -> None:
+        super().update(frame, clock, delta, events)
+        for event in events:
+            if event.type == EVENT_NIGHT_MODE:
+                self.night_mode = event.payload == "ON"
+                self.dirty = 1
         self.alpha_animator.update()
         if self.alpha_animator.state == AnimatorState.CLOSED:
             self.render_next_image()
             self.alpha_animator.set(True)
         if self.image:
-            self.image.set_alpha(int(self.alpha_animator.value))
+            self.image.set_alpha(
+                64 if self.night_mode else int(self.alpha_animator.value)
+            )
         if self.alpha_animator.animating:
             self.dirty = 1
         # logger.debug(f"image:update alpha_animator={self.alpha_animator.value}")
