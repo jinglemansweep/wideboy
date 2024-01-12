@@ -58,7 +58,7 @@ class DefaultScene(BaseScene):
         self.clock_background = RectSprite(
             self,
             Rect(self.width - CLOCK_WIDTH, 0, CLOCK_WIDTH, 40),
-            Color(0, 0, 0, 160),
+            Color(0, 0, 0, 192),
         )
         self.group.add(self.clock_background)
 
