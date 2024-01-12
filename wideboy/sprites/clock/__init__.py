@@ -1,9 +1,8 @@
 import logging
 
 from datetime import datetime
-from typing import Optional
 from pygame import Clock, Color, Event, Rect, Surface, SRCALPHA
-from wideboy.sprites.image_helpers import render_text, rainbow_color
+from wideboy.sprites.image_helpers import render_text
 from wideboy.constants import EVENT_EPOCH_MINUTE
 from wideboy.scenes.base import BaseScene
 from wideboy.sprites.base import BaseSprite
@@ -18,7 +17,7 @@ def time_to_color(hour: int) -> Color:
     if hour > 6 and hour < 18:
         return Color(255, 255, 0, 255)
     else:
-        return Color(128, 255, 255, 255)
+        return Color(255, 128, 192, 255)
 
 
 class TimeSprite(BaseSprite):
@@ -37,7 +36,6 @@ class TimeSprite(BaseSprite):
         time_format: str = "%H:%M",
         align: str = "center",
         pos_adj: tuple[int, int] = (0, 0),
-        rainbow: Optional[str] = None,
     ) -> None:
         super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -49,7 +47,6 @@ class TimeSprite(BaseSprite):
         self.time_format = time_format
         self.align = align
         self.pos_adj = pos_adj
-        self.rainbow = rainbow
         self.render_text_surface()
         self.render()
 
@@ -112,7 +109,6 @@ class DateSprite(BaseSprite):
         uppercase: bool = True,
         align: str = "center",
         pos_adj: tuple[int, int] = (0, 0),
-        rainbow: Optional[str] = None,
     ) -> None:
         super().__init__(scene, rect)
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
@@ -125,7 +121,6 @@ class DateSprite(BaseSprite):
         self.uppercase = uppercase
         self.align = align
         self.pos_adj = pos_adj
-        self.rainbow = rainbow
         self.dirty = 1
         self.render_text_surface()
         self.render()
@@ -141,13 +136,6 @@ class DateSprite(BaseSprite):
         for event in events:
             if event.type == EVENT_EPOCH_MINUTE:
                 self.render_text_surface()
-                self.dirty = 1
-        if frame % 100 == 0:
-            if self.rainbow == "fg":
-                self.color_fg = rainbow_color(frame / 100)
-                self.dirty = 1
-            elif self.rainbow == "outline":
-                self.color_outline = rainbow_color(frame / 100)
                 self.dirty = 1
         self.render()
 

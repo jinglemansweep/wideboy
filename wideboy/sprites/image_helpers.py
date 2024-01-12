@@ -5,7 +5,7 @@ import os
 import pygame
 from PIL import Image, ImageFilter, ImageEnhance
 from pygame import Color, Surface, Vector2, SRCALPHA
-from typing import Optional, List, Tuple
+from typing import Optional, List
 
 logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
 logger = logging.getLogger("sprites.image_helpers")
@@ -243,13 +243,6 @@ def render_material_icon(
     surface = Surface((icon.get_rect().width, icon.get_rect().height), SRCALPHA)
     surface.blit(icon, (0, 0))
     return surface
-
-
-def rainbow_color(step: float, alpha: int = 255) -> Tuple[int, int, int, int]:
-    r = int(255 * (1 + math.sin(step)) / 2)
-    g = int(255 * (1 + math.sin(step + (2 * math.pi / 3))) / 2)
-    b = int(255 * (1 + math.sin(step + (4 * math.pi / 3))) / 2)
-    return (r, g, b, alpha)
 
 
 def build_background(size: Vector2, color: Color) -> Surface:

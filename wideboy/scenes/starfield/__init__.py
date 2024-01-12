@@ -24,7 +24,7 @@ class StarfieldScene(BaseScene):
     def __init__(
         self,
         engine: "Engine",
-        bg_color: Color = (0, 0, 0, 255),
+        bg_color: Color = Color(0, 0, 0, 255),
     ) -> None:
         super().__init__(engine, bg_color)
 
@@ -43,32 +43,17 @@ class StarfieldScene(BaseScene):
         self.group.add(self.starfield_widget)
 
         # =====================================================================
-        # SPHERE WIDGET
-        # =====================================================================
-
-        """
-        self.sphere_widget = SphereSprite(
-            self,
-            Rect(576, -32, 768 - 576, 128),
-            color_fg=Color(0, 0, 255, 64),
-            radius=100,
-        )
-        self.group.add(self.sphere_widget)
-        """
-
-        # =====================================================================
         # CLOCK WIDGET
         # =====================================================================
 
-        self.clock_time_pos: tuple[int, int] = (self.width - 128, -7)
-        self.clock_date_offset: tuple[int, int] = [0, 48]
+        self.clock_time_pos = (self.width - 128, -7)
+        self.clock_date_offset = [0, 48]
         self.clock_time_widget = TimeSprite(
             self,
             Rect(self.clock_time_pos[0], self.clock_time_pos[1], 128, 48),
             font_size=48,
             color_fg=Color(0, 0, 0, 255),
             color_outline=Color(255, 0, 255, 64),
-            rainbow="outline",
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
@@ -81,7 +66,6 @@ class StarfieldScene(BaseScene):
             ),
             color_fg=Color(0, 0, 0, 255),
             color_outline=Color(128, 0, 128, 255),
-            rainbow="outline",
         )
         self.group.add(self.clock_date_widget)
 
