@@ -86,7 +86,7 @@ class TimeSprite(BaseSprite):
         self.image.blit(
             self.surface_text,
             (
-                x,
+                x + self.pos_adj[0],
                 0 + self.pos_adj[1],
             ),
         )

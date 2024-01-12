@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger("scenes.scene.default")
 
-CLOCK_WIDTH = 96
+CLOCK_WIDTH = 90
 
 
 class DefaultScene(BaseScene):
@@ -57,23 +57,25 @@ class DefaultScene(BaseScene):
 
         self.clock_background = RectSprite(
             self,
-            Rect(self.width - CLOCK_WIDTH, 0, CLOCK_WIDTH, 48),
+            Rect(self.width - CLOCK_WIDTH, 0, CLOCK_WIDTH, 40),
             Color(0, 0, 0, 160),
         )
         self.group.add(self.clock_background)
 
         self.clock_time_widget = TimeSprite(
             self,
-            Rect(self.width - CLOCK_WIDTH, 4, CLOCK_WIDTH, 30),
+            Rect(self.width - CLOCK_WIDTH, 1, CLOCK_WIDTH, 30),
             color_fg=Color(255, 255, 0, 255),
             font_size=30,
+            pos_adj=(1, 0),
         )
         self.group.add(self.clock_time_widget)
         self.clock_date_widget = DateSprite(
             self,
-            Rect(self.width - CLOCK_WIDTH, 30, CLOCK_WIDTH, 16),
+            Rect(self.width - CLOCK_WIDTH, 25, CLOCK_WIDTH, 16),
             color_fg=Color(255, 255, 255, 255),
             font_size=14,
+            uppercase=False,
         )
         self.group.add(self.clock_date_widget)
 
