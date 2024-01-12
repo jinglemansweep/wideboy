@@ -13,10 +13,18 @@ from wideboy.sprites.image_helpers import (
     glob_files,
     load_image,
     scale_surface,
+    recolor_image,
     render_text,
 )
 
 logger = logging.getLogger("sprite.background")
+
+TINT_COLORS = [
+    Color(64, 0, 0, 255),
+    Color(0, 64, 0, 255),
+    Color(0, 0, 64, 255),
+    Color(64, 0, 64, 255),
+]
 
 
 class BackgroundSprite(BaseSprite):
@@ -55,9 +63,7 @@ class BackgroundSprite(BaseSprite):
             self.render_next_image()
             self.alpha_animator.set(True)
         if self.image:
-            self.image.set_alpha(
-                64 if self.night_mode else int(self.alpha_animator.value)
-            )
+            self.image.set_alpha(int(self.alpha_animator.value))
         if self.alpha_animator.animating:
             self.dirty = 1
         # logger.debug(f"image:update alpha_animator={self.alpha_animator.value}")
@@ -71,10 +77,12 @@ class BackgroundSprite(BaseSprite):
         logger.debug(f"image:next index={self.image_index} filename={filename}")
         surface = Surface((self.rect.width, self.rect.height))
         orig_image = load_image(filename)
+        if self.night_mode:
+            orig_image = recolor_image(orig_image, random.choice(TINT_COLORS))
         scaled_image = scale_surface(orig_image, (self.rect.width, self.rect.height))
         surface.blit(scaled_image, (0, 0))
         metadata = self.load_metadata(filename)
-        if metadata:
+        if not self.night_mode and metadata:
             label_text = metadata["inputs"]["prompt"].strip()
             label = render_text(
                 label_text,

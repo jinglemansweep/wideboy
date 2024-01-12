@@ -48,6 +48,13 @@ def filter_surface(
     return pil_to_surface(image)
 
 
+def recolor_image(image: Surface, color: Color) -> Surface:
+    surface = pygame.Surface(image.get_size(), pygame.SRCALPHA)
+    surface.fill(color)
+    surface.blit(image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+    return surface
+
+
 def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:
     return glob.glob(os.path.join(path, pattern))
 
