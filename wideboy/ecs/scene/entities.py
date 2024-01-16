@@ -15,6 +15,7 @@ class AppState:
 @entity
 class MQTTService:
     client: MQTTClient
+    listeners: list = field(default_factory=list)
 
 
 @entity

@@ -1,7 +1,7 @@
 from ecs_pattern import EntityManager, System
-from pygame.event import get as get_events
+from pygame.event import Event, get as get_events, post as post_event
 from pygame.display import Info as DisplayInfo
-from ..consts import EVENT_CLOCK_NEW_SECOND, EVENT_HASS_ENTITY_UPDATE
+from ..consts import EVENT_CLOCK_NEW_SECOND, EVENT_DEBUG_LOG, EVENT_HASS_ENTITY_UPDATE
 from ..entities import (
     AppState,
     WidgetClock,
@@ -28,8 +28,14 @@ class SysScene(System):
         )
 
     def update(self):
-        for event in get_events():
+        for event in get_events((EVENT_CLOCK_NEW_SECOND, EVENT_HASS_ENTITY_UPDATE)):
             if event.type == EVENT_CLOCK_NEW_SECOND:
+                post_event(
+                    Event(
+                        EVENT_DEBUG_LOG,
+                        dict(msg=f"Clock: {event.now.strftime('%H:%M:%S')}"),
+                    ),
+                )
                 clock = next(self.entities.get_by_class(WidgetClock))
                 clock.sprite = clock_sprite(event.now.strftime("%H:%M:%S"))
             if event.type == EVENT_HASS_ENTITY_UPDATE:

@@ -7,6 +7,7 @@ from ..consts import (
     EVENT_CLOCK_NEW_SECOND,
     EVENT_CLOCK_NEW_MINUTE,
     EVENT_CLOCK_NEW_HOUR,
+    EVENT_DEBUG_LOG,
 )
 
 
@@ -29,7 +30,7 @@ class SysClock(System):
         now = datetime.datetime.now()
         if now.second != self.now.second:
             app_state = next(self.entities.get_by_class(AppState))
-            app_state.time_now = self.now
+            app_state.time_now = now
             post_event(Event(EVENT_CLOCK_NEW_SECOND, dict(unit=now.second, now=now)))
             if now.second == 0 and now.minute != self.now.minute:
                 post_event(
@@ -39,6 +40,7 @@ class SysClock(System):
                     post_event(
                         Event(EVENT_CLOCK_NEW_HOUR, dict(unit=now.hour, now=now))
                     )
+            self.now = now
 
 
 class SysInput(System):
@@ -67,4 +69,5 @@ class SysDebug(System):
         self.entities = entities
 
     def update(self):
-        pass
+        for event in get_events((EVENT_DEBUG_LOG)):
+            print(f"debug.log: {event.msg}")
