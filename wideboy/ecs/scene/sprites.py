@@ -23,5 +23,11 @@ def test_sprite(size=20) -> Sprite:
 
 def clock_sprite(text: str, font_size: int = 80) -> Sprite:
     font = Font(None, font_size)
-    font_surface = font.render(text, True, Color("white"), Color("black"))
+    font_surface = font.render(text, True, Color("white"))
+    return SurfaceSprite(font_surface)
+
+
+def hass_sprite(text: str, font_size: int = 40) -> Sprite:
+    font = Font(None, font_size)
+    font_surface = font.render(text, True, Color("yellow"))
     return SurfaceSprite(font_surface)

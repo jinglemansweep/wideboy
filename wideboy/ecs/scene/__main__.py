@@ -5,7 +5,15 @@ from ecs_pattern import EntityManager, SystemManager
 
 from .consts import FPS_MAX
 from .entities import AppState
-from .systems import SysDraw, SysInit, SysInputControl, SysMovement, SysMqttControl
+from .systems import (
+    SysClock,
+    SysDraw,
+    SysEventBus,
+    SysInit,
+    SysInputControl,
+    SysMovement,
+    SysMqttControl,
+)
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"  # window at center
 
@@ -23,8 +31,10 @@ def main():
     system_manager = SystemManager(
         [
             SysInit(entities),
+            SysClock(entities),
             SysMqttControl(entities),
             SysInputControl(entities, pygame.event.get),
+            SysEventBus(entities),
             SysMovement(entities),
             SysDraw(entities, screen),
         ]
