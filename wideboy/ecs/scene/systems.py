@@ -7,15 +7,21 @@ from pygame.constants import (
     K_UP,
     QUIT,
 )
+from pygame.event import get as get_events, post as post_event
 from pygame.display import Info as DisplayInfo
 from paho.mqtt.client import Client as MQTTClient
 from ecs_pattern import EntityManager, System
 import datetime
-from typing import Callable
 from .components import ComMotion, ComVisible
-from .consts import EventsEnum
+from .consts import EVENT_HASS_ENTITY_UPDATE
 from .sprites import clock_sprite, test_sprite
-from .entities import AppState, MQTT, WidgetClock, WidgetHass, WidgetTest
+from .entities import (
+    AppState,
+    MQTT,
+    WidgetClock,
+    WidgetTest,
+    WidgetTileGrid,
+)
 
 from ...sprites.tile_grid_ecs import TileGrid
 from ...scenes.default.tiles import CELLS
@@ -27,11 +33,12 @@ class SysInit(System):
 
     def start(self):
         self.entities.init()
+        app_state = AppState(running=True)
+        self.entities.add(app_state)
         self.entities.add(
-            AppState(running=True),
             WidgetClock(clock_sprite(""), 0, 0),
             WidgetTest(test_sprite(), 100, 100, 1, 1),
-            WidgetHass(TileGrid(CELLS), 20, 50),
+            WidgetTileGrid(TileGrid(CELLS, app_state.hass_state), 20, 50),
             # GameStateInfo(play=True, pause=False),
             # WaitForBallMoveEvent(1000),
         )
@@ -48,7 +55,7 @@ class SysClock(System):
     def update(self):
         now = datetime.datetime.now()
         if now.second != self.now.second:
-            print("NEW SECOND")
+            # print("NEW SECOND")
             self.now = now
             self.set_clock()
 
@@ -82,20 +89,31 @@ class SysMqttControl(System):
             payload = message.payload.decode("utf-8")
             device_class, entity_id, attr = parts[1], parts[-2], parts[-1]
             entity_id_full = f"{device_class}.{entity_id}"
-            app_state.events.append(
-                (EventsEnum.HASS_ENTITY_UPDATE, (entity_id_full, attr, payload))
+            post_event(
+                Event(
+                    EVENT_HASS_ENTITY_UPDATE,
+                    dict(entity_id=entity_id_full, attribute=attr, payload=payload),
+                )
             )
             if entity_id_full not in app_state.hass_state:
                 app_state.hass_state[entity_id_full] = dict()
             app_state.hass_state[entity_id_full][attr] = payload
 
 
-class SysInputControl(System):
-    def __init__(
-        self, entities: EntityManager, event_getter: Callable[..., list[Event]]
-    ):
+class SysEvents(System):
+    def __init__(self, entities: EntityManager):
         self.entities = entities
-        self.event_getter = event_getter
+
+    def update(self):
+        for event in get_events():
+            if event.type == EVENT_HASS_ENTITY_UPDATE:
+                widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
+                widget_tilegrid.sprite.update(event.entity_id)
+
+
+class SysInputControl(System):
+    def __init__(self, entities: EntityManager):
+        self.entities = entities
         self.event_types = (KEYDOWN, KEYUP, QUIT)  # Whitelist
         self.app_state = None
 
@@ -103,7 +121,7 @@ class SysInputControl(System):
         self.app_state = next(self.entities.get_by_class(AppState))
 
     def update(self):
-        for event in self.event_getter(self.event_types):
+        for event in get_events(self.event_types):
             event_type = event.type
             event_key = getattr(event, "key", None)
             # Quit App
@@ -112,23 +130,6 @@ class SysInputControl(System):
             # Up/Down
             if event_type == KEYDOWN and event_key in (K_UP, K_DOWN):
                 print("Up/Down", event_key)
-
-
-class SysEventBus(System):
-    def __init__(self, entities: EntityManager):
-        self.entities = entities
-        self.app_state = None
-
-    def start(self):
-        self.app_state = next(self.entities.get_by_class(AppState))
-
-    def update(self):
-        if len(self.app_state.events) > 0:
-            print(len(self.app_state.events))
-            event, payload = self.app_state.events.pop(0)
-            if event == EventsEnum.HASS_ENTITY_UPDATE:
-                hass_widget = next(self.entities.get_by_class(WidgetHass))
-                hass_widget.sprite.update(payload[0])
 
 
 class SysMovement(System):
@@ -142,9 +143,8 @@ class SysMovement(System):
 
     def update(self):
         # TODO: move somewhere else
-        hass_widget = next(self.entities.get_by_class(WidgetHass))
-        hass_widget.sprite.state = self.app_state.hass_state
-        hass_widget.sprite.update()
+        widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
+        widget_tilegrid.sprite.update()
         # get entities
         test_entity = next(self.entities.get_by_class(WidgetTest))
         # move

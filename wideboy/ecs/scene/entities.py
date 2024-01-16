@@ -10,7 +10,6 @@ class AppState:
     running: bool
     time_now: datetime.datetime = datetime.datetime.now()
     hass_state: dict = field(default_factory=dict)
-    events: list = field(default_factory=list)
 
 
 @entity
@@ -29,5 +28,5 @@ class WidgetClock(ComVisible):
 
 
 @entity
-class WidgetHass(ComVisible):
+class WidgetTileGrid(ComVisible):
     pass

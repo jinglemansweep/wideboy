@@ -8,7 +8,7 @@ from .entities import AppState
 from .systems import (
     SysClock,
     SysDraw,
-    SysEventBus,
+    SysEvents,
     SysInit,
     SysInputControl,
     SysMovement,
@@ -31,10 +31,11 @@ def main():
     system_manager = SystemManager(
         [
             SysInit(entities),
+            SysEvents(entities),
             SysClock(entities),
             SysMqttControl(entities),
-            SysInputControl(entities, pygame.event.get),
-            SysEventBus(entities),
+            SysInputControl(entities),
+            # SysEventBus(entities),
             SysMovement(entities),
             SysDraw(entities, screen),
         ]

@@ -135,7 +135,6 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
                 if hasattr(sprite, "open") and sprite.open
             ]
         )
-        print(open)
         self.animator.set(open)
         self.animator.update()
         if self.animating:
@@ -157,12 +156,12 @@ class TileGrid(pygame.sprite.Sprite):
     tile_surface_cache: Dict[str, pygame.Surface] = dict()
     update_frames: int = 0
 
-    def __init__(self, cells: List[List[Type[TileGridCell]]]):
+    def __init__(self, cells: List[List[Type[TileGridCell]]], state: Dict):
         super().__init__()
         self.image = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
         self.cells = cells
-        self.state = dict()
+        self.state = state
         self.columns = []
 
         for column in self.cells:
