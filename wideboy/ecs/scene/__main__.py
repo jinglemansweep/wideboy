@@ -5,15 +5,12 @@ from ecs_pattern import EntityManager, SystemManager
 
 from .consts import FPS_MAX
 from .entities import AppState
-from .systems import (
-    SysClock,
-    SysDraw,
-    SysEvents,
-    SysInit,
-    SysInputControl,
-    SysMovement,
-    SysMqttControl,
-)
+from .systems.animation import SysMovement
+from .systems.boot import SysBoot, SysClock, SysDebug, SysInput
+from .systems.display import SysDraw
+from .systems.scene import SysScene
+from .systems.mqtt import SysMQTT, SysHomeAssistant
+
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"  # window at center
 
@@ -30,14 +27,20 @@ def main():
 
     system_manager = SystemManager(
         [
-            SysInit(entities),
-            SysEvents(entities),
+            # Boot
+            SysBoot(entities),
+            # Inputs/Control
             SysClock(entities),
-            SysMqttControl(entities),
-            SysInputControl(entities),
-            # SysEventBus(entities),
+            SysInput(entities),
+            SysMQTT(entities),
+            SysHomeAssistant(entities),
+            # Stage
+            SysScene(entities),
             SysMovement(entities),
+            # Render
             SysDraw(entities, screen),
+            # Debugging
+            SysDebug(entities),
         ]
     )
     system_manager.start_systems()

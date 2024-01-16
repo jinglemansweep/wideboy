@@ -13,7 +13,7 @@ class AppState:
 
 
 @entity
-class MQTT:
+class MQTTService:
     client: MQTTClient
 
 

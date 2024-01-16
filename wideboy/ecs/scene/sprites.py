@@ -1,5 +1,8 @@
 from pygame import Color, Font, Surface
 from pygame.sprite import Sprite
+from typing import Dict, List
+
+from ...sprites.tile_grid_ecs import TileGrid
 
 
 class ColoredBlockSprite(Sprite):
@@ -17,17 +20,15 @@ class SurfaceSprite(Sprite):
         self.rect = self.image.get_rect()
 
 
-def test_sprite(size=20) -> Sprite:
-    return ColoredBlockSprite(Color("white"), size, size)
-
-
 def clock_sprite(text: str, font_size: int = 80) -> Sprite:
     font = Font(None, font_size)
     font_surface = font.render(text, True, Color("white"))
     return SurfaceSprite(font_surface)
 
 
-def hass_sprite(text: str, font_size: int = 40) -> Sprite:
-    font = Font(None, font_size)
-    font_surface = font.render(text, True, Color("yellow"))
-    return SurfaceSprite(font_surface)
+def test_sprite(size=20) -> Sprite:
+    return ColoredBlockSprite(Color("white"), size, size)
+
+
+def tilegrid_sprite(cells: List, state: Dict) -> Sprite:
+    return TileGrid(cells, state)
