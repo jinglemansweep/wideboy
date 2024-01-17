@@ -1,4 +1,5 @@
 import datetime
+from dynaconf import Dynaconf
 from ecs_pattern import EntityManager, System
 from ..entities import AppState
 from pygame.constants import KEYDOWN, KEYUP, QUIT, K_UP, K_DOWN, K_ESCAPE
@@ -12,12 +13,17 @@ from ..consts import (
 
 
 class SysBoot(System):
-    def __init__(self, entities: EntityManager):
+    def __init__(
+        self,
+        entities: EntityManager,
+        config: Dynaconf,
+    ):
         self.entities = entities
+        self.config = config
 
     def start(self):
         self.entities.init()
-        app_state = AppState(running=True)
+        app_state = AppState(running=True, config=self.config)
         self.entities.add(app_state)
 
 

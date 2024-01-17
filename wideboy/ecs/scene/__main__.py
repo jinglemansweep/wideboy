@@ -1,8 +1,10 @@
 import os
 
 import pygame
+from dynaconf import Dynaconf
 from ecs_pattern import EntityManager, SystemManager
 
+from .config import VALIDATORS
 from .consts import FPS_MAX
 from .entities import AppState
 from .systems.animation import SysMovement
@@ -13,6 +15,13 @@ from .systems.mqtt import SysMQTT, SysHomeAssistant
 
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"  # window at center
+
+
+config = Dynaconf(
+    envvar_prefix="WIDEBOY",
+    settings_files=["settings.toml", "settings.local.toml", "secrets.toml"],
+    validators=VALIDATORS,
+)
 
 
 def main():
@@ -28,7 +37,7 @@ def main():
     system_manager = SystemManager(
         [
             # Boot
-            SysBoot(entities),
+            SysBoot(entities, config),
             # Inputs/Control
             SysClock(entities),
             SysInput(entities),

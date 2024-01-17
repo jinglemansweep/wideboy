@@ -27,6 +27,9 @@ class SysScene(System):
             WidgetTileGrid(tilegrid_sprite(CELLS, app_state.hass_state), 20, 50),
         )
 
+        widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
+        widget_tilegrid.speed_x, widget_tilegrid.speed_y = -1, -1
+
     def update(self):
         for event in get_events((EVENT_CLOCK_NEW_SECOND, EVENT_HASS_ENTITY_UPDATE)):
             if event.type == EVENT_CLOCK_NEW_SECOND:
@@ -44,6 +47,11 @@ class SysScene(System):
 
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
         widget_tilegrid.sprite.update()
+
+        if widget_tilegrid.x <= 0 or widget_tilegrid.x > self.display_info.current_w:
+            widget_tilegrid.speed_x = -widget_tilegrid.speed_x
+        elif widget_tilegrid.y <= 0 or widget_tilegrid.y > self.display_info.current_h:
+            widget_tilegrid.speed_y = -widget_tilegrid.speed_y
 
         test_entity = next(self.entities.get_by_class(WidgetTest))
         if test_entity.x < 0:

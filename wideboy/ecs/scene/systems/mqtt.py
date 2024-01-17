@@ -9,13 +9,23 @@ from ..entities import AppState, MQTTService
 class SysMQTT(System):
     def __init__(self, entities: EntityManager):
         self.entities = entities
+        self.app_state = None
         self.client = MQTTClient()
 
     def start(self):
-        self.client.username_pw_set("mqtt", "password")
+        self.app_state = next(self.entities.get_by_class(AppState))
+        self.client.username_pw_set(
+            self.app_state.config.mqtt.user, self.app_state.config.mqtt.password
+        )
         self.client.on_message = self._on_message
-        self.client.connect("hass.home", 1883, 60)
-        listeners = []  # [self.debug_listener]
+        self.client.connect(
+            self.app_state.config.mqtt.host,
+            self.app_state.config.mqtt.port,
+            self.app_state.config.mqtt.keepalive,
+        )
+        listeners = []
+        if self.app_state.config.general.debug:
+            listeners.append(self.debug_listener)
         self.entities.add(MQTTService(client=self.client, listeners=listeners))
 
     def update(self):

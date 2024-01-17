@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import field
+from dynaconf import Dynaconf
 from ecs_pattern import entity
 from paho.mqtt.client import Client as MQTTClient
 from .components import ComMotion, ComVisible
@@ -8,6 +9,7 @@ from .components import ComMotion, ComVisible
 @entity
 class AppState:
     running: bool
+    config: Dynaconf = None
     time_now: datetime.datetime = datetime.datetime.now()
     hass_state: dict = field(default_factory=dict)
 
@@ -29,5 +31,5 @@ class WidgetClock(ComVisible):
 
 
 @entity
-class WidgetTileGrid(ComVisible):
+class WidgetTileGrid(ComMotion, ComVisible):
     pass
