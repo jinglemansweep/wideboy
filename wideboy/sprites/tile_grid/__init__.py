@@ -2,11 +2,9 @@ import logging
 import pygame
 from typing import List, Dict, Type
 
-from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
-from wideboy.scenes.base import BaseScene
-from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.animation_helpers import Animator, AnimatorState
-from wideboy.sprites.tile_grid.helpers import (
+
+from ..utils import Animator, AnimatorState
+from .helpers import (
     FontAwesomeIcons,
     render_icon,
     render_text,
@@ -15,9 +13,9 @@ from wideboy.sprites.tile_grid.helpers import (
 
 # NOTES
 
-logger = logging.getLogger("sprite.tile_grid")
+logger = logging.getLogger("sprites.tile_grid")
 
-# CONSTANTS
+# CONSTANTSf
 
 TILE_GRID_CELL_WIDTH = 64
 TILE_GRID_CELL_HEIGHT = 12
@@ -25,7 +23,6 @@ TILE_GRID_CELL_ICON_WIDTH = 15
 TILE_GRID_CELL_ICON_HEIGHT = 12
 
 # TILE GRID
-
 
 # Mixins
 
@@ -152,19 +149,18 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
 # Tile Grid Sprite
 
 
-class TileGrid(BaseSprite):
+class TileGrid(pygame.sprite.Sprite):
     state: Dict
     columns: List
     tile_surface_cache: Dict[str, pygame.Surface] = dict()
     update_frames: int = 0
 
-    def __init__(self, scene: BaseScene, cells: List[List[Type[TileGridCell]]]):
-        super().__init__(scene, pygame.Rect(0, 0, 0, 0))
+    def __init__(self, cells: List[List[Type[TileGridCell]]], state: Dict):
+        super().__init__()
         self.image = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
-        self.scene = scene
         self.cells = cells
-        self.state = self.scene.engine.state
+        self.state = state
         self.columns = []
 
         for column in self.cells:
@@ -177,15 +173,8 @@ class TileGrid(BaseSprite):
     def __repr__(self):
         return f"TileGrid(columns={self.columns})"
 
-    def update(self, frame, clock, delta, events):
-        super().update(frame, clock, delta, events)
+    def update(self, entity_id=None):
         dirty = False
-        entity_id = None
-        for event in events:
-            if event.type == EVENT_HASS_STATESTREAM_UPDATE:
-                entity_id = event.payload.get("entity_id", None)
-                dirty = True
-                # logger.debug(f"state update: {entity_id}")
         cx, cy = 0, 0
         width, height = self.calculate_size()
         animating = any([column.animating for column in self.columns])
@@ -214,7 +203,7 @@ class TileGrid(BaseSprite):
             column.update()
             column.draw(self.image)
         self.rect.width, self.rect.height = self.calculate_size()
-        self.dirty = 1 if self.update_frames > 0 else 0
+        self.dirty = 1  # if self.update_frames > 0 else 0
         self.update_frames -= 1
 
     def calculate_size(self):
@@ -277,3 +266,9 @@ class VerticalCollapseTileGridCell(TileGridCell):
 
     def __repr__(self):
         return f"VerticalCollapseTileGridCell(size=({self.width}x{self.height}), label='{self.label}', open={self.open}, height={self.height_animator.value})"
+
+
+def build_tile_grid_sprite(
+    cells: List[List[Type[TileGridCell]]], state: Dict
+) -> TileGrid:
+    return TileGrid(cells, state)

@@ -1,8 +1,5 @@
 from pygame import Color, Font, Surface
 from pygame.sprite import Sprite
-from typing import Dict, List
-
-from ...sprites.tile_grid_ecs import TileGrid
 
 
 class ColoredBlockSprite(Sprite):
@@ -28,7 +25,3 @@ def clock_sprite(text: str, font_size: int = 80) -> Sprite:
 
 def test_sprite(size=20) -> Sprite:
     return ColoredBlockSprite(Color("white"), size, size)
-
-
-def tilegrid_sprite(cells: List, state: Dict) -> Sprite:
-    return TileGrid(cells, state)

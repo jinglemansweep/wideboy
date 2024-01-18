@@ -8,9 +8,9 @@ from ..entities import (
     WidgetTest,
     WidgetTileGrid,
 )
-from ..sprites import clock_sprite, test_sprite, tilegrid_sprite
-
-from ....scenes.default.tiles import CELLS
+from ..sprites.common import clock_sprite, test_sprite
+from ..sprites.tile_grid import build_tile_grid_sprite
+from ..sprites.tile_grid.tiles import CELLS
 
 
 class SysScene(System):
@@ -24,7 +24,7 @@ class SysScene(System):
         self.entities.add(
             WidgetClock(clock_sprite(""), 0, 0),
             WidgetTest(test_sprite(), 100, 100, 1, 1),
-            WidgetTileGrid(tilegrid_sprite(CELLS, app_state.hass_state), 20, 50),
+            WidgetTileGrid(build_tile_grid_sprite(CELLS, app_state.hass_state), 20, 50),
         )
 
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
