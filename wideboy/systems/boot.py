@@ -23,8 +23,6 @@ class SysBoot(System):
 
     def start(self):
         self.entities.init()
-        app_state = AppState(running=True, config=self.config)
-        self.entities.add(app_state)
 
 
 class SysClock(System):
