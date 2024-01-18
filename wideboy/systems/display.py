@@ -1,7 +1,7 @@
 import os
 import sys
 from ecs_pattern import EntityManager, System
-from pygame.image.tostring import tostring as image_to_string
+from pygame.image import tostring as image_to_string
 from pygame.surface import Surface
 from PIL import Image
 from ..entities import AppState
