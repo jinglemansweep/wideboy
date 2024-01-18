@@ -29,8 +29,18 @@ VALIDATORS = [
         cast=int,
     ),
     Validator(
-        "MQTT__TOPIC_PREFIX",
+        "MQTT__TOPIC_PREFIX__APP",
         default="wideboy",
+        cast=str,
+    ),
+    Validator(
+        "MQTT__TOPIC_PREFIX__HOMEASSISTANT__DEFAULT",
+        default="homeassistant",
+        cast=str,
+    ),
+    Validator(
+        "MQTT__TOPIC_PREFIX__HOMEASSISTANT__STATESTREAM",
+        default="homeassistant/statestream",
         cast=str,
     ),
     Validator(
@@ -48,16 +58,10 @@ VALIDATORS = [
         default=60,
         cast=int,
     ),
-    # HOME ASSISTANT
     Validator(
-        "HOMEASSISTANT__TOPIC_PREFIX",
-        default="homeassistant",
-        cast=str,
-    ),
-    Validator(
-        "HOMEASSISTANT__STATESTREAM_TOPIC_PREFIX",
-        default="homeassistant/statestream",
-        cast=str,
+        "MQTT__LOG_MESSAGES",
+        default=False,
+        cast=bool,
     ),
     # PATHS
     Validator(

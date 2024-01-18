@@ -12,6 +12,7 @@ class AppState:
     config: Dynaconf = None
     time_now: datetime.datetime = datetime.datetime.now()
     hass_state: dict = field(default_factory=dict)
+    power: bool = True
 
 
 @entity

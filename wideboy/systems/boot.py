@@ -84,5 +84,5 @@ class SysDebug(System):
         logger.info("Debug system starting...")
 
     def update(self):
-        for event in get_events((EVENT_DEBUG_LOG)):
+        for event in get_events(EVENT_DEBUG_LOG):
             logger.debug(f"sys.debug.log: {event.msg}")

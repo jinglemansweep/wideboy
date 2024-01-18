@@ -1,11 +1,7 @@
 [general]
   # device_id = "lounge"
-  # remote_url = "http://wideboy.local"
   # debug = false
   # log_level = "debug" # info, debug
-  # profiling = ""
-  # fps = 30
-  # demo = false
 
 [display]
   [display.canvas]
@@ -40,21 +36,20 @@
 [mqtt]
   # host = "hass.local"
   # port = 1883
-  # topic_prefix = "wideboy"
   # user = "user"
   # password = "password"
   # keepalive = 60
+  # log_messages = false
 
-[homeassistant]
-  # topic_prefix = "homeassistant"
-  # statestream_topic_prefix = "homeassistant/statestream"
+[mqtt.topic_prefix]
+  # app = "wideboy"
+
+[mqtt.topic_prefix.homeassistant]
+  # default = "homeassistant"
+  # statestream = "homeassistant/statestream"
 
 [paths]
   # images_backgrounds = "images/background"
-  # images_backgrounds_night ="images/night"
   # images_weather = "images/icons"
   # images_icons = "images/icons"
   # images_screenshots = "images/screenshots"
-
-[backgrounds]
-  # change_interval_mins = 5
