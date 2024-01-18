@@ -1,3 +1,4 @@
+import logging
 from ecs_pattern import EntityManager, System
 from pygame.event import Event, get as get_events, post as post_event
 from pygame.display import Info as DisplayInfo
@@ -12,6 +13,8 @@ from ..sprites.common import clock_sprite, test_sprite
 from ..sprites.tile_grid import build_tile_grid_sprite
 from ..sprites.tile_grid.tiles import CELLS
 
+logger = logging.getLogger(__name__)
+
 
 class SysScene(System):
     def __init__(self, entities: EntityManager):
@@ -19,6 +22,7 @@ class SysScene(System):
         self.display_info = DisplayInfo()
 
     def start(self):
+        logger.info("Scene system starting...")
         self.entities.init()
         app_state = next(self.entities.get_by_class(AppState))
         self.entities.add(

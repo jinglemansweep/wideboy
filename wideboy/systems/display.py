@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 from ecs_pattern import EntityManager, System
@@ -19,6 +20,8 @@ sys.path.append(
 
 from rgbmatrix import RGBMatrix, RGBMatrixOptions  # type: ignore
 
+logger = logging.getLogger(__name__)
+
 
 def surface_to_led_matrix(surface: Surface) -> Image.Image:
     pixels = image_to_string(surface, "RGB")
@@ -30,13 +33,18 @@ class SysDisplay(System):
         self.entities = entities
         self.screen = screen
         self.config = next(self.entities.get_by_class(AppState)).config
+        self.enabled = self.config.display.matrix.enabled
 
     def start(self):
-        if not self.config.display.matrix.enabled:
+        if not self.enabled:
+            logger.info("Display system disabled")
             return
+        logger.info("Display system starting...")
         self._setup_matrix_driver()
 
     def update(self):
+        if not self.enabled:
+            return
         self.buffer.SetImage(surface_to_led_matrix(self.screen))
         self.matrix.SwapOnVSync(self.buffer)
 

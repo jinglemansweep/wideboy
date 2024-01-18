@@ -1,10 +1,16 @@
+import logging
 from ecs_pattern import EntityManager, System
 from ..components import ComMotion, ComVisible
+
+logger = logging.getLogger(__name__)
 
 
 class SysMovement(System):
     def __init__(self, entities: EntityManager):
         self.entities = entities
+
+    def start(self):
+        logger.info("Movement system starting...")
 
     def update(self):
         for movable_entity in self.entities.get_with_component(ComMotion, ComVisible):

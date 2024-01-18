@@ -1,5 +1,5 @@
 import os
-
+import logging
 import pygame
 from dynaconf import Dynaconf
 from ecs_pattern import EntityManager, SystemManager
@@ -14,7 +14,7 @@ from .systems.display import SysDisplay
 from .systems.draw import SysDraw
 from .systems.scene import SysScene
 from .systems.mqtt import SysMQTT, SysHomeAssistant
-
+from .utils import setup_logger
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 
@@ -27,11 +27,17 @@ config = Dynaconf(
 
 
 def main():
+    app_state = AppState(running=True, config=config)
+
+    setup_logger(config)
+    logger = logging.getLogger(__name__)
+
+    logger.info(f"{_APP_TITLE} v{_APP_VERSION} starting up...")
+
     pygame.init()
+    pygame.mixer.quit()
     pygame.display.set_caption(f"{_APP_TITLE} v{_APP_VERSION}")
     clock = pygame.time.Clock()
-
-    app_state = AppState(running=True, config=config)
 
     entities = EntityManager()
     entities.add(app_state)

@@ -1,9 +1,12 @@
+import logging
 from ecs_pattern import EntityManager, System
 from paho.mqtt.client import Client as MQTTClient
 from pygame.event import Event, post as post_event
 from typing import Any
 from ..consts import EVENT_HASS_ENTITY_UPDATE
 from ..entities import AppState, MQTTService
+
+logger = logging.getLogger(__name__)
 
 
 class SysMQTT(System):
@@ -13,6 +16,7 @@ class SysMQTT(System):
         self.client = MQTTClient()
 
     def start(self):
+        logger.info("MQTT system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
         self.client.username_pw_set(
             self.app_state.config.mqtt.user, self.app_state.config.mqtt.password
@@ -32,7 +36,7 @@ class SysMQTT(System):
         self.client.loop(timeout=0.001)
 
     def debug_listener(self, topic: str, payload: str, client: MQTTClient) -> None:
-        print(f"sys.mqtt.message: topic: {topic}, payload: {payload}")
+        logger.debug(f"sys.mqtt.message: topic: {topic}, payload: {payload}")
 
     def _on_message(self, client: MQTTClient, userdata: Any, message: Any):
         mqtt_service = next(self.entities.get_by_class(MQTTService))
@@ -50,6 +54,7 @@ class SysHomeAssistant(System):
         self.mqtt = None
 
     def start(self):
+        logger.info("HomeAssistant system starting...")
         self.mqtt = next(self.entities.get_by_class(MQTTService))
         self.mqtt.listeners.append(self.on_mqtt_message)
         self.mqtt.client.subscribe(f"{self.statestream_topic_prefix}/#")

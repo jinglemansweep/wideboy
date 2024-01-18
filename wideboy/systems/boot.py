@@ -1,4 +1,5 @@
 import datetime
+import logging
 from dynaconf import Dynaconf
 from ecs_pattern import EntityManager, System
 from ..entities import AppState
@@ -11,6 +12,8 @@ from ..consts import (
     EVENT_DEBUG_LOG,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class SysBoot(System):
     def __init__(
@@ -22,6 +25,7 @@ class SysBoot(System):
         self.config = config
 
     def start(self):
+        logger.info("Boot system starting...")
         self.entities.init()
 
 
@@ -29,6 +33,9 @@ class SysClock(System):
     def __init__(self, entities: EntityManager):
         self.entities = entities
         self.now = datetime.datetime.now()
+
+    def start(self):
+        logger.info("Clock system starting...")
 
     def update(self):
         now = datetime.datetime.now()
@@ -54,6 +61,7 @@ class SysInput(System):
         self.app_state = None
 
     def start(self):
+        logger.info("Input system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
 
     def update(self):
@@ -65,13 +73,16 @@ class SysInput(System):
                 self.app_state.running = False
             # Up/Down
             if event_type == KEYDOWN and event_key in (K_UP, K_DOWN):
-                print("Up/Down", event_key)
+                logger.debug("Up/Down", event_key)
 
 
 class SysDebug(System):
     def __init__(self, entities: EntityManager):
         self.entities = entities
 
+    def start(self):
+        logger.info("Debug system starting...")
+
     def update(self):
         for event in get_events((EVENT_DEBUG_LOG)):
-            print(f"debug.log: {event.msg}")
+            logger.debug(f"sys.debug.log: {event.msg}")
