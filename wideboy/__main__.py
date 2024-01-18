@@ -10,7 +10,8 @@ from .consts import FPS_MAX
 from .entities import AppState
 from .systems.animation import SysMovement
 from .systems.boot import SysBoot, SysClock, SysDebug, SysInput
-from .systems.display import SysDraw
+from .systems.display import SysDisplay
+from .systems.draw import SysDraw
 from .systems.scene import SysScene
 from .systems.mqtt import SysMQTT, SysHomeAssistant
 
@@ -53,6 +54,7 @@ def main():
             SysMovement(entities),
             # Render
             SysDraw(entities, screen),
+            SysDisplay(entities, screen),
             # Debugging
             SysDebug(entities),
         ]

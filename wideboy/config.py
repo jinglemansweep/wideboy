@@ -70,11 +70,6 @@ VALIDATORS = [
         cast=Path,
     ),
     Validator(
-        "PATHS__IMAGES_BACKGROUNDS_NIGHT",
-        default="images/night",
-        cast=Path,
-    ),
-    Validator(
         "PATHS__IMAGES_WEATHER",
         default="images/weather",
         cast=Path,
