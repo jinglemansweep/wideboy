@@ -15,11 +15,22 @@ def switch_power_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ):
     state.power = payload == "ON"
+    logger.debug(f"sys.hass.entities.power: state={state.power}")
     client.publish(
         entity_config["state_topic"],
         "ON" if state.power else "OFF",
         qos=1,
     )
+
+
+ENTITIES = [
+    {
+        "cls": SwitchEntity,
+        "name": "power",
+        "callback": switch_power_callback,
+        "initial_state": "OFF",
+    },
+]
 
 
 class SysMQTT(System):
@@ -80,17 +91,15 @@ class SysHomeAssistant(System):
         self._advertise_entities()
 
     def _advertise_entities(self):
-        hass_entities = [
-            SwitchEntity(
-                "power",
+        self.command_topics = {}
+        for entity_config in ENTITIES:
+            entity = entity_config["cls"](
+                entity_config["name"],
                 self.app_id,
                 self.topic_prefix_app,
-                initial_state="OFF",
-                callback=switch_power_callback,
-            ),
-        ]
-        self.command_topics = {}
-        for entity in hass_entities:
+                initial_state=entity_config["initial_state"],
+                callback=entity_config["callback"],
+            )
             config = entity.configure()
             topic = entity.configure_topic()
             self.mqtt.client.publish(
