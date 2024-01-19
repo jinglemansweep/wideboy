@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class SysScene(System):
-    def __init__(self, entities: EntityManager):
+    def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.display_info = DisplayInfo()
 
@@ -34,7 +34,7 @@ class SysScene(System):
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
         widget_tilegrid.speed_x, widget_tilegrid.speed_y = -1, -1
 
-    def update(self):
+    def update(self) -> None:
         widget_clock = next(self.entities.get_by_class(WidgetClock))
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
         widget_test = next(self.entities.get_by_class(WidgetTest))

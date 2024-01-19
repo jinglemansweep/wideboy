@@ -1,6 +1,6 @@
 import logging
 import pygame
-from typing import List, Dict, Type
+from typing import Any, Dict, List, Tuple, Type
 
 
 from ..utils import Animator, AnimatorState
@@ -55,18 +55,18 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
     height: int = TILE_GRID_CELL_HEIGHT
     label: str = ""
 
-    def __init__(self, state):
+    def __init__(self, state) -> None:
         super().__init__()
         self.state = state
         self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.image.fill(self.cell_color_background)
         self.rect = self.image.get_rect()
 
-    def update(self, *args, **kwargs):
+    def update(self, *args, **kwargs) -> None:
         super().update(*args, **kwargs)
         self.dirty = 1
 
-    def render(self):
+    def render(self) -> pygame.Surface:
         image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         image.fill(self.cell_color_background)
         cx, cy = 0, 0
@@ -91,7 +91,7 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
         image.blit(label_surface, (cx, cy))
         return image
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
 
     @property
@@ -99,7 +99,7 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
         return self.state.get(self.entity_id, dict())
 
     @property
-    def value(self):
+    def value(self) -> Any:
         state = self.entity_state.get("state", None)
         if state is None:
             return None
@@ -120,12 +120,12 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
 class TileGridColumn(pygame.sprite.LayeredDirty):
     animator: Animator
 
-    def __init__(self, *sprites: TileGridCell):
+    def __init__(self, *sprites: TileGridCell) -> None:
         super().__init__()
         self.add(sprites)
         self.animator = Animator(range=(0.0, 64.0), open=False, speed=1.0)
 
-    def update(self, *args, **kwargs):
+    def update(self, *args, **kwargs) -> None:
         super().update(*args, **kwargs)
         open = any(
             [
@@ -140,7 +140,7 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
             self.dirty = 1
 
     @property
-    def animating(self):
+    def animating(self) -> bool:
         return self.animator.animating or any(
             [cell.animating for cell in self.sprites() if hasattr(cell, "animating")]
         )
@@ -155,7 +155,7 @@ class TileGrid(pygame.sprite.Sprite):
     tile_surface_cache: Dict[str, pygame.Surface] = dict()
     update_frames: int = 0
 
-    def __init__(self, cells: List[List[Type[TileGridCell]]], state: Dict):
+    def __init__(self, cells: List[List[Type[TileGridCell]]], state: Dict) -> None:
         super().__init__()
         self.image = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
@@ -170,7 +170,7 @@ class TileGrid(pygame.sprite.Sprite):
                 column_group.add(cell_instance)
             self.columns.append(column_group)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"TileGrid(columns={self.columns})"
 
     def update(self, entity_id=None):
@@ -206,7 +206,7 @@ class TileGrid(pygame.sprite.Sprite):
         self.dirty = 1  # if self.update_frames > 0 else 0
         self.update_frames -= 1
 
-    def calculate_size(self):
+    def calculate_size(self) -> Tuple[int, int]:
         width = 0
         height = 0
         for column in self.columns:
@@ -224,7 +224,7 @@ class TallGridCell(TileGridCell):
     open: bool = True
     icon_visible: bool = False
 
-    def __init__(self, state):
+    def __init__(self, state) -> None:
         super().__init__(state)
         self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.image.fill(pygame.Color(255, 255, 255, 255))
@@ -235,7 +235,7 @@ class VerticalCollapseTileGridCell(TileGridCell):
     width: int = TILE_GRID_CELL_WIDTH
     height_animator: Animator
 
-    def __init__(self, state):
+    def __init__(self, state) -> None:
         super().__init__(state)
         self.height_animator = Animator(range=(0.0, 12.0), open=self.open, speed=1.0)
 
@@ -249,22 +249,22 @@ class VerticalCollapseTileGridCell(TileGridCell):
         super().update(*args, **kwargs)
 
     @property
-    def open_finished(self):
+    def open_finished(self) -> bool:
         return self.height_animator.state != AnimatorState.CLOSED
 
     @property
-    def close_finished(self):
+    def close_finished(self) -> bool:
         return self.height_animator.state != AnimatorState.OPEN
 
     @property
-    def animating(self):
+    def animating(self) -> bool:
         return self.height_animator.animating
 
     @property
     def open(self):
         return is_defined(self.value) and self.value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"VerticalCollapseTileGridCell(size=({self.width}x{self.height}), label='{self.label}', open={self.open}, height={self.height_animator.value})"
 
 

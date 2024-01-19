@@ -7,14 +7,14 @@ logger = logging.getLogger(__name__)
 
 
 class SysDraw(System):
-    def __init__(self, entities: EntityManager, screen: Surface):
+    def __init__(self, entities: EntityManager, screen: Surface) -> None:
         self.entities = entities
         self.screen = screen
 
-    def start(self):
+    def start(self) -> None:
         logger.info("Draw system starting...")
 
-    def update(self):
+    def update(self) -> None:
         self.screen.fill((0, 0, 0))
         for visible_entity in self.entities.get_with_component(ComVisible):
             self.screen.blit(

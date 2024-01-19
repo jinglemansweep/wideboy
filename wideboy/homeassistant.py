@@ -7,11 +7,11 @@ from . import _APP_AUTHOR, _APP_NAME, _APP_TITLE, _APP_VERSION
 logger = logging.getLogger(__name__)
 
 
-def build_entity_prefix(app_id: str):
+def build_entity_prefix(app_id: str) -> str:
     return f"{_APP_NAME}_{app_id}".lower()
 
 
-def build_device_info(app_id: str):
+def build_device_info(app_id: str) -> Dict[str, Any]:
     name = build_entity_prefix(app_id)
     return {
         "identifiers": [name],
@@ -22,7 +22,7 @@ def build_device_info(app_id: str):
     }
 
 
-def build_full_entity_id(app_id: str, name: str):
+def build_full_entity_id(app_id: str, name: str) -> str:
     return f"{build_entity_prefix(app_id)}_{name}".lower()
 
 
@@ -54,7 +54,7 @@ class HomeAssistantEntity:
         options: Optional[Dict[str, Any]] = None,
         initial_state: Optional[Dict[str, Any]] = None,
         topic_prefix_homeassistant: Optional[str] = None,
-    ):
+    ) -> None:
         self.name = name
         self.app_id = app_id
         self.topic_prefix = topic_prefix
@@ -68,7 +68,7 @@ class HomeAssistantEntity:
     def to_hass_state(self) -> str:
         return json.dumps(self.initial_state)
 
-    def configure(self):
+    def configure(self) -> Dict[str, Any]:
         options = self.options
         options.update(self.options_custom)
         full_entity_id = build_full_entity_id(self.app_id, self.name)
@@ -95,7 +95,7 @@ class HomeAssistantEntity:
         self.config = config
         return config
 
-    def configure_topic(self):
+    def configure_topic(self) -> str:
         return f"{self.topic_prefix_homeassistant}/{self.device_class}/{build_full_entity_id(self.app_id, self.name)}/config"
 
 

@@ -12,14 +12,14 @@ class AnimatorState(enum.Enum):
 
 
 class Animator:
-    def __init__(self, range: Tuple[float, float], open=True, speed=1.0):
+    def __init__(self, range: Tuple[float, float], open=True, speed=1.0) -> None:
         self.range = range
         self.speed = speed
         self.open = open
         self.value = range[1] if open else range[0]
 
     @property
-    def state(self):
+    def state(self) -> AnimatorState:
         if self.open:
             return (
                 AnimatorState.OPEN
@@ -34,16 +34,16 @@ class Animator:
             )
 
     @property
-    def animating(self):
+    def animating(self) -> bool:
         return self.value != self.range[0] and self.value != self.range[1]
 
-    def toggle(self):
+    def toggle(self) -> None:
         self.open = not self.open
 
-    def set(self, open: bool):
+    def set(self, open: bool) -> None:
         self.open = open
 
-    def update(self):
+    def update(self) -> None:
         value = self.value + self.speed if self.open else self.value - self.speed
         if value > self.range[1]:
             value = self.range[1]
@@ -51,5 +51,5 @@ class Animator:
             value = self.range[0]
         self.value = value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Animator(value={self.value}, open={self.open}, state={self.state}, range={self.range}, speed={self.speed})"

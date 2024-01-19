@@ -3,7 +3,7 @@ from pygame.sprite import Sprite
 
 
 class ColoredBlockSprite(Sprite):
-    def __init__(self, color: Color, width: int, height: int):
+    def __init__(self, color: Color, width: int, height: int) -> None:
         Sprite.__init__(self)
         self.image = Surface((width, height))
         self.image.fill(color)
@@ -11,7 +11,7 @@ class ColoredBlockSprite(Sprite):
 
 
 class SurfaceSprite(Sprite):
-    def __init__(self, surface: Surface):
+    def __init__(self, surface: Surface) -> None:
         Sprite.__init__(self)
         self.image = surface
         self.rect = self.image.get_rect()

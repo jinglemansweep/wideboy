@@ -5,6 +5,7 @@ from ecs_pattern import EntityManager, System
 from ..entities import AppState
 from pygame.constants import KEYDOWN, KEYUP, QUIT, K_UP, K_DOWN, K_ESCAPE
 from pygame.event import Event, get as get_events, post as post_event
+from typing import Optional
 from ..consts import (
     EVENT_CLOCK_NEW_SECOND,
     EVENT_CLOCK_NEW_MINUTE,
@@ -20,24 +21,24 @@ class SysBoot(System):
         self,
         entities: EntityManager,
         config: Dynaconf,
-    ):
+    ) -> None:
         self.entities = entities
         self.config = config
 
-    def start(self):
+    def start(self) -> None:
         logger.info("Boot system starting...")
         self.entities.init()
 
 
 class SysClock(System):
-    def __init__(self, entities: EntityManager):
+    def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.now = datetime.datetime.now()
 
-    def start(self):
+    def start(self) -> None:
         logger.info("Clock system starting...")
 
-    def update(self):
+    def update(self) -> None:
         now = datetime.datetime.now()
         if now.second != self.now.second:
             app_state = next(self.entities.get_by_class(AppState))
@@ -55,16 +56,18 @@ class SysClock(System):
 
 
 class SysInput(System):
-    def __init__(self, entities: EntityManager):
+    def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.event_types = (KEYDOWN, KEYUP, QUIT)  # Whitelist
-        self.app_state = None
+        self.app_state: Optional[AppState] = None
 
-    def start(self):
+    def start(self) -> None:
         logger.info("Input system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
 
-    def update(self):
+    def update(self) -> None:
+        if not self.app_state:
+            return
         for event in get_events(self.event_types):
             event_type = event.type
             event_key = getattr(event, "key", None)
@@ -77,12 +80,12 @@ class SysInput(System):
 
 
 class SysDebug(System):
-    def __init__(self, entities: EntityManager):
+    def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
 
-    def start(self):
+    def start(self) -> None:
         logger.info("Debug system starting...")
 
-    def update(self):
+    def update(self) -> None:
         for event in get_events(EVENT_DEBUG_LOG):
             logger.debug(f"sys.debug.log: {event.msg}")

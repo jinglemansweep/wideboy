@@ -1,24 +1,14 @@
 import logging
 import os
 import sys
+from dynaconf import Dynaconf
 from ecs_pattern import EntityManager, System
 from pygame.image import tostring as image_to_string
 from pygame.surface import Surface
 from PIL import Image
+from typing import Any
 from ..entities import AppState
 
-sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "lib/rpi-rgb-led-matrix/bindings/python",
-        ),
-    ),
-)
-
-from rgbmatrix import RGBMatrix, RGBMatrixOptions  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -29,32 +19,35 @@ def surface_to_led_matrix(surface: Surface) -> Image.Image:
 
 
 class SysDisplay(System):
-    def __init__(self, entities: EntityManager, screen: Surface):
+    def __init__(self, entities: EntityManager, screen: Surface) -> None:
         self.entities = entities
         self.screen = screen
         self.config = next(self.entities.get_by_class(AppState)).config
         self.enabled = self.config.display.matrix.enabled
 
-    def start(self):
+    def start(self) -> None:
         if not self.enabled:
             logger.info("Display system disabled")
             return
         logger.info("Display system starting...")
         self._setup_matrix_driver()
 
-    def update(self):
+    def update(self) -> None:
         if not self.enabled:
             return
         self.buffer.SetImage(surface_to_led_matrix(self.screen))
         self.matrix.SwapOnVSync(self.buffer)
 
-    def _setup_matrix_driver(self):
+    def _setup_matrix_driver(self) -> None:
+        self._update_python_path()
+        from rgbmatrix import RGBMatrix, RGBMatrixOptions  # type: ignore
+
         self.options = RGBMatrixOptions()
         self._set_matrix_options(self.options, self.config.display.matrix.driver)
         self.matrix = RGBMatrix(options=self.options)
         self.buffer = self.matrix.CreateFrameCanvas()
 
-    def _set_matrix_options(self, options, config):
+    def _set_matrix_options(self, options: Any, config: Dynaconf) -> None:
         options.rows = config.rows
         options.cols = config.cols
         options.chain_length = config.chain
@@ -78,3 +71,15 @@ class SysDisplay(System):
         options.gpio_slowdown = config.slowdown_gpio
         options.daemon = config.daemon
         options.drop_privileges = 0
+
+    def _update_python_path(self) -> None:
+        sys.path.append(
+            os.path.abspath(
+                os.path.join(
+                    os.path.dirname(__file__),
+                    "..",
+                    "..",
+                    "lib/rpi-rgb-led-matrix/bindings/python",
+                ),
+            ),
+        )

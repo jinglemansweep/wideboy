@@ -90,7 +90,7 @@ class FontAwesomeIcons:
 # HELPER FUNCTIONS
 
 
-def is_defined(value):
+def is_defined(value) -> bool:
     return value is not None and value not in ["unavailable"]
 
 

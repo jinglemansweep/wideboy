@@ -1,7 +1,7 @@
 import json
 import logging
 from ecs_pattern import EntityManager, System
-from paho.mqtt.client import Client as MQTTClient
+from paho.mqtt.client import Client as MQTTClient, MQTTMessage
 from pygame.event import Event, post as post_event
 from typing import Any, Dict
 from ..consts import EVENT_HASS_ENTITY_UPDATE
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def switch_power_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
-):
+) -> None:
     state.power = payload == "ON"
     logger.debug(f"sys.hass.entities.power: state={state.power}")
     client.publish(
@@ -25,7 +25,7 @@ def switch_power_callback(
 
 def light_light_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
-):
+) -> None:
     payload_dict = json.loads(payload)
     state.light_state = payload_dict["state"] == "ON"
     if "brightness" in payload_dict:
@@ -66,14 +66,16 @@ ENTITIES = [
 
 
 class SysMQTT(System):
-    def __init__(self, entities: EntityManager):
+    def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.app_state = None
         self.client = MQTTClient()
 
-    def start(self):
+    def start(self) -> None:
         logger.info("MQTT system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
+        if not self.app_state:
+            raise Exception("AppState not found")
         self.client.username_pw_set(
             self.app_state.config.mqtt.user, self.app_state.config.mqtt.password
         )
@@ -88,13 +90,15 @@ class SysMQTT(System):
             listeners.append(self.debug_listener)
         self.entities.add(MQTTService(client=self.client, listeners=listeners))
 
-    def update(self):
+    def update(self) -> None:
         self.client.loop(timeout=0.001)
 
     def debug_listener(self, topic: str, payload: str, client: MQTTClient) -> None:
         logger.debug(f"sys.mqtt.message: topic: {topic}, payload: {payload}")
 
-    def _on_message(self, client: MQTTClient, userdata: Any, message: Any):
+    def _on_message(
+        self, client: MQTTClient, userdata: Any, message: MQTTMessage
+    ) -> None:
         mqtt_service = next(self.entities.get_by_class(MQTTService))
         topic = message.topic
         payload = message.payload.decode("utf-8")
@@ -103,13 +107,19 @@ class SysMQTT(System):
 
 
 class SysHomeAssistant(System):
-    def __init__(self, entities: EntityManager):
+    topic_prefix_default: str
+    topic_prefix_statestream: str
+    topic_prefix_app: str
+
+    def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.mqtt = None
 
-    def start(self):
+    def start(self) -> None:
         logger.info("HomeAssistant system starting...")
         self.mqtt = next(self.entities.get_by_class(MQTTService))
+        if not self.mqtt:
+            raise Exception("MQTTService not found")
         self.mqtt.listeners.append(self._on_mqtt_message)
         config = next(self.entities.get_by_class(AppState)).config
         self.topic_prefix_default = config.mqtt.topic_prefix.homeassistant.default
@@ -151,7 +161,7 @@ class SysHomeAssistant(System):
                     qos=1,
                 )
 
-    def _on_mqtt_message(self, topic, payload, client):
+    def _on_mqtt_message(self, topic: str, payload: str, client: MQTTClient) -> None:
         app_state = next(self.entities.get_by_class(AppState))
         # STATESTREAM
         if topic.startswith(f"{self.topic_prefix_statestream}/"):
