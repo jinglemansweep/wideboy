@@ -27,7 +27,7 @@ class SysScene(System):
         app_state = next(self.entities.get_by_class(AppState))
         self.entities.add(
             WidgetClock(clock_sprite(""), 0, 0),
-            WidgetTest(test_sprite(), 100, 100, 1, 1),
+            WidgetTest(test_sprite(), 1, 1, 1, 1),
             WidgetTileGrid(build_tile_grid_sprite(CELLS, app_state.hass_state), 20, 50),
         )
 
@@ -35,28 +35,22 @@ class SysScene(System):
         widget_tilegrid.speed_x, widget_tilegrid.speed_y = -1, -1
 
     def update(self):
+        widget_clock = next(self.entities.get_by_class(WidgetClock))
+        widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
+        widget_test = next(self.entities.get_by_class(WidgetTest))
+
         for event in get_events((EVENT_CLOCK_NEW_SECOND, EVENT_HASS_ENTITY_UPDATE)):
             if event.type == EVENT_CLOCK_NEW_SECOND:
-                clock = next(self.entities.get_by_class(WidgetClock))
-                clock.sprite = clock_sprite(event.now.strftime("%H:%M:%S"))
+                widget_clock.sprite = clock_sprite(event.now.strftime("%H:%M:%S"))
             if event.type == EVENT_HASS_ENTITY_UPDATE:
-                widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
                 widget_tilegrid.sprite.update(event.entity_id)
-
-        widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
-        widget_tilegrid.sprite.update()
 
         if widget_tilegrid.x <= 0 or widget_tilegrid.x > self.display_info.current_w:
             widget_tilegrid.speed_x = -widget_tilegrid.speed_x
         elif widget_tilegrid.y <= 0 or widget_tilegrid.y > self.display_info.current_h:
             widget_tilegrid.speed_y = -widget_tilegrid.speed_y
 
-        test_entity = next(self.entities.get_by_class(WidgetTest))
-        if test_entity.x < 0:
-            test_entity.speed_x = -test_entity.speed_x
-        if test_entity.x > self.display_info.current_w:
-            test_entity.speed_x = -test_entity.speed_x
-        if test_entity.y < 0:
-            test_entity.speed_y = -test_entity.speed_y
-        if test_entity.y > self.display_info.current_h:
-            test_entity.speed_y = -test_entity.speed_y
+        if widget_test.x <= 0 or widget_test.x > self.display_info.current_w:
+            widget_test.speed_x = -widget_test.speed_x
+        elif widget_test.y <= 0 or widget_test.y > self.display_info.current_h:
+            widget_test.speed_y = -widget_test.speed_y
