@@ -6,7 +6,13 @@ from pygame.event import Event, post as post_event
 from typing import Any, Dict
 from ..consts import EVENT_HASS_ENTITY_UPDATE
 from ..entities import AppState, MQTTService
-from ..homeassistant import LightEntity, SwitchEntity, to_hass_bool
+from ..homeassistant import (
+    ButtonEntity,
+    LightEntity,
+    NumberEntity,
+    SwitchEntity,
+    to_hass_bool,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +51,25 @@ def light_light_callback(
     )
 
 
+def number_number_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+) -> None:
+    state.number_state = float(payload)
+    logger.debug(f"sys.hass.entities.number: state={state.number_state}")
+    client.publish(
+        entity_config["state_topic"],
+        state.number_state,
+        qos=1,
+    )
+
+
+def button_button_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+) -> None:
+    state.button_flag = not state.button_flag
+    logger.debug(f"sys.hass.entities.button: state={state.button_flag}")
+
+
 ENTITIES = [
     {
         "cls": SwitchEntity,
@@ -61,6 +86,23 @@ ENTITIES = [
         },
         "callback": light_light_callback,
         "initial_state": {"state": "ON", "brightness": 255},
+    },
+    {
+        "cls": NumberEntity,
+        "name": "number",
+        "options": {
+            "device_class": "duration",
+            "step": 0.1,
+            "min": 0,
+            "max": 10,
+        },
+        "callback": number_number_callback,
+        "initial_state": 5.0,
+    },
+    {
+        "cls": ButtonEntity,
+        "name": "button",
+        "callback": button_button_callback,
     },
 ]
 

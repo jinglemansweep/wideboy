@@ -35,7 +35,7 @@ def from_hass_bool(value: str) -> bool:
 
 
 class HomeAssistantEntity:
-    device_class: str
+    device_class: str | None
     name: str
     topic_prefix: str
     callback: Callable[..., None]
@@ -72,9 +72,7 @@ class HomeAssistantEntity:
         options = self.options
         options.update(self.options_custom)
         full_entity_id = build_full_entity_id(self.app_id, self.name)
-        topic_template = (
-            f"{self.topic_prefix}/{self.app_id}/{self.device_class}/{self.name}"
-        )
+        topic_template = f"{self.topic_prefix}/{self.app_id}/{self.convert_device_class(self.device_class)}/{self.name}"
         if "state_topic" in options:
             options["state_topic"] = options["state_topic"].format(topic_template)
         if "command_topic" in options:
@@ -85,25 +83,31 @@ class HomeAssistantEntity:
             )
 
         config = {
-            "device_class": self.device_class,
             "name": self.name,
             "object_id": full_entity_id,
             "unique_id": full_entity_id,
             "device": build_device_info(self.app_id),
         }
+        if self.device_class is not None:
+            config["device_class"] = self.device_class
         config.update(options)
         self.config = config
         return config
 
     def configure_topic(self) -> str:
-        return f"{self.topic_prefix_homeassistant}/{self.device_class}/{build_full_entity_id(self.app_id, self.name)}/config"
+        return f"{self.topic_prefix_homeassistant}/{self.convert_device_class(self.device_class)}/{build_full_entity_id(self.app_id, self.name)}/config"
+
+    def convert_device_class(self, value: str | None) -> str | None:
+        return "button" if self.device_class is None else value
 
 
 class ButtonEntity(HomeAssistantEntity):
-    device_class = "button"
+    device_class = None
     options = {
-        "schema": "json",
+        "entity_category": "config",
         "command_topic": "{}/set",
+        "retain": False,
+        "qos": 0,
     }
 
 
@@ -115,6 +119,18 @@ class LightEntity(HomeAssistantEntity):
         "state_topic": "{}/state",
         "brightness_command_topic": "{}/brightness/set",
         "brightness_state_topic": "{}/brightness/state",
+    }
+
+
+class NumberEntity(HomeAssistantEntity):
+    device_class = "number"
+    options = {
+        "schema": "json",
+        "command_topic": "{}/set",
+        "state_topic": "{}/state",
+        "step": 1.0,
+        "min": 0,
+        "max": 100,
     }
 
 

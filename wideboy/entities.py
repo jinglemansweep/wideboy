@@ -15,6 +15,8 @@ class AppState:
     power: bool = True
     light_state: bool = True
     light_brightness: int = 255
+    number_state: float = 5.0
+    button_flag: bool = False
 
 
 @entity

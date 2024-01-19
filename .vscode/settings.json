@@ -1,7 +1,17 @@
 {
-    "python.formatting.provider": "black",
-    "mypy.runUsingActiveInterpreter": true,
-    "files.exclude": {
-        "**/__pycache__": true
+  "python.formatting.provider": "black",
+  "mypy.runUsingActiveInterpreter": true,
+  "files.exclude": {
+    "**/__pycache__": true
+  },
+  "vsmqtt.brokerProfiles": [
+    {
+      "name": "HomeAssistant",
+      "host": "hass.home",
+      "port": 1883,
+      "username": "mqtt",
+      "password": "password",
+      "clientId": "vsmqtt_client_923a"
     }
+  ]
 }
