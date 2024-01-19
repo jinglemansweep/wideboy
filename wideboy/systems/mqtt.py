@@ -6,7 +6,7 @@ from pygame.event import Event, post as post_event
 from typing import Any, Dict
 from ..consts import EVENT_HASS_ENTITY_UPDATE
 from ..entities import AppState, MQTTService
-from ..homeassistant import SwitchEntity
+from ..homeassistant import LightEntity, SwitchEntity
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +23,35 @@ def switch_power_callback(
     )
 
 
+def light_testlight_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+):
+    # state.power = payload == "ON"
+    logger.debug(f"sys.hass.entities.lighttest: payload={payload}")
+    client.publish(
+        entity_config["state_topic"],
+        "ON" if state.power else "OFF",
+        qos=1,
+    )
+
+
 ENTITIES = [
     {
         "cls": SwitchEntity,
         "name": "power",
         "callback": switch_power_callback,
         "initial_state": "OFF",
+    },
+    {
+        "cls": LightEntity,
+        "name": "testlight2",
+        "options": {
+            "brightness": True,
+            "color_mode": True,
+            "supported_color_mode": ["brightness", "rgb"],
+        },
+        "callback": light_testlight_callback,
+        "initial_state": json.dumps({"state": "ON", "brightness": 255}),
     },
 ]
 
@@ -93,12 +116,14 @@ class SysHomeAssistant(System):
     def _advertise_entities(self):
         self.command_topics = {}
         for entity_config in ENTITIES:
-            entity = entity_config["cls"](
-                entity_config["name"],
+            EntityCls = entity_config.get("cls")
+            entity = EntityCls(
+                entity_config.get("name"),
                 self.app_id,
                 self.topic_prefix_app,
-                initial_state=entity_config["initial_state"],
-                callback=entity_config["callback"],
+                initial_state=entity_config.get("initial_state", {}),
+                options=entity_config.get("options", {}),
+                callback=entity_config.get("callback"),
             )
             config = entity.configure()
             topic = entity.configure_topic()

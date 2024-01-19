@@ -13,6 +13,8 @@ class AppState:
     time_now: datetime.datetime = datetime.datetime.now()
     hass_state: dict = field(default_factory=dict)
     power: bool = True
+    light_state: bool = True
+    light_brightness: int = 255
 
 
 @entity

@@ -32,6 +32,7 @@ class HomeAssistantEntity:
     topic_prefix: str
     callback: Callable[..., None]
     options: Dict[str, Any] = {}
+    options_custom: Dict[str, Any] = {}
     initial_state: Dict[str, Any] = {}
     topic_prefix_homeassistant: str = "homeassistant"
     config: Optional[Dict[str, Any]] = {}
@@ -50,7 +51,8 @@ class HomeAssistantEntity:
         self.app_id = app_id
         self.topic_prefix = topic_prefix
         self.callback = callback
-        self.options_custom = options or {}
+        if options:
+            self.options_custom = options
         self.initial_state = initial_state or {}
         if topic_prefix_homeassistant:
             self.topic_prefix_homeassistant = topic_prefix_homeassistant
