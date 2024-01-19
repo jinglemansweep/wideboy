@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def build_entity_prefix(app_id: str):
-    return f"new_{_APP_NAME}_{app_id}".lower()
+    return f"{_APP_NAME}_{app_id}".lower()
 
 
 def build_device_info(app_id: str):
@@ -24,6 +24,14 @@ def build_device_info(app_id: str):
 
 def build_full_entity_id(app_id: str, name: str):
     return f"{build_entity_prefix(app_id)}_{name}".lower()
+
+
+def to_hass_bool(value: bool) -> str:
+    return "ON" if value else "OFF"
+
+
+def from_hass_bool(value: str) -> bool:
+    return value == "ON"
 
 
 class HomeAssistantEntity:
@@ -63,19 +71,19 @@ class HomeAssistantEntity:
     def configure(self):
         options = self.options
         options.update(self.options_custom)
+        full_entity_id = build_full_entity_id(self.app_id, self.name)
+        topic_template = (
+            f"{self.topic_prefix}/{self.app_id}/{self.device_class}/{self.name}"
+        )
         if "state_topic" in options:
-            options["state_topic"] = options["state_topic"].format(
-                f"{self.topic_prefix}/{self.app_id}/{self.device_class}/{self.name}"
-            )
+            options["state_topic"] = options["state_topic"].format(topic_template)
         if "command_topic" in options:
-            options["command_topic"] = options["command_topic"].format(
-                f"{self.topic_prefix}/{self.app_id}/{self.device_class}/{self.name}"
-            )
+            options["command_topic"] = options["command_topic"].format(topic_template)
         if "json_attributes_topic" in options:
             options["json_attributes_topic"] = options["json_attributes_topic"].format(
-                f"{self.topic_prefix}/{self.app_id}/{self.device_class}/{self.name}"
+                topic_template
             )
-        full_entity_id = build_full_entity_id(self.app_id, self.name)
+
         config = {
             "device_class": self.device_class,
             "name": self.name,
@@ -105,6 +113,8 @@ class LightEntity(HomeAssistantEntity):
         "schema": "json",
         "command_topic": "{}/set",
         "state_topic": "{}/state",
+        "brightness_command_topic": "{}/brightness/set",
+        "brightness_state_topic": "{}/brightness/state",
     }
 
 

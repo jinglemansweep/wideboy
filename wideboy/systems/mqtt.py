@@ -6,7 +6,7 @@ from pygame.event import Event, post as post_event
 from typing import Any, Dict
 from ..consts import EVENT_HASS_ENTITY_UPDATE
 from ..entities import AppState, MQTTService
-from ..homeassistant import LightEntity, SwitchEntity
+from ..homeassistant import LightEntity, SwitchEntity, to_hass_bool
 
 logger = logging.getLogger(__name__)
 
@@ -18,19 +18,29 @@ def switch_power_callback(
     logger.debug(f"sys.hass.entities.power: state={state.power}")
     client.publish(
         entity_config["state_topic"],
-        "ON" if state.power else "OFF",
+        to_hass_bool(state.power),
         qos=1,
     )
 
 
-def light_testlight_callback(
+def light_light_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ):
-    # state.power = payload == "ON"
-    logger.debug(f"sys.hass.entities.lighttest: payload={payload}")
+    payload_dict = json.loads(payload)
+    state.light_state = payload_dict["state"] == "ON"
+    if "brightness" in payload_dict:
+        state.light_brightness = int(payload_dict["brightness"])
+    logger.debug(
+        f"sys.hass.entities.lighttest: topic={entity_config['state_topic']} state={state.light_state} brightness={state.light_brightness}"
+    )
     client.publish(
         entity_config["state_topic"],
-        "ON" if state.power else "OFF",
+        json.dumps(
+            {
+                "state": to_hass_bool(state.light_state),
+                "brightness": state.light_brightness,
+            }
+        ),
         qos=1,
     )
 
@@ -44,14 +54,13 @@ ENTITIES = [
     },
     {
         "cls": LightEntity,
-        "name": "testlight2",
+        "name": "light",
         "options": {
             "brightness": True,
-            "color_mode": True,
-            "supported_color_mode": ["brightness", "rgb"],
+            "supported_color_mode": ["brightness"],
         },
-        "callback": light_testlight_callback,
-        "initial_state": json.dumps({"state": "ON", "brightness": 255}),
+        "callback": light_light_callback,
+        "initial_state": {"state": "ON", "brightness": 255},
     },
 ]
 
@@ -127,6 +136,7 @@ class SysHomeAssistant(System):
             )
             config = entity.configure()
             topic = entity.configure_topic()
+            logger.debug(f"sys.mqtt.advertise: topic={topic} config={config}")
             self.mqtt.client.publish(
                 topic,
                 json.dumps(config),
