@@ -238,10 +238,7 @@ class SysHomeAssistant(System):
                 self.command_topics[config["command_topic"]] = entity
             if entity.initial_state:
                 self.mqtt.client.publish(
-                    config["state_topic"],
-                    entity.to_hass_state(),
-                    qos=1,
-                    retain=True,
+                    config["state_topic"], entity.to_hass_state(), qos=1
                 )
 
     def _on_mqtt_message(self, topic: str, payload: str, client: MQTTClient) -> None:
