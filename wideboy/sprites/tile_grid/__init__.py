@@ -2,9 +2,7 @@ import logging
 from pygame import Color, Surface, SRCALPHA
 from pygame.sprite import LayeredDirty, DirtySprite
 from typing import Any, Dict, List, Tuple, Type
-
-
-from ..utils import Animator, AnimatorState
+from ..animation import Animator, AnimatorState
 from .helpers import (
     FontAwesomeIcons,
     render_icon,

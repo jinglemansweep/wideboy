@@ -1,5 +1,6 @@
 import logging
 import random
+from datetime import datetime
 from ecs_pattern import EntityManager, System
 from pygame import Color
 from pygame.display import Info as DisplayInfo
@@ -7,11 +8,17 @@ from ..components import ComMotion
 from ..consts import EventTypes
 from ..entities import (
     AppState,
-    WidgetClock,
+    WidgetClockDate,
+    WidgetClockTime,
     WidgetTest,
     WidgetTileGrid,
 )
-from ..sprites.common import clock_sprite, test_sprite
+from ..sprites.common import test_sprite
+from ..sprites.clock import (
+    build_clock_date_sprite,
+    build_clock_time_sprite,
+    CLOCK_WIDTH,
+)
 from ..sprites.tile_grid import build_tile_grid_sprite
 from ..sprites.tile_grid.tiles import CELLS
 
@@ -29,14 +36,10 @@ class SysScene(System):
 
     def start(self):
         logger.info("Scene system starting...")
+        now = datetime.now()
         self.entities.init()
         self.app_state = next(self.entities.get_by_class(AppState))
-        self.entities.add(
-            WidgetClock(clock_sprite(""), 0, 0),
-            WidgetTileGrid(
-                build_tile_grid_sprite(CELLS, self.app_state.hass_state), 512, 0
-            ),
-        )
+
         for i in range(10):
             self.entities.add(
                 WidgetTest(
@@ -48,19 +51,37 @@ class SysScene(System):
                 ),
             )
 
+        clock_x = self.display_info.current_w - CLOCK_WIDTH
+        clock_y = 1
+        self.entities.add(
+            WidgetClockTime(build_clock_time_sprite(now), clock_x, clock_y),
+            WidgetClockDate(build_clock_date_sprite(now), clock_x, clock_y + 30),
+            WidgetTileGrid(
+                build_tile_grid_sprite(CELLS, self.app_state.hass_state),
+                256,
+                0,
+            ),
+        )
+
     def update(self) -> None:
         # logger.debug(f"sys.scene.update: events={len(self.app_state.events)}")
-        widget_clock = next(self.entities.get_by_class(WidgetClock))
+        widget_clock_date = next(self.entities.get_by_class(WidgetClockDate))
+        widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
 
         for event_type, event_payload in self.app_state.events:
             if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
-                widget_clock.sprite = clock_sprite(
-                    event_payload["now"].strftime("%H:%M:%S")
-                )
+                widget_clock_time.sprite = build_clock_time_sprite(event_payload["now"])
+            if event_type == EventTypes.EVENT_CLOCK_NEW_MINUTE:
+                widget_clock_date.sprite = build_clock_date_sprite(event_payload["now"])
             elif event_type == EventTypes.EVENT_HASS_ENTITY_UPDATE:
                 widget_tilegrid.sprite.update(event_payload["entity_id"])
 
+        widget_tilegrid.x = (
+            self.display_info.current_w
+            - CLOCK_WIDTH
+            - widget_tilegrid.sprite.rect.width
+        )
         widget_tilegrid.sprite.update()
 
         for widget in self.entities.get_with_component(ComMotion):

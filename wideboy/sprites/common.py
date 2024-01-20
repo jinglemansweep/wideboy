@@ -1,4 +1,4 @@
-from pygame import Color, Font, Surface
+from pygame import Color, Surface
 from pygame.sprite import Sprite
 
 
@@ -15,12 +15,6 @@ class SurfaceSprite(Sprite):
         Sprite.__init__(self)
         self.image = surface
         self.rect = self.image.get_rect()
-
-
-def clock_sprite(text: str, font_size: int = 80) -> Sprite:
-    font = Font(None, font_size)
-    font_surface = font.render(text, True, Color("white"))
-    return SurfaceSprite(font_surface)
 
 
 def test_sprite(color: Color, size=20) -> Sprite:

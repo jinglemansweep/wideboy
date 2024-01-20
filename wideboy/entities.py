@@ -34,7 +34,12 @@ class WidgetTest(ComMotion, ComVisible):
 
 
 @entity
-class WidgetClock(ComVisible):
+class WidgetClockDate(ComVisible):
+    pass
+
+
+@entity
+class WidgetClockTime(ComVisible):
     pass
 
 
