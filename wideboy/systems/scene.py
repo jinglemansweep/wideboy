@@ -1,6 +1,7 @@
 import logging
 import random
 from ecs_pattern import EntityManager, System
+from pygame import Color
 from pygame.display import Info as DisplayInfo
 from ..components import ComMotion
 from ..consts import EventTypes
@@ -15,6 +16,10 @@ from ..sprites.tile_grid import build_tile_grid_sprite
 from ..sprites.tile_grid.tiles import CELLS
 
 logger = logging.getLogger(__name__)
+
+
+def random_color():
+    return Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 
 class SysScene(System):
@@ -35,7 +40,7 @@ class SysScene(System):
         for i in range(10):
             self.entities.add(
                 WidgetTest(
-                    test_sprite(),
+                    test_sprite(color=random_color()),
                     (i + 1) * 32,
                     random.randint(0, self.display_info.current_h - 32),
                     random.choice([-1, 1]),

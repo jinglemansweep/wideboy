@@ -23,5 +23,5 @@ def clock_sprite(text: str, font_size: int = 80) -> Sprite:
     return SurfaceSprite(font_surface)
 
 
-def test_sprite(size=20) -> Sprite:
-    return ColoredBlockSprite(Color("white"), size, size)
+def test_sprite(color: Color, size=20) -> Sprite:
+    return ColoredBlockSprite(color, size, size)
