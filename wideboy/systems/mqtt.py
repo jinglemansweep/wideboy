@@ -44,7 +44,7 @@ def light_master_callback(
 def select_scene_mode_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ) -> None:
-    state.scene_mode = payload.lower()
+    state.scene_mode = payload
     logger.debug(f"sys.hass.entities.select.scene_mode: state={state.scene_mode}")
     client.publish(
         entity_config["state_topic"],
@@ -112,9 +112,9 @@ ENTITIES = [
     {
         "cls": SelectEntity,
         "name": "mode",
-        "options": {"options": ["Default", "Dark", "Night"]},
+        "options": {"options": ["default", "night"]},
         "callback": select_scene_mode_callback,
-        "initial_state": "Default",
+        "initial_state": "default",
     },
     {
         "cls": SwitchEntity,
