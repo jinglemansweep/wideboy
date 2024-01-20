@@ -28,21 +28,26 @@ def random_color():
 CLOCK_WIDTH = 110
 
 
-def build_time_sprite(text: str, color_fg: Color = Color(255, 255, 0, 255)):
-    return TextSprite(text, font_size=36, color_fg=color_fg)
+def build_time_sprite(text: str, night: bool = False):
+    color_fg = Color(255, 255, 0, 255) if not night else Color(0, 0, 0, 255)
+    color_outline = Color(0, 0, 0, 255) if not night else Color(0, 0, 192, 255)
+    return TextSprite(
+        text, font_size=36, color_fg=color_fg, color_outline=color_outline
+    )
 
 
-def build_date_sprite(text: str, color_fg: Color = Color(255, 255, 255, 255)):
+def build_date_sprite(text: str, night: bool = False):
+    color_fg = Color(255, 255, 255, 255) if not night else Color(0, 0, 0, 255)
+    color_outline = Color(0, 0, 0, 255) if not night else Color(0, 0, 192, 255)
     return TextSprite(
         text,
         font_size=17,
         color_fg=color_fg,
+        color_outline=color_outline,
     )
 
 
 class SysScene(System):
-    first_run = True
-
     def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.display_info = DisplayInfo()
@@ -97,11 +102,12 @@ class SysScene(System):
         for event_type, event_payload in self.app_state.events:
             if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
                 widget_clock_time.sprite = build_time_sprite(
-                    app_state.time_now.strftime(time_fmt)
+                    app_state.time_now.strftime(time_fmt),
+                    night=app_state.scene_mode == "night",
                 )
-            if event_type == EventTypes.EVENT_CLOCK_NEW_MINUTE or self.first_run:
                 widget_clock_date.sprite = build_date_sprite(
-                    app_state.time_now.strftime(date_fmt)
+                    app_state.time_now.strftime(date_fmt),
+                    night=app_state.scene_mode == "night",
                 )
             if event_type == EventTypes.EVENT_HASS_ENTITY_UPDATE:
                 widget_tilegrid.sprite.update(event_payload["entity_id"])
@@ -124,5 +130,3 @@ class SysScene(System):
                 or widget.y > self.display_info.current_h - widget.sprite.rect.height
             ):
                 widget.speed_y = -widget.speed_y
-
-        self.first_run = False
