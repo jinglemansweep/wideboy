@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-FPS_MAX = 100
+FPS_MAX = 50
 FPS_CORR = 24 / FPS_MAX
 
 
