@@ -32,9 +32,6 @@ class SysScene(System):
             ),
         )
 
-        widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
-        widget_tilegrid.speed_x, widget_tilegrid.speed_y = -1, -1
-
     def update(self) -> None:
         # logger.debug(f"sys.scene.update: events={len(self.app_state.events)}")
         widget_clock = next(self.entities.get_by_class(WidgetClock))
@@ -48,6 +45,8 @@ class SysScene(System):
                 )
             elif event_type == EventTypes.EVENT_HASS_ENTITY_UPDATE:
                 widget_tilegrid.sprite.update(event_payload["entity_id"])
+
+        widget_tilegrid.sprite.update()
 
         if widget_test.x <= 0 or widget_test.x > self.display_info.current_w:
             widget_test.speed_x = -widget_test.speed_x

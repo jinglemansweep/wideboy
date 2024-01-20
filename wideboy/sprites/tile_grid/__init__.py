@@ -174,6 +174,7 @@ class TileGrid(pygame.sprite.Sprite):
         return f"TileGrid(columns={self.columns})"
 
     def update(self, entity_id=None):
+        print("GRID UPDATE")
         dirty = False
         cx, cy = 0, 0
         width, height = self.calculate_size()
