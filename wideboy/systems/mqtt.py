@@ -10,7 +10,10 @@ from ..homeassistant import (
     ButtonEntity,
     LightEntity,
     NumberEntity,
+    SelectEntity,
     SwitchEntity,
+    TextEntity,
+    strip_quotes,
     to_hass_bool,
 )
 
@@ -63,6 +66,30 @@ def number_number_callback(
     )
 
 
+def select_select_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+) -> None:
+    state.select_state = payload
+    logger.debug(f"sys.hass.entities.select: state={state.select_state}")
+    client.publish(
+        entity_config["state_topic"],
+        state.select_state,
+        qos=1,
+    )
+
+
+def text_text_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+) -> None:
+    state.text_state = payload
+    logger.debug(f"sys.hass.entities.text: state={state.text_state}")
+    client.publish(
+        entity_config["state_topic"],
+        strip_quotes(state.text_state),
+        qos=1,
+    )
+
+
 def button_button_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ) -> None:
@@ -100,10 +127,21 @@ ENTITIES = [
         "initial_state": 5.0,
     },
     {
-        "cls": ButtonEntity,
-        "name": "button",
-        "callback": button_button_callback,
+        "cls": SelectEntity,
+        "name": "select",
+        "options": {
+            "options": ["Option 1", "Option 2", "Option 3"],
+        },
+        "callback": select_select_callback,
+        "initial_state": "option_1",
     },
+    {
+        "cls": TextEntity,
+        "name": "text",
+        "callback": text_text_callback,
+        "initial_state": "Hello",
+    },
+    {"cls": ButtonEntity, "name": "button", "callback": button_button_callback},
 ]
 
 

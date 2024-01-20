@@ -34,6 +34,10 @@ def from_hass_bool(value: str) -> bool:
     return value == "ON"
 
 
+def strip_quotes(value: str) -> str:
+    return value.strip('"')
+
+
 class HomeAssistantEntity:
     device_class: str | None
     name: str
@@ -41,7 +45,7 @@ class HomeAssistantEntity:
     callback: Callable[..., None]
     options: Dict[str, Any] = {}
     options_custom: Dict[str, Any] = {}
-    initial_state: Dict[str, Any] = {}
+    initial_state: Dict[str, Any] | str = {}
     topic_prefix_homeassistant: str = "homeassistant"
     config: Optional[Dict[str, Any]] = {}
 
@@ -168,4 +172,8 @@ class TextEntity(HomeAssistantEntity):
     options = {
         "schema": "json",
         "command_topic": "{}/set",
+        "state_topic": "{}/state",
     }
+
+    def to_hass_state(self) -> str:
+        return str(self.initial_state)

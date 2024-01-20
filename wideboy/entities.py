@@ -16,6 +16,8 @@ class AppState:
     light_state: bool = True
     light_brightness: int = 255
     number_state: float = 5.0
+    select_state: str = "Option 1"
+    text_state: str = ""
     button_flag: bool = False
 
 
