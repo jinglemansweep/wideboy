@@ -13,14 +13,12 @@ class AppState:
     events: list = field(default_factory=list)
     time_now: datetime.datetime = datetime.datetime.now()
     hass_state: dict = field(default_factory=dict)
-    power: bool = True
+    master_power: bool = True
+    master_brightness: int = 255
+    background_interval: int = 1
     clock_24_hour: bool = True
-    light_state: bool = True
-    light_brightness: int = 255
-    number_state: float = 5.0
-    select_state: str = "Option 1"
-    text_state: str = ""
-    button_flag: bool = False
+    text_message: str = ""
+    scene_mode: str = "default"
 
 
 @entity

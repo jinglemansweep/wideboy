@@ -19,14 +19,36 @@ from ..homeassistant import (
 logger = logging.getLogger(__name__)
 
 
-def switch_power_callback(
+def light_master_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ) -> None:
-    state.power = payload == "ON"
-    logger.debug(f"sys.hass.entities.power: state={state.power}")
+    payload_dict = json.loads(payload)
+    state.master_power = payload_dict["state"] == "ON"
+    if "brightness" in payload_dict:
+        state.master_brightness = int(payload_dict["brightness"])
+    logger.debug(
+        f"sys.hass.entities.light.master: state={state.master_power} brightness={state.master_brightness}"
+    )
     client.publish(
         entity_config["state_topic"],
-        to_hass_bool(state.power),
+        json.dumps(
+            {
+                "state": to_hass_bool(state.master_power),
+                "brightness": state.master_brightness,
+            }
+        ),
+        qos=1,
+    )
+
+
+def select_scene_mode_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+) -> None:
+    state.scene_mode = payload.lower()
+    logger.debug(f"sys.hass.entities.select.scene_mode: state={state.scene_mode}")
+    client.publish(
+        entity_config["state_topic"],
+        state.scene_mode,
         qos=1,
     )
 
@@ -43,69 +65,30 @@ def switch_clock_24_hour_callback(
     )
 
 
-def light_light_callback(
+def number_background_interval_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ) -> None:
-    payload_dict = json.loads(payload)
-    state.light_state = payload_dict["state"] == "ON"
-    if "brightness" in payload_dict:
-        state.light_brightness = int(payload_dict["brightness"])
+    state.background_interval = int(payload)
     logger.debug(
-        f"sys.hass.entities.lighttest: topic={entity_config['state_topic']} state={state.light_state} brightness={state.light_brightness}"
+        f"sys.hass.entities.number.background_interval: state={state.background_interval}"
     )
     client.publish(
         entity_config["state_topic"],
-        json.dumps(
-            {
-                "state": to_hass_bool(state.light_state),
-                "brightness": state.light_brightness,
-            }
-        ),
+        state.background_interval,
         qos=1,
     )
 
 
-def number_number_callback(
+def text_message_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ) -> None:
-    state.number_state = float(payload)
-    logger.debug(f"sys.hass.entities.number: state={state.number_state}")
+    state.text_message = payload
+    logger.debug(f"sys.hass.entities.text.message: state={state.text_message}")
     client.publish(
         entity_config["state_topic"],
-        state.number_state,
+        strip_quotes(state.text_message),
         qos=1,
     )
-
-
-def select_select_callback(
-    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
-) -> None:
-    state.select_state = payload
-    logger.debug(f"sys.hass.entities.select: state={state.select_state}")
-    client.publish(
-        entity_config["state_topic"],
-        state.select_state,
-        qos=1,
-    )
-
-
-def text_text_callback(
-    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
-) -> None:
-    state.text_state = payload
-    logger.debug(f"sys.hass.entities.text: state={state.text_state}")
-    client.publish(
-        entity_config["state_topic"],
-        strip_quotes(state.text_state),
-        qos=1,
-    )
-
-
-def button_button_callback(
-    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
-) -> None:
-    state.button_flag = not state.button_flag
-    logger.debug(f"sys.hass.entities.button: state={state.button_flag}")
 
 
 def button_state_log_callback(
@@ -117,10 +100,21 @@ def button_state_log_callback(
 
 ENTITIES = [
     {
-        "cls": SwitchEntity,
-        "name": "power",
-        "callback": switch_power_callback,
-        "initial_state": "ON",
+        "cls": LightEntity,
+        "name": "master",
+        "options": {
+            "brightness": True,
+            "supported_color_mode": ["brightness"],
+        },
+        "callback": light_master_callback,
+        "initial_state": {"state": "ON", "brightness": 255},
+    },
+    {
+        "cls": SelectEntity,
+        "name": "mode",
+        "options": {"options": ["Default", "Dark", "Night"]},
+        "callback": select_scene_mode_callback,
+        "initial_state": "Default",
     },
     {
         "cls": SwitchEntity,
@@ -128,43 +122,25 @@ ENTITIES = [
         "callback": switch_clock_24_hour_callback,
         "initial_state": "ON",
     },
-    {"cls": ButtonEntity, "name": "state_log", "callback": button_state_log_callback},
-    {
-        "cls": LightEntity,
-        "name": "light",
-        "options": {
-            "brightness": True,
-            "supported_color_mode": ["brightness"],
-        },
-        "callback": light_light_callback,
-        "initial_state": {"state": "ON", "brightness": 255},
-    },
     {
         "cls": NumberEntity,
-        "name": "number",
+        "name": "background_interval",
         "options": {
             "device_class": "duration",
-            "step": 0.1,
-            "min": 0,
-            "max": 10,
+            "step": 1,
+            "min": 1,
+            "max": 60,
         },
-        "callback": number_number_callback,
+        "callback": number_background_interval_callback,
         "initial_state": 5.0,
-    },
-    {
-        "cls": SelectEntity,
-        "name": "select",
-        "options": {"options": ["opt1", "opt2", "opt3"]},
-        "callback": select_select_callback,
-        "initial_state": "opt2",
     },
     {
         "cls": TextEntity,
         "name": "text",
-        "callback": text_text_callback,
+        "callback": text_message_callback,
         "initial_state": "Hello",
     },
-    {"cls": ButtonEntity, "name": "test", "callback": button_button_callback},
+    {"cls": ButtonEntity, "name": "state_log", "callback": button_state_log_callback},
 ]
 
 

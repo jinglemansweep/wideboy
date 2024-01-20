@@ -45,8 +45,9 @@ class SysDisplay(System):
         app_state = next(self.entities.get_by_class(AppState))
         if not self.enabled:
             return
-        render_surface = self.screen if app_state.power else self.screen_off
+        render_surface = self.screen if app_state.master_power else self.screen_off
         self.buffer.SetImage(surface_to_led_matrix(render_surface))
+        self.matrix.SetBrightness((app_state.master_brightness / 255) * 100)
         self.matrix.SwapOnVSync(self.buffer)
 
     def _setup_matrix_driver(self) -> None:
