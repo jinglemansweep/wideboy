@@ -26,7 +26,7 @@ class SysScene(System):
         self.app_state = next(self.entities.get_by_class(AppState))
         self.entities.add(
             WidgetClock(clock_sprite(""), 0, 0),
-            WidgetTest(test_sprite(), 1, 1, 1, 1),
+            WidgetTest(test_sprite(), 1, 1, 0, 0),
             WidgetTileGrid(
                 build_tile_grid_sprite(CELLS, self.app_state.hass_state), 512, 0
             ),
