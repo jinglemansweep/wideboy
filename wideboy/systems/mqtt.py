@@ -107,7 +107,7 @@ ENTITIES = [
             "supported_color_mode": ["brightness"],
         },
         "callback": light_master_callback,
-        "initial_state": {"state": "ON", "brightness": 255},
+        "initial_state": {"state": "ON", "brightness": 128},
     },
     {
         "cls": SelectEntity,
