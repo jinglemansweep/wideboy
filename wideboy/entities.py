@@ -14,7 +14,7 @@ class AppState:
     time_now: datetime.datetime = datetime.datetime.now()
     hass_state: dict = field(default_factory=dict)
     master_power: bool = True
-    master_brightness: int = 255
+    master_brightness: int = 128
     background_interval: int = 1
     clock_24_hour: bool = True
     text_message: str = ""
