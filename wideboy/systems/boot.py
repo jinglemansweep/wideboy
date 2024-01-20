@@ -38,8 +38,8 @@ class SysEvents(System):
         # logger.debug(
         #     f"sys.events.update: events={len(app_state.events)} pygame_events={len(pygame_events)}"
         # )
-        if len(app_state.events) > 0:
-            logger.debug(f"sys.events.update: {app_state.events}")
+        # if len(app_state.events) > 0:
+        #     logger.debug(f"sys.events.update: {app_state.events}")
 
 
 class SysClock(System):
@@ -101,5 +101,5 @@ class SysDebug(System):
         for event_type, event_payload in self.app_state.events:
             if event_type == EventTypes.EVENT_DEBUG_LOG:
                 logger.debug(f"sys.debug.log: {event_payload['msg']}")
-            if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
+            if event_type == EventTypes.EVENT_CLOCK_NEW_MINUTE:
                 logger.debug(f"sys.debug.clock: {event_payload['now']}")
