@@ -51,12 +51,12 @@ class SysScene(System):
         if (
             widget_test.x <= 0
             or widget_test.x
-            > self.display_info.current_w - widget_test.sprite.rect.width
+            >= self.display_info.current_w - widget_test.sprite.rect.width
         ):
             widget_test.speed_x = -widget_test.speed_x
-        elif (
+        if (
             widget_test.y <= 0
             or widget_test.y
-            > self.display_info.current_h - widget_test.sprite.rect.height
+            >= self.display_info.current_h - widget_test.sprite.rect.height
         ):
             widget_test.speed_y = -widget_test.speed_y
