@@ -73,7 +73,7 @@ class HomeAssistantEntity:
         return json.dumps(self.initial_state)
 
     def configure(self) -> Dict[str, Any]:
-        options = self.options
+        options = self.options.copy()
         options.update(self.options_custom)
         full_entity_id = build_full_entity_id(self.app_id, self.name)
         topic_template = f"{self.topic_prefix}/{self.app_id}/{self.convert_device_class(self.device_class)}/{self.name}"
@@ -129,7 +129,6 @@ class LightEntity(HomeAssistantEntity):
 class NumberEntity(HomeAssistantEntity):
     device_class = "number"
     options = {
-        "schema": "json",
         "command_topic": "{}/set",
         "state_topic": "{}/state",
         "step": 1.0,
@@ -141,16 +140,17 @@ class NumberEntity(HomeAssistantEntity):
 class SelectEntity(HomeAssistantEntity):
     device_class = "select"
     options = {
-        "schema": "json",
         "command_topic": "{}/set",
         "state_topic": "{}/state",
     }
+
+    def to_hass_state(self) -> str:
+        return str(self.initial_state)
 
 
 class SensorEntity(HomeAssistantEntity):
     device_class = "sensor"
     options = {
-        "schema": "json",
         "state_topic": "{}/state",
     }
 
@@ -158,7 +158,6 @@ class SensorEntity(HomeAssistantEntity):
 class SwitchEntity(HomeAssistantEntity):
     device_class = "switch"
     options = {
-        "schema": "json",
         "command_topic": "{}/set",
         "state_topic": "{}/state",
     }
@@ -170,7 +169,6 @@ class SwitchEntity(HomeAssistantEntity):
 class TextEntity(HomeAssistantEntity):
     device_class = "text"
     options = {
-        "schema": "json",
         "command_topic": "{}/set",
         "state_topic": "{}/state",
     }

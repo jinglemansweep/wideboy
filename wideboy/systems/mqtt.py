@@ -20,6 +20,13 @@ from ..homeassistant import (
 logger = logging.getLogger(__name__)
 
 
+def button_state_log_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+) -> None:
+    logger.debug("sys.hass.entities.button.state_log: press")
+    logger.info(f"app_state: {state}")
+
+
 def switch_power_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ) -> None:
@@ -98,6 +105,7 @@ def button_button_callback(
 
 
 ENTITIES = [
+    {"cls": ButtonEntity, "name": "state_log", "callback": button_state_log_callback},
     {
         "cls": SwitchEntity,
         "name": "power",
@@ -129,11 +137,9 @@ ENTITIES = [
     {
         "cls": SelectEntity,
         "name": "select",
-        "options": {
-            "options": ["Option 1", "Option 2", "Option 3"],
-        },
+        "options": {"options": ["opt1", "opt2", "opt3"]},
         "callback": select_select_callback,
-        "initial_state": "option_1",
+        "initial_state": "opt2",
     },
     {
         "cls": TextEntity,
@@ -141,7 +147,7 @@ ENTITIES = [
         "callback": text_text_callback,
         "initial_state": "Hello",
     },
-    {"cls": ButtonEntity, "name": "button", "callback": button_button_callback},
+    {"cls": ButtonEntity, "name": "test", "callback": button_button_callback},
 ]
 
 
@@ -227,11 +233,7 @@ class SysHomeAssistant(System):
             config = entity.configure()
             topic = entity.configure_topic()
             logger.debug(f"sys.mqtt.advertise: topic={topic} config={config}")
-            self.mqtt.client.publish(
-                topic,
-                json.dumps(config),
-                qos=1,
-            )
+            self.mqtt.client.publish(topic, json.dumps(config), qos=1, retain=True)
             if "command_topic" in config:
                 self.command_topics[config["command_topic"]] = entity
             if entity.initial_state:
@@ -239,6 +241,7 @@ class SysHomeAssistant(System):
                     config["state_topic"],
                     entity.to_hass_state(),
                     qos=1,
+                    retain=True,
                 )
 
     def _on_mqtt_message(self, topic: str, payload: str, client: MQTTClient) -> None:
