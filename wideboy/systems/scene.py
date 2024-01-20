@@ -26,7 +26,7 @@ class SysScene(System):
         self.app_state = next(self.entities.get_by_class(AppState))
         self.entities.add(
             WidgetClock(clock_sprite(""), 0, 0),
-            WidgetTest(test_sprite(), 1, 1, 0, 0),
+            WidgetTest(test_sprite(), 1, 1, 1, 2),
             WidgetTileGrid(
                 build_tile_grid_sprite(CELLS, self.app_state.hass_state), 512, 0
             ),
@@ -50,5 +50,9 @@ class SysScene(System):
 
         if widget_test.x <= 0 or widget_test.x > self.display_info.current_w:
             widget_test.speed_x = -widget_test.speed_x
-        elif widget_test.y <= 0 or widget_test.y > self.display_info.current_h:
+        elif (
+            widget_test.y <= 0
+            or widget_test.y
+            > self.display_info.current_h - widget_test.sprite.rect.height
+        ):
             widget_test.speed_y = -widget_test.speed_y
