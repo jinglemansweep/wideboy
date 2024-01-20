@@ -149,7 +149,7 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
 # Tile Grid Sprite
 
 
-class TileGrid(pygame.sprite.Sprite):
+class TileGrid(pygame.sprite.DirtySprite):
     state: Dict
     columns: List
     tile_surface_cache: Dict[str, pygame.Surface] = dict()
