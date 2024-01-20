@@ -40,13 +40,13 @@ class SysScene(System):
         self.entities.init()
         self.app_state = next(self.entities.get_by_class(AppState))
 
-        for i in range(10):
+        for i in range(50):
             self.entities.add(
                 WidgetTest(
                     test_sprite(color=random_color()),
-                    (i + 1) * 32,
+                    random.randint(0, self.display_info.current_w - 32),
                     random.randint(0, self.display_info.current_h - 32),
-                    random.choice([-1, 1]),
+                    random.choice([-2, -1, 1, 2]),
                     random.choice([-1, 1]),
                 ),
             )
