@@ -3,11 +3,13 @@ import os
 import sys
 from dynaconf import Dynaconf
 from ecs_pattern import EntityManager, System
+from pygame import Color
 from pygame.image import tostring as image_to_string
 from pygame.surface import Surface
 from PIL import Image
 from typing import Any
 from ..entities import AppState
+from ..sprites.graphics import build_surface
 
 
 logger = logging.getLogger(__name__)
@@ -19,9 +21,16 @@ def surface_to_led_matrix(surface: Surface) -> Image.Image:
 
 
 class SysDisplay(System):
+    entities: EntityManager
+    screen: Surface
+    screen_off: Surface
+    config: Dynaconf
+    enabled: bool
+
     def __init__(self, entities: EntityManager, screen: Surface) -> None:
         self.entities = entities
         self.screen = screen
+        self.screen_off = build_surface(screen.get_size(), Color(0, 0, 0))
         self.config = next(self.entities.get_by_class(AppState)).config
         self.enabled = self.config.display.matrix.enabled
 
@@ -33,9 +42,11 @@ class SysDisplay(System):
         self._setup_matrix_driver()
 
     def update(self) -> None:
+        app_state = next(self.entities.get_by_class(AppState))
         if not self.enabled:
             return
-        self.buffer.SetImage(surface_to_led_matrix(self.screen))
+        render_surface = self.screen if app_state.power else self.screen_off
+        self.buffer.SetImage(surface_to_led_matrix(render_surface))
         self.matrix.SwapOnVSync(self.buffer)
 
     def _setup_matrix_driver(self) -> None:

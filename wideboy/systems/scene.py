@@ -54,7 +54,11 @@ class SysScene(System):
         clock_x = self.display_info.current_w - CLOCK_WIDTH
         clock_y = 1
         self.entities.add(
-            WidgetClockTime(build_clock_time_sprite(now), clock_x, clock_y),
+            WidgetClockTime(
+                build_clock_time_sprite(now, hours_24=self.app_state.clock_24_hour),
+                clock_x,
+                clock_y,
+            ),
             WidgetClockDate(build_clock_date_sprite(now), clock_x, clock_y + 30),
             WidgetTileGrid(
                 build_tile_grid_sprite(CELLS, self.app_state.hass_state),
@@ -64,6 +68,7 @@ class SysScene(System):
         )
 
     def update(self) -> None:
+        app_state = next(self.entities.get_by_class(AppState))
         # logger.debug(f"sys.scene.update: events={len(self.app_state.events)}")
         widget_clock_date = next(self.entities.get_by_class(WidgetClockDate))
         widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
@@ -71,10 +76,12 @@ class SysScene(System):
 
         for event_type, event_payload in self.app_state.events:
             if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
-                widget_clock_time.sprite = build_clock_time_sprite(event_payload["now"])
+                widget_clock_time.sprite = build_clock_time_sprite(
+                    event_payload["now"], app_state.clock_24_hour
+                )
             if event_type == EventTypes.EVENT_CLOCK_NEW_MINUTE:
                 widget_clock_date.sprite = build_clock_date_sprite(event_payload["now"])
-            elif event_type == EventTypes.EVENT_HASS_ENTITY_UPDATE:
+            if event_type == EventTypes.EVENT_HASS_ENTITY_UPDATE:
                 widget_tilegrid.sprite.update(event_payload["entity_id"])
 
         widget_tilegrid.x = (

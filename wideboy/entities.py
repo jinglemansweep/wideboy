@@ -14,6 +14,7 @@ class AppState:
     time_now: datetime.datetime = datetime.datetime.now()
     hass_state: dict = field(default_factory=dict)
     power: bool = True
+    clock_24_hour: bool = True
     light_state: bool = True
     light_brightness: int = 255
     number_state: float = 5.0

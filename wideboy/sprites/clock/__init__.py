@@ -22,33 +22,26 @@ def time_to_color(hour: int) -> Color:
 class TimeSprite(Sprite):
     image: Surface
     rect: Rect = Rect(0, 0, CLOCK_WIDTH, 30)
+    font_name: str = FONT_FILENAME
+    font_size: int = 36
+    text_align: str = "center"
+    color_bg: Color = Color(0, 0, 0, 0)
+    color_fg: Color = Color(255, 0, 255, 255)
+    color_outline: Color = Color(0, 0, 0, 255)
+    pos_adj: tuple[int, int] = (0, 0)
 
     def __init__(
         self,
         now: datetime,
-        color_bg: Color = Color(0, 0, 0, 0),
-        color_fg: Color = Color(255, 0, 255, 255),
-        color_outline: Color = Color(0, 0, 0, 255),
-        font_name: str = FONT_FILENAME,
-        font_size: int = 36,
-        time_format: str = "%H:%M",
-        align: str = "center",
-        pos_adj: tuple[int, int] = (0, 0),
+        hours_24: bool,
     ) -> None:
         self.image = Surface((self.rect.width, self.rect.height), SRCALPHA)
         self.now = now
-        self.color_bg = color_bg
-        self.color_fg = color_fg
-        self.color_outline = color_outline
-        self.font_name = font_name
-        self.font_size = font_size
-        self.time_format = time_format
-        self.align = align
-        self.pos_adj = pos_adj
+        self.hours_24 = hours_24
         self.render(now)
 
     def render_text_surface(self) -> Surface:
-        time_str = self.now.strftime(self.time_format)
+        time_str = self.now.strftime("%H:%M" if self.hours_24 else "%I:%M")
         return render_text(
             time_str,
             self.font_name,
@@ -62,9 +55,9 @@ class TimeSprite(Sprite):
         self.image.fill(self.color_bg)
         surface = self.render_text_surface()
         x: float = (self.rect.width / 2) - (surface.get_rect().width / 2)
-        if self.align == "left":
+        if self.text_align == "left":
             x = 0.0
-        elif self.align == "right":
+        elif self.text_align == "right":
             x = self.rect.width - surface.get_rect().width
         self.image.blit(
             surface,
@@ -75,8 +68,8 @@ class TimeSprite(Sprite):
         )
 
 
-def build_clock_time_sprite(now: datetime):
-    return TimeSprite(now)
+def build_clock_time_sprite(now: datetime, hours_24: bool):
+    return TimeSprite(now, hours_24=hours_24)
 
 
 class DateSprite(Sprite):

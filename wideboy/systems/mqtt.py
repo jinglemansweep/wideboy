@@ -19,13 +19,6 @@ from ..homeassistant import (
 logger = logging.getLogger(__name__)
 
 
-def button_state_log_callback(
-    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
-) -> None:
-    logger.debug("sys.hass.entities.button.state_log: press")
-    logger.info(f"app_state: {state}")
-
-
 def switch_power_callback(
     client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
 ) -> None:
@@ -34,6 +27,18 @@ def switch_power_callback(
     client.publish(
         entity_config["state_topic"],
         to_hass_bool(state.power),
+        qos=1,
+    )
+
+
+def switch_clock_24_hour_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+) -> None:
+    state.clock_24_hour = payload == "ON"
+    logger.debug(f"sys.hass.entities.clock_24_hour: state={state.clock_24_hour}")
+    client.publish(
+        entity_config["state_topic"],
+        to_hass_bool(state.clock_24_hour),
         qos=1,
     )
 
@@ -103,14 +108,27 @@ def button_button_callback(
     logger.debug(f"sys.hass.entities.button: state={state.button_flag}")
 
 
+def button_state_log_callback(
+    client: MQTTClient, entity_config: Dict[str, Any], state: AppState, payload: str
+) -> None:
+    logger.debug("sys.hass.entities.button.state_log: press")
+    logger.info(f"app_state: {state}")
+
+
 ENTITIES = [
-    {"cls": ButtonEntity, "name": "state_log", "callback": button_state_log_callback},
     {
         "cls": SwitchEntity,
         "name": "power",
         "callback": switch_power_callback,
-        "initial_state": "OFF",
+        "initial_state": "ON",
     },
+    {
+        "cls": SwitchEntity,
+        "name": "clock_24_hour",
+        "callback": switch_clock_24_hour_callback,
+        "initial_state": "ON",
+    },
+    {"cls": ButtonEntity, "name": "state_log", "callback": button_state_log_callback},
     {
         "cls": LightEntity,
         "name": "light",

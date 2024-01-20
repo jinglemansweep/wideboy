@@ -5,7 +5,7 @@ import os
 import pygame
 from PIL import Image, ImageFilter, ImageEnhance
 from pygame import Color, Surface, Vector2, BLEND_RGBA_MULT, SRCALPHA
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
 logger = logging.getLogger("sprites.image_helpers")
@@ -252,7 +252,7 @@ def render_material_icon(
     return surface
 
 
-def build_background(size: Vector2, color: Color) -> Surface:
-    background = Surface(size)
-    background.fill(color)
-    return background
+def build_surface(size: Tuple[int, int], color: Color) -> Surface:
+    surface = Surface(size)
+    surface.fill(color)
+    return surface
