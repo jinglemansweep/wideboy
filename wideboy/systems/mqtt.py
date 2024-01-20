@@ -170,7 +170,7 @@ class SysMQTT(System):
         self.entities.add(MQTTService(client=self.client, listeners=listeners))
 
     def update(self) -> None:
-        self.client.loop(timeout=0.001)
+        self.client.loop(timeout=0.005)
 
     def debug_listener(self, topic: str, payload: str, client: MQTTClient) -> None:
         logger.debug(f"sys.mqtt.message: topic: {topic}, payload: {payload}")
