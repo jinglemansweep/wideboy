@@ -3,6 +3,7 @@ import random
 from ecs_pattern import EntityManager, System
 from pygame import Color
 from pygame.display import Info as DisplayInfo
+from typing import Optional
 from ..components import ComMotion
 from ..consts import EventTypes
 from ..entities import (
@@ -51,6 +52,7 @@ class SysScene(System):
     def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.display_info = DisplayInfo()
+        self.scene_mode: Optional[str] = None
 
     def start(self):
         logger.info("Scene system starting...")
@@ -91,6 +93,9 @@ class SysScene(System):
 
     def update(self) -> None:
         app_state = next(self.entities.get_by_class(AppState))
+
+        self._handle_scene_mode_change()
+
         # logger.debug(f"sys.scene.update: events={len(self.app_state.events)}")
         widget_clock_date = next(self.entities.get_by_class(WidgetClockDate))
         widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
@@ -130,3 +135,28 @@ class SysScene(System):
                 or widget.y > self.display_info.current_h - widget.sprite.rect.height
             ):
                 widget.speed_y = -widget.speed_y
+
+        self.entities.delete_buffer_purge()
+
+    def _handle_scene_mode_change(self) -> None:
+        if self.app_state.scene_mode != self.scene_mode:
+            self.scene_mode = self.app_state.scene_mode
+            logger.info(f"sys.scene.update.scene: mode={self.scene_mode}")
+            if self.scene_mode == "default":
+                logger.info("DEFAULT MODE")
+                self._add_square_sprites(50)
+            elif self.scene_mode == "night":
+                logger.info("NIGHT MODE")
+                self.entities.delete_buffer_add(*self.entities.get_by_class(WidgetTest))
+
+    def _add_square_sprites(self, count: int) -> None:
+        for i in range(count):
+            self.entities.add(
+                WidgetTest(
+                    test_sprite(color=random_color()),
+                    random.randint(0, self.display_info.current_w - 32),
+                    random.randint(0, self.display_info.current_h - 32),
+                    random.choice([-2, -1, 1, 2]),
+                    random.choice([-1, 1]),
+                ),  # type: ignore[call-arg]
+            )
