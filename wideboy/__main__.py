@@ -69,9 +69,9 @@ def main():
     system_manager.start_systems()
 
     while app_state.running:
-        clock.tick_busy_loop(FPS_MAX)
+        clock.tick(FPS_MAX)
         system_manager.update_systems()
-        pygame.display.flip()  # draw changes on screen
+        pygame.display.flip()
 
     system_manager.stop_systems()
 
