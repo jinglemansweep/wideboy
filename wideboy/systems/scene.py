@@ -96,7 +96,7 @@ class SysScene(System):
         widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
 
-        time_fmt = "%H:%M" if app_state.clock_24_hour else "%i:%M %p"
+        time_fmt = "%H:%M" if app_state.clock_24_hour else "%l:%M %p"
         date_fmt = "%a %d %b"
 
         for event_type, event_payload in self.app_state.events:
