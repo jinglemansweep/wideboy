@@ -1,8 +1,7 @@
 import logging
 from ecs_pattern import EntityManager, System
-from pygame.event import get as get_events
 from pygame.display import Info as DisplayInfo
-from ..consts import EVENT_CLOCK_NEW_SECOND, EVENT_HASS_ENTITY_UPDATE
+from ..consts import EventTypes
 from ..entities import (
     AppState,
     WidgetClock,
@@ -24,31 +23,31 @@ class SysScene(System):
     def start(self):
         logger.info("Scene system starting...")
         self.entities.init()
-        app_state = next(self.entities.get_by_class(AppState))
+        self.app_state = next(self.entities.get_by_class(AppState))
         self.entities.add(
             WidgetClock(clock_sprite(""), 0, 0),
             WidgetTest(test_sprite(), 1, 1, 1, 1),
-            WidgetTileGrid(build_tile_grid_sprite(CELLS, app_state.hass_state), 20, 50),
+            WidgetTileGrid(
+                build_tile_grid_sprite(CELLS, self.app_state.hass_state), 512, 0
+            ),
         )
 
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
         widget_tilegrid.speed_x, widget_tilegrid.speed_y = -1, -1
 
     def update(self) -> None:
+        # logger.debug(f"sys.scene.update: events={len(self.app_state.events)}")
         widget_clock = next(self.entities.get_by_class(WidgetClock))
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
         widget_test = next(self.entities.get_by_class(WidgetTest))
 
-        for event in get_events((EVENT_CLOCK_NEW_SECOND, EVENT_HASS_ENTITY_UPDATE)):
-            if event.type == EVENT_CLOCK_NEW_SECOND:
-                widget_clock.sprite = clock_sprite(event.now.strftime("%H:%M:%S"))
-            if event.type == EVENT_HASS_ENTITY_UPDATE:
-                widget_tilegrid.sprite.update(event.entity_id)
-
-        if widget_tilegrid.x <= 0 or widget_tilegrid.x > self.display_info.current_w:
-            widget_tilegrid.speed_x = -widget_tilegrid.speed_x
-        elif widget_tilegrid.y <= 0 or widget_tilegrid.y > self.display_info.current_h:
-            widget_tilegrid.speed_y = -widget_tilegrid.speed_y
+        for event_type, event_payload in self.app_state.events:
+            if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
+                widget_clock.sprite = clock_sprite(
+                    event_payload["now"].strftime("%H:%M:%S")
+                )
+            elif event_type == EventTypes.EVENT_HASS_ENTITY_UPDATE:
+                widget_tilegrid.sprite.update(event_payload["entity_id"])
 
         if widget_test.x <= 0 or widget_test.x > self.display_info.current_w:
             widget_test.speed_x = -widget_test.speed_x

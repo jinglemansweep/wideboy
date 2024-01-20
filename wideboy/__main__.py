@@ -9,7 +9,7 @@ from .config import VALIDATORS
 from .consts import FPS_MAX
 from .entities import AppState
 from .systems.animation import SysMovement
-from .systems.boot import SysBoot, SysClock, SysDebug, SysInput
+from .systems.boot import SysBoot, SysClock, SysDebug, SysEvents, SysInput
 from .systems.display import SysDisplay
 from .systems.draw import SysDraw
 from .systems.scene import SysScene
@@ -51,6 +51,7 @@ def main():
             # Boot
             SysBoot(entities, config),
             # Inputs/Control
+            SysEvents(entities),
             SysClock(entities),
             SysInput(entities),
             SysMQTT(entities),

@@ -10,6 +10,7 @@ from .components import ComMotion, ComVisible
 class AppState:
     running: bool
     config: Dynaconf = None
+    events: list = field(default_factory=list)
     time_now: datetime.datetime = datetime.datetime.now()
     hass_state: dict = field(default_factory=dict)
     power: bool = True
@@ -38,5 +39,5 @@ class WidgetClock(ComVisible):
 
 
 @entity
-class WidgetTileGrid(ComMotion, ComVisible):
+class WidgetTileGrid(ComVisible):
     pass

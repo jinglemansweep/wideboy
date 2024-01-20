@@ -2,9 +2,8 @@ import json
 import logging
 from ecs_pattern import EntityManager, System
 from paho.mqtt.client import Client as MQTTClient, MQTTMessage
-from pygame.event import Event, post as post_event
 from typing import Any, Dict
-from ..consts import EVENT_HASS_ENTITY_UPDATE
+from ..consts import EventTypes
 from ..entities import AppState, MQTTService
 from ..homeassistant import (
     ButtonEntity,
@@ -248,9 +247,9 @@ class SysHomeAssistant(System):
             parts = topic[len(self.topic_prefix_statestream) :].split("/")
             device_class, entity_id, attr = parts[1], parts[-2], parts[-1]
             entity_id_full = f"{device_class}.{entity_id}"
-            post_event(
-                Event(
-                    EVENT_HASS_ENTITY_UPDATE,
+            app_state.events.append(
+                (
+                    EventTypes.EVENT_HASS_ENTITY_UPDATE,
                     dict(entity_id=entity_id_full, attribute=attr, payload=payload),
                 )
             )
