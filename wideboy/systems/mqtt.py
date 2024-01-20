@@ -236,6 +236,9 @@ class SysHomeAssistant(System):
             if "command_topic" in config:
                 self.command_topics[config["command_topic"]] = entity
             if entity.initial_state:
+                logger.debug(
+                    f"sys.mqtt.state: entity={entity.name} state={entity.to_hass_state()}"
+                )
                 self.mqtt.client.publish(
                     config["state_topic"], entity.to_hass_state(), qos=1
                 )
