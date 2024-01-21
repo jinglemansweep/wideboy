@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class MasterPowerLight(LightEntity):
     name: str = "master"
-    description: str = "Master power switch"
+    description: str = "Master"
     initial_state: Dict[str, Any] = {"state": "ON", "brightness": 128}
     options: Dict[str, Any] = {
         "brightness": True,
@@ -80,7 +80,7 @@ class ModeSelect(SelectEntity):
 
 class Clock24HourSwitch(SwitchEntity):
     name: str = "clock_24_hour"
-    description: str = "24 hour clock"
+    description: str = "24h Clock"
     initial_state: str = "ON"
 
     def callback(
@@ -103,7 +103,7 @@ class Clock24HourSwitch(SwitchEntity):
 
 class BackgroundIntervalNumber(NumberEntity):
     name: str = "background_interval"
-    description: str = "Background interval"
+    description: str = "Slideshow Interval"
     initial_state: float = 5.0
     options: Dict[str, Any] = {
         "device_class": "duration",
@@ -153,7 +153,7 @@ class MessageText(TextEntity):
 
 class StateLogButton(ButtonEntity):
     name: str = "state_log"
-    description: str = "Log state"
+    description: str = "Log State"
 
     def callback(
         self,

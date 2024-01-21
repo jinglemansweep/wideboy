@@ -36,9 +36,10 @@ def strip_quotes(value: str) -> str:
 class HomeAssistantEntity:
     device_class: str | None
     name: str
+    callback: Callable[..., None]
     topic_prefix_app: str
     topic_prefix_homeassistant: str = "homeassistant"
-    callback: Callable[..., None]
+    description: Optional[str] = None
     entity_options: Dict[str, Any] = {}
     options: Dict[str, Any] = {}
     initial_state: Any = {}
@@ -63,7 +64,7 @@ class HomeAssistantEntity:
         opts.update(self.options or {})
         opts.update(
             {
-                "name": self.name,
+                "name": self.entity_name,
                 "object_id": self.entity_id,
                 "unique_id": self.entity_id,
                 "device": build_device_info(self.app_id),
@@ -78,6 +79,10 @@ class HomeAssistantEntity:
     @property
     def entity_id(self) -> str:
         return f"{build_entity_prefix(self.app_id)}_{self.name}".lower()
+
+    @property
+    def entity_name(self) -> str:
+        return self.description or self.name
 
     @property
     def topic_prefix(self) -> str:
