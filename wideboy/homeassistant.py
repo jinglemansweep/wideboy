@@ -1,7 +1,6 @@
 import json
 import logging
 from typing import Any, Callable, Dict, Optional
-
 from . import _APP_AUTHOR, _APP_NAME, _APP_TITLE, _APP_VERSION
 
 logger = logging.getLogger(__name__)
@@ -22,10 +21,6 @@ def build_device_info(app_id: str) -> Dict[str, Any]:
     }
 
 
-def build_full_entity_id(app_id: str, name: str) -> str:
-    return f"{build_entity_prefix(app_id)}_{name}".lower()
-
-
 def to_hass_bool(value: bool) -> str:
     return "ON" if value else "OFF"
 
@@ -41,73 +36,69 @@ def strip_quotes(value: str) -> str:
 class HomeAssistantEntity:
     device_class: str | None
     name: str
-    topic_prefix: str
-    callback: Callable[..., None]
-    options: Dict[str, Any] = {}
-    options_custom: Dict[str, Any] = {}
-    initial_state: Dict[str, Any] | str = {}
+    topic_prefix_app: str
     topic_prefix_homeassistant: str = "homeassistant"
-    config: Optional[Dict[str, Any]] = {}
+    callback: Callable[..., None]
+    entity_options: Dict[str, Any] = {}
+    options: Dict[str, Any] = {}
+    initial_state: Any = {}
 
     def __init__(
         self,
-        name: str,
         app_id: str,
-        topic_prefix: str,
-        callback: Callable[..., None],
-        options: Optional[Dict[str, Any]] = None,
-        initial_state: Optional[Dict[str, Any]] = None,
+        topic_prefix_app: str,
         topic_prefix_homeassistant: Optional[str] = None,
     ) -> None:
-        self.name = name
         self.app_id = app_id
-        self.topic_prefix = topic_prefix
-        self.callback = callback
-        if options:
-            self.options_custom = options
-        self.initial_state = initial_state or {}
+        self.topic_prefix_app = topic_prefix_app
         if topic_prefix_homeassistant:
             self.topic_prefix_homeassistant = topic_prefix_homeassistant
 
     def to_hass_state(self) -> str:
         return json.dumps(self.initial_state)
 
-    def configure(self) -> Dict[str, Any]:
-        options = self.options.copy()
-        options.update(self.options_custom)
-        full_entity_id = build_full_entity_id(self.app_id, self.name)
-        topic_template = f"{self.topic_prefix}/{self.app_id}/{self.convert_device_class(self.device_class)}/{self.name}"
-        if "state_topic" in options:
-            options["state_topic"] = options["state_topic"].format(topic_template)
-        if "command_topic" in options:
-            options["command_topic"] = options["command_topic"].format(topic_template)
-        if "json_attributes_topic" in options:
-            options["json_attributes_topic"] = options["json_attributes_topic"].format(
-                topic_template
-            )
-
-        config = {
-            "name": self.name,
-            "object_id": full_entity_id,
-            "unique_id": full_entity_id,
-            "device": build_device_info(self.app_id),
-        }
+    @property
+    def config(self) -> Dict[str, Any]:
+        opts = self.entity_options.copy()
+        opts.update(self.options or {})
+        opts.update(
+            {
+                "name": self.name,
+                "object_id": self.entity_id,
+                "unique_id": self.entity_id,
+                "device": build_device_info(self.app_id),
+            }
+        )
         if self.device_class is not None:
-            config["device_class"] = self.device_class
-        config.update(options)
-        self.config = config
-        return config
+            opts["device_class"] = self.device_class
+        opts.update(self.options or {})
+        self._template_topics(opts)
+        return opts
 
-    def configure_topic(self) -> str:
-        return f"{self.topic_prefix_homeassistant}/{self.convert_device_class(self.device_class)}/{build_full_entity_id(self.app_id, self.name)}/config"
+    @property
+    def entity_id(self) -> str:
+        return f"{build_entity_prefix(self.app_id)}_{self.name}".lower()
 
-    def convert_device_class(self, value: str | None) -> str | None:
+    @property
+    def topic_prefix(self) -> str:
+        return f"{self.topic_prefix_app}/{self.app_id}/{self.cast_device_class(self.device_class)}/{self.name}"
+
+    @property
+    def topic_config(self) -> str:
+        return f"{self.topic_prefix_homeassistant}/{self.cast_device_class(self.device_class)}/{self.entity_id}/config"
+
+    def cast_device_class(self, value: str | None) -> str | None:
         return "button" if self.device_class is None else value
+
+    def _template_topics(self, options: Dict[str, Any]) -> None:
+        for key in options:
+            if key.endswith("_topic") and isinstance(key, str):
+                options[key] = options[key].format(self.topic_prefix)
 
 
 class ButtonEntity(HomeAssistantEntity):
     device_class = None
-    options = {
+    entity_options = {
         "entity_category": "config",
         "command_topic": "{}/set",
         "retain": False,
@@ -117,7 +108,7 @@ class ButtonEntity(HomeAssistantEntity):
 
 class LightEntity(HomeAssistantEntity):
     device_class = "light"
-    options = {
+    entity_options = {
         "schema": "json",
         "command_topic": "{}/set",
         "state_topic": "{}/state",
@@ -128,7 +119,7 @@ class LightEntity(HomeAssistantEntity):
 
 class NumberEntity(HomeAssistantEntity):
     device_class = "number"
-    options = {
+    entity_options = {
         "command_topic": "{}/set",
         "state_topic": "{}/state",
         "step": 1.0,
@@ -139,7 +130,7 @@ class NumberEntity(HomeAssistantEntity):
 
 class SelectEntity(HomeAssistantEntity):
     device_class = "select"
-    options = {
+    entity_options = {
         "command_topic": "{}/set",
         "state_topic": "{}/state",
     }
@@ -150,14 +141,14 @@ class SelectEntity(HomeAssistantEntity):
 
 class SensorEntity(HomeAssistantEntity):
     device_class = "sensor"
-    options = {
+    entity_options = {
         "state_topic": "{}/state",
     }
 
 
 class SwitchEntity(HomeAssistantEntity):
     device_class = "switch"
-    options = {
+    entity_options = {
         "command_topic": "{}/set",
         "state_topic": "{}/state",
     }
@@ -168,7 +159,7 @@ class SwitchEntity(HomeAssistantEntity):
 
 class TextEntity(HomeAssistantEntity):
     device_class = "text"
-    options = {
+    entity_options = {
         "command_topic": "{}/set",
         "state_topic": "{}/state",
     }

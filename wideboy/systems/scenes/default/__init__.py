@@ -4,20 +4,19 @@ from ecs_pattern import EntityManager, System
 from pygame import Color
 from pygame.display import Info as DisplayInfo
 from typing import Optional
-from ..components import ComMotion
-from ..consts import EventTypes
-from ..entities import (
+from ....components import ComMotion
+from ....consts import EventTypes
+from ....entities import (
     AppState,
     WidgetClockDate,
     WidgetClockTime,
     WidgetTest,
     WidgetTileGrid,
 )
-from ..sprites.common import test_sprite
-
-from ..sprites.text import TextSprite
-from ..sprites.tile_grid import build_tile_grid_sprite
-from ..sprites.tile_grid.tiles import CELLS
+from ....sprites.common import test_sprite
+from ....sprites.text import TextSprite
+from ....sprites.tile_grid import build_tile_grid_sprite
+from .entity_tiles import CELLS
 
 logger = logging.getLogger(__name__)
 

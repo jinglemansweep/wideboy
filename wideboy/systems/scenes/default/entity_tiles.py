@@ -1,7 +1,7 @@
 from typing import Optional
 
-from wideboy.sprites.tile_grid import VerticalCollapseTileGridCell, TallGridCell
-from wideboy.sprites.tile_grid.helpers import (
+from ....sprites.tile_grid import VerticalCollapseTileGridCell, TallGridCell
+from ....sprites.tile_grid.helpers import (
     CommonColors,
     FontAwesomeIcons,
     is_defined,
