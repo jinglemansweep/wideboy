@@ -57,8 +57,8 @@ def build_rect_sprite(color: Color, width=12, height=12):
     return ColoredBlockSprite(color, width, height)
 
 
-def build_image_sprite(filename: str):
-    return ImageSprite(filename)
+def build_image_sprite(filename: str, alpha: int = 255):
+    return ImageSprite(filename, alpha)
 
 
 class SysScene(System):
@@ -165,7 +165,9 @@ class SysScene(System):
         for i in range(count):
             self.entities.add(
                 WidgetImage(
-                    build_image_sprite(random.choice(images)),
+                    build_image_sprite(
+                        random.choice(images), random.randrange(64, 256)
+                    ),
                     x=random.randint(0, self.display_info.current_w - 32),
                     y=random.randint(0, self.display_info.current_h - 32),
                     speed_x=random.choice([-2, -1, 1, 2]),

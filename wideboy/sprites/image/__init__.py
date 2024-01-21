@@ -14,6 +14,8 @@ class ImageSprite(Sprite):
     def __init__(
         self,
         filename: str,
+        alpha: int = 255,
     ) -> None:
         self.image = pygame_image_load(filename, "RGBA")
+        self.image.set_alpha(alpha)
         self.rect = self.image.get_rect()
