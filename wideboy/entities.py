@@ -3,6 +3,7 @@ from dataclasses import field
 from dynaconf import Dynaconf
 from ecs_pattern import entity
 from paho.mqtt.client import Client as MQTTClient
+from typing import Callable
 from .components import ComMotion, ComVisible
 
 
@@ -24,7 +25,10 @@ class AppState:
 @entity
 class MQTTService:
     client: MQTTClient
-    listeners: list = field(default_factory=list)
+    connect_callback: Callable
+    on_connect_listeners: list = field(default_factory=list)
+    on_disconnect_listeners: list = field(default_factory=list)
+    on_message_listeners: list = field(default_factory=list)
 
 
 @entity

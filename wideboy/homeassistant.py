@@ -86,14 +86,15 @@ class HomeAssistantEntity:
 
     @property
     def topic_prefix(self) -> str:
-        return f"{self.topic_prefix_app}/{self.app_id}/{self.cast_device_class(self.device_class)}/{self.name}"
+        return f"{self.topic_prefix_app}/{self.app_id}/{self.topic_device_class}/{self.name}"
 
     @property
     def topic_config(self) -> str:
-        return f"{self.topic_prefix_homeassistant}/{self.cast_device_class(self.device_class)}/{self.entity_id}/config"
+        return f"{self.topic_prefix_homeassistant}/{self.topic_device_class}/{self.entity_id}/config"
 
-    def cast_device_class(self, value: str | None) -> str | None:
-        return "button" if self.device_class is None else value
+    @property
+    def topic_device_class(self) -> str:
+        return self.device_class or "button"
 
     def _template_topics(self, options: Dict[str, Any]) -> None:
         for key in options:
