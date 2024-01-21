@@ -31,7 +31,7 @@ CLOCK_WIDTH = 110
 
 def build_time_sprite(text: str, night: bool = False):
     color_fg = Color(255, 255, 0, 255) if not night else Color(0, 0, 0, 255)
-    color_outline = Color(0, 0, 0, 255) if not night else Color(0, 128, 192, 255)
+    color_outline = Color(0, 0, 0, 255) if not night else Color(192, 0, 192, 255)
     return TextSprite(
         text, font_size=36, color_fg=color_fg, color_outline=color_outline
     )
@@ -39,7 +39,7 @@ def build_time_sprite(text: str, night: bool = False):
 
 def build_date_sprite(text: str, night: bool = False):
     color_fg = Color(255, 255, 255, 255) if not night else Color(0, 0, 0, 255)
-    color_outline = Color(0, 0, 0, 255) if not night else Color(0, 128, 192, 255)
+    color_outline = Color(0, 0, 0, 255) if not night else Color(192, 0, 128, 255)
     return TextSprite(
         text,
         font_size=17,
