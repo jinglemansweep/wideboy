@@ -8,12 +8,13 @@ from ....components import ComMotion
 from ....consts import EventTypes
 from ....entities import (
     AppState,
+    WidgetClockBackground,
     WidgetClockDate,
     WidgetClockTime,
-    WidgetTest,
+    WidgetSquare,
     WidgetTileGrid,
 )
-from ....sprites.common import test_sprite
+from ....sprites.common import ColoredBlockSprite
 from ....sprites.text import TextSprite
 from ....sprites.tile_grid import build_tile_grid_sprite
 from .entity_tiles import CELLS
@@ -47,6 +48,14 @@ def build_date_sprite(text: str, night: bool = False):
     )
 
 
+def build_square_sprite(color: Color, size=12):
+    return ColoredBlockSprite(color, size, size)
+
+
+def build_rect_sprite(color: Color, width=12, height=12):
+    return ColoredBlockSprite(color, width, height)
+
+
 class SysScene(System):
     def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
@@ -61,8 +70,8 @@ class SysScene(System):
 
         for i in range(50):
             self.entities.add(
-                WidgetTest(
-                    test_sprite(color=random_color()),
+                WidgetSquare(
+                    build_square_sprite(color=random_color()),
                     random.randint(0, self.display_info.current_w - 32),
                     random.randint(0, self.display_info.current_h - 32),
                     random.choice([-2, -1, 1, 2]),
@@ -73,6 +82,11 @@ class SysScene(System):
         clock_x = self.display_info.current_w - CLOCK_WIDTH
         clock_y = 1
         self.entities.add(
+            WidgetClockBackground(
+                build_rect_sprite(Color(0, 0, 0, 192), CLOCK_WIDTH, 48),
+                clock_x,
+                clock_y,
+            ),
             WidgetClockTime(
                 build_time_sprite(""),
                 clock_x,
@@ -146,13 +160,15 @@ class SysScene(System):
                 self._add_square_sprites(50)
             elif self.scene_mode == "night":
                 logger.info("NIGHT MODE")
-                self.entities.delete_buffer_add(*self.entities.get_by_class(WidgetTest))
+                self.entities.delete_buffer_add(
+                    *self.entities.get_by_class(WidgetSquare)
+                )
 
     def _add_square_sprites(self, count: int) -> None:
         for i in range(count):
             self.entities.add(
-                WidgetTest(
-                    test_sprite(color=random_color()),
+                WidgetSquare(
+                    build_square_sprite(color=random_color()),
                     random.randint(0, self.display_info.current_w - 32),
                     random.randint(0, self.display_info.current_h - 32),
                     random.choice([-2, -1, 1, 2]),
