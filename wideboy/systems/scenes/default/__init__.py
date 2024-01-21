@@ -83,7 +83,7 @@ class SysScene(System):
         clock_y = 2
         self.entities.add(
             WidgetClockBackground(
-                build_rect_sprite(Color(0, 0, 0, 192), CLOCK_WIDTH, 48),
+                build_rect_sprite(Color(0, 0, 0, 192), CLOCK_WIDTH, 42),
                 clock_x,
                 clock_y,
             ),
@@ -95,7 +95,7 @@ class SysScene(System):
             WidgetClockDate(
                 build_date_sprite(""),
                 clock_x + 3,
-                clock_y + 28,
+                clock_y + 26,
             ),
             WidgetTileGrid(
                 build_tile_grid_sprite(CELLS, self.app_state.hass_state),
