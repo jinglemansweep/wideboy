@@ -105,7 +105,7 @@ class BackgroundIntervalNumber(NumberEntity):
     name: str = "background_interval"
     description: str = "Background interval"
     initial_state: float = 5.0
-    entity_options: Dict[str, Any] = {
+    options: Dict[str, Any] = {
         "device_class": "duration",
         "step": 1,
         "min": 1,
