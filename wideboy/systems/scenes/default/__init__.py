@@ -11,6 +11,7 @@ from ....entities import (
     WidgetClockBackground,
     WidgetClockDate,
     WidgetClockTime,
+    WidgetImage,
     WidgetSquare,
     WidgetTileGrid,
 )
@@ -163,11 +164,11 @@ class SysScene(System):
     def _add_chicken_sprites(self, count: int) -> None:
         for i in range(count):
             self.entities.add(
-                WidgetSquare(
+                WidgetImage(
                     build_image_sprite("images/icons/chick.png"),
-                    random.randint(0, self.display_info.current_w - 32),
-                    random.randint(0, self.display_info.current_h - 32),
-                    random.choice([-2, -1, 1, 2]),
-                    random.choice([-1, 1]),
+                    x=random.randint(0, self.display_info.current_w - 32),
+                    y=random.randint(0, self.display_info.current_h - 32),
+                    speed_x=random.choice([-2, -1, 1, 2]),
+                    speed_y=random.choice([-2, -1, 1, 2]),
                 ),  # type: ignore[call-arg]
             )
