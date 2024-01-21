@@ -12,7 +12,6 @@ from ....entities import (
     WidgetClockDate,
     WidgetClockTime,
     WidgetImage,
-    WidgetSquare,
     WidgetTileGrid,
 )
 from ....sprites.common import ColoredBlockSprite
@@ -157,7 +156,7 @@ class SysScene(System):
             elif self.scene_mode == "night":
                 logger.info("NIGHT MODE")
                 self.entities.delete_buffer_add(
-                    *self.entities.get_by_class(WidgetSquare)
+                    *self.entities.get_by_class(WidgetImage)
                 )
                 # widget_clock_time.target_y = -self.display_info.current_h
 
