@@ -151,7 +151,7 @@ class SysScene(System):
             # widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
             if self.scene_mode == "default":
                 logger.info("DEFAULT MODE")
-                self._add_chicken_sprites(50)
+                self._add_image_sprites(20)
                 # widget_clock_time.target_y = 0
             elif self.scene_mode == "night":
                 logger.info("NIGHT MODE")
@@ -160,11 +160,12 @@ class SysScene(System):
                 )
                 # widget_clock_time.target_y = -self.display_info.current_h
 
-    def _add_chicken_sprites(self, count: int) -> None:
+    def _add_image_sprites(self, count: int) -> None:
+        images = ["images/icons/emoji-duck.png", "images/icons/emoji-cat.png"]
         for i in range(count):
             self.entities.add(
                 WidgetImage(
-                    build_image_sprite("images/icons/chick.png"),
+                    build_image_sprite(random.choice(images)),
                     x=random.randint(0, self.display_info.current_w - 32),
                     y=random.randint(0, self.display_info.current_h - 32),
                     speed_x=random.choice([-2, -1, 1, 2]),
