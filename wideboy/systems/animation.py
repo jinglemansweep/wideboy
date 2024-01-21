@@ -1,6 +1,6 @@
 import logging
 from ecs_pattern import EntityManager, System
-from ..components import ComMotion, ComVisible
+from ..components import ComMotion, ComTarget, ComVisible
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +13,31 @@ class SysMovement(System):
         logger.info("Movement system starting...")
 
     def update(self) -> None:
-        for movable_entity in self.entities.get_with_component(ComMotion, ComVisible):
-            movable_entity.x += movable_entity.speed_x
-            movable_entity.y += movable_entity.speed_y
+        # Targeting
+
+        for e in self.entities.get_with_component(ComTarget, ComMotion, ComVisible):
+            # X Axis
+            if e.target_x is not None:
+                if e.x < e.target_x:
+                    e.speed_x = 1
+                elif e.x > e.target_x:
+                    e.speed_x = -1
+                else:
+                    e.target_x = None
+                    e.speed_x = 0
+
+            # Y Axis
+            if e.target_y is not None:
+                if e.y < e.target_y:
+                    e.speed_y = 1
+                elif e.y > e.target_y:
+                    e.speed_y = -1
+                else:
+                    e.target_y = None
+                    e.speed_y = 0
+
+        # Movement
+
+        for e in self.entities.get_with_component(ComMotion, ComVisible):
+            e.x += e.speed_x
+            e.y += e.speed_y

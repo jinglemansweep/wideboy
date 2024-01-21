@@ -155,14 +155,17 @@ class SysScene(System):
         if self.app_state.scene_mode != self.scene_mode:
             self.scene_mode = self.app_state.scene_mode
             logger.info(f"sys.scene.update.scene: mode={self.scene_mode}")
+            # widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
             if self.scene_mode == "default":
                 logger.info("DEFAULT MODE")
                 self._add_square_sprites(50)
+                # widget_clock_time.target_y = 0
             elif self.scene_mode == "night":
                 logger.info("NIGHT MODE")
                 self.entities.delete_buffer_add(
                     *self.entities.get_by_class(WidgetSquare)
                 )
+                # widget_clock_time.target_y = -self.display_info.current_h
 
     def _add_square_sprites(self, count: int) -> None:
         for i in range(count):
