@@ -32,7 +32,12 @@ class MQTTService:
 
 
 @entity
-class WidgetSquare(ComMotion, ComVisible):
+class WidgetSquare(ComTarget, ComMotion, ComVisible):
+    pass
+
+
+@entity
+class WidgetImage(ComTarget, ComMotion, ComVisible):
     pass
 
 
