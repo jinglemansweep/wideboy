@@ -8,6 +8,7 @@ class ComVisible:
     sprite: Sprite
     x: int = 0
     y: int = 0
+    z_order: int = 0
 
 
 @component

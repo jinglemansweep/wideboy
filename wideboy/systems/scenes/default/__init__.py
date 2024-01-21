@@ -80,21 +80,20 @@ class SysScene(System):
                 build_rect_sprite(Color(0, 0, 0, 192), CLOCK_WIDTH, 42),
                 clock_x,
                 clock_y,
+                z_order=10,
             ),
-            WidgetClockTime(
-                build_time_sprite(""),
-                clock_x,
-                clock_y,
-            ),
+            WidgetClockTime(build_time_sprite(""), clock_x, clock_y, z_order=10),
             WidgetClockDate(
                 build_date_sprite(""),
                 clock_x + 3,
                 clock_y + 26,
+                z_order=10,
             ),
             WidgetTileGrid(
                 build_tile_grid_sprite(CELLS, self.app_state.hass_state),
                 256,
                 0,
+                z_order=10,
             ),
         )
 
@@ -152,7 +151,7 @@ class SysScene(System):
             # widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
             if self.scene_mode == "default":
                 logger.info("DEFAULT MODE")
-                self._add_square_sprites(50)
+                self._add_chicken_sprites(50)
                 # widget_clock_time.target_y = 0
             elif self.scene_mode == "night":
                 logger.info("NIGHT MODE")
@@ -161,7 +160,7 @@ class SysScene(System):
                 )
                 # widget_clock_time.target_y = -self.display_info.current_h
 
-    def _add_square_sprites(self, count: int) -> None:
+    def _add_chicken_sprites(self, count: int) -> None:
         for i in range(count):
             self.entities.add(
                 WidgetSquare(

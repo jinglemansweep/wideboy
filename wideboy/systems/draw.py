@@ -16,7 +16,8 @@ class SysDraw(System):
 
     def update(self) -> None:
         self.screen.fill((0, 0, 0))
-        for visible_entity in self.entities.get_with_component(ComVisible):
-            self.screen.blit(
-                visible_entity.sprite.image, (visible_entity.x, visible_entity.y)
-            )
+        visible_entities = self.entities.get_with_component(ComVisible)
+        sorted_visible = sorted(visible_entities, key=lambda x: x.z_order)
+
+        for e in sorted_visible:
+            self.screen.blit(e.sprite.image, (e.x, e.y))
