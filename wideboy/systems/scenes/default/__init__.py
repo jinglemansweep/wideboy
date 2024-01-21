@@ -165,7 +165,7 @@ class SysScene(System):
         for i in range(count):
             self.entities.add(
                 WidgetSquare(
-                    build_image_sprite("images/icons/trollface.png"),
+                    build_image_sprite("images/icons/chick.png"),
                     random.randint(0, self.display_info.current_w - 32),
                     random.randint(0, self.display_info.current_h - 32),
                     random.choice([-2, -1, 1, 2]),
