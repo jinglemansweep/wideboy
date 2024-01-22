@@ -1,8 +1,11 @@
+import logging
 import random
 from typing import Tuple
 from ..utils import Stage
 from ....entities import WidgetImage
 from ....sprites.image import build_image_sprite
+
+logger = logging.getLogger(__name__)
 
 IMAGE_DUCK = "images/icons/emoji-duck.png"
 IMAGE_CAT = "images/icons/emoji-cat.png"
@@ -32,6 +35,9 @@ class StageDefault(Stage):
                 ),  # type: ignore[call-arg]
             )
 
+    def update(self) -> None:
+        logger.debug(f"stage.default.update: entities={len(self.entities)}")
+
 
 class StageNight(Stage):
     image_count: int
@@ -53,3 +59,6 @@ class StageNight(Stage):
                     speed_y=random.choice([-1, 0, 1]),
                 ),  # type: ignore[call-arg]
             )
+
+    def update(self) -> None:
+        logger.debug(f"stage.night.update: entities={len(self.entities)}")

@@ -7,3 +7,6 @@ class Stage:
 
     def setup(self) -> None:
         pass
+
+    def update(self, *args, **kwargs) -> None:
+        pass

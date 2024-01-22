@@ -51,6 +51,7 @@ def build_date_sprite(text: str, night: bool = False):
 class SysScene(System):
     entities: EntityManager
     scene_mode: Optional[str]
+    stage: Optional[Stage] = None
     stage_entities: List[entity] = []
 
     def __init__(self, entities: EntityManager) -> None:
@@ -91,6 +92,7 @@ class SysScene(System):
 
     def update(self) -> None:
         self._handle_scene_mode_change()
+        self._update_stage()
         self._update_core_widgets()
         self._update_motion_widgets()
 
@@ -140,8 +142,11 @@ class SysScene(System):
 
         self.entities.delete_buffer_purge()
 
+    def _update_stage(self) -> None:
+        if self.stage is not None:
+            self.stage.update()
+
     def _handle_scene_mode_change(self) -> None:
-        stage: Optional[Stage] = None
         if self.app_state.scene_mode != self.scene_mode:
             self.scene_mode = self.app_state.scene_mode
             logger.info(f"sys.scene.update.scene: mode={self.scene_mode}")
@@ -149,18 +154,18 @@ class SysScene(System):
             if self.scene_mode == "night":
                 logger.info("NIGHT MODE")
                 self.entities.delete_buffer_add(*self.stage_entities)
-                stage = StageNight(
+                self.stage = StageNight(
                     (self.display_info.current_w, self.display_info.current_h)
                 )
-                self.entities.add(*stage.entities)
-                self.stage_entities = stage.entities
+                self.entities.add(*self.stage.entities)
+                self.stage_entities = self.stage.entities
                 # widget_clock_time.target_y = -self.display_info.current_h
             else:
                 logger.info("DEFAULT MODE")
                 self.entities.delete_buffer_add(*self.stage_entities)
-                stage = StageDefault(
+                self.stage = StageDefault(
                     (self.display_info.current_w, self.display_info.current_h)
                 )
-                self.entities.add(*stage.entities)
-                self.stage_entities = stage.entities
+                self.entities.add(*self.stage.entities)
+                self.stage_entities = self.stage.entities
                 # widget_clock_time.target_y = 0
