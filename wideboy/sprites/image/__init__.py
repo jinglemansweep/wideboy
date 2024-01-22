@@ -7,6 +7,10 @@ from pygame.sprite import Sprite
 logger = logging.getLogger(__name__)
 
 
+def build_image_sprite(filename: str, alpha: int = 255):
+    return ImageSprite(filename, alpha)
+
+
 class ImageSprite(Sprite):
     image: Surface
     rect: Rect

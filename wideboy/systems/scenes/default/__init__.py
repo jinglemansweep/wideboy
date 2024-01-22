@@ -1,9 +1,9 @@
 import logging
 import random
-from ecs_pattern import EntityManager, System
+from ecs_pattern import EntityManager, System, entity
 from pygame import Color
 from pygame.display import Info as DisplayInfo
-from typing import Optional
+from typing import List, Optional
 from ....components import ComMotion
 from ....consts import EventTypes
 from ....entities import (
@@ -11,14 +11,13 @@ from ....entities import (
     WidgetClockBackground,
     WidgetClockDate,
     WidgetClockTime,
-    WidgetImage,
     WidgetTileGrid,
 )
-from ....sprites.common import ColoredBlockSprite
-from ....sprites.image import ImageSprite
+from ....sprites.common import build_rect_sprite
 from ....sprites.text import TextSprite
 from ....sprites.tile_grid import build_tile_grid_sprite
 from .entity_tiles import CELLS
+from .stages import Stage, StageDefault, StageNight
 
 logger = logging.getLogger(__name__)
 
@@ -49,19 +48,11 @@ def build_date_sprite(text: str, night: bool = False):
     )
 
 
-def build_square_sprite(color: Color, size=12):
-    return ColoredBlockSprite(color, size, size)
-
-
-def build_rect_sprite(color: Color, width=12, height=12):
-    return ColoredBlockSprite(color, width, height)
-
-
-def build_image_sprite(filename: str, alpha: int = 255):
-    return ImageSprite(filename, alpha)
-
-
 class SysScene(System):
+    entities: EntityManager
+    scene_mode: Optional[str]
+    stage_entities: List[entity] = []
+
     def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.display_info = DisplayInfo()
@@ -71,6 +62,7 @@ class SysScene(System):
         logger.info("Scene system starting...")
 
         self.entities.init()
+        self.stage_entities = []
         self.app_state = next(self.entities.get_by_class(AppState))
 
         clock_x = self.display_info.current_w - CLOCK_WIDTH
@@ -98,9 +90,12 @@ class SysScene(System):
         )
 
     def update(self) -> None:
-        app_state = next(self.entities.get_by_class(AppState))
-
         self._handle_scene_mode_change()
+        self._update_core_widgets()
+        self._update_motion_widgets()
+
+    def _update_core_widgets(self) -> None:
+        app_state = next(self.entities.get_by_class(AppState))
 
         # logger.debug(f"sys.scene.update: events={len(self.app_state.events)}")
         widget_clock_date = next(self.entities.get_by_class(WidgetClockDate))
@@ -130,6 +125,7 @@ class SysScene(System):
         )
         widget_tilegrid.sprite.update()
 
+    def _update_motion_widgets(self) -> None:
         for widget in self.entities.get_with_component(ComMotion):
             if (
                 widget.x < 0
@@ -145,32 +141,26 @@ class SysScene(System):
         self.entities.delete_buffer_purge()
 
     def _handle_scene_mode_change(self) -> None:
+        stage: Optional[Stage] = None
         if self.app_state.scene_mode != self.scene_mode:
             self.scene_mode = self.app_state.scene_mode
             logger.info(f"sys.scene.update.scene: mode={self.scene_mode}")
             # widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
-            if self.scene_mode == "default":
-                logger.info("DEFAULT MODE")
-                self._add_image_sprites(20)
-                # widget_clock_time.target_y = 0
-            elif self.scene_mode == "night":
+            if self.scene_mode == "night":
                 logger.info("NIGHT MODE")
-                self.entities.delete_buffer_add(
-                    *self.entities.get_by_class(WidgetImage)
+                self.entities.delete_buffer_add(*self.stage_entities)
+                stage = StageNight(
+                    (self.display_info.current_w, self.display_info.current_h)
                 )
+                self.entities.add(*stage.entities)
+                self.stage_entities = stage.entities
                 # widget_clock_time.target_y = -self.display_info.current_h
-
-    def _add_image_sprites(self, count: int) -> None:
-        images = ["images/icons/emoji-duck.png", "images/icons/emoji-cat.png"]
-        for i in range(count):
-            self.entities.add(
-                WidgetImage(
-                    build_image_sprite(
-                        random.choice(images), random.randrange(64, 256)
-                    ),
-                    x=random.randint(0, self.display_info.current_w - 32),
-                    y=random.randint(0, self.display_info.current_h - 32),
-                    speed_x=random.choice([-2, -1, 1, 2]),
-                    speed_y=random.choice([-2, -1, 1, 2]),
-                ),  # type: ignore[call-arg]
-            )
+            else:
+                logger.info("DEFAULT MODE")
+                self.entities.delete_buffer_add(*self.stage_entities)
+                stage = StageDefault(
+                    (self.display_info.current_w, self.display_info.current_h)
+                )
+                self.entities.add(*stage.entities)
+                self.stage_entities = stage.entities
+                # widget_clock_time.target_y = 0
