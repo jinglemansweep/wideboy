@@ -3,7 +3,7 @@ import random
 import time
 from ecs_pattern import EntityManager, System
 from functools import partial
-from typing import List, Tuple
+from typing import Callable, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
 from ..sprites.text import build_system_message_sprite
 
@@ -24,7 +24,7 @@ class SysPreprocess(System):
     entities: EntityManager
     app_state: AppState
     cache: Cache
-    queue: List[Tuple] = []
+    queue: List[Tuple[Callable, Tuple]] = []
     step_index: int = 0
 
     def __init__(self, entities: EntityManager) -> None:

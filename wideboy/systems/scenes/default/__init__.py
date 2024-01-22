@@ -4,7 +4,6 @@ from ecs_pattern import EntityManager, System, entity
 from pygame import Color
 from pygame.display import Info as DisplayInfo
 from typing import List, Optional
-from ....components import ComMotion
 from ....consts import EventTypes
 from ....entities import (
     AppState,
@@ -87,7 +86,6 @@ class SysScene(System):
         self._handle_scene_mode_change()
         self._update_stage()
         self._update_core_widgets()
-        self._update_motion_widgets()
 
     def _update_core_widgets(self) -> None:
         app_state = next(self.entities.get_by_class(AppState))
@@ -121,24 +119,10 @@ class SysScene(System):
         )
         widget_tilegrid.sprite.update()
 
-    def _update_motion_widgets(self) -> None:
-        for widget in self.entities.get_with_component(ComMotion):
-            if (
-                widget.x < 0
-                or widget.x > self.display_info.current_w - widget.sprite.rect.width
-            ):
-                widget.speed_x = -widget.speed_x
-            if (
-                widget.y < 0
-                or widget.y > self.display_info.current_h - widget.sprite.rect.height
-            ):
-                widget.speed_y = -widget.speed_y
-
-        self.entities.delete_buffer_purge()
-
     def _update_stage(self) -> None:
         if self.stage is not None:
             self.stage.update()
+        self.entities.delete_buffer_purge()
 
     def _handle_scene_mode_change(self) -> None:
         if (

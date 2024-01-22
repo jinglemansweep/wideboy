@@ -1,6 +1,6 @@
 from ecs_pattern import component
 from pygame.sprite import Sprite
-from typing import Optional
+from typing import Optional, Tuple
 
 
 @component
@@ -22,3 +22,9 @@ class ComMotion:
 class ComTarget:
     target_x: Optional[int] = None
     target_y: Optional[int] = None
+
+
+@component
+class ComBound:
+    bound_rect: Optional[Tuple[int, int, int, int]] = None
+    bound_size: Optional[Tuple[int, int]] = None

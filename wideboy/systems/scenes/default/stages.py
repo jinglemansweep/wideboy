@@ -46,6 +46,8 @@ class StageDefault(Stage):
                     y=random.randint(0, self.display_size[1] - 32),
                     speed_x=random.choice([-2, -1, 1, 2]),
                     speed_y=random.choice([-2, -1, 1, 2]),
+                    bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
+                    bound_size=(32, 32),
                 ),  # type: ignore[call-arg]
             )
 
