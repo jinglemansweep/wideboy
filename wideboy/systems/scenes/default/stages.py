@@ -36,7 +36,8 @@ class StageDefault(Stage):
             )
 
     def update(self) -> None:
-        logger.debug(f"stage.default.update: entities={len(self.entities)}")
+        pass
+        # logger.debug(f"stage.default.update: entities={len(self.entities)}")
 
 
 class StageNight(Stage):
@@ -61,4 +62,5 @@ class StageNight(Stage):
             )
 
     def update(self) -> None:
-        logger.debug(f"stage.night.update: entities={len(self.entities)}")
+        pass
+        # logger.debug(f"stage.night.update: entities={len(self.entities)}")
