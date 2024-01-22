@@ -9,6 +9,7 @@ from .components import ComMotion, ComTarget, ComVisible
 
 @entity
 class AppState:
+    booting: bool
     running: bool
     config: Dynaconf = None
     events: list = field(default_factory=list)
@@ -32,12 +33,22 @@ class MQTTService:
 
 
 @entity
+class WidgetText(ComTarget, ComMotion, ComVisible):
+    pass
+
+
+@entity
 class WidgetSquare(ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
 class WidgetImage(ComTarget, ComMotion, ComVisible):
+    pass
+
+
+@entity
+class WidgetSysMessage(ComTarget, ComMotion, ComVisible):
     pass
 
 

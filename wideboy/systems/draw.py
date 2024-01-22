@@ -20,4 +20,6 @@ class SysDraw(System):
         sorted_visible = sorted(visible_entities, key=lambda x: x.z_order)
 
         for e in sorted_visible:
+            if e.hidden:
+                continue
             self.screen.blit(e.sprite.image, (e.x, e.y))

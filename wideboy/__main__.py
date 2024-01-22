@@ -15,6 +15,7 @@ from .systems.draw import SysDraw
 from .systems.scenes.default import SysScene
 from .systems.scenes.default.hass_entities import ENTITIES as HASS_ENTITIES
 from .systems.mqtt import SysMQTT, SysHomeAssistant
+from .systems.preprocess import SysPreprocess
 from .utils import setup_logger
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
@@ -28,7 +29,7 @@ config = Dynaconf(
 
 
 def main():
-    app_state = AppState(running=True, config=config)
+    app_state = AppState(running=True, booting=True, config=config)
 
     setup_logger(config)
     logger = logging.getLogger(__name__)
@@ -51,6 +52,7 @@ def main():
         [
             # Boot
             SysBoot(entities, config),
+            SysPreprocess(entities),
             # Inputs/Control
             SysEvents(entities),
             SysClock(entities),

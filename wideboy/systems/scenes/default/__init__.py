@@ -11,13 +11,18 @@ from ....entities import (
     WidgetClockBackground,
     WidgetClockDate,
     WidgetClockTime,
+    WidgetSysMessage,
     WidgetTileGrid,
 )
 from ....sprites.common import build_rect_sprite
-from ....sprites.text import TextSprite
+from ....sprites.text import (
+    build_date_sprite,
+    build_time_sprite,
+    build_system_message_sprite,
+)
 from ....sprites.tile_grid import build_tile_grid_sprite
 from .entity_tiles import CELLS
-from .stages import Stage, StageDefault, StageNight
+from .stages import Stage, StageBoot, StageDefault, StageNight
 
 logger = logging.getLogger(__name__)
 
@@ -27,25 +32,6 @@ def random_color():
 
 
 CLOCK_WIDTH = 110
-
-
-def build_time_sprite(text: str, night: bool = False):
-    color_fg = Color(255, 255, 0, 255) if not night else Color(0, 0, 0, 255)
-    color_outline = Color(0, 0, 0, 255) if not night else Color(192, 0, 192, 255)
-    return TextSprite(
-        text, font_size=36, color_fg=color_fg, color_outline=color_outline
-    )
-
-
-def build_date_sprite(text: str, night: bool = False):
-    color_fg = Color(255, 255, 255, 255) if not night else Color(0, 0, 0, 255)
-    color_outline = Color(0, 0, 0, 255) if not night else Color(192, 0, 128, 255)
-    return TextSprite(
-        text,
-        font_size=17,
-        color_fg=color_fg,
-        color_outline=color_outline,
-    )
 
 
 class SysScene(System):
@@ -88,6 +74,9 @@ class SysScene(System):
                 0,
                 z_order=10,
             ),
+            WidgetSysMessage(
+                build_system_message_sprite("Hi!"), 5, 5, z_order=10, hidden=True
+            ),
         )
 
     def update(self) -> None:
@@ -120,6 +109,7 @@ class SysScene(System):
             if event_type == EventTypes.EVENT_HASS_ENTITY_UPDATE:
                 widget_tilegrid.sprite.update(event_payload["entity_id"])
 
+        widget_tilegrid.hidden = app_state.booting
         widget_tilegrid.x = (
             self.display_info.current_w
             - CLOCK_WIDTH
@@ -150,22 +140,30 @@ class SysScene(System):
         if self.app_state.scene_mode != self.scene_mode:
             self.scene_mode = self.app_state.scene_mode
             logger.info(f"sys.scene.update.scene: mode={self.scene_mode}")
-            # widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
-            if self.scene_mode == "night":
-                logger.info("NIGHT MODE")
-                self.entities.delete_buffer_add(*self.stage_entities)
-                self.stage = StageNight(
-                    (self.display_info.current_w, self.display_info.current_h)
+            if self.app_state.booting:
+                logger.info("BOOT MODE")
+                self._switch_stage(
+                    StageBoot(
+                        (self.display_info.current_w, self.display_info.current_h)
+                    )
                 )
-                self.entities.add(*self.stage.entities)
-                self.stage_entities = self.stage.entities
-                # widget_clock_time.target_y = -self.display_info.current_h
+            elif self.scene_mode == "night":
+                logger.info("NIGHT MODE")
+                self._switch_stage(
+                    StageNight(
+                        (self.display_info.current_w, self.display_info.current_h)
+                    )
+                )
             else:
                 logger.info("DEFAULT MODE")
-                self.entities.delete_buffer_add(*self.stage_entities)
-                self.stage = StageDefault(
-                    (self.display_info.current_w, self.display_info.current_h)
+                self._switch_stage(
+                    StageDefault(
+                        (self.display_info.current_w, self.display_info.current_h)
+                    )
                 )
-                self.entities.add(*self.stage.entities)
-                self.stage_entities = self.stage.entities
-                # widget_clock_time.target_y = 0
+
+    def _switch_stage(self, stage: Stage) -> None:
+        self.entities.delete_buffer_add(*self.stage_entities)
+        self.stage = stage
+        self.entities.add(*self.stage.entities)
+        self.stage_entities = self.stage.entities

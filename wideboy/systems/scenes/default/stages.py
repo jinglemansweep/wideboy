@@ -11,6 +11,20 @@ IMAGE_DUCK = "images/icons/emoji-duck.png"
 IMAGE_CAT = "images/icons/emoji-cat.png"
 
 
+class StageBoot(Stage):
+    def __init__(self, display_size: Tuple[int, int]) -> None:
+        self.display_size = display_size
+        self.entities = []
+        self.setup()
+
+    def setup(self) -> None:
+        pass
+
+    def update(self) -> None:
+        pass
+        # logger.debug(f"stage.boot.update: entities={len(self.entities)}")
+
+
 class StageDefault(Stage):
     image_count: int
 

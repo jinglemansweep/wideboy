@@ -9,6 +9,7 @@ class ComVisible:
     x: int = 0
     y: int = 0
     z_order: int = 0
+    hidden: bool = False
 
 
 @component
