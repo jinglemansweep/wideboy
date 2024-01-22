@@ -35,7 +35,7 @@ class SysPreprocess(System):
         logger.info("Preprocessing system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
         self.cache = next(self.entities.get_by_class(Cache))
-        for i in range(80):
+        for i in range(20):
             self.queue.append((_preprocess_text, (self.cache, "test", f"Step {i}")))
         self.queue_length = len(self.queue)
 
