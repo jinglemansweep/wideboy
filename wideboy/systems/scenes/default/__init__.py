@@ -60,11 +60,11 @@ class SysScene(System):
 
         self.entities.add(
             WidgetClockBackground(
-                build_rect_sprite(Color(0, 0, 0, 192), CLOCK_WIDTH, 42),
+                build_rect_sprite(Color(0, 0, 0, 255), CLOCK_WIDTH, 42),
                 clock_x,
                 clock_y,
                 z_order=10,
-                alpha=0,
+                alpha=128,
             ),
             WidgetClockTime(
                 build_time_sprite(""), clock_x, clock_y, z_order=10, alpha=0
