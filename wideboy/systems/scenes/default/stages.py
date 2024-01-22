@@ -52,6 +52,7 @@ class StageDefault(Stage):
                 speed_x=1,
                 bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
                 bound_size=(32, 32),
+                bound_mode="loop",
                 frames=cache.surfaces["dino"],
             ),  # type: ignore[call-arg]
         )
