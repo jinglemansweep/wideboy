@@ -91,6 +91,8 @@ class StageNight(Stage):
                     alpha=random.randrange(32, 128),
                     speed_x=random.choice([-1, 0, 1]),
                     speed_y=random.choice([-1, 0, 1]),
+                    bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
+                    bound_size=(32, 32),
                 ),  # type: ignore[call-arg]
             )
         for w in self.entities.get_by_class(

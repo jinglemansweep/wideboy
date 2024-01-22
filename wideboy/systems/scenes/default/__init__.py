@@ -72,7 +72,7 @@ class SysScene(System):
             WidgetClockDate(
                 build_date_sprite(""),
                 clock_x + 3,
-                clock_y + 26,
+                clock_y + 28,
                 z_order=10,
                 alpha=0,
             ),
@@ -153,17 +153,6 @@ class SysScene(System):
                     )
                 )
             else:
-                # Fade in main components
-                """
-                for w in self.entities.get_by_class(
-                    WidgetClockBackground,
-                    WidgetClockDate,
-                    WidgetClockTime,
-                    WidgetTileGrid,
-                ):
-                    w.fade_target_alpha = 255
-                """
-
                 # Night Mode
                 if self.scene_mode == "night":
                     logger.info("NIGHT MODE")
