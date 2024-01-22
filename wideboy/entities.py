@@ -33,6 +33,11 @@ class MQTTService:
 
 
 @entity
+class Cache:
+    surfaces: dict = field(default_factory=dict)
+
+
+@entity
 class WidgetText(ComTarget, ComMotion, ComVisible):
     pass
 

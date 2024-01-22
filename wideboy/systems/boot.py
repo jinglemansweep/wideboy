@@ -5,7 +5,7 @@ from ecs_pattern import EntityManager, System
 from pygame.constants import KEYDOWN, KEYUP, QUIT, K_UP, K_DOWN, K_ESCAPE
 from pygame.event import get as get_pygame_events
 from ..consts import EventTypes
-from ..entities import AppState
+from ..entities import AppState, Cache
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +22,7 @@ class SysBoot(System):
     def start(self) -> None:
         logger.info("Boot system starting...")
         self.entities.init()
+        self.entities.add(Cache())
 
 
 class SysEvents(System):

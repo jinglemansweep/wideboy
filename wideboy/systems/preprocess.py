@@ -2,41 +2,54 @@ import logging
 import random
 import time
 from ecs_pattern import EntityManager, System
-from typing import List
-from ..entities import AppState, WidgetSysMessage
+from functools import partial
+from typing import List, Tuple
+from ..entities import AppState, Cache, WidgetSysMessage
 from ..sprites.text import build_system_message_sprite
 
 logger = logging.getLogger(__name__)
+
+# Preprocessing Functions
+
+
+def _preprocess_text(cache: Cache, key: str, text: str):
+    logger.debug(f"_preprocess_text: key={key} text={text}")
+    sprite = build_system_message_sprite(text)
+    if key not in cache.surfaces:
+        cache.surfaces[key] = []
+    cache.surfaces[key].append(sprite.image)
 
 
 class SysPreprocess(System):
     entities: EntityManager
     app_state: AppState
-    queue: List[int] = [i for i in range(0, 20)]
+    cache: Cache
+    queue: List[Tuple] = []
     step_index: int = 0
 
-    def __init__(
-        self,
-        entities: EntityManager,
-    ) -> None:
+    def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
 
     def start(self) -> None:
         logger.info("Preprocessing system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
+        self.cache = next(self.entities.get_by_class(Cache))
+        for i in range(10):
+            self.queue.append((_preprocess_text, (self.cache, "test", f"Step {i}")))
 
     def update(self) -> None:
         if not self.app_state.booting:
             # logger.debug(f"sys.preprocess.update: booting={self.app_state.booting}")
             return
 
+        if not self.cache:
+            return
+
         if len(self.queue):
-            result = self.queue.pop(0)
+            task = self.queue.pop(0)
             self._progress(f"Getting ready {('.' * self.step_index)}")
+            partial(task[0], *task[1])()
             sleep_time = random.randrange(10, 200) * 1000.0
-            logger.debug(
-                f"sys.preprocess.update: queue_item={result} sleep_time={sleep_time}"
-            )
             time.sleep(sleep_time / 1000000.0)
             self.step_index += 1
         else:

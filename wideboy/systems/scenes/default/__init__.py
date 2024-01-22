@@ -8,6 +8,7 @@ from ....components import ComMotion
 from ....consts import EventTypes
 from ....entities import (
     AppState,
+    Cache,
     WidgetClockBackground,
     WidgetClockDate,
     WidgetClockTime,
@@ -23,6 +24,7 @@ from ....sprites.text import (
 from ....sprites.tile_grid import build_tile_grid_sprite
 from .entity_tiles import CELLS
 from .stages import Stage, StageBoot, StageDefault, StageNight
+
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +54,7 @@ class SysScene(System):
         self.entities.init()
         self.stage_entities = []
         self.app_state = next(self.entities.get_by_class(AppState))
+        self.cache = next(self.entities.get_by_class(Cache))
 
         clock_x = self.display_info.current_w - CLOCK_WIDTH
         clock_y = 2
