@@ -12,10 +12,10 @@ FONT_FILENAME = "fonts/white-rabbit.ttf"
 
 
 def build_system_message_sprite(text: str):
-    color_fg = Color(255, 255, 255, 255)
+    color_fg = Color(255, 0, 0, 255)
     color_outline = Color(0, 0, 0, 255)
     return TextSprite(
-        text, font_size=14, color_fg=color_fg, color_outline=color_outline
+        text, font_size=32, color_fg=color_fg, color_outline=color_outline
     )
 
 

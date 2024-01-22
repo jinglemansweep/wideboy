@@ -25,6 +25,7 @@ class SysPreprocess(System):
     app_state: AppState
     cache: Cache
     queue: List[Tuple[Callable, Tuple]] = []
+    queue_length: int = 0
     step_index: int = 0
 
     def __init__(self, entities: EntityManager) -> None:
@@ -34,8 +35,9 @@ class SysPreprocess(System):
         logger.info("Preprocessing system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
         self.cache = next(self.entities.get_by_class(Cache))
-        for i in range(10):
+        for i in range(80):
             self.queue.append((_preprocess_text, (self.cache, "test", f"Step {i}")))
+        self.queue_length = len(self.queue)
 
     def update(self) -> None:
         if not self.app_state.booting:
@@ -47,9 +49,10 @@ class SysPreprocess(System):
 
         if len(self.queue):
             task = self.queue.pop(0)
-            self._progress(f"Getting ready {('.' * self.step_index)}")
+            percent = int((self.step_index / self.queue_length) * 100)
+            self._progress(f"Getting ready... {percent}%")
             partial(task[0], *task[1])()
-            sleep_time = random.randrange(100, 500) * 1000.0
+            sleep_time = random.randrange(10, 50) * 1000.0
             time.sleep(sleep_time / 1000000.0)
             self.step_index += 1
         else:
