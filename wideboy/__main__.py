@@ -8,7 +8,7 @@ from . import _APP_NAME, _APP_TITLE, _APP_VERSION
 from .config import VALIDATORS
 from .consts import FPS_MAX
 from .entities import AppState
-from .systems.animation import SysMovement
+from .systems.animation import SysAnimation
 from .systems.boot import SysBoot, SysClock, SysDebug, SysEvents, SysInput
 from .systems.display import SysDisplay
 from .systems.draw import SysDraw
@@ -61,7 +61,7 @@ def main():
             SysHomeAssistant(entities, hass_entities=HASS_ENTITIES),
             # Stage
             SysScene(entities),
-            SysMovement(entities),
+            SysAnimation(entities),
             # Render
             SysDraw(entities, screen),
             SysDisplay(entities, screen),

@@ -7,8 +7,8 @@ from pygame.sprite import Sprite
 logger = logging.getLogger(__name__)
 
 
-def build_image_sprite(filename: str, alpha: int = 255):
-    return ImageSprite(filename, alpha)
+def build_image_sprite(filename: str):
+    return ImageSprite(filename)
 
 
 class ImageSprite(Sprite):
@@ -21,5 +21,4 @@ class ImageSprite(Sprite):
         alpha: int = 255,
     ) -> None:
         self.image = pygame_image_load(filename, "RGBA")
-        self.image.set_alpha(alpha)
         self.rect = self.image.get_rect()

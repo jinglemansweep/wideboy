@@ -9,6 +9,7 @@ class ComVisible:
     x: int = 0
     y: int = 0
     z_order: int = 0
+    alpha: int = 255
     hidden: bool = False
 
 
@@ -28,3 +29,9 @@ class ComTarget:
 class ComBound:
     bound_rect: Optional[Tuple[int, int, int, int]] = None
     bound_size: Optional[Tuple[int, int]] = None
+
+
+@component
+class ComFade:
+    fade_target_alpha: Optional[int] = None
+    fade_speed: int = 8

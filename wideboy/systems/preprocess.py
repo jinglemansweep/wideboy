@@ -49,7 +49,7 @@ class SysPreprocess(System):
             task = self.queue.pop(0)
             self._progress(f"Getting ready {('.' * self.step_index)}")
             partial(task[0], *task[1])()
-            sleep_time = random.randrange(10, 200) * 1000.0
+            sleep_time = random.randrange(100, 500) * 1000.0
             time.sleep(sleep_time / 1000000.0)
             self.step_index += 1
         else:
@@ -59,5 +59,5 @@ class SysPreprocess(System):
     def _progress(self, message: str = "", visible: bool = True) -> None:
         widget_message = next(self.entities.get_by_class(WidgetSysMessage))
         if widget_message is not None:
-            widget_message.hidden = not visible
+            widget_message.fade_target_alpha = 255 if visible else 0
             widget_message.sprite = build_system_message_sprite(message)

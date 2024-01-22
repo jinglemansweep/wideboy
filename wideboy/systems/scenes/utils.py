@@ -1,9 +1,14 @@
-from ecs_pattern import entity
+from ecs_pattern import EntityManager, entity
 from typing import List
 
 
 class Stage:
-    entities: List[entity]
+    entities: EntityManager
+    stage_entities: List[entity]
+
+    def __init__(self, entities: EntityManager, *args, **kwargs) -> None:
+        self.entities = entities
+        self.stage_entities = []
 
     def setup(self) -> None:
         pass

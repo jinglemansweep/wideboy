@@ -4,7 +4,7 @@ from dynaconf import Dynaconf
 from ecs_pattern import entity
 from paho.mqtt.client import Client as MQTTClient
 from typing import Callable
-from .components import ComBound, ComMotion, ComTarget, ComVisible
+from .components import ComBound, ComFade, ComMotion, ComTarget, ComVisible
 
 
 @entity
@@ -38,40 +38,40 @@ class Cache:
 
 
 @entity
-class WidgetText(ComTarget, ComMotion, ComVisible):
+class WidgetText(ComFade, ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
-class WidgetSquare(ComTarget, ComMotion, ComVisible):
+class WidgetSquare(ComFade, ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
-class WidgetImage(ComBound, ComTarget, ComMotion, ComVisible):
+class WidgetImage(ComFade, ComBound, ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
-class WidgetSysMessage(ComTarget, ComMotion, ComVisible):
+class WidgetSysMessage(ComFade, ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
-class WidgetClockBackground(ComTarget, ComMotion, ComVisible):
+class WidgetClockBackground(ComFade, ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
-class WidgetClockDate(ComTarget, ComMotion, ComVisible):
+class WidgetClockDate(ComFade, ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
-class WidgetClockTime(ComTarget, ComMotion, ComVisible):
+class WidgetClockTime(ComFade, ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
-class WidgetTileGrid(ComTarget, ComMotion, ComVisible):
+class WidgetTileGrid(ComFade, ComTarget, ComMotion, ComVisible):
     pass

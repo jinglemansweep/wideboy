@@ -1,11 +1,11 @@
 import logging
 from ecs_pattern import EntityManager, System
-from ..components import ComBound, ComMotion, ComTarget, ComVisible
+from ..components import ComBound, ComFade, ComMotion, ComTarget, ComVisible
 
 logger = logging.getLogger(__name__)
 
 
-class SysMovement(System):
+class SysAnimation(System):
     def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
 
@@ -13,15 +13,23 @@ class SysMovement(System):
         logger.info("Movement system starting...")
 
     def update(self) -> None:
+        self._update_fade()
         self._update_targeting()
         self._update_bounds()
-        self._update_movement()
+        self._update_core()
 
-        # Bounds
+    def _update_fade(self):
+        for e in self.entities.get_with_component(ComFade, ComVisible):
+            if e.fade_target_alpha is None or e.alpha == e.fade_target_alpha:
+                continue
+            if e.alpha < e.fade_target_alpha:
+                e.alpha += e.fade_speed
+            elif e.alpha > e.fade_target_alpha:
+                e.alpha -= e.fade_speed
 
     def _update_bounds(self):
         for e in self.entities.get_with_component(ComBound, ComMotion, ComVisible):
-            if not hasattr(e, "bound_rect") or not hasattr(e, "bound_size"):
+            if e.bound_rect is None or e.bound_size is None:
                 continue
 
             if e.x < e.bound_rect[0] or e.x > e.bound_rect[2] - e.bound_size[0]:
@@ -51,7 +59,8 @@ class SysMovement(System):
                     e.target_y = None
                     e.speed_y = 0
 
-    def _update_movement(self):
+    def _update_core(self):
         for e in self.entities.get_with_component(ComMotion, ComVisible):
             e.x += e.speed_x
             e.y += e.speed_y
+            e.sprite.image.set_alpha(e.alpha)
