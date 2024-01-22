@@ -75,6 +75,11 @@ VALIDATORS = [
         cast=Path,
     ),
     Validator(
+        "PATHS__IMAGES_SPRITES",
+        default="images/sprites",
+        cast=Path,
+    ),
+    Validator(
         "PATHS__IMAGES_WEATHER",
         default="images/weather",
         cast=Path,

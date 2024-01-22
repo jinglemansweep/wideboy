@@ -4,7 +4,7 @@ from dynaconf import Dynaconf
 from ecs_pattern import entity
 from paho.mqtt.client import Client as MQTTClient
 from typing import Callable
-from .components import ComBound, ComFade, ComMotion, ComTarget, ComVisible
+from .components import ComBound, ComFade, ComFrame, ComMotion, ComTarget, ComVisible
 
 
 @entity
@@ -49,6 +49,13 @@ class WidgetSquare(ComFade, ComTarget, ComMotion, ComVisible):
 
 @entity
 class WidgetImage(ComFade, ComBound, ComTarget, ComMotion, ComVisible):
+    pass
+
+
+@entity
+class WidgetFrameAnimation(
+    ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComVisible
+):
     pass
 
 

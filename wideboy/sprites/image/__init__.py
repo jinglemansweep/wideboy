@@ -7,11 +7,25 @@ from pygame.sprite import Sprite
 logger = logging.getLogger(__name__)
 
 
-def build_image_sprite(filename: str):
-    return ImageSprite(filename)
+def build_image_sprite(surface: Surface):
+    return ImageSprite(surface)
+
+
+def build_image_file_sprite(filename: str):
+    return ImageFileSprite(filename)
 
 
 class ImageSprite(Sprite):
+    image: Surface
+    rect: Rect
+
+    def __init__(self, surface: Surface) -> None:
+        self.image = surface
+        self.rect = self.image.get_rect()
+
+
+class ImageFileSprite(ImageSprite):
+    filename: str
     image: Surface
     rect: Rect
 
@@ -21,4 +35,4 @@ class ImageSprite(Sprite):
         alpha: int = 255,
     ) -> None:
         self.image = pygame_image_load(filename, "RGBA")
-        self.rect = self.image.get_rect()
+        super().__init__(self.image)

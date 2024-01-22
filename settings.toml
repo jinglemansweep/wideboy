@@ -50,6 +50,7 @@
 
 [paths]
   # images_backgrounds = "images/background"
-  # images_weather = "images/icons"
   # images_icons = "images/icons"
   # images_screenshots = "images/screenshots"
+  # images_sprites = "images/sprites"
+  # images_weather = "images/icons"

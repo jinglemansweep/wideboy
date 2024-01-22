@@ -4,12 +4,14 @@ from ecs_pattern import EntityManager
 from typing import Tuple
 from ..utils import Stage
 from ....entities import (
+    Cache,
     WidgetClockDate,
     WidgetClockTime,
+    WidgetFrameAnimation,
     WidgetImage,
     WidgetTileGrid,
 )
-from ....sprites.image import build_image_sprite
+from ....sprites.image import build_image_sprite, build_image_file_sprite
 
 logger = logging.getLogger(__name__)
 
@@ -39,11 +41,24 @@ class StageDefault(Stage):
         self.setup()
 
     def setup(self) -> None:
+        cache = next(self.entities.get_by_class(Cache))
         images = [IMAGE_DUCK, IMAGE_CAT]
+        self.stage_entities.append(
+            WidgetFrameAnimation(
+                build_image_sprite(cache.surfaces["dino"][0]),
+                x=0,
+                y=self.display_size[1] - 16,
+                z_order=10,
+                speed_x=1,
+                bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
+                bound_size=(32, 32),
+                frames=cache.surfaces["dino"],
+            ),  # type: ignore[call-arg]
+        )
         for i in range(self.image_count):
             self.stage_entities.append(
                 WidgetImage(
-                    build_image_sprite(random.choice(images)),
+                    build_image_file_sprite(random.choice(images)),
                     x=random.randint(0, self.display_size[0] - 32),
                     y=random.randint(0, self.display_size[1] - 32),
                     alpha=random.randint(0, 255),
@@ -83,7 +98,7 @@ class StageNight(Stage):
         for i in range(self.image_count):
             self.stage_entities.append(
                 WidgetImage(
-                    build_image_sprite(
+                    build_image_file_sprite(
                         IMAGE_DUCK,
                     ),
                     x=random.randint(0, self.display_size[0] - 32),

@@ -1,6 +1,8 @@
+from dataclasses import field
 from ecs_pattern import component
+from pygame import Surface
 from pygame.sprite import Sprite
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 
 @component
@@ -36,3 +38,10 @@ class ComBound:
 class ComFade:
     fade_target_alpha: Optional[int] = None
     fade_speed: int = 8
+
+
+@component
+class ComFrame:
+    frames: List[Surface] = field(default_factory=list)
+    frame_index: int = 0
+    frame_direction: int = 1

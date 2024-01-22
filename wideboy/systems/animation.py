@@ -1,6 +1,6 @@
 import logging
 from ecs_pattern import EntityManager, System, entity
-from ..components import ComBound, ComFade, ComMotion, ComTarget, ComVisible
+from ..components import ComBound, ComFade, ComFrame, ComMotion, ComTarget, ComVisible
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +16,7 @@ class SysAnimation(System):
         self._update_fade()
         self._update_targeting()
         self._update_bounds()
+        self._update_frames()
         self._update_core()
 
     def _update_fade(self):
@@ -75,6 +76,17 @@ class SysAnimation(System):
             e.y = e.bound_rect[3]
         elif e.y > e.bound_rect[3]:
             e.y = e.bound_rect[1] - e.bound_size[1]
+
+    def _update_frames(self):
+        for e in self.entities.get_with_component(ComFrame, ComVisible):
+            if len(e.frames) <= 1:
+                continue
+            e.sprite.image = e.frames[e.frame_index]
+            e.frame_index += e.frame_direction
+            if e.frame_index >= len(e.frames):
+                e.frame_index = 0
+            elif e.frame_index < 0:
+                e.frame_index = len(e.frames) - 1
 
     def _update_core(self):
         for e in self.entities.get_with_component(ComMotion, ComVisible):

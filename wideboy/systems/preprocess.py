@@ -3,6 +3,7 @@ import random
 import time
 from ecs_pattern import EntityManager, System
 from functools import partial
+from pygame.image import load as pygame_image_load
 from typing import Callable, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
 from ..sprites.text import build_system_message_sprite
@@ -10,6 +11,13 @@ from ..sprites.text import build_system_message_sprite
 logger = logging.getLogger(__name__)
 
 # Preprocessing Functions
+
+
+def _preprocess_load_image(cache: Cache, key: str, path: str):
+    logger.debug(f"_preprocess_load_image: key={key} path={path}")
+    if key not in cache.surfaces:
+        cache.surfaces[key] = []
+    cache.surfaces[key].append(pygame_image_load(path))
 
 
 def _preprocess_text(cache: Cache, key: str, text: str):
@@ -34,9 +42,21 @@ class SysPreprocess(System):
     def start(self) -> None:
         logger.info("Preprocessing system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
+        print(self.app_state.config.paths.images_sprites)
         self.cache = next(self.entities.get_by_class(Cache))
-        for i in range(20):
-            self.queue.append((_preprocess_text, (self.cache, "test", f"Step {i}")))
+        for i in range(4, 8):
+            self.queue.append(
+                (
+                    _preprocess_load_image,
+                    (
+                        self.cache,
+                        "dino",
+                        f"{self.app_state.config.paths.images_sprites}/dino/image_{i}.png",
+                    ),
+                ),
+            )
+        # for i in range(20):
+        #     self.queue.append((_preprocess_text, (self.cache, "test", f"Step {i}")))
         self.queue_length = len(self.queue)
 
     def update(self) -> None:
