@@ -72,7 +72,7 @@ class StageNight(Stage):
         self,
         entities: EntityManager,
         display_size: Tuple[int, int],
-        image_count: int = 5,
+        image_count: int = 20,
     ) -> None:
         super().__init__(entities)
         self.display_size = display_size
@@ -89,10 +89,11 @@ class StageNight(Stage):
                     x=random.randint(0, self.display_size[0] - 32),
                     y=random.randint(0, self.display_size[1] - 32),
                     alpha=random.randrange(32, 128),
-                    speed_x=random.choice([-1, 0, 1]),
-                    speed_y=random.choice([-1, 0, 1]),
+                    speed_x=random.choice([-1, 1]),
+                    speed_y=random.choice([-1, 1]),
                     bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
                     bound_size=(32, 32),
+                    bound_mode="loop",
                 ),  # type: ignore[call-arg]
             )
         widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))

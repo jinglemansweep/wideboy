@@ -1,5 +1,5 @@
 import logging
-from ecs_pattern import EntityManager, System
+from ecs_pattern import EntityManager, System, entity
 from ..components import ComBound, ComFade, ComMotion, ComTarget, ComVisible
 
 logger = logging.getLogger(__name__)
@@ -27,17 +27,6 @@ class SysAnimation(System):
             elif e.alpha > e.fade_target_alpha:
                 e.alpha -= e.fade_speed
 
-    def _update_bounds(self):
-        for e in self.entities.get_with_component(ComBound, ComMotion, ComVisible):
-            if e.bound_rect is None or e.bound_size is None:
-                continue
-
-            if e.x < e.bound_rect[0] or e.x > e.bound_rect[2] - e.bound_size[0]:
-                e.speed_x = -e.speed_x
-
-            if e.y < e.bound_rect[1] or e.y > e.bound_rect[3] - e.bound_size[1]:
-                e.speed_y = -e.speed_y
-
     def _update_targeting(self):
         for e in self.entities.get_with_component(ComTarget, ComMotion, ComVisible):
             # X Axis
@@ -58,6 +47,34 @@ class SysAnimation(System):
                 else:
                     e.target_y = None
                     e.speed_y = 0
+
+    def _update_bounds(self):
+        for e in self.entities.get_with_component(ComBound, ComMotion, ComVisible):
+            if e.bound_rect is None or e.bound_size is None:
+                continue
+
+            if e.bound_mode == "bounce":
+                self._update_bound_bounce(e)
+            elif e.bound_mode == "loop":
+                self._update_bound_loop(e)
+
+    def _update_bound_bounce(self, e: entity):
+        if e.x < e.bound_rect[0] or e.x > e.bound_rect[2] - e.bound_size[0]:
+            e.speed_x = -e.speed_x
+
+        if e.y < e.bound_rect[1] or e.y > e.bound_rect[3] - e.bound_size[1]:
+            e.speed_y = -e.speed_y
+
+    def _update_bound_loop(self, e: entity):
+        if e.x < e.bound_rect[0] - e.bound_size[0]:
+            e.x = e.bound_rect[2]
+        elif e.x > e.bound_rect[2]:
+            e.x = e.bound_rect[0] - e.bound_size[0]
+
+        if e.y < e.bound_rect[1] - e.bound_size[1]:
+            e.y = e.bound_rect[3]
+        elif e.y > e.bound_rect[3]:
+            e.y = e.bound_rect[1] - e.bound_size[1]
 
     def _update_core(self):
         for e in self.entities.get_with_component(ComMotion, ComVisible):

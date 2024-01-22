@@ -27,6 +27,7 @@ class ComTarget:
 
 @component
 class ComBound:
+    bound_mode: str = "bounce"
     bound_rect: Optional[Tuple[int, int, int, int]] = None
     bound_size: Optional[Tuple[int, int]] = None
 
