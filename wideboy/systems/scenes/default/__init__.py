@@ -36,6 +36,7 @@ CLOCK_WIDTH = 110
 
 class SysScene(System):
     entities: EntityManager
+    booting: bool = True
     scene_mode: Optional[str]
     stage: Optional[Stage] = None
     stage_entities: List[entity] = []
@@ -137,8 +138,12 @@ class SysScene(System):
             self.stage.update()
 
     def _handle_scene_mode_change(self) -> None:
-        if self.app_state.scene_mode != self.scene_mode:
+        if (
+            self.app_state.scene_mode != self.scene_mode
+            or self.app_state.booting != self.booting
+        ):
             self.scene_mode = self.app_state.scene_mode
+            self.booting = self.app_state.booting
             logger.info(f"sys.scene.update.scene: mode={self.scene_mode}")
             if self.app_state.booting:
                 logger.info("BOOT MODE")
@@ -147,20 +152,21 @@ class SysScene(System):
                         (self.display_info.current_w, self.display_info.current_h)
                     )
                 )
-            elif self.scene_mode == "night":
-                logger.info("NIGHT MODE")
-                self._switch_stage(
-                    StageNight(
-                        (self.display_info.current_w, self.display_info.current_h)
-                    )
-                )
             else:
-                logger.info("DEFAULT MODE")
-                self._switch_stage(
-                    StageDefault(
-                        (self.display_info.current_w, self.display_info.current_h)
+                if self.scene_mode == "night":
+                    logger.info("NIGHT MODE")
+                    self._switch_stage(
+                        StageNight(
+                            (self.display_info.current_w, self.display_info.current_h)
+                        )
                     )
-                )
+                else:
+                    logger.info("DEFAULT MODE")
+                    self._switch_stage(
+                        StageDefault(
+                            (self.display_info.current_w, self.display_info.current_h)
+                        )
+                    )
 
     def _switch_stage(self, stage: Stage) -> None:
         self.entities.delete_buffer_add(*self.stage_entities)

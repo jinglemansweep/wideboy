@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 class SysPreprocess(System):
     entities: EntityManager
     app_state: AppState
-    queue: List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    queue: List[int] = [i for i in range(0, 20)]
+    step_index: int = 0
 
     def __init__(
         self,
@@ -26,17 +27,18 @@ class SysPreprocess(System):
 
     def update(self) -> None:
         if not self.app_state.booting:
-            logger.debug(f"sys.preprocess.update: booting={self.app_state.booting}")
+            # logger.debug(f"sys.preprocess.update: booting={self.app_state.booting}")
             return
 
         if len(self.queue):
             result = self.queue.pop(0)
-            self._progress(f"Getting ready {('.' * result)}")
-            sleep_time = random.randrange(100, 1000) * 1000.0
+            self._progress(f"Getting ready {('.' * self.step_index)}")
+            sleep_time = random.randrange(10, 200) * 1000.0
             logger.debug(
                 f"sys.preprocess.update: queue_item={result} sleep_time={sleep_time}"
             )
             time.sleep(sleep_time / 1000000.0)
+            self.step_index += 1
         else:
             self.app_state.booting = False
             self._progress(visible=False)
