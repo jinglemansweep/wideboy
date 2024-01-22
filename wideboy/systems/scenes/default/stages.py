@@ -95,10 +95,10 @@ class StageNight(Stage):
                     bound_size=(32, 32),
                 ),  # type: ignore[call-arg]
             )
-        for w in self.entities.get_by_class(
-            WidgetTileGrid,
-        ):
-            w.fade_target_alpha = 128
+        widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
+        widget_tilegrid.fade_target_alpha = 128
+        widget_clock_date = next(self.entities.get_by_class(WidgetClockDate))
+        widget_clock_date.fade_target_alpha = 0
 
     def update(self) -> None:
         pass
