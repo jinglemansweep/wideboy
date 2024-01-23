@@ -6,12 +6,14 @@ from typing import List, Tuple
 from ....consts import EventTypes
 from ....entities import (
     AppState,
+    Cache,
     WidgetClockDate,
     WidgetClockTime,
+    WidgetDucky,
     WidgetSlideshow,
     WidgetTileGrid,
 )
-from ..sprites import build_slideshow_sprite
+from ..sprites import build_image_sprite, build_slideshow_sprite
 from . import Stage
 
 
@@ -28,11 +30,16 @@ class StageDefault(Stage):
         display_size: Tuple[int, int],
     ) -> None:
         super().__init__(entities)
+        self.entities = entities
         self.display_size = display_size
         self.setup()
 
     def setup(self) -> None:
+        cache = next(self.entities.get_by_class(Cache))
+
         self._glob_backgrounds()
+
+        # Add slideshow widget
         self.stage_entities.append(
             WidgetSlideshow(
                 build_slideshow_sprite(
@@ -41,6 +48,28 @@ class StageDefault(Stage):
             )  # type: ignore[call-arg]
         )
 
+        # Add Ducky
+
+        self.stage_entities.append(
+            WidgetDucky(
+                build_image_sprite(cache.surfaces["duck_animated"][0]),
+                x=0,
+                y=self.display_size[1] - 32,
+                z_order=10,
+                speed_x=1,
+                bound_rect=(
+                    0,
+                    0,
+                    self.display_size[0] // 2,
+                    self.display_size[1],
+                ),
+                bound_size=(32, 32),
+                frames=cache.surfaces["duck_animated"],
+                frame_delay=4,
+            ),  # type: ignore[call-arg]
+        )
+
+        # Fade in widgets
         for w in self.entities.get_by_class(
             WidgetClockDate,
             WidgetClockTime,
