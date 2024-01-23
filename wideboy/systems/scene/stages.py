@@ -3,8 +3,8 @@ import random
 from ecs_pattern import EntityManager
 
 from typing import Tuple
-from ..utils import Stage
-from ....entities import (
+from .utils import Stage
+from ...entities import (
     Cache,
     WidgetClockDate,
     WidgetClockTime,
@@ -12,12 +12,9 @@ from ....entities import (
     WidgetImage,
     WidgetTileGrid,
 )
-from .sprites import build_image_sprite, build_image_file_sprite
+from .sprites import build_image_sprite
 
 logger = logging.getLogger(__name__)
-
-IMAGE_DUCK = "images/icons/emoji-duck.png"
-IMAGE_CAT = "images/icons/emoji-cat.png"
 
 
 class StageBoot(Stage):
@@ -46,7 +43,7 @@ class StageDefault(Stage):
 
         self.stage_entities.append(
             WidgetFrameAnimation(
-                build_image_sprite(cache.surfaces["ducky"][0]),
+                build_image_sprite(cache.surfaces["duck_animated"][0]),
                 x=0,
                 y=self.display_size[1] - 32,
                 z_order=10,
@@ -54,14 +51,14 @@ class StageDefault(Stage):
                 bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
                 bound_size=(32, 32),
                 bound_mode="loop",
-                frames=cache.surfaces["ducky"],
+                frames=cache.surfaces["duck_animated"],
                 frame_delay=4,
             ),  # type: ignore[call-arg]
         )
         for i in range(self.image_count):
             self.stage_entities.append(
                 WidgetImage(
-                    build_image_file_sprite(IMAGE_DUCK, flip_x=True),
+                    build_image_sprite(cache.surfaces["duck_pixel"][0]),
                     x=random.randint(0, self.display_size[0] - 32),
                     y=random.randint(0, self.display_size[1] - 32),
                     alpha=random.randint(64, 128),
@@ -97,12 +94,11 @@ class StageNight(Stage):
         self.setup()
 
     def setup(self) -> None:
+        cache = next(self.entities.get_by_class(Cache))
         for i in range(self.image_count):
             self.stage_entities.append(
                 WidgetImage(
-                    build_image_file_sprite(
-                        IMAGE_DUCK,
-                    ),
+                    build_image_sprite(cache.surfaces["duck_pixel"][0]),
                     x=random.randint(0, self.display_size[0] - 32),
                     y=random.randint(0, self.display_size[1] - 32),
                     alpha=random.randrange(32, 128),

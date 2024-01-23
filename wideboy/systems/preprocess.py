@@ -6,21 +6,21 @@ from functools import partial
 from pygame.image import load as pygame_image_load
 from typing import Callable, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
-from .scenes.default.sprites import build_system_message_sprite
+from .scene.sprites import build_system_message_sprite
 
 logger = logging.getLogger(__name__)
 
 # Preprocessing Functions
 
 
-def _preprocess_load_spritesheet(
+def preprocess_load_spritesheet(
     cache: Cache,
     key: str,
     path: str,
     size: Tuple[int, int],
     tile_range: Tuple[int, int],
 ):
-    logger.debug(f"_preprocess_load_spritesheet: key={key} path={path} size={size}")
+    logger.debug(f"preprocess_load_spritesheet: key={key} path={path} size={size}")
     if key not in cache.surfaces:
         cache.surfaces[key] = []
     sheet = pygame_image_load(path)
@@ -32,15 +32,15 @@ def _preprocess_load_spritesheet(
             idx += 1
 
 
-def _preprocess_load_image(cache: Cache, key: str, path: str):
-    logger.debug(f"_preprocess_load_image: key={key} path={path}")
+def preprocess_load_image(cache: Cache, key: str, path: str):
+    logger.debug(f"preprocess_load_image: key={key} path={path}")
     if key not in cache.surfaces:
         cache.surfaces[key] = []
     cache.surfaces[key].append(pygame_image_load(path))
 
 
-def _preprocess_text(cache: Cache, key: str, text: str):
-    logger.debug(f"_preprocess_text: key={key} text={text}")
+def preprocess_text(cache: Cache, key: str, text: str):
+    logger.debug(f"preprocess_text: key={key} text={text}")
     sprite = build_system_message_sprite(text)
     if key not in cache.surfaces:
         cache.surfaces[key] = []
@@ -62,33 +62,32 @@ class SysPreprocess(System):
         logger.info("Preprocessing system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
         self.cache = next(self.entities.get_by_class(Cache))
+
+        # Pixelated Duck
         self.queue.append(
             (
-                _preprocess_load_spritesheet,
+                preprocess_load_image,
                 (
                     self.cache,
-                    "ducky",
+                    "duck_pixel",
+                    f"{self.app_state.config.paths.images_sprites}/misc/duck-pixel.png",
+                ),
+            )
+        )
+
+        # Animated Duck
+        self.queue.append(
+            (
+                preprocess_load_spritesheet,
+                (
+                    self.cache,
+                    "duck_animated",
                     f"{self.app_state.config.paths.images_sprites}/ducky/spritesheet.png",
                     (32, 32),
                     (6, 12),
                 ),
             ),
         )
-        """
-        for i in range(4, 12):
-            self.queue.append(
-                (
-                    _preprocess_load_image,
-                    (
-                        self.cache,
-                        "dino",
-                        f"{self.app_state.config.paths.images_sprites}/dino/image_{i}.png",
-                    ),
-                ),
-            )
-        for i in range(20):
-            self.queue.append((_preprocess_text, (self.cache, "test", f"Step {i}")))
-        """
         self.queue_length = len(self.queue)
 
     def update(self) -> None:

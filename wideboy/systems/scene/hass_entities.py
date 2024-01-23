@@ -2,8 +2,8 @@ import json
 import logging
 from paho.mqtt.client import Client as MQTTClient
 from typing import Any, Dict
-from ....entities import AppState
-from ....homeassistant import (
+from ...entities import AppState
+from ...homeassistant import (
     ButtonEntity,
     LightEntity,
     NumberEntity,

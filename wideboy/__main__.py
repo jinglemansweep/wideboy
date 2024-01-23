@@ -12,8 +12,8 @@ from .systems.animation import SysAnimation
 from .systems.boot import SysBoot, SysClock, SysDebug, SysEvents, SysInput
 from .systems.display import SysDisplay
 from .systems.draw import SysDraw
-from .systems.scenes.default import SysScene
-from .systems.scenes.default.hass_entities import ENTITIES as HASS_ENTITIES
+from .systems.scene import SysScene
+from .systems.scene.hass_entities import ENTITIES as HASS_ENTITIES
 from .systems.mqtt import SysMQTT, SysHomeAssistant
 from .systems.preprocess import SysPreprocess
 from .utils import setup_logger

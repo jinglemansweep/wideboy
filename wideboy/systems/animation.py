@@ -20,15 +20,15 @@ class SysAnimation(System):
         self.entities = entities
 
     def start(self) -> None:
-        logger.info("Movement system starting...")
+        logger.info("Animation system starting...")
 
     def update(self) -> None:
         self._update_fade()
         self._update_direction()
-        self._update_targeting()
-        self._update_bounds()
-        self._update_frames()
-        self._update_core()
+        self._update_target()
+        self._update_bound()
+        self._update_frame()
+        self._update_visible()
 
     def _update_direction(self):
         for e in self.entities.get_with_component(ComDirection, ComMotion, ComVisible):
@@ -44,7 +44,7 @@ class SysAnimation(System):
             elif e.alpha > e.fade_target_alpha:
                 e.alpha -= e.fade_speed
 
-    def _update_targeting(self):
+    def _update_target(self):
         for e in self.entities.get_with_component(ComTarget, ComMotion, ComVisible):
             # X Axis
             if e.target_x is not None:
@@ -65,7 +65,7 @@ class SysAnimation(System):
                     e.target_y = None
                     e.speed_y = 0
 
-    def _update_bounds(self):
+    def _update_bound(self):
         for e in self.entities.get_with_component(ComBound, ComMotion, ComVisible):
             if e.bound_rect is None or e.bound_size is None:
                 continue
@@ -93,7 +93,7 @@ class SysAnimation(System):
         elif e.y > e.bound_rect[3]:
             e.y = e.bound_rect[1] - e.bound_size[1]
 
-    def _update_frames(self):
+    def _update_frame(self):
         for e in self.entities.get_with_component(ComFrame, ComVisible):
             if len(e.frames) <= 1:
                 continue
@@ -106,7 +106,7 @@ class SysAnimation(System):
                     e.frame_index = len(e.frames) - 1
             e.scene_frame += 1
 
-    def _update_core(self):
+    def _update_visible(self):
         for e in self.entities.get_with_component(ComMotion, ComVisible):
             e.x += e.speed_x
             e.y += e.speed_y

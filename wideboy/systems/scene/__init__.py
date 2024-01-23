@@ -4,8 +4,8 @@ from ecs_pattern import EntityManager, System, entity
 from pygame import Color
 from pygame.display import Info as DisplayInfo
 from typing import List, Optional
-from ....consts import EventTypes
-from ....entities import (
+from ...consts import EventTypes
+from ...entities import (
     AppState,
     Cache,
     WidgetClockBackground,
@@ -14,7 +14,7 @@ from ....entities import (
     WidgetSysMessage,
     WidgetTileGrid,
 )
-from ....sprites.common import build_rect_sprite
+from ...sprites.common import build_rect_sprite
 from .entity_tiles import CELLS
 from .stages import Stage, StageBoot, StageDefault, StageNight
 from .sprites import (

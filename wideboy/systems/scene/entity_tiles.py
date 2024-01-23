@@ -1,7 +1,7 @@
 from typing import Optional
 
-from ....sprites.tile_grid import VerticalCollapseTileGridCell, TallGridCell
-from ....sprites.tile_grid.helpers import (
+from ...sprites.tile_grid import VerticalCollapseTileGridCell, TallGridCell
+from ...sprites.tile_grid.helpers import (
     CommonColors,
     FontAwesomeIcons,
     is_defined,

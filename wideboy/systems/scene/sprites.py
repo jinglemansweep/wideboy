@@ -1,9 +1,9 @@
 import logging
 from pygame import Color, Surface
 from typing import Dict, List, Type
-from ....sprites.image import ImageFileSprite, ImageSprite
-from ....sprites.text import TextSprite
-from ....sprites.tile_grid import TileGrid, TileGridCell
+from ...sprites.image import ImageFileSprite, ImageSprite
+from ...sprites.text import TextSprite
+from ...sprites.tile_grid import TileGrid, TileGridCell
 
 logger = logging.getLogger(__name__)
 
