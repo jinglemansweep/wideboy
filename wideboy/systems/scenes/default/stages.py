@@ -42,7 +42,7 @@ class StageDefault(Stage):
 
     def setup(self) -> None:
         cache = next(self.entities.get_by_class(Cache))
-        images = [IMAGE_DUCK, IMAGE_CAT]
+
         self.stage_entities.append(
             WidgetFrameAnimation(
                 build_image_sprite(cache.surfaces["ducky"][0]),
@@ -54,8 +54,10 @@ class StageDefault(Stage):
                 bound_size=(32, 32),
                 bound_mode="loop",
                 frames=cache.surfaces["ducky"],
+                frame_delay=4,
             ),  # type: ignore[call-arg]
         )
+        images = [IMAGE_DUCK, IMAGE_CAT]
         for i in range(self.image_count):
             self.stage_entities.append(
                 WidgetImage(

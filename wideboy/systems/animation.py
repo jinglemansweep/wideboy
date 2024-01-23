@@ -81,12 +81,14 @@ class SysAnimation(System):
         for e in self.entities.get_with_component(ComFrame, ComVisible):
             if len(e.frames) <= 1:
                 continue
-            e.sprite.image = e.frames[e.frame_index]
-            e.frame_index += e.frame_direction
-            if e.frame_index >= len(e.frames):
-                e.frame_index = 0
-            elif e.frame_index < 0:
-                e.frame_index = len(e.frames) - 1
+            if e.scene_frame % e.frame_delay == 0:
+                e.sprite.image = e.frames[e.frame_index]
+                e.frame_index += e.frame_direction
+                if e.frame_index >= len(e.frames):
+                    e.frame_index = 0
+                elif e.frame_index < 0:
+                    e.frame_index = len(e.frames) - 1
+            e.scene_frame += 1
 
     def _update_core(self):
         for e in self.entities.get_with_component(ComMotion, ComVisible):

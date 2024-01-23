@@ -43,5 +43,7 @@ class ComFade:
 @component
 class ComFrame:
     frames: List[Surface] = field(default_factory=list)
+    scene_frame: int = 0
     frame_index: int = 0
     frame_direction: int = 1
+    frame_delay: int = 1
