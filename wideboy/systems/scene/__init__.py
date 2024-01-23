@@ -16,7 +16,11 @@ from ...entities import (
 )
 from ...sprites.common import build_rect_sprite
 from .entity_tiles import CELLS
-from .stages import Stage, StageBoot, StageDefault, StageDuck, StageNight
+from .stages import Stage
+from .stages.boot import StageBoot
+from .stages.default import StageDefault
+from .stages.ducks import StageDucks
+from .stages.night import StageNight
 from .sprites import (
     build_date_sprite,
     build_time_sprite,
@@ -157,7 +161,7 @@ class SysScene(System):
                 if self.scene_mode == "ducks":
                     logger.info("DUCK MODE")
                     self._switch_stage(
-                        StageDuck(
+                        StageDucks(
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )

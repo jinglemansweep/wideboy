@@ -2,6 +2,7 @@ import logging
 from pygame import Color, Surface
 from typing import Dict, List, Type
 from ...sprites.image import ImageSprite
+from ...sprites.slideshow import SlideshowSprite
 from ...sprites.text import TextSprite
 from ...sprites.tile_grid import TileGrid, TileGridCell
 
@@ -43,3 +44,7 @@ def build_tile_grid_sprite(
     cells: List[List[Type[TileGridCell]]], state: Dict
 ) -> TileGrid:
     return TileGrid(cells, state)
+
+
+def build_slideshow_sprite(surface: Surface):
+    return SlideshowSprite(surface)

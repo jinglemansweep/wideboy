@@ -92,6 +92,11 @@ class WidgetTileGrid(ComFade, ComTarget, ComMotion, ComVisible):
 
 
 @entity
+class WidgetSlideshow(ComFade, ComMotion, ComVisible):
+    pass
+
+
+@entity
 class WidgetDucky(ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComVisible):
     flip_x: bool = False
     flip_y: bool = False

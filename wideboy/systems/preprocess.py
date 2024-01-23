@@ -63,6 +63,23 @@ class SysPreprocess(System):
         self.app_state = next(self.entities.get_by_class(AppState))
         self.cache = next(self.entities.get_by_class(Cache))
 
+        """
+        # Slideshow Backgrounds
+        bgs = Path(self.app_state.config.paths.images_backgrounds).glob("*.png")
+        for bg in bgs:
+            print(bg)
+            self.queue.append(
+                (
+                    preprocess_load_image,
+                    (
+                        self.cache,
+                        "slideshow_backgrounds",
+                        str(bg),
+                    ),
+                )
+            )
+        """
+
         # Pixelated Duck
         self.queue.append(
             (
