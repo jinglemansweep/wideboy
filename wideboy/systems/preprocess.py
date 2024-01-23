@@ -61,7 +61,6 @@ class SysPreprocess(System):
     def start(self) -> None:
         logger.info("Preprocessing system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
-        print(self.app_state.config.paths.images_sprites)
         self.cache = next(self.entities.get_by_class(Cache))
         self.queue.append(
             (

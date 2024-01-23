@@ -33,7 +33,7 @@ class StageDefault(Stage):
         self,
         entities: EntityManager,
         display_size: Tuple[int, int],
-        image_count: int = 20,
+        image_count: int = 10,
     ) -> None:
         super().__init__(entities)
         self.display_size = display_size
@@ -64,7 +64,7 @@ class StageDefault(Stage):
                     build_image_file_sprite(random.choice(images)),
                     x=random.randint(0, self.display_size[0] - 32),
                     y=random.randint(0, self.display_size[1] - 32),
-                    alpha=random.randint(0, 255),
+                    alpha=random.randint(64, 128),
                     speed_x=random.choice([-2, -1, 1, 2]),
                     speed_y=random.choice([-2, -1, 1, 2]),
                     bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
