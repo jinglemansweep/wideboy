@@ -51,7 +51,7 @@ class StageDefault(Stage):
     def update(self) -> None:
         app_state = next(self.entities.get_by_class(AppState))
         for event_type, event_payload in app_state.events:
-            if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
+            if event_type == EventTypes.EVENT_CLOCK_NEW_MINUTE:
                 self.advance()
 
     def advance(self) -> None:
