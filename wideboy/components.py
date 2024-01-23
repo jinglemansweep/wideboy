@@ -19,10 +19,6 @@ class ComVisible:
 class ComMotion:
     speed_x: int = 0
     speed_y: int = 0
-
-
-@component
-class ComDirection:
     direction_x: int = 0
     direction_y: int = 0
 

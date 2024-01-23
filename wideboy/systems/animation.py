@@ -1,10 +1,9 @@
 import logging
 from ecs_pattern import EntityManager, System, entity
 
-# from pygame.transform import flip as pygame_transform_flip
+from pygame.transform import flip as pygame_transform_flip
 from ..components import (
     ComBound,
-    ComDirection,
     ComFade,
     ComFrame,
     ComMotion,
@@ -24,18 +23,14 @@ class SysAnimation(System):
 
     def update(self) -> None:
         self._update_fade()
-        self._update_direction()
         self._update_target()
         self._update_bound()
         self._update_frame()
+        self._update_motion()
         self._update_visible()
 
-    def _update_direction(self):
-        for e in self.entities.get_with_component(ComDirection, ComMotion, ComVisible):
-            e.direction_x = 1 if e.speed_x > 0 else -1 if e.speed_x < 0 else 0
-            e.direction_y = 1 if e.speed_y > 0 else -1 if e.speed_y < 0 else 0
-
     def _update_fade(self):
+        # Handle fade animation
         for e in self.entities.get_with_component(ComFade, ComVisible):
             if e.fade_target_alpha is None or e.alpha == e.fade_target_alpha:
                 continue
@@ -45,6 +40,7 @@ class SysAnimation(System):
                 e.alpha -= e.fade_speed
 
     def _update_target(self):
+        # Set speed to move towards target
         for e in self.entities.get_with_component(ComTarget, ComMotion, ComVisible):
             # X Axis
             if e.target_x is not None:
@@ -94,6 +90,7 @@ class SysAnimation(System):
             e.y = e.bound_rect[1] - e.bound_size[1]
 
     def _update_frame(self):
+        # Handle frame animation
         for e in self.entities.get_with_component(ComFrame, ComVisible):
             if len(e.frames) <= 1:
                 continue
@@ -106,8 +103,21 @@ class SysAnimation(System):
                     e.frame_index = len(e.frames) - 1
             e.scene_frame += 1
 
-    def _update_visible(self):
+    def _update_motion(self):
+        # Move entity according to speed and set direction
         for e in self.entities.get_with_component(ComMotion, ComVisible):
             e.x += e.speed_x
             e.y += e.speed_y
+            e.direction_x = 1 if e.speed_x > 0 else -1 if e.speed_x < 0 else 0
+            e.direction_y = 1 if e.speed_y > 0 else -1 if e.speed_y < 0 else 0
+
+        # Flip sprite if moving left
+        for e in self.entities.get_with_component(ComFrame, ComMotion):
+            if e.direction_x < 0:
+                e.sprite.image = pygame_transform_flip(
+                    e.frames[e.frame_index], True, False
+                )
+
+    def _update_visible(self):
+        for e in self.entities.get_with_component(ComVisible):
             e.sprite.image.set_alpha(e.alpha)

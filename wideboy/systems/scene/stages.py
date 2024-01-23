@@ -1,14 +1,13 @@
 import logging
 import random
 from ecs_pattern import EntityManager
-
 from typing import Tuple
 from .utils import Stage
 from ...entities import (
     Cache,
     WidgetClockDate,
     WidgetClockTime,
-    WidgetFrameAnimation,
+    WidgetDucky,
     WidgetImage,
     WidgetTileGrid,
 )
@@ -25,6 +24,25 @@ class StageBoot(Stage):
 
 
 class StageDefault(Stage):
+    def __init__(
+        self,
+        entities: EntityManager,
+        display_size: Tuple[int, int],
+    ) -> None:
+        super().__init__(entities)
+        self.display_size = display_size
+        self.setup()
+
+    def setup(self) -> None:
+        for w in self.entities.get_by_class(
+            WidgetClockDate,
+            WidgetClockTime,
+            WidgetTileGrid,
+        ):
+            w.fade_target_alpha = 255
+
+
+class StageDuck(Stage):
     image_count: int
 
     def __init__(
@@ -42,15 +60,14 @@ class StageDefault(Stage):
         cache = next(self.entities.get_by_class(Cache))
 
         self.stage_entities.append(
-            WidgetFrameAnimation(
+            WidgetDucky(
                 build_image_sprite(cache.surfaces["duck_animated"][0]),
                 x=0,
                 y=self.display_size[1] - 32,
                 z_order=10,
                 speed_x=1,
-                bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
+                bound_rect=(0, 0, 100, self.display_size[1]),
                 bound_size=(32, 32),
-                bound_mode="loop",
                 frames=cache.surfaces["duck_animated"],
                 frame_delay=4,
             ),  # type: ignore[call-arg]
@@ -76,7 +93,8 @@ class StageDefault(Stage):
             w.fade_target_alpha = 255
 
     def update(self) -> None:
-        pass
+        ducky = next(self.entities.get_by_class(WidgetDucky))
+        ducky.sprite.flip_x = ducky.direction_x < 0
 
 
 class StageNight(Stage):

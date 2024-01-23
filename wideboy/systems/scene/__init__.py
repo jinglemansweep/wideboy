@@ -16,7 +16,7 @@ from ...entities import (
 )
 from ...sprites.common import build_rect_sprite
 from .entity_tiles import CELLS
-from .stages import Stage, StageBoot, StageDefault, StageNight
+from .stages import Stage, StageBoot, StageDefault, StageDuck, StageNight
 from .sprites import (
     build_date_sprite,
     build_time_sprite,
@@ -153,8 +153,25 @@ class SysScene(System):
                     )
                 )
             else:
+                # Duck Mode
+                if self.scene_mode == "ducks":
+                    logger.info("DUCK MODE")
+                    self._switch_stage(
+                        StageDuck(
+                            self.entities,
+                            (self.display_info.current_w, self.display_info.current_h),
+                        )
+                    )
                 # Night Mode
-                if self.scene_mode == "night":
+                elif self.scene_mode == "night":
+                    logger.info("NIGHT MODE")
+                    self._switch_stage(
+                        StageNight(
+                            self.entities,
+                            (self.display_info.current_w, self.display_info.current_h),
+                        )
+                    )  # Night Mode
+                elif self.scene_mode == "night":
                     logger.info("NIGHT MODE")
                     self._switch_stage(
                         StageNight(

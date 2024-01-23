@@ -6,7 +6,6 @@ from paho.mqtt.client import Client as MQTTClient
 from typing import Callable
 from .components import (
     ComBound,
-    ComDirection,
     ComFade,
     ComFrame,
     ComMotion,
@@ -56,13 +55,13 @@ class WidgetSquare(ComFade, ComTarget, ComMotion, ComVisible):
 
 
 @entity
-class WidgetImage(ComFade, ComBound, ComTarget, ComDirection, ComMotion, ComVisible):
+class WidgetImage(ComFade, ComBound, ComTarget, ComMotion, ComVisible):
     pass
 
 
 @entity
 class WidgetFrameAnimation(
-    ComFrame, ComFade, ComBound, ComTarget, ComDirection, ComMotion, ComVisible
+    ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComVisible
 ):
     pass
 
@@ -90,3 +89,9 @@ class WidgetClockTime(ComFade, ComTarget, ComMotion, ComVisible):
 @entity
 class WidgetTileGrid(ComFade, ComTarget, ComMotion, ComVisible):
     pass
+
+
+@entity
+class WidgetDucky(ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComVisible):
+    flip_x: bool = False
+    flip_y: bool = False
