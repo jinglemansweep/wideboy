@@ -45,15 +45,15 @@ class StageDefault(Stage):
         images = [IMAGE_DUCK, IMAGE_CAT]
         self.stage_entities.append(
             WidgetFrameAnimation(
-                build_image_sprite(cache.surfaces["dino"][0]),
+                build_image_sprite(cache.surfaces["ducky"][0]),
                 x=0,
-                y=self.display_size[1] - 16,
+                y=self.display_size[1] - 32,
                 z_order=10,
                 speed_x=1,
                 bound_rect=(0, 0, self.display_size[0], self.display_size[1]),
                 bound_size=(32, 32),
                 bound_mode="loop",
-                frames=cache.surfaces["dino"],
+                frames=cache.surfaces["ducky"],
             ),  # type: ignore[call-arg]
         )
         for i in range(self.image_count):

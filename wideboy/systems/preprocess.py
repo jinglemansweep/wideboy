@@ -13,6 +13,25 @@ logger = logging.getLogger(__name__)
 # Preprocessing Functions
 
 
+def _preprocess_load_spritesheet(
+    cache: Cache,
+    key: str,
+    path: str,
+    size: Tuple[int, int],
+    tile_range: Tuple[int, int],
+):
+    logger.debug(f"_preprocess_load_spritesheet: key={key} path={path} size={size}")
+    if key not in cache.surfaces:
+        cache.surfaces[key] = []
+    sheet = pygame_image_load(path)
+    idx = 0
+    for y in range(0, sheet.get_height(), size[1]):
+        for x in range(0, sheet.get_width(), size[0]):
+            if tile_range[0] <= idx <= tile_range[1]:
+                cache.surfaces[key].append(sheet.subsurface((x, y, size[0], size[1])))
+            idx += 1
+
+
 def _preprocess_load_image(cache: Cache, key: str, path: str):
     logger.debug(f"_preprocess_load_image: key={key} path={path}")
     if key not in cache.surfaces:
@@ -44,6 +63,19 @@ class SysPreprocess(System):
         self.app_state = next(self.entities.get_by_class(AppState))
         print(self.app_state.config.paths.images_sprites)
         self.cache = next(self.entities.get_by_class(Cache))
+        self.queue.append(
+            (
+                _preprocess_load_spritesheet,
+                (
+                    self.cache,
+                    "ducky",
+                    f"{self.app_state.config.paths.images_sprites}/ducky/spritesheet.png",
+                    (32, 32),
+                    (6, 12),
+                ),
+            ),
+        )
+        """
         for i in range(4, 12):
             self.queue.append(
                 (
@@ -55,8 +87,9 @@ class SysPreprocess(System):
                     ),
                 ),
             )
-        # for i in range(20):
-        #     self.queue.append((_preprocess_text, (self.cache, "test", f"Step {i}")))
+        for i in range(20):
+            self.queue.append((_preprocess_text, (self.cache, "test", f"Step {i}")))
+        """
         self.queue_length = len(self.queue)
 
     def update(self) -> None:
