@@ -1,6 +1,16 @@
 import logging
 from ecs_pattern import EntityManager, System, entity
-from ..components import ComBound, ComFade, ComFrame, ComMotion, ComTarget, ComVisible
+
+# from pygame.transform import flip as pygame_transform_flip
+from ..components import (
+    ComBound,
+    ComDirection,
+    ComFade,
+    ComFrame,
+    ComMotion,
+    ComTarget,
+    ComVisible,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -14,10 +24,16 @@ class SysAnimation(System):
 
     def update(self) -> None:
         self._update_fade()
+        self._update_direction()
         self._update_targeting()
         self._update_bounds()
         self._update_frames()
         self._update_core()
+
+    def _update_direction(self):
+        for e in self.entities.get_with_component(ComDirection, ComMotion, ComVisible):
+            e.direction_x = 1 if e.speed_x > 0 else -1 if e.speed_x < 0 else 0
+            e.direction_y = 1 if e.speed_y > 0 else -1 if e.speed_y < 0 else 0
 
     def _update_fade(self):
         for e in self.entities.get_with_component(ComFade, ComVisible):

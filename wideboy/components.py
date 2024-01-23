@@ -22,6 +22,12 @@ class ComMotion:
 
 
 @component
+class ComDirection:
+    direction_x: int = 0
+    direction_y: int = 0
+
+
+@component
 class ComTarget:
     target_x: Optional[int] = None
     target_y: Optional[int] = None

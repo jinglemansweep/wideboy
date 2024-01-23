@@ -1,6 +1,7 @@
 import logging
 import random
 from ecs_pattern import EntityManager
+
 from typing import Tuple
 from ..utils import Stage
 from ....entities import (
@@ -57,11 +58,10 @@ class StageDefault(Stage):
                 frame_delay=4,
             ),  # type: ignore[call-arg]
         )
-        images = [IMAGE_DUCK, IMAGE_CAT]
         for i in range(self.image_count):
             self.stage_entities.append(
                 WidgetImage(
-                    build_image_file_sprite(random.choice(images)),
+                    build_image_file_sprite(IMAGE_DUCK, flip_x=True),
                     x=random.randint(0, self.display_size[0] - 32),
                     y=random.randint(0, self.display_size[1] - 32),
                     alpha=random.randint(64, 128),
@@ -80,7 +80,6 @@ class StageDefault(Stage):
 
     def update(self) -> None:
         pass
-        # logger.debug(f"stage.default.update: entities={len(self.entities)}")
 
 
 class StageNight(Stage):
@@ -118,7 +117,3 @@ class StageNight(Stage):
         widget_tilegrid.fade_target_alpha = 128
         widget_clock_date = next(self.entities.get_by_class(WidgetClockDate))
         widget_clock_date.fade_target_alpha = 0
-
-    def update(self) -> None:
-        pass
-        # logger.debug(f"stage.night.update: entities={len(self.entities)}")
