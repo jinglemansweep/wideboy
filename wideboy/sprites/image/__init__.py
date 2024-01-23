@@ -8,16 +8,6 @@ from pygame.sprite import Sprite
 logger = logging.getLogger(__name__)
 
 
-def build_image_sprite(surface: Surface):
-    return ImageSprite(surface)
-
-
-def build_image_file_sprite(
-    filename: str, alpha: int = 255, flip_x=False, flip_y=False
-):
-    return ImageFileSprite(filename, alpha=alpha, flip_x=flip_x, flip_y=flip_y)
-
-
 class ImageSprite(Sprite):
     image: Surface
     rect: Rect

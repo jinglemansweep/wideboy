@@ -15,14 +15,14 @@ from ....entities import (
     WidgetTileGrid,
 )
 from ....sprites.common import build_rect_sprite
-from ....sprites.text import (
+from .entity_tiles import CELLS
+from .stages import Stage, StageBoot, StageDefault, StageNight
+from .sprites import (
     build_date_sprite,
     build_time_sprite,
     build_system_message_sprite,
+    build_tile_grid_sprite,
 )
-from ....sprites.tile_grid import build_tile_grid_sprite
-from .entity_tiles import CELLS
-from .stages import Stage, StageBoot, StageDefault, StageNight
 
 
 logger = logging.getLogger(__name__)

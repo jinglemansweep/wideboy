@@ -6,7 +6,7 @@ from functools import partial
 from pygame.image import load as pygame_image_load
 from typing import Callable, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
-from ..sprites.text import build_system_message_sprite
+from .scenes.default.sprites import build_system_message_sprite
 
 logger = logging.getLogger(__name__)
 

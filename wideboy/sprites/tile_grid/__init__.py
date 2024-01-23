@@ -261,9 +261,3 @@ class VerticalCollapseTileGridCell(TileGridCell):
 
     def __repr__(self) -> str:
         return f"VerticalCollapseTileGridCell(size=({self.width}x{self.height}), label='{self.label}', open={self.open}, height={self.height_animator.value})"
-
-
-def build_tile_grid_sprite(
-    cells: List[List[Type[TileGridCell]]], state: Dict
-) -> TileGrid:
-    return TileGrid(cells, state)

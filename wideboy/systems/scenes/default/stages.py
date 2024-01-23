@@ -12,7 +12,7 @@ from ....entities import (
     WidgetImage,
     WidgetTileGrid,
 )
-from ....sprites.image import build_image_sprite, build_image_file_sprite
+from .sprites import build_image_sprite, build_image_file_sprite
 
 logger = logging.getLogger(__name__)
 
