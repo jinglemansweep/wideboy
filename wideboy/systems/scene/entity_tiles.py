@@ -232,6 +232,17 @@ class CellSpeedTestPing(GridCell):
         return template_if_defined(self.value, "{:.0f}ms")
 
 
+class CellVPNPrivacyStatus(GridCell):
+    entity_id = "binary_sensor.vpn_privacy_status"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_SHIELD_HALVED
+    cell_color_background = CommonColors.COLOR_RED_DARK
+    icon_color_background = CommonColors.COLOR_RED
+
+    @property
+    def label(self):
+        return "VPN"
+
+
 class CellDS920VolumeUsage(GridCell):
     entity_id = "sensor.ds920plus_volume_used"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HARD_DRIVE
@@ -623,6 +634,7 @@ CELLS = [
         CellMotionGarage,
     ],
     [
+        CellVPNPrivacyStatus,
         CellDS920VolumeUsage,
         CellSpeedTestDownload,
         CellSpeedTestUpload,
