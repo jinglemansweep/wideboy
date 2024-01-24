@@ -6,7 +6,9 @@
       "type": "python",
       "request": "launch",
       "module": "wideboy",
-      "justMyCode": true
+      "justMyCode": true,
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart"
     }
   ]
 }

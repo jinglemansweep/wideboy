@@ -7,27 +7,25 @@ readme = "README.md"
 packages = []
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<4.0"
 numpy = "^1.24.2"
-python-dotenv = "^0.21.1"
 pillow = "^9.4.0"
-asyncio = "^3.4.3"
-pytweening = "^1.0.4"
 paho-mqtt = "^1.6.1"
 simplejson = "^3.18.3"
-homeassistant_api = { git = "https://github.com/GrandMoff100/HomeAssistantAPI.git" }
-qrcode = {extras = ["pil"], version = "^7.4.2"}
 types-paho-mqtt = "^1.6.0.5"
 dynaconf = "^3.1.12"
 pyyaml = "^6.0"
 pygame-ce = "^2.2.1"
 types-pyyaml = "^6.0.12.12"
+ecs-pattern = "^1.2.0"
+toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
 flake8 = "^6.0.0"
 mypy = "^1.0.0"
 pre-commit = "^3.6.0"
+types-toml = "^0.10.8.7"
 types-pillow = "^9.4.0.10"
 
 [build-system]

@@ -1,43 +1,16 @@
 import logging
-from pygame import Rect, Surface, Vector2
-from typing import Optional
-from wideboy.scenes.base import BaseScene
-from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.image_helpers import (
-    load_image,
-    filter_surface,
-    scale_surface,
-)
+from pygame import Rect, Surface
+from pygame.sprite import Sprite
 
 
-logger = logging.getLogger("sprite.image")
+logger = logging.getLogger(__name__)
 
 
-class ImageSprite(BaseSprite):
-    rect: Rect
+class ImageSprite(Sprite):
     image: Surface
+    rect: Rect
 
-    def __init__(
-        self,
-        scene: BaseScene,
-        rect: Rect,
-        size: Optional[Vector2],
-        filename: str,
-        alpha: int = 255,
-    ) -> None:
-        super().__init__(scene, rect)
-        self.filename = filename
-        self.size = size
-        self.alpha = alpha
-        self.render()
-
-    def render(self) -> None:
-        surface = load_image(self.filename)
-        self.rect = Rect(
-            self.rect[0], self.rect[1], surface.get_rect()[2], surface.get_rect()[3]
-        )
-        if self.size:
-            surface = scale_surface(surface, self.size)
-        surface = filter_surface(surface, alpha=self.alpha)
+    def __init__(self, surface: Surface) -> None:
         self.image = surface
-        self.dirty = 1
+        self.image_orig = self.image.copy()
+        self.rect = self.image.get_rect()

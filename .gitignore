@@ -1,7 +1,7 @@
 images/screenshots/**
 images/weather/premium/**
 http_cache
-venv
+venv*
 __pycache__
 dietpi.txt
 settings.*.toml

@@ -1,40 +1,84 @@
-import cProfile
+import os
 import logging
-from dotenv import load_dotenv, find_dotenv
-from typing import Type, List
-from wideboy.constants import (
-    AppMetadata,
+import pygame
+from dynaconf import Dynaconf
+from ecs_pattern import EntityManager, SystemManager
+
+from . import _APP_NAME, _APP_TITLE, _APP_VERSION
+from .config import VALIDATORS
+from .consts import FPS_MAX
+from .entities import AppState
+from .systems.animation import SysAnimation
+from .systems.boot import SysBoot, SysClock, SysDebug, SysEvents, SysInput
+from .systems.display import SysDisplay
+from .systems.draw import SysDraw
+from .systems.scene import SysScene
+from .systems.scene.hass_entities import ENTITIES as HASS_ENTITIES
+from .systems.mqtt import SysMQTT, SysHomeAssistant
+from .systems.preprocess import SysPreprocess
+from .utils import setup_logger
+
+os.environ["SDL_VIDEO_CENTERED"] = "1"
+
+
+config = Dynaconf(
+    envvar_prefix=_APP_NAME.upper(),
+    settings_files=["settings.toml", "settings.local.toml", "secrets.toml"],
+    validators=VALIDATORS,
 )
-from wideboy.config import settings
-from wideboy.controller import Controller
-from wideboy.homeassistant.hass import HASSEntity
-from wideboy.scenes.base import BaseScene
-from wideboy.scenes.credits import CreditsScene
-from wideboy.scenes.default import DefaultScene
-from wideboy.scenes.starfield import StarfieldScene
-from wideboy.utils.logger import setup_logger
-
-load_dotenv(find_dotenv())
-
-# Logging
-setup_logger(level=settings.general.log_level)
-logger = logging.getLogger(AppMetadata.NAME)
-
-# SCENES
-SCENES: List[Type[BaseScene]] = [DefaultScene, StarfieldScene, CreditsScene]
-
-# ENTITIES
-ENTITIES: List[Type[HASSEntity]] = []
 
 
 def main():
-    controller = Controller(scenes=SCENES, entities=ENTITIES)
-    controller.start()
+    app_state = AppState(running=True, booting=True, config=config)
+
+    setup_logger(config)
+    logger = logging.getLogger(__name__)
+
+    logger.info(f"{_APP_TITLE} v{_APP_VERSION} starting up...")
+
+    pygame.init()
+    pygame.mixer.quit()
+    pygame.display.set_caption(f"{_APP_TITLE} v{_APP_VERSION}")
+    clock = pygame.time.Clock()
+
+    entities = EntityManager()
+    entities.add(app_state)
+
+    screen = pygame.display.set_mode(
+        (app_state.config.display.canvas.width, app_state.config.display.canvas.height),
+        pygame.SRCALPHA,
+    )
+
+    system_manager = SystemManager(
+        [
+            # Boot
+            SysBoot(entities, config),
+            SysPreprocess(entities),
+            # Inputs/Control
+            SysEvents(entities),
+            SysClock(entities),
+            SysInput(entities),
+            SysMQTT(entities),
+            SysHomeAssistant(entities, hass_entities=HASS_ENTITIES),
+            # Stage
+            SysScene(entities),
+            SysAnimation(entities),
+            # Render
+            SysDraw(entities, screen),
+            SysDisplay(entities, screen),
+            # Debugging
+            SysDebug(entities),
+        ]
+    )
+    system_manager.start_systems()
+
+    while app_state.running:
+        clock.tick(FPS_MAX)
+        system_manager.update_systems()
+        pygame.display.flip()
+
+    system_manager.stop_systems()
 
 
-# Entrypoint
 if __name__ == "__main__":
-    if settings.general.profiling in ["ncalls", "tottime"]:
-        cProfile.run("main()", None, sort=settings.general.profiling)
-    else:
-        main()
+    main()

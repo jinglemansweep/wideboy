@@ -85,12 +85,13 @@ class FontAwesomeIcons:
     ICON_FA_CAR = 0xF1B9
     ICON_FA_CAMERA = 0xF030
     ICON_FA_TRASH_CAN = 0xF2ED
+    ICON_FA_SHIELD_HALVED = 0xF3ED
 
 
 # HELPER FUNCTIONS
 
 
-def is_defined(value):
+def is_defined(value) -> bool:
     return value is not None and value not in ["unavailable"]
 
 

@@ -1,12 +1,9 @@
 import logging
-import pygame
-from typing import List, Dict, Type
-
-from wideboy.constants import EVENT_HASS_STATESTREAM_UPDATE
-from wideboy.scenes.base import BaseScene
-from wideboy.sprites.base import BaseSprite
-from wideboy.sprites.animation_helpers import Animator, AnimatorState
-from wideboy.sprites.tile_grid.helpers import (
+from pygame import Color, Surface, SRCALPHA
+from pygame.sprite import LayeredDirty, DirtySprite
+from typing import Any, Dict, List, Tuple, Type
+from ..animation import Animator, AnimatorState
+from .helpers import (
     FontAwesomeIcons,
     render_icon,
     render_text,
@@ -15,9 +12,9 @@ from wideboy.sprites.tile_grid.helpers import (
 
 # NOTES
 
-logger = logging.getLogger("sprite.tile_grid")
+logger = logging.getLogger("sprites.tile_grid")
 
-# CONSTANTS
+# CONSTANTSf
 
 TILE_GRID_CELL_WIDTH = 64
 TILE_GRID_CELL_HEIGHT = 12
@@ -26,51 +23,50 @@ TILE_GRID_CELL_ICON_HEIGHT = 12
 
 # TILE GRID
 
-
 # Mixins
 
 
 class StyleMixin:
     # Cell
-    cell_color_background: pygame.Color = pygame.Color(16, 16, 16, 64)
+    cell_color_background: Color = Color(16, 16, 16, 64)
     # Label
     label_antialias: bool = True
     label_outline: bool = True
-    label_color_foreground: pygame.Color = pygame.Color(255, 255, 255, 255)
-    label_color_outline: pygame.Color = pygame.Color(0, 0, 0, 255)
+    label_color_foreground: Color = Color(255, 255, 255, 255)
+    label_color_outline: Color = Color(0, 0, 0, 255)
     # Icon
     icon_visible: bool = True
     icon_codepoint: int = FontAwesomeIcons.ICON_FA_BOLT
     icon_width: int = TILE_GRID_CELL_ICON_WIDTH
     icon_height: int = TILE_GRID_CELL_ICON_HEIGHT
-    icon_color_background: pygame.Color = pygame.Color(32, 32, 32, 255)
-    icon_color_foreground: pygame.Color = pygame.Color(255, 255, 255, 255)
+    icon_color_background: Color = Color(32, 32, 32, 255)
+    icon_color_foreground: Color = Color(255, 255, 255, 255)
 
 
 # Tile Grid Cell Sprites
 
 
-class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
-    image: pygame.Surface
+class TileGridCell(DirtySprite, StyleMixin):
+    image: Surface
     style: Dict
     entity_id: str = ""
     width: int = TILE_GRID_CELL_WIDTH
     height: int = TILE_GRID_CELL_HEIGHT
     label: str = ""
 
-    def __init__(self, state):
+    def __init__(self, state) -> None:
         super().__init__()
         self.state = state
-        self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        self.image = Surface((self.width, self.height), SRCALPHA)
         self.image.fill(self.cell_color_background)
         self.rect = self.image.get_rect()
 
-    def update(self, *args, **kwargs):
+    def update(self, *args, **kwargs) -> None:
         super().update(*args, **kwargs)
         self.dirty = 1
 
-    def render(self):
-        image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+    def render(self) -> Surface:
+        image = Surface((self.width, self.height), SRCALPHA)
         image.fill(self.cell_color_background)
         cx, cy = 0, 0
         if self.icon_visible:
@@ -94,7 +90,7 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
         image.blit(label_surface, (cx, cy))
         return image
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"TileGridCell(size=({self.width}x{self.height}), visible={self.visible}, label='{self.label}')"
 
     @property
@@ -102,7 +98,7 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
         return self.state.get(self.entity_id, dict())
 
     @property
-    def value(self):
+    def value(self) -> Any:
         state = self.entity_state.get("state", None)
         if state is None:
             return None
@@ -120,15 +116,15 @@ class TileGridCell(pygame.sprite.DirtySprite, StyleMixin):
 # Tile Grid Column Group
 
 
-class TileGridColumn(pygame.sprite.LayeredDirty):
+class TileGridColumn(LayeredDirty):
     animator: Animator
 
-    def __init__(self, *sprites: TileGridCell):
+    def __init__(self, *sprites: TileGridCell) -> None:
         super().__init__()
         self.add(sprites)
         self.animator = Animator(range=(0.0, 64.0), open=False, speed=1.0)
 
-    def update(self, *args, **kwargs):
+    def update(self, *args, **kwargs) -> None:
         super().update(*args, **kwargs)
         open = any(
             [
@@ -143,7 +139,7 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
             self.dirty = 1
 
     @property
-    def animating(self):
+    def animating(self) -> bool:
         return self.animator.animating or any(
             [cell.animating for cell in self.sprites() if hasattr(cell, "animating")]
         )
@@ -152,19 +148,17 @@ class TileGridColumn(pygame.sprite.LayeredDirty):
 # Tile Grid Sprite
 
 
-class TileGrid(BaseSprite):
+class TileGrid(DirtySprite):
     state: Dict
     columns: List
-    tile_surface_cache: Dict[str, pygame.Surface] = dict()
-    update_frames: int = 0
+    tile_surface_cache: Dict[str, Surface] = dict()
 
-    def __init__(self, scene: BaseScene, cells: List[List[Type[TileGridCell]]]):
-        super().__init__(scene, pygame.Rect(0, 0, 0, 0))
-        self.image = pygame.Surface((0, 0), pygame.SRCALPHA)
+    def __init__(self, cells: List[List[Type[TileGridCell]]], state: Dict) -> None:
+        super().__init__()
+        self.image = Surface((0, 0), SRCALPHA)
         self.rect = self.image.get_rect()
-        self.scene = scene
         self.cells = cells
-        self.state = self.scene.engine.state
+        self.state = state
         self.columns = []
 
         for column in self.cells:
@@ -174,27 +168,18 @@ class TileGrid(BaseSprite):
                 column_group.add(cell_instance)
             self.columns.append(column_group)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"TileGrid(columns={self.columns})"
 
-    def update(self, frame, clock, delta, events):
-        super().update(frame, clock, delta, events)
+    def update(self, entity_id=None):
         dirty = False
-        entity_id = None
-        for event in events:
-            if event.type == EVENT_HASS_STATESTREAM_UPDATE:
-                entity_id = event.payload.get("entity_id", None)
-                dirty = True
-                # logger.debug(f"state update: {entity_id}")
         cx, cy = 0, 0
         width, height = self.calculate_size()
         animating = any([column.animating for column in self.columns])
         if animating:
             dirty = True
-        if dirty:
-            self.update_frames = 2
-        self.image = pygame.Surface((width, height), pygame.SRCALPHA)
-        self.image.fill(pygame.Color(0, 0, 0, 0))
+        self.image = Surface((width, height), SRCALPHA)
+        self.image.fill(Color(0, 0, 0, 0))
         for column in self.columns:
             cy = 0
             for cell in column.sprites():
@@ -214,10 +199,9 @@ class TileGrid(BaseSprite):
             column.update()
             column.draw(self.image)
         self.rect.width, self.rect.height = self.calculate_size()
-        self.dirty = 1 if self.update_frames > 0 else 0
-        self.update_frames -= 1
+        self.dirty = 1 if dirty else 0
 
-    def calculate_size(self):
+    def calculate_size(self) -> Tuple[int, int]:
         width = 0
         height = 0
         for column in self.columns:
@@ -235,10 +219,10 @@ class TallGridCell(TileGridCell):
     open: bool = True
     icon_visible: bool = False
 
-    def __init__(self, state):
+    def __init__(self, state) -> None:
         super().__init__(state)
-        self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        self.image.fill(pygame.Color(255, 255, 255, 255))
+        self.image = Surface((self.width, self.height), SRCALPHA)
+        self.image.fill(Color(255, 255, 255, 255))
         self.rect = self.image.get_rect()
 
 
@@ -246,7 +230,7 @@ class VerticalCollapseTileGridCell(TileGridCell):
     width: int = TILE_GRID_CELL_WIDTH
     height_animator: Animator
 
-    def __init__(self, state):
+    def __init__(self, state) -> None:
         super().__init__(state)
         self.height_animator = Animator(range=(0.0, 12.0), open=self.open, speed=1.0)
 
@@ -254,26 +238,26 @@ class VerticalCollapseTileGridCell(TileGridCell):
         self.height_animator.set(self.open)
         self.height_animator.update()
         self.rect.height = self.height_animator.value
-        crop_surface = pygame.Surface((self.width, self.rect.height), pygame.SRCALPHA)
+        crop_surface = Surface((self.width, self.rect.height), SRCALPHA)
         crop_surface.blit(self.image, (0, 0, self.width, self.rect.height))
         self.image = crop_surface
         super().update(*args, **kwargs)
 
     @property
-    def open_finished(self):
+    def open_finished(self) -> bool:
         return self.height_animator.state != AnimatorState.CLOSED
 
     @property
-    def close_finished(self):
+    def close_finished(self) -> bool:
         return self.height_animator.state != AnimatorState.OPEN
 
     @property
-    def animating(self):
+    def animating(self) -> bool:
         return self.height_animator.animating
 
     @property
     def open(self):
         return is_defined(self.value) and self.value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"VerticalCollapseTileGridCell(size=({self.width}x{self.height}), label='{self.label}', open={self.open}, height={self.height_animator.value})"

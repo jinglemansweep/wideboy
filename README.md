@@ -140,7 +140,7 @@ Each Entity tile must be created as a Python class which can then be added to Co
 - :black_medium_square: [RPi RGB LED Matrix](https://github.com/hzeller/rpi-rgb-led-matrix) library to drive HUB75 LED panels with a Raspberry Pi
 - :video_game: [PyGame CE](https://www.pyga.me/) Python based 2D graphics and gaming engine
 - :penguin: [DietPi](https://dietpi.com/), a minimal lightweight Linux distribution designed for Raspberry Pi devices
-- :snake: Python 3.x, [Paho MQTT Client](https://pypi.org/project/paho-mqtt/), [HomeAssistantAPI](https://github.com/GrandMoff100/HomeAssistantAPI)
+- :snake: Python 3.10+, [ECS Pattern](https://github.com/ikvk/ecs_pattern), [Paho MQTT Client](https://pypi.org/project/paho-mqtt/), etc.
 
 ## Installation
 
