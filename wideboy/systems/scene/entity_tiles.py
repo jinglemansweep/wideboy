@@ -239,6 +239,10 @@ class CellVPNPrivacyStatus(GridCell):
     icon_color_background = CommonColors.COLOR_RED
 
     @property
+    def open(self):
+        return is_defined(self.value) and not self.value
+
+    @property
     def label(self):
         return "VPN"
 
