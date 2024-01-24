@@ -28,6 +28,7 @@ class AppState:
     slideshow_interval: int = 60
     slideshow_index: int = 0
     clock_24_hour: bool = True
+    screenshot: bool = False
     text_message: str = ""
     scene_mode: str = "default"
 

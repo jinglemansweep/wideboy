@@ -52,7 +52,7 @@ class SysMQTT(System):
 
     def update(self) -> None:
         try:
-            self.client.loop(timeout=0.005)
+            self.client.loop(timeout=0.01)
         except Exception as e:
             logger.error(f"sys.mqtt.update: exception={e}")
         if not self.mqtt_connected:
@@ -204,4 +204,6 @@ class SysHomeAssistant(System):
     ) -> None:
         logger.debug(f"sys.hass.command: topic: {topic}, payload: {payload}")
         entity = self.commands[topic]
-        entity.callback(client, app_state, entity.config["state_topic"], payload)
+        entity.callback(
+            client, app_state, entity.config.get("state_topic", None), payload
+        )

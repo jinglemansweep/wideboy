@@ -167,6 +167,21 @@ class StateLogButton(ButtonEntity):
         logger.info(f"app_state: {app_state}")
 
 
+class ScreenshotButton(ButtonEntity):
+    name: str = "screenshot"
+    description: str = "Screenshot"
+
+    def callback(
+        self,
+        client: MQTTClient,
+        app_state: AppState,
+        state_topic: str,
+        payload: str,
+    ) -> None:
+        logger.debug("sys.hass.entities.button.screenshot: press")
+        app_state.screenshot = True
+
+
 ENTITIES = [
     MasterPowerLight,
     ModeSelect,
@@ -174,4 +189,5 @@ ENTITIES = [
     BackgroundIntervalNumber,
     MessageText,
     StateLogButton,
+    ScreenshotButton,
 ]
