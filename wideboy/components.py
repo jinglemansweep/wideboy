@@ -11,8 +11,12 @@ class ComVisible:
     x: int = 0
     y: int = 0
     z_order: int = 0
-    alpha: int = 255
     hidden: bool = False
+
+
+@component
+class ComAlpha:
+    alpha: int = 255
 
 
 @component

@@ -1,17 +1,14 @@
-import glob
 import logging
-import math
-import os
 import pygame
 from PIL import Image, ImageFilter, ImageEnhance
 from pygame import Color, Surface, Vector2, BLEND_RGBA_MULT, SRCALPHA
-from typing import Optional, List, Tuple
+from typing import Optional, Tuple
 
 logging.getLogger("PIL").setLevel(logging.CRITICAL + 1)
-logger = logging.getLogger("sprites.image_helpers")
+logger = logging.getLogger(__name__)
 
 
-def load_image(filename: str, convert_alpha: bool = False) -> Surface:
+def load_image(filename: str, convert_alpha: bool = True) -> Surface:
     image = pygame.image.load(filename)
     if convert_alpha:
         image = image.convert_alpha()
@@ -55,22 +52,6 @@ def recolor_image(image: Surface, color: Color) -> Surface:
     return surface
 
 
-def glob_files(path: str = ".", pattern: str = "*.*") -> list[str]:
-    return glob.glob(os.path.join(path, pattern))
-
-
-def tile_surface(surface: Surface, size: Vector2) -> Surface:
-    x = y = 0
-    tiled_surface = Surface(size)
-    while y < size[1]:
-        while x < size[0]:
-            tiled_surface.blit(surface, (x, y))
-            x += surface.get_width()
-        y += surface.get_height()
-        x = 0
-    return tiled_surface
-
-
 def render_text(
     text: str,
     font_filename: str,
@@ -103,101 +84,6 @@ def render_text(
         surface_dest.blit(surface_orig, (0, 0))
     surface_dest.set_alpha(color_fg.a)
     return surface_dest
-
-
-def render_arrow(
-    start_pos: tuple[int, int] = (0, 0),
-    length: int = 10,
-    angle: int = 0,
-    color: Color = Color(255, 255, 255, 255),
-    adjust: int = 0,
-) -> Surface:
-    surface = Surface((length * 2, length * 2), SRCALPHA)
-    rect = surface.get_rect()
-    rect.center = start_pos
-    angle = 360 - angle + 90 + adjust
-    tip_pos = (
-        length * math.cos(math.radians(angle)),
-        -length * math.sin(math.radians(angle)),
-    )
-    base_angle1 = angle + 135
-    base_angle2 = angle - 135
-    base_point1 = (
-        length + length * math.cos(math.radians(base_angle1)),
-        length - length * math.sin(math.radians(base_angle1)),
-    )
-    base_point2 = (
-        length + length * math.cos(math.radians(base_angle2)),
-        length - length * math.sin(math.radians(base_angle2)),
-    )
-    pygame.draw.polygon(
-        surface,
-        color,
-        [(length + tip_pos[0], length + tip_pos[1]), base_point1, base_point2],
-    )
-    return surface
-
-
-def number_to_color(
-    number: float,
-    ranges: List[float] = [0.3, 0.6],
-    colors: Optional[List[Color]] = None,
-    color_default: Color = Color(0, 0, 0, 255),
-    invert: bool = False,
-) -> Color:
-    if colors is None:
-        colors = [
-            Color(0, 255, 0, 255),
-            Color(255, 255, 0, 255),
-            Color(255, 0, 0, 255),
-        ]
-    if number < ranges[0]:
-        return colors[0] if not invert else colors[2]
-    elif ranges[0] <= number < ranges[1]:
-        return colors[1]
-    elif number > ranges[1]:
-        return colors[2] if not invert else colors[0]
-    else:
-        return color_default
-
-
-def render_grid(
-    size: tuple[int, int],
-    spacing: int,
-    color: Color,
-    zoom: float,
-    angle: float,
-    line_size: int = 1,
-) -> Surface:
-    width, height = size
-    surface = Surface((width, height))
-    center_x, center_y = width // 2, height // 2
-    radians = math.radians(angle)
-    for x in range(-width, width, int(spacing * zoom)):
-        for y in range(-height, height, int(spacing * zoom)):
-            # Calculate the rotated endpoints for horizontal and vertical lines
-            x1 = x * math.cos(radians) - y * math.sin(radians)
-            y1 = x * math.sin(radians) + y * math.cos(radians)
-            x2 = (x + int(spacing * zoom)) * math.cos(radians) - y * math.sin(radians)
-            y2 = (x + int(spacing * zoom)) * math.sin(radians) + y * math.cos(radians)
-            x3 = x * math.cos(radians) - (y + int(spacing * zoom)) * math.sin(radians)
-            y3 = x * math.sin(radians) + (y + int(spacing * zoom)) * math.cos(radians)
-            # Draw horizontal and vertical lines
-            pygame.draw.line(
-                surface,
-                color,
-                (center_x + x1, center_y - y1),
-                (center_x + x2, center_y - y2),
-                line_size,
-            )
-            pygame.draw.line(
-                surface,
-                color,
-                (center_x + x1, center_y - y1),
-                (center_x + x3, center_y - y3),
-                line_size,
-            )
-    return surface
 
 
 class MaterialIcons:
@@ -253,6 +139,6 @@ def render_material_icon(
 
 
 def build_surface(size: Tuple[int, int], color: Color) -> Surface:
-    surface = Surface(size)
+    surface = Surface(size, SRCALPHA)
     surface.fill(color)
     return surface

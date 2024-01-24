@@ -102,14 +102,15 @@ class Clock24HourSwitch(SwitchEntity):
 
 
 class BackgroundIntervalNumber(NumberEntity):
-    name: str = "background_interval"
+    name: str = "slideshow_interval"
     description: str = "Slideshow Interval"
-    initial_state: float = 5.0
+    initial_state: int = 60
     options: Dict[str, Any] = {
         "device_class": "duration",
         "step": 1,
-        "min": 1,
-        "max": 60,
+        "min": 10,
+        "max": 600,
+        "unit_of_measurement": "s",
     }
 
     def callback(
@@ -119,13 +120,13 @@ class BackgroundIntervalNumber(NumberEntity):
         state_topic: str,
         payload: str,
     ) -> None:
-        app_state.background_interval = int(payload)
+        app_state.slideshow_interval = int(payload)
         logger.debug(
-            f"sys.hass.entities.number.background_interval: state={app_state.background_interval}"
+            f"sys.hass.entities.number.slideshow_interval: state={app_state.slideshow_interval}"
         )
         client.publish(
             state_topic,
-            app_state.background_interval,
+            app_state.slideshow_interval,
             qos=1,
         )
 

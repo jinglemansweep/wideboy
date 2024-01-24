@@ -45,7 +45,8 @@ def main():
     entities.add(app_state)
 
     screen = pygame.display.set_mode(
-        (app_state.config.display.canvas.width, app_state.config.display.canvas.height)
+        (app_state.config.display.canvas.width, app_state.config.display.canvas.height),
+        pygame.SRCALPHA,
     )
 
     system_manager = SystemManager(

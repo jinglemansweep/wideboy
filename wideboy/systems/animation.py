@@ -3,6 +3,7 @@ from ecs_pattern import EntityManager, System, entity
 
 from pygame.transform import flip as pygame_transform_flip
 from ..components import (
+    ComAlpha,
     ComBound,
     ComFade,
     ComFrame,
@@ -23,11 +24,11 @@ class SysAnimation(System):
 
     def update(self) -> None:
         self._update_fade()
+        self._update_alpha()
         self._update_target()
         self._update_bound()
         self._update_frame()
         self._update_motion()
-        self._update_visible()
 
     def _update_fade(self):
         # Handle fade animation
@@ -152,7 +153,7 @@ class SysAnimation(System):
                     e.frames[e.frame_index], True, False
                 )
 
-    def _update_visible(self):
-        for e in self.entities.get_with_component(ComVisible):
-            # Set alpha
+    def _update_alpha(self):
+        for e in self.entities.get_with_component(ComAlpha):
+            # Set alpha of sprite image
             e.sprite.image.set_alpha(e.alpha)

@@ -5,6 +5,7 @@ from ecs_pattern import entity
 from paho.mqtt.client import Client as MQTTClient
 from typing import Callable
 from .components import (
+    ComAlpha,
     ComBound,
     ComFade,
     ComFrame,
@@ -24,7 +25,8 @@ class AppState:
     hass_state: dict = field(default_factory=dict)
     master_power: bool = True
     master_brightness: int = 128
-    background_interval: int = 1
+    slideshow_interval: int = 60
+    slideshow_index: int = 0
     clock_24_hour: bool = True
     text_message: str = ""
     scene_mode: str = "default"
@@ -45,58 +47,59 @@ class Cache:
 
 
 @entity
-class WidgetText(ComFade, ComTarget, ComMotion, ComVisible):
+class WidgetText(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
     pass
 
 
 @entity
-class WidgetSquare(ComFade, ComTarget, ComMotion, ComVisible):
+class WidgetSquare(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
     pass
 
 
 @entity
-class WidgetImage(ComFade, ComBound, ComTarget, ComMotion, ComVisible):
+class WidgetImage(ComFade, ComBound, ComTarget, ComMotion, ComAlpha, ComVisible):
     pass
 
 
 @entity
 class WidgetFrameAnimation(
-    ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComVisible
+    ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComAlpha, ComVisible
 ):
     pass
 
 
 @entity
-class WidgetSysMessage(ComFade, ComTarget, ComMotion, ComVisible):
+class WidgetSysMessage(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
     pass
 
 
 @entity
-class WidgetClockBackground(ComFade, ComTarget, ComMotion, ComVisible):
+class WidgetClockBackground(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
     pass
 
 
 @entity
-class WidgetClockDate(ComFade, ComTarget, ComMotion, ComVisible):
+class WidgetClockDate(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
     pass
 
 
 @entity
-class WidgetClockTime(ComFade, ComTarget, ComMotion, ComVisible):
+class WidgetClockTime(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
     pass
 
 
 @entity
-class WidgetTileGrid(ComFade, ComTarget, ComMotion, ComVisible):
+class WidgetTileGrid(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
     pass
 
 
 @entity
-class WidgetSlideshow(ComFade, ComMotion, ComVisible):
+class WidgetSlideshow(ComVisible):
     pass
 
 
 @entity
-class WidgetDucky(ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComVisible):
-    flip_x: bool = False
-    flip_y: bool = False
+class WidgetDucky(
+    ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComAlpha, ComVisible
+):
+    pass

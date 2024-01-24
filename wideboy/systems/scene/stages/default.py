@@ -1,7 +1,7 @@
 import logging
+import random
 from ecs_pattern import EntityManager
 from pathlib import Path
-from pygame.image import load as pygame_image_load
 from typing import List, Tuple
 from ....consts import EventTypes
 from ....entities import (
@@ -13,6 +13,7 @@ from ....entities import (
     WidgetSlideshow,
     WidgetTileGrid,
 )
+from ....sprites.graphics import load_image
 from ..sprites import build_image_sprite, build_slideshow_sprite
 from . import Stage
 
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class StageDefault(Stage):
     slideshow_images: List[Path] = []
-    slideshow_index: int = 0
+    slideshow_timer: int = 0
 
     def __init__(
         self,
@@ -35,16 +36,19 @@ class StageDefault(Stage):
         self.setup()
 
     def setup(self) -> None:
-        cache = next(self.entities.get_by_class(Cache))
+        self.app_state = next(self.entities.get_by_class(AppState))
+        self.cache = next(self.entities.get_by_class(Cache))
 
-        self._glob_backgrounds()
+        self.slideshow_timer = self.app_state.slideshow_interval
+        self._glob_backgrounds(randomize=True)
 
         # Add slideshow widget
+        slideshow_image = load_image(
+            self.slideshow_images[self.app_state.slideshow_index]
+        )
         self.stage_entities.append(
             WidgetSlideshow(
-                build_slideshow_sprite(
-                    pygame_image_load(self.slideshow_images[self.slideshow_index])
-                )
+                build_slideshow_sprite(slideshow_image)
             )  # type: ignore[call-arg]
         )
 
@@ -52,7 +56,7 @@ class StageDefault(Stage):
 
         self.stage_entities.append(
             WidgetDucky(
-                build_image_sprite(cache.surfaces["duck_animated"][0]),
+                build_image_sprite(self.cache.surfaces["duck_animated"][0]),
                 x=0,
                 y=self.display_size[1] - 32,
                 z_order=10,
@@ -64,7 +68,7 @@ class StageDefault(Stage):
                     self.display_size[1],
                 ),
                 bound_size=(32, 32),
-                frames=cache.surfaces["duck_animated"],
+                frames=self.cache.surfaces["duck_animated"],
                 frame_delay=4,
             ),  # type: ignore[call-arg]
         )
@@ -78,23 +82,29 @@ class StageDefault(Stage):
             w.fade_target_alpha = 255
 
     def update(self) -> None:
-        app_state = next(self.entities.get_by_class(AppState))
-        for event_type, event_payload in app_state.events:
-            if event_type == EventTypes.EVENT_CLOCK_NEW_MINUTE:
-                self.advance()
+        widget_slideshow = next(self.entities.get_by_class(WidgetSlideshow))
+        for event_type, event_payload in self.app_state.events:
+            if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
+                self.slideshow_timer -= 1
+                if self.slideshow_timer <= 0:
+                    logger.debug("sys.scene.stage.default.slideshow: advance")
+                    self.advance()
+                    self.slideshow_timer = self.app_state.slideshow_interval
+
+        widget_slideshow.sprite.update()
 
     def advance(self) -> None:
         widget_slideshow = next(self.entities.get_by_class(WidgetSlideshow))
-        self.slideshow_index += 1
-        if self.slideshow_index >= len(self.slideshow_images):
-            self.slideshow_index = 0
-        widget_slideshow.sprite.set_next_image(
-            pygame_image_load(self.slideshow_images[self.slideshow_index])
-        )
+        self.app_state.slideshow_index += 1
+        if self.app_state.slideshow_index >= len(self.slideshow_images):
+            self.app_state.slideshow_index = 0
+        next_image = load_image(self.slideshow_images[self.app_state.slideshow_index])
+        widget_slideshow.sprite.set_next_image(next_image)
         widget_slideshow.sprite.swap()
 
-    def _glob_backgrounds(self) -> None:
+    def _glob_backgrounds(self, randomize: bool = False) -> None:
         app_state = next(self.entities.get_by_class(AppState))
-        self.slideshow_images = list(
-            Path(app_state.config.paths.images_backgrounds).glob("*.png")
-        )
+        images = list(Path(app_state.config.paths.images_backgrounds).glob("*.png"))
+        if randomize:
+            random.shuffle(images)
+        self.slideshow_images = images
