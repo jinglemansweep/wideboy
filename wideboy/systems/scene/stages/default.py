@@ -117,6 +117,15 @@ class StageDefault(Stage):
         self.slideshow_images = images
 
     def _load_and_process_image(self, filename: str) -> Surface:
+        tint_enabled = self.app_state.tint_enabled
+        color = self.app_state.tint_color
+        brightness = self.app_state.tint_brightness
+        color = Color(
+            color[0] * brightness / 255,
+            color[1] * brightness / 255,
+            color[2] * brightness / 255,
+        )
         surface = load_image(filename)
-        surface = recolor_image(surface, Color(*self.app_state.background_tint))
+        if tint_enabled:
+            surface = recolor_image(surface, color)
         return surface

@@ -105,12 +105,12 @@ class BackgroundTintLight(LightEntity):
     name: str = "background_tint"
     description: str = "Background Tint"
     initial_state: Dict[str, Any] = {
-        "state": "ON",
+        "state": "OFF",
         "brightness": 255,
         "color": {"r": 255, "g": 255, "b": 255},
     }
     options: Dict[str, Any] = {
-        "brightness": False,
+        "brightness": True,
         "supported_color_modes": ["rgb"],
         "color_mode": True,
     }
@@ -123,25 +123,29 @@ class BackgroundTintLight(LightEntity):
         payload: str,
     ) -> None:
         payload_dict = json.loads(payload)
+        app_state.tint_enabled = payload_dict["state"] == "ON"
+        if "brightness" in payload_dict:
+            app_state.tint_brightness = int(payload_dict["brightness"])
         if "color" in payload_dict:
-            app_state.background_tint = (
+            app_state.tint_color = (
                 int(payload_dict["color"]["r"]),
                 int(payload_dict["color"]["g"]),
                 int(payload_dict["color"]["b"]),
             )
         logger.debug(
-            f"sys.hass.entities.light.background_tint: color={app_state.background_tint}"
+            f"sys.hass.entities.light.background_tint: enabled={app_state.tint_enabled} color={app_state.tint_color} brightness={app_state.tint_brightness}"
         )
         client.publish(
             state_topic,
             json.dumps(
                 {
-                    "state": to_hass_bool(True),
+                    "state": to_hass_bool(app_state.tint_enabled),
+                    "brightness": app_state.tint_brightness,
                     "color_mode": "rgb",
                     "color": {
-                        "r": app_state.background_tint[0],
-                        "g": app_state.background_tint[1],
-                        "b": app_state.background_tint[2],
+                        "r": app_state.tint_color[0],
+                        "g": app_state.tint_color[1],
+                        "b": app_state.tint_color[2],
                     },
                 }
             ),
@@ -152,7 +156,7 @@ class BackgroundTintLight(LightEntity):
 class BackgroundIntervalNumber(NumberEntity):
     name: str = "slideshow_interval"
     description: str = "Slideshow Interval"
-    initial_state: int = 60
+    initial_state: int = 10
     options: Dict[str, Any] = {
         "device_class": "duration",
         "step": 1,

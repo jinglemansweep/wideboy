@@ -25,8 +25,10 @@ class AppState:
     hass_state: dict = field(default_factory=dict)
     master_power: bool = True
     master_brightness: int = 128
-    background_tint: tuple = (255, 255, 255)
-    slideshow_interval: int = 60
+    tint_enabled: bool = False
+    tint_brightness: int = 128
+    tint_color: tuple = (255, 0, 64)
+    slideshow_interval: int = 30
     slideshow_index: int = 0
     clock_24_hour: bool = True
     screenshot: bool = False
