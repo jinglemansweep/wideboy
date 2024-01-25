@@ -49,7 +49,7 @@ class StageDefault(Stage):
         )
         self.stage_entities.append(
             WidgetSlideshow(
-                build_slideshow_sprite(slideshow_image)
+                build_slideshow_sprite(slideshow_image, self.display_size),
             )  # type: ignore[call-arg]
         )
 
@@ -100,7 +100,9 @@ class StageDefault(Stage):
         if self.app_state.slideshow_index >= len(self.slideshow_images):
             self.app_state.slideshow_index = 0
         next_image = load_image(self.slideshow_images[self.app_state.slideshow_index])
-        widget_slideshow.sprite.set_next_image(next_image)
+        widget_slideshow.sprite.set_next_image(
+            next_image, (self.display_size[0], self.display_size[1])
+        )
         widget_slideshow.sprite.swap(
             random.choice([Transition.FADE, Transition.WIPE, Transition.FOLD])
         )

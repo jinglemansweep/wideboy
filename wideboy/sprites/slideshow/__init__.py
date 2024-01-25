@@ -3,7 +3,7 @@ from enum import Enum
 from pygame import Rect, Surface
 from pygame.sprite import Sprite
 from pygame.transform import scale as pygame_transform_scale
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -24,11 +24,12 @@ class SlideshowSprite(Sprite):
     transition_out: bool = False
     transition_state: Dict[str, Any] = {}
 
-    def __init__(self, surface: Surface) -> None:
-        self.image = surface
+    def __init__(self, surface: Surface, size: Tuple[int, int]) -> None:
+        self.image = self._resize(surface, size)
         self.rect = self.image.get_rect()
 
     def set_next_image(self, surface: Surface) -> None:
+        surface = self._resize(surface, (self.rect.width, self.rect.height))
         self.image_buffer = surface
 
     def swap(self, transition: Transition = Transition.NONE) -> None:
@@ -58,6 +59,9 @@ class SlideshowSprite(Sprite):
     def reset_transition(self) -> None:
         self.transition = None
         self.transition_state = {}
+
+    def _resize(self, surface: Surface, size: Tuple[int, int]) -> Surface:
+        return pygame_transform_scale(surface, size)
 
     def _transition_fade(self, speed: int = 8) -> None:
         if self.image_buffer is None:

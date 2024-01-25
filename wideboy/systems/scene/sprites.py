@@ -1,6 +1,6 @@
 import logging
 from pygame import Color, Surface
-from typing import Dict, List, Type
+from typing import Dict, List, Tuple, Type
 from ...sprites.image import ImageSprite
 from ...sprites.slideshow import SlideshowSprite
 from ...sprites.text import TextSprite
@@ -46,5 +46,5 @@ def build_tile_grid_sprite(
     return TileGrid(cells, state)
 
 
-def build_slideshow_sprite(surface: Surface):
-    return SlideshowSprite(surface)
+def build_slideshow_sprite(surface: Surface, size: Tuple[int, int]):
+    return SlideshowSprite(surface, size)
