@@ -80,7 +80,7 @@ class StageDefault(Stage):
                     y=0,
                     z_order=5,
                     frames=self.cache.surfaces["mode7_vinyl"],
-                    frame_delay=4,
+                    frame_delay=1,
                 ),  # type: ignore[call-arg]
             ]
         )
