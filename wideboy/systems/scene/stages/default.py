@@ -110,7 +110,7 @@ class StageDefault(Stage):
                     self.slideshow_timer = self.app_state.slideshow_interval
 
         widget_slideshow.sprite.update()
-        widget_spinner.sprite.rotation += 1
+        widget_spinner.sprite.rotation += 3
         widget_spinner.sprite.update()
 
     def advance(self) -> None:
