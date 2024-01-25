@@ -156,3 +156,17 @@ class SysPreprocess(System):
                 0.175,
             )
             yield f"Vinyl (Serato) [{r}]"
+        for r in range(1, 360, 2):
+            preprocess_mode7(
+                self.cache,
+                "mode7_tron_grid",
+                f"{self.app_state.config.paths.images_sprites}/misc/grid_red.png",
+                (
+                    self.display_info.current_w,
+                    self.display_info.current_h,
+                ),
+                0.1,
+                0 - r,
+                0.8,
+            )
+            yield f"Tron Grid [{r}]"

@@ -109,3 +109,8 @@ class WidgetDucky(
 @entity
 class WidgetVinyl(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
     pass
+
+
+@entity
+class WidgetTronGrid(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
+    pass

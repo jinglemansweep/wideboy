@@ -21,6 +21,7 @@ from .stages.boot import StageBoot
 from .stages.default import StageDefault
 from .stages.ducks import StageDucks
 from .stages.night import StageNight
+from .stages.tron import StageTron
 from .stages.vinyl import StageVinyl
 from .sprites import (
     build_date_sprite,
@@ -172,6 +173,15 @@ class SysScene(System):
                     logger.info("NIGHT MODE")
                     self._switch_stage(
                         StageNight(
+                            self.entities,
+                            (self.display_info.current_w, self.display_info.current_h),
+                        )
+                    )
+                # Tron Mode
+                if self.scene_mode == "tron":
+                    logger.info("TRON MODE")
+                    self._switch_stage(
+                        StageTron(
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )
