@@ -5,7 +5,7 @@ from ....entities import (
     Cache,
     WidgetClockDate,
     WidgetClockTime,
-    WidgetTronGrid,
+    WidgetGalaxy,
     WidgetTileGrid,
 )
 from ..sprites import build_image_sprite
@@ -14,7 +14,7 @@ from . import Stage
 logger = logging.getLogger(__name__)
 
 
-class StageTron(Stage):
+class StageGalaxy(Stage):
     def __init__(
         self,
         entities: EntityManager,
@@ -29,12 +29,12 @@ class StageTron(Stage):
 
         self.stage_entities.extend(
             [
-                WidgetTronGrid(
-                    build_image_sprite(self.cache.surfaces["mode7_tron_grid"][0]),
+                WidgetGalaxy(
+                    build_image_sprite(self.cache.surfaces["mode7_milky_way"][0]),
                     x=0,
                     y=0,
                     z_order=5,
-                    frames=self.cache.surfaces["mode7_tron_grid"],
+                    frames=self.cache.surfaces["mode7_milky_way"],
                     frame_delay=3,
                 ),  # type: ignore[call-arg]
             ]

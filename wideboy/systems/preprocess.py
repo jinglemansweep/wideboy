@@ -141,7 +141,7 @@ class SysPreprocess(System):
                 0 - r,
                 0.5,
             )
-            yield f"Vinyl [{r}]"
+            yield f"Vinyl #1 [{r/360*100:.0f}%]"
         for r in range(1, 360, 5):
             preprocess_mode7(
                 self.cache,
@@ -155,12 +155,12 @@ class SysPreprocess(System):
                 0 - r,
                 0.175,
             )
-            yield f"Vinyl (Serato) [{r}]"
+            yield f"Vinyl #2 [{r/360*100:.0f}%]"
         for r in range(1, 360, 2):
             preprocess_mode7(
                 self.cache,
-                "mode7_tron_grid",
-                f"{self.app_state.config.paths.images_sprites}/misc/circle_milky_way.png",
+                "mode7_milky_way",
+                f"{self.app_state.config.paths.images_sprites}/misc/milky_way.png",
                 (
                     self.display_info.current_w,
                     self.display_info.current_h,
@@ -169,4 +169,4 @@ class SysPreprocess(System):
                 0 - r,
                 0.6,
             )
-            yield f"Tron Grid [{r}]"
+            yield f"Milky Way [{r/360*100:.0f}%]"

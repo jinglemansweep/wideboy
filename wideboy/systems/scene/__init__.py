@@ -20,8 +20,8 @@ from .stages import Stage
 from .stages.boot import StageBoot
 from .stages.default import StageDefault
 from .stages.ducks import StageDucks
+from .stages.galaxy import StageGalaxy
 from .stages.night import StageNight
-from .stages.tron import StageTron
 from .stages.vinyl import StageVinyl
 from .sprites import (
     build_date_sprite,
@@ -177,11 +177,11 @@ class SysScene(System):
                             (self.display_info.current_w, self.display_info.current_h),
                         )
                     )
-                # Tron Mode
-                if self.scene_mode == "tron":
-                    logger.info("TRON MODE")
+                # Galaxy Mode
+                if self.scene_mode == "galaxy":
+                    logger.info("GALAXY MODE")
                     self._switch_stage(
-                        StageTron(
+                        StageGalaxy(
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )

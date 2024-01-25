@@ -112,5 +112,5 @@ class WidgetVinyl(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
 
 
 @entity
-class WidgetTronGrid(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
+class WidgetGalaxy(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
     pass
