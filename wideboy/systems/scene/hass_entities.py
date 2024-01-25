@@ -156,7 +156,7 @@ class BackgroundTintLight(LightEntity):
 class BackgroundIntervalNumber(NumberEntity):
     name: str = "slideshow_interval"
     description: str = "Slideshow Interval"
-    initial_state: int = 10
+    # initial_state: int = 10
     options: Dict[str, Any] = {
         "device_class": "duration",
         "step": 1,
