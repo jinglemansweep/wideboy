@@ -35,7 +35,7 @@ class StageGalaxy(Stage):
                     y=0,
                     z_order=5,
                     frames=self.cache.surfaces["mode7_milky_way"],
-                    frame_delay=3,
+                    frame_delay=2,
                 ),  # type: ignore[call-arg]
             ]
         )
