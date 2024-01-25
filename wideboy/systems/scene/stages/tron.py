@@ -35,7 +35,7 @@ class StageTron(Stage):
                     y=0,
                     z_order=5,
                     frames=self.cache.surfaces["mode7_tron_grid"],
-                    frame_delay=1,
+                    frame_delay=5,
                 ),  # type: ignore[call-arg]
             ]
         )
