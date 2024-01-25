@@ -104,3 +104,8 @@ class WidgetDucky(
     ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComAlpha, ComVisible
 ):
     pass
+
+
+@entity
+class WidgetSpinner(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
+    pass

@@ -11,11 +11,12 @@ from ....entities import (
     WidgetClockTime,
     WidgetDucky,
     WidgetSlideshow,
+    WidgetSpinner,
     WidgetTileGrid,
 )
 from ....sprites.graphics import load_image
 from ....sprites.slideshow import Transition
-from ..sprites import build_image_sprite, build_slideshow_sprite
+from ..sprites import build_image_sprite, build_mode7_sprite, build_slideshow_sprite
 from . import Stage
 
 
@@ -55,23 +56,38 @@ class StageDefault(Stage):
 
         # Add Ducky
 
-        self.stage_entities.append(
-            WidgetDucky(
-                build_image_sprite(self.cache.surfaces["duck_animated"][0]),
-                x=0,
-                y=self.display_size[1] - 32,
-                z_order=10,
-                speed_x=1,
-                bound_rect=(
-                    0,
-                    0,
-                    self.display_size[0] // 2,
-                    self.display_size[1],
-                ),
-                bound_size=(32, 32),
-                frames=self.cache.surfaces["duck_animated"],
-                frame_delay=4,
-            ),  # type: ignore[call-arg]
+        self.stage_entities.extend(
+            [
+                WidgetDucky(
+                    build_image_sprite(self.cache.surfaces["duck_animated"][0]),
+                    x=0,
+                    y=self.display_size[1] - 32,
+                    z_order=10,
+                    speed_x=1,
+                    bound_rect=(
+                        0,
+                        0,
+                        self.display_size[0] // 2,
+                        self.display_size[1],
+                    ),
+                    bound_size=(32, 32),
+                    frames=self.cache.surfaces["duck_animated"],
+                    frame_delay=4,
+                ),  # type: ignore[call-arg]
+                WidgetSpinner(
+                    build_mode7_sprite(
+                        load_image(
+                            f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png"
+                        ),
+                        0.3,
+                        0,
+                        0.2,
+                    ),
+                    x=16,
+                    y=2,
+                    z_order=5,
+                ),  # type: ignore[call-arg]
+            ]
         )
 
         # Fade in widgets
@@ -84,6 +100,7 @@ class StageDefault(Stage):
 
     def update(self) -> None:
         widget_slideshow = next(self.entities.get_by_class(WidgetSlideshow))
+        widget_spinner = next(self.entities.get_by_class(WidgetSpinner))
         for event_type, event_payload in self.app_state.events:
             if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
                 self.slideshow_timer -= 1
@@ -93,6 +110,8 @@ class StageDefault(Stage):
                     self.slideshow_timer = self.app_state.slideshow_interval
 
         widget_slideshow.sprite.update()
+        widget_spinner.sprite.rotation += 1
+        widget_spinner.sprite.update()
 
     def advance(self) -> None:
         widget_slideshow = next(self.entities.get_by_class(WidgetSlideshow))
