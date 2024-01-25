@@ -32,7 +32,6 @@ class StageDucks(Stage):
 
     def setup(self) -> None:
         cache = next(self.entities.get_by_class(Cache))
-
         self.stage_entities.append(
             WidgetDucky(
                 build_image_sprite(cache.surfaces["duck_animated"][0]),

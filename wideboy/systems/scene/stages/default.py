@@ -55,25 +55,23 @@ class StageDefault(Stage):
 
         # Add Main Widgets
 
-        self.stage_entities.extend(
-            [
-                WidgetDucky(
-                    build_image_sprite(self.cache.surfaces["duck_animated"][0]),
-                    x=0,
-                    y=self.display_size[1] - 32,
-                    z_order=10,
-                    speed_x=1,
-                    bound_rect=(
-                        0,
-                        0,
-                        self.display_size[0] // 2,
-                        self.display_size[1],
-                    ),
-                    bound_size=(32, 32),
-                    frames=self.cache.surfaces["duck_animated"],
-                    frame_delay=4,
-                ),  # type: ignore[call-arg]
-            ]
+        self.stage_entities.append(
+            WidgetDucky(
+                build_image_sprite(self.cache.surfaces["duck_animated"][0]),
+                x=0,
+                y=self.display_size[1] - 32,
+                z_order=10,
+                speed_x=1,
+                bound_rect=(
+                    0,
+                    0,
+                    self.display_size[0] // 2,
+                    self.display_size[1],
+                ),
+                bound_size=(32, 32),
+                frames=self.cache.surfaces["duck_animated"],
+                frame_delay=4,
+            ),  # type: ignore[call-arg]
         )
 
         # Fade in widgets

@@ -178,7 +178,7 @@ class SysScene(System):
                         )
                     )
                 # Galaxy Mode
-                if self.scene_mode == "galaxy":
+                elif self.scene_mode == "galaxy":
                     logger.info("GALAXY MODE")
                     self._switch_stage(
                         StageGalaxy(
