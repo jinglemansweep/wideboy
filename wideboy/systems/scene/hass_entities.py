@@ -101,6 +101,54 @@ class Clock24HourSwitch(SwitchEntity):
         )
 
 
+class BackgroundTintLight(LightEntity):
+    name: str = "background_tint"
+    description: str = "Background Tint"
+    initial_state: Dict[str, Any] = {
+        "state": "ON",
+        "brightness": 255,
+        "color": {"r": 255, "g": 255, "b": 255},
+    }
+    options: Dict[str, Any] = {
+        "brightness": False,
+        "supported_color_modes": ["rgb"],
+        "color_mode": True,
+    }
+
+    def callback(
+        self,
+        client: MQTTClient,
+        app_state: AppState,
+        state_topic: str,
+        payload: str,
+    ) -> None:
+        payload_dict = json.loads(payload)
+        if "color" in payload_dict:
+            app_state.background_tint = (
+                int(payload_dict["color"]["r"]),
+                int(payload_dict["color"]["g"]),
+                int(payload_dict["color"]["b"]),
+            )
+        logger.debug(
+            f"sys.hass.entities.light.background_tint: color={app_state.background_tint}"
+        )
+        client.publish(
+            state_topic,
+            json.dumps(
+                {
+                    "state": to_hass_bool(True),
+                    "color_mode": "rgb",
+                    "color": {
+                        "r": app_state.background_tint[0],
+                        "g": app_state.background_tint[1],
+                        "b": app_state.background_tint[2],
+                    },
+                }
+            ),
+            qos=1,
+        )
+
+
 class BackgroundIntervalNumber(NumberEntity):
     name: str = "slideshow_interval"
     description: str = "Slideshow Interval"
@@ -186,6 +234,7 @@ ENTITIES = [
     MasterPowerLight,
     ModeSelect,
     Clock24HourSwitch,
+    BackgroundTintLight,
     BackgroundIntervalNumber,
     MessageText,
     StateLogButton,

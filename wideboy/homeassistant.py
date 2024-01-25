@@ -118,8 +118,6 @@ class LightEntity(HomeAssistantEntity):
         "schema": "json",
         "command_topic": "{}/set",
         "state_topic": "{}/state",
-        "brightness_command_topic": "{}/brightness/set",
-        "brightness_state_topic": "{}/brightness/state",
     }
 
 

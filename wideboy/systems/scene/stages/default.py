@@ -2,6 +2,7 @@ import logging
 import random
 from ecs_pattern import EntityManager
 from pathlib import Path
+from pygame import Color, Surface
 from typing import List, Tuple
 from ....consts import EventTypes
 from ....entities import (
@@ -13,7 +14,7 @@ from ....entities import (
     WidgetSlideshow,
     WidgetTileGrid,
 )
-from ....sprites.graphics import load_image
+from ....sprites.graphics import load_image, recolor_image
 from ....sprites.slideshow import Transition
 from ..sprites import build_image_sprite, build_slideshow_sprite
 from . import Stage
@@ -44,7 +45,7 @@ class StageDefault(Stage):
         self._glob_backgrounds(randomize=True)
 
         # Add slideshow widget
-        slideshow_image = load_image(
+        slideshow_image = self._load_and_process_image(
             self.slideshow_images[self.app_state.slideshow_index]
         )
         self.stage_entities.append(
@@ -100,7 +101,9 @@ class StageDefault(Stage):
         self.app_state.slideshow_index += 1
         if self.app_state.slideshow_index >= len(self.slideshow_images):
             self.app_state.slideshow_index = 0
-        next_image = load_image(self.slideshow_images[self.app_state.slideshow_index])
+        next_image = self._load_and_process_image(
+            self.slideshow_images[self.app_state.slideshow_index]
+        )
         widget_slideshow.sprite.set_next_image(next_image)
         widget_slideshow.sprite.swap(
             random.choice([Transition.FADE, Transition.WIPE, Transition.FOLD])
@@ -112,3 +115,8 @@ class StageDefault(Stage):
         if randomize:
             random.shuffle(images)
         self.slideshow_images = images
+
+    def _load_and_process_image(self, filename: str) -> Surface:
+        surface = load_image(filename)
+        surface = recolor_image(surface, Color(*self.app_state.background_tint))
+        return surface
