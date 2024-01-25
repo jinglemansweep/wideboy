@@ -2,7 +2,7 @@ import logging
 from pygame import Rect, Surface, SRCALPHA
 from pygame.sprite import Sprite
 from pygame.transform import rotozoom, smoothscale
-
+from typing import Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 class Mode7Sprite(Sprite):
     image_original: Surface
     rect: Rect
+    _size: Tuple[int, int]
     _perspective: float
     _rotation: float
     _zoom: float
@@ -18,16 +19,19 @@ class Mode7Sprite(Sprite):
     def __init__(
         self,
         surface: Surface,
+        size: Tuple[int, int],
         perspective: float = 0,
         rotation: float = 0,
         zoom: float = 0,
     ) -> None:
         self.image_original = surface
         self.rect = surface.get_rect()
+        self._size = size
         self._perspective = perspective
         self._rotation = rotation
         self._zoom = zoom
         self._dirty = True
+        self.update()
 
     @property
     def zoom(self):
@@ -72,7 +76,7 @@ class Mode7Sprite(Sprite):
     def update(self):
         if not self._dirty:
             return
-        surface = Surface((256, 64), SRCALPHA)
+        surface = Surface(self._size, SRCALPHA)
         surface.fill((0, 0, 0, 0))
         image = rotozoom(self.image_original, self._rotation, self._zoom)
         w2, h2 = image.get_size()

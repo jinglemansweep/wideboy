@@ -52,6 +52,10 @@ def build_slideshow_sprite(surface: Surface, size: Tuple[int, int]):
 
 
 def build_mode7_sprite(
-    surface: Surface, perspective: float, rotation: float, zoom: float
+    surface: Surface,
+    size: Tuple[int, int],
+    perspective: float,
+    rotation: float,
+    zoom: float,
 ):
-    return Mode7Sprite(surface, perspective, rotation, zoom)
+    return Mode7Sprite(surface, size, perspective, rotation, zoom)

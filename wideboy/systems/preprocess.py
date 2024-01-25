@@ -3,10 +3,10 @@ import random
 import time
 from ecs_pattern import EntityManager, System
 from functools import partial
-from pygame.image import load as pygame_image_load
 from typing import Callable, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
-from .scene.sprites import build_system_message_sprite
+from ..sprites.graphics import load_image
+from .scene.sprites import build_mode7_sprite, build_system_message_sprite
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def preprocess_load_spritesheet(
     logger.debug(f"preprocess_load_spritesheet: key={key} path={path} size={size}")
     if key not in cache.surfaces:
         cache.surfaces[key] = []
-    sheet = pygame_image_load(path)
+    sheet = load_image(path)
     idx = 0
     for y in range(0, sheet.get_height(), size[1]):
         for x in range(0, sheet.get_width(), size[0]):
@@ -36,7 +36,7 @@ def preprocess_load_image(cache: Cache, key: str, path: str):
     logger.debug(f"preprocess_load_image: key={key} path={path}")
     if key not in cache.surfaces:
         cache.surfaces[key] = []
-    cache.surfaces[key].append(pygame_image_load(path))
+    cache.surfaces[key].append(load_image(path))
 
 
 def preprocess_text(cache: Cache, key: str, text: str):
@@ -44,6 +44,31 @@ def preprocess_text(cache: Cache, key: str, text: str):
     sprite = build_system_message_sprite(text)
     if key not in cache.surfaces:
         cache.surfaces[key] = []
+    cache.surfaces[key].append(sprite.image)
+
+
+def preprocess_mode7(
+    cache: Cache,
+    key: str,
+    path: str,
+    canvas_size: Tuple[int, int],
+    perspective=0.5,
+    rotation=0.0,
+    zoom=1.0,
+):
+    logger.debug(
+        f"preprocess_mode7: key={key} path={path} canvas_size={canvas_size} perspective={perspective} rotation={rotation} zoom={zoom}"
+    )
+
+    if key not in cache.surfaces:
+        cache.surfaces[key] = []
+    sprite = build_mode7_sprite(
+        load_image(path),
+        canvas_size,
+        perspective=perspective,
+        rotation=rotation,
+        zoom=zoom,
+    )
     cache.surfaces[key].append(sprite.image)
 
 
@@ -62,23 +87,6 @@ class SysPreprocess(System):
         logger.info("Preprocessing system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
         self.cache = next(self.entities.get_by_class(Cache))
-
-        """
-        # Slideshow Backgrounds
-        bgs = Path(self.app_state.config.paths.images_backgrounds).glob("*.png")
-        for bg in bgs:
-            print(bg)
-            self.queue.append(
-                (
-                    preprocess_load_image,
-                    (
-                        self.cache,
-                        "slideshow_backgrounds",
-                        str(bg),
-                    ),
-                )
-            )
-        """
 
         # Pixelated Duck
         self.queue.append(
@@ -105,6 +113,24 @@ class SysPreprocess(System):
                 ),
             ),
         )
+
+        # Mode7 Vinyl
+        for r in range(1, 360, 5):
+            self.queue.append(
+                (
+                    preprocess_mode7,
+                    (
+                        self.cache,
+                        "mode7_vinyl",
+                        f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png",
+                        (380, 64),
+                        0.25,
+                        0 - r,
+                        0.4,
+                    ),
+                ),
+            )
+
         self.queue_length = len(self.queue)
 
     def update(self) -> None:

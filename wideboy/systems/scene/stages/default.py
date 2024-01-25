@@ -16,7 +16,7 @@ from ....entities import (
 )
 from ....sprites.graphics import load_image
 from ....sprites.slideshow import Transition
-from ..sprites import build_image_sprite, build_mode7_sprite, build_slideshow_sprite
+from ..sprites import build_image_sprite, build_slideshow_sprite
 from . import Stage
 
 
@@ -54,7 +54,7 @@ class StageDefault(Stage):
             )  # type: ignore[call-arg]
         )
 
-        # Add Ducky
+        # Add Main Widgets
 
         self.stage_entities.extend(
             [
@@ -75,17 +75,12 @@ class StageDefault(Stage):
                     frame_delay=4,
                 ),  # type: ignore[call-arg]
                 WidgetSpinner(
-                    build_mode7_sprite(
-                        load_image(
-                            f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png"
-                        ),
-                        0.3,
-                        0,
-                        0.2,
-                    ),
-                    x=16,
-                    y=2,
+                    build_image_sprite(self.cache.surfaces["mode7_vinyl"][0]),
+                    x=0,
+                    y=0,
                     z_order=5,
+                    frames=self.cache.surfaces["mode7_vinyl"],
+                    frame_delay=4,
                 ),  # type: ignore[call-arg]
             ]
         )
@@ -100,7 +95,7 @@ class StageDefault(Stage):
 
     def update(self) -> None:
         widget_slideshow = next(self.entities.get_by_class(WidgetSlideshow))
-        widget_spinner = next(self.entities.get_by_class(WidgetSpinner))
+        # widget_spinner = next(self.entities.get_by_class(WidgetSpinner))
         for event_type, event_payload in self.app_state.events:
             if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
                 self.slideshow_timer -= 1
@@ -110,8 +105,6 @@ class StageDefault(Stage):
                     self.slideshow_timer = self.app_state.slideshow_interval
 
         widget_slideshow.sprite.update()
-        widget_spinner.sprite.rotation += 3
-        widget_spinner.sprite.update()
 
     def advance(self) -> None:
         widget_slideshow = next(self.entities.get_by_class(WidgetSlideshow))
