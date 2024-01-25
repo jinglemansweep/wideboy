@@ -2,7 +2,10 @@ import logging
 from enum import Enum
 from pygame import Rect, Surface
 from pygame.sprite import Sprite
-from pygame.transform import scale as pygame_transform_scale
+from pygame.transform import (
+    flip as pygame_transform_flip,
+    scale as pygame_transform_scale,
+)
 from typing import Any, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
@@ -117,7 +120,7 @@ class SlideshowSprite(Sprite):
                 (0, 0, self.rect.width, self.transition_state["y"]),
             )
             self.image.blit(
-                self.image_buffer,
+                pygame_transform_flip(self.image_buffer, False, True),
                 (0, self.transition_state["y"]),
                 (
                     0,
