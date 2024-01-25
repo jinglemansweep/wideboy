@@ -97,9 +97,8 @@ class SysPreprocess(System):
             return
 
         try:
-            next(self.task_gen)
-            dots = "." * (self.step_index % 4)
-            self._progress(f"Getting ready{dots}")
+            desc = next(self.task_gen)
+            self._progress(f"Asset: {desc}")
             self.step_index += 1
         except StopIteration:
             self.app_state.booting = False
@@ -118,7 +117,7 @@ class SysPreprocess(System):
             "duck_pixel",
             f"{self.app_state.config.paths.images_sprites}/misc/duck-pixel.png",
         )
-        yield True
+        yield "Pixelated Duck"
         # Animated Duck
         preprocess_load_spritesheet(
             self.cache,
@@ -127,7 +126,7 @@ class SysPreprocess(System):
             (32, 32),
             (6, 12),
         )
-        yield True
+        yield "Animated Duck"
         # Mode7 Vinyl
         for r in range(1, 360, 5):
             preprocess_mode7(
@@ -142,6 +141,8 @@ class SysPreprocess(System):
                 0 - r,
                 0.5,
             )
+            yield f"Vinyl [{r}]"
+        for r in range(1, 360, 5):
             preprocess_mode7(
                 self.cache,
                 "mode7_vinyl_serato",
@@ -154,4 +155,4 @@ class SysPreprocess(System):
                 0 - r,
                 0.175,
             )
-            yield True
+            yield f"Vinyl (Serato) [{r}]"
