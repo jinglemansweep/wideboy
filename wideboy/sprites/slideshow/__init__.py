@@ -12,6 +12,7 @@ class Transition(Enum):
     FADE = 1
     WIPE = 2
     BLEED = 3
+    COLUMNS = 4
 
 
 class SlideshowSprite(Sprite):
@@ -21,7 +22,6 @@ class SlideshowSprite(Sprite):
     transition: Optional[Transition] = None
     transition_out: bool = False
     transition_state: Dict[str, Any] = {}
-    fade_speed: int = 4
 
     def __init__(self, surface: Surface) -> None:
         self.image = surface
@@ -51,19 +51,21 @@ class SlideshowSprite(Sprite):
             self._transition_wipe()
         elif self.transition == Transition.BLEED:
             self._transition_bleed()
+        elif self.transition == Transition.COLUMNS:
+            self._transition_columns()
 
     def reset_transition(self) -> None:
         self.transition = None
         self.transition_state = {}
 
-    def _transition_fade(self) -> None:
+    def _transition_fade(self, speed: int = 8) -> None:
         if self.image_buffer is None:
             return
         image_alpha = self.image.get_alpha() or 0
         # If fading down, decrease alpha. When alpha reaches 0, swap images
         if self.transition_out:
             if image_alpha > 0:
-                image_alpha -= self.fade_speed
+                image_alpha -= speed
             else:
                 image_alpha = 0
                 self.transition_out = False
@@ -71,7 +73,7 @@ class SlideshowSprite(Sprite):
         # If fading up, increase alpha. When alpha reaches 255, stop transition, and reset direction
         else:
             if image_alpha < 255:
-                image_alpha += self.fade_speed
+                image_alpha += speed
             else:
                 image_alpha = 255
                 self.transition_out = True
@@ -118,6 +120,24 @@ class SlideshowSprite(Sprite):
                     self.rect.width,
                     self.transition_state["y"],
                 ),
+            )
+        # When wipe is complete, swap images and reset state
+        else:
+            self.image = self.image_buffer
+            self.image_buffer = None
+            self.reset_transition()
+
+    def _transition_columns(self, speed: int = 4) -> None:
+        if self.image_buffer is None:
+            return
+        self.transition_state["x"] = self.transition_state.get("x", 1)
+        # Wipe out old image
+        if self.transition_state["x"] < self.rect.width:
+            self.transition_state["x"] += speed
+            self.image.blit(
+                self.image_buffer,
+                (0, 0),
+                (0, 0, self.transition_state["x"], self.rect.height),
             )
         # When wipe is complete, swap images and reset state
         else:
