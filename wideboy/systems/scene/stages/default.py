@@ -102,9 +102,7 @@ class StageDefault(Stage):
         next_image = load_image(self.slideshow_images[self.app_state.slideshow_index])
         widget_slideshow.sprite.set_next_image(next_image)
         widget_slideshow.sprite.swap(
-            random.choice(
-                [Transition.FADE, Transition.WIPE, Transition.FOLD, Transition.BLEED]
-            )
+            random.choice([Transition.FADE, Transition.WIPE, Transition.FOLD])
         )
 
     def _glob_backgrounds(self, randomize: bool = False) -> None:
