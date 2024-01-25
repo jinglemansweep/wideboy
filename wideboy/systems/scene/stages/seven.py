@@ -33,7 +33,7 @@ class StageSeven(Stage):
             WidgetSpinner(
                 build_image_sprite(self.cache.surfaces["mode7_vinyl"][0]),
                 x=0,
-                y=8,
+                y=0,
                 z_order=5,
                 frames=self.cache.surfaces["mode7_vinyl"],
                 frame_delay=1,

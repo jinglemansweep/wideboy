@@ -124,11 +124,11 @@ class SysPreprocess(System):
                     (
                         self.cache,
                         "mode7_vinyl",
-                        f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png",
+                        f"{self.app_state.config.paths.images_sprites}/misc/vinyl_serato.png",
                         (self.display_info.current_w, self.display_info.current_h),
                         0.15,
                         0 - r,
-                        0.8,
+                        0.4,
                     ),
                 ),
             )
