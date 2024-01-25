@@ -1,10 +1,7 @@
 import logging
-import random
-import time
 from ecs_pattern import EntityManager, System
 from pygame.display import Info as DisplayInfo
-from functools import partial
-from typing import Callable, List, Tuple
+from typing import Callable, Generator, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
 from ..sprites.graphics import load_image
 from .scene.sprites import build_mode7_sprite, build_system_message_sprite
@@ -84,76 +81,12 @@ class SysPreprocess(System):
     def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
         self.display_info = DisplayInfo()
+        self.task_gen = self.tasks()
 
     def start(self) -> None:
         logger.info("Preprocessing system starting...")
         self.app_state = next(self.entities.get_by_class(AppState))
         self.cache = next(self.entities.get_by_class(Cache))
-
-        # Pixelated Duck
-        self.queue.append(
-            (
-                preprocess_load_image,
-                (
-                    self.cache,
-                    "duck_pixel",
-                    f"{self.app_state.config.paths.images_sprites}/misc/duck-pixel.png",
-                ),
-            )
-        )
-
-        # Animated Duck
-        self.queue.append(
-            (
-                preprocess_load_spritesheet,
-                (
-                    self.cache,
-                    "duck_animated",
-                    f"{self.app_state.config.paths.images_sprites}/ducky/spritesheet.png",
-                    (32, 32),
-                    (6, 12),
-                ),
-            ),
-        )
-
-        # Mode7 Vinyl
-        for r in range(1, 360, 5):
-            self.queue.append(
-                (
-                    preprocess_mode7,
-                    (
-                        self.cache,
-                        "mode7_vinyl",
-                        f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png",
-                        (
-                            512,
-                            self.display_info.current_h,
-                        ),
-                        0.2,
-                        0 - r,
-                        0.5,
-                    ),
-                )
-            )
-            self.queue.append(
-                (
-                    preprocess_mode7,
-                    (
-                        self.cache,
-                        "mode7_vinyl_serato",
-                        f"{self.app_state.config.paths.images_sprites}/misc/vinyl_serato.png",
-                        (
-                            512,
-                            self.display_info.current_h,
-                        ),
-                        0.2,
-                        0 - r,
-                        0.175,
-                    ),
-                ),
-            )
-
-        self.queue_length = len(self.queue)
 
     def update(self) -> None:
         if not self.app_state.booting:
@@ -163,15 +96,12 @@ class SysPreprocess(System):
         if not self.cache:
             return
 
-        if len(self.queue):
-            task = self.queue.pop(0)
-            percent = int((self.step_index / self.queue_length) * 100)
-            self._progress(f"Getting ready... {percent}%")
-            partial(task[0], *task[1])()
-            sleep_time = random.randrange(10, 50) * 1000.0
-            time.sleep(sleep_time / 1000000.0)
+        try:
+            next(self.task_gen)
+            dots = "." * (self.step_index % 4)
+            self._progress(f"Getting ready{dots}")
             self.step_index += 1
-        else:
+        except StopIteration:
             self.app_state.booting = False
             self._progress(visible=False)
 
@@ -180,3 +110,48 @@ class SysPreprocess(System):
         if widget_message is not None:
             widget_message.fade_target_alpha = 255 if visible else 0
             widget_message.sprite = build_system_message_sprite(message)
+
+    def tasks(self) -> Generator:
+        # Duck Pixel
+        preprocess_load_image(
+            self.cache,
+            "duck_pixel",
+            f"{self.app_state.config.paths.images_sprites}/misc/duck-pixel.png",
+        )
+        yield True
+        # Animated Duck
+        preprocess_load_spritesheet(
+            self.cache,
+            "duck_animated",
+            f"{self.app_state.config.paths.images_sprites}/ducky/spritesheet.png",
+            (32, 32),
+            (6, 12),
+        )
+        yield True
+        # Mode7 Vinyl
+        for r in range(1, 360, 5):
+            preprocess_mode7(
+                self.cache,
+                "mode7_vinyl",
+                f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png",
+                (
+                    512,
+                    self.display_info.current_h,
+                ),
+                0.2,
+                0 - r,
+                0.5,
+            )
+            preprocess_mode7(
+                self.cache,
+                "mode7_vinyl_serato",
+                f"{self.app_state.config.paths.images_sprites}/misc/vinyl_serato.png",
+                (
+                    512,
+                    self.display_info.current_h,
+                ),
+                0.2,
+                0 - r,
+                0.175,
+            )
+            yield True
