@@ -2,6 +2,7 @@ import logging
 from enum import Enum
 from pygame import Rect, Surface
 from pygame.sprite import Sprite
+from pygame.transform import scale as pygame_transform_scale
 from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
@@ -11,8 +12,8 @@ class Transition(Enum):
     NONE = 0
     FADE = 1
     WIPE = 2
-    BLEED = 3
-    COLUMNS = 4
+    FOLD = 3
+    BLEED = 4
 
 
 class SlideshowSprite(Sprite):
@@ -49,10 +50,10 @@ class SlideshowSprite(Sprite):
             self._transition_fade()
         elif self.transition == Transition.WIPE:
             self._transition_wipe()
+        elif self.transition == Transition.FOLD:
+            self._transition_fold()
         elif self.transition == Transition.BLEED:
             self._transition_bleed()
-        elif self.transition == Transition.COLUMNS:
-            self._transition_columns()
 
     def reset_transition(self) -> None:
         self.transition = None
@@ -99,7 +100,7 @@ class SlideshowSprite(Sprite):
             self.image_buffer = None
             self.reset_transition()
 
-    def _transition_bleed(self, speed: int = 1) -> None:
+    def _transition_fold(self, speed: int = 1) -> None:
         if self.image_buffer is None:
             return
         self.transition_state["y"] = self.transition_state.get("y", 0)
@@ -127,17 +128,35 @@ class SlideshowSprite(Sprite):
             self.image_buffer = None
             self.reset_transition()
 
-    def _transition_columns(self, speed: int = 4) -> None:
+    def _transition_bleed(self, speed: int = 4) -> None:
         if self.image_buffer is None:
             return
-        self.transition_state["x"] = self.transition_state.get("x", 1)
+        self.transition_state["x"] = self.transition_state.get("x", 0)
         # Wipe out old image
         if self.transition_state["x"] < self.rect.width:
             self.transition_state["x"] += speed
+            fill = Surface((1, self.rect.height))
+            fill.blit(
+                self.image_buffer,
+                (0, 0),
+                (self.transition_state["x"], 0, 1, self.rect.height),
+            )
+            fill = pygame_transform_scale(
+                fill, (self.rect.width - self.transition_state["x"], self.rect.height)
+            )
             self.image.blit(
                 self.image_buffer,
                 (0, 0),
                 (0, 0, self.transition_state["x"], self.rect.height),
+            )
+            self.image.blit(
+                fill,
+                (
+                    self.transition_state["x"],
+                    0,
+                    self.rect.width - self.transition_state["x"],
+                    self.rect.height,
+                ),
             )
         # When wipe is complete, swap images and reset state
         else:
