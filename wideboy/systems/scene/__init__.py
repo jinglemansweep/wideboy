@@ -21,6 +21,7 @@ from .stages.boot import StageBoot
 from .stages.default import StageDefault
 from .stages.ducks import StageDucks
 from .stages.night import StageNight
+from .stages.seven import StageSeven
 from .sprites import (
     build_date_sprite,
     build_time_sprite,
@@ -174,11 +175,12 @@ class SysScene(System):
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )
-                    )  # Night Mode
-                elif self.scene_mode == "night":
-                    logger.info("NIGHT MODE")
+                    )
+                # Seven Mode
+                elif self.scene_mode == "seven":
+                    logger.info("SEVEN MODE")
                     self._switch_stage(
-                        StageNight(
+                        StageSeven(
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )

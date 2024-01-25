@@ -2,6 +2,7 @@ import logging
 import random
 import time
 from ecs_pattern import EntityManager, System
+from pygame.display import Info as DisplayInfo
 from functools import partial
 from typing import Callable, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
@@ -82,6 +83,7 @@ class SysPreprocess(System):
 
     def __init__(self, entities: EntityManager) -> None:
         self.entities = entities
+        self.display_info = DisplayInfo()
 
     def start(self) -> None:
         logger.info("Preprocessing system starting...")
@@ -123,10 +125,10 @@ class SysPreprocess(System):
                         self.cache,
                         "mode7_vinyl",
                         f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png",
-                        (380, 64),
-                        0.2,
+                        (self.display_info.current_w, self.display_info.current_h),
+                        0.15,
                         0 - r,
-                        0.4,
+                        0.8,
                     ),
                 ),
             )

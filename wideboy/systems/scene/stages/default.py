@@ -11,7 +11,6 @@ from ....entities import (
     WidgetClockTime,
     WidgetDucky,
     WidgetSlideshow,
-    WidgetSpinner,
     WidgetTileGrid,
 )
 from ....sprites.graphics import load_image
@@ -73,14 +72,6 @@ class StageDefault(Stage):
                     bound_size=(32, 32),
                     frames=self.cache.surfaces["duck_animated"],
                     frame_delay=4,
-                ),  # type: ignore[call-arg]
-                WidgetSpinner(
-                    build_image_sprite(self.cache.surfaces["mode7_vinyl"][0]),
-                    x=0,
-                    y=0,
-                    z_order=5,
-                    frames=self.cache.surfaces["mode7_vinyl"],
-                    frame_delay=1,
                 ),  # type: ignore[call-arg]
             ]
         )

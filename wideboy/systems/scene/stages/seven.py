@@ -1,0 +1,48 @@
+import logging
+from ecs_pattern import EntityManager
+from typing import Tuple
+from ....entities import (
+    Cache,
+    WidgetClockDate,
+    WidgetClockTime,
+    WidgetSpinner,
+    WidgetTileGrid,
+)
+from ..sprites import build_image_sprite
+from . import Stage
+
+logger = logging.getLogger(__name__)
+
+
+class StageSeven(Stage):
+    image_count: int
+
+    def __init__(
+        self,
+        entities: EntityManager,
+        display_size: Tuple[int, int],
+    ) -> None:
+        super().__init__(entities)
+        self.display_size = display_size
+        self.setup()
+
+    def setup(self) -> None:
+        self.cache = next(self.entities.get_by_class(Cache))
+
+        self.stage_entities.append(
+            WidgetSpinner(
+                build_image_sprite(self.cache.surfaces["mode7_vinyl"][0]),
+                x=0,
+                y=8,
+                z_order=5,
+                frames=self.cache.surfaces["mode7_vinyl"],
+                frame_delay=1,
+            ),  # type: ignore[call-arg]
+        )
+
+        for w in self.entities.get_by_class(
+            WidgetClockDate,
+            WidgetClockTime,
+            WidgetTileGrid,
+        ):
+            w.fade_target_alpha = 255
