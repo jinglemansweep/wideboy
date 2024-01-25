@@ -107,5 +107,5 @@ class WidgetDucky(
 
 
 @entity
-class WidgetSpinner(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
+class WidgetVinyl(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
     pass

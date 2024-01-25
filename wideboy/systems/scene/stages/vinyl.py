@@ -5,7 +5,7 @@ from ....entities import (
     Cache,
     WidgetClockDate,
     WidgetClockTime,
-    WidgetSpinner,
+    WidgetVinyl,
     WidgetTileGrid,
 )
 from ..sprites import build_image_sprite
@@ -14,7 +14,7 @@ from . import Stage
 logger = logging.getLogger(__name__)
 
 
-class StageSeven(Stage):
+class StageVinyl(Stage):
     image_count: int
 
     def __init__(
@@ -31,7 +31,7 @@ class StageSeven(Stage):
 
         self.stage_entities.extend(
             [
-                WidgetSpinner(
+                WidgetVinyl(
                     build_image_sprite(self.cache.surfaces["mode7_vinyl"][0]),
                     x=-100,
                     y=0,
@@ -39,7 +39,7 @@ class StageSeven(Stage):
                     frames=self.cache.surfaces["mode7_vinyl"],
                     frame_delay=1,
                 ),  # type: ignore[call-arg]
-                WidgetSpinner(
+                WidgetVinyl(
                     build_image_sprite(self.cache.surfaces["mode7_vinyl_serato"][0]),
                     x=420,
                     y=24,

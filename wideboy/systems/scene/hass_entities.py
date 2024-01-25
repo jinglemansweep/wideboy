@@ -57,7 +57,7 @@ class ModeSelect(SelectEntity):
     description: str = "Mode"
     initial_state: str = "default"
     options: Dict[str, Any] = {
-        "options": ["default", "ducks", "night", "seven"],
+        "options": ["default", "ducks", "night", "vinyl"],
     }
 
     def callback(

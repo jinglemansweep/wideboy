@@ -21,7 +21,7 @@ from .stages.boot import StageBoot
 from .stages.default import StageDefault
 from .stages.ducks import StageDucks
 from .stages.night import StageNight
-from .stages.seven import StageSeven
+from .stages.vinyl import StageVinyl
 from .sprites import (
     build_date_sprite,
     build_time_sprite,
@@ -176,11 +176,11 @@ class SysScene(System):
                             (self.display_info.current_w, self.display_info.current_h),
                         )
                     )
-                # Seven Mode
-                elif self.scene_mode == "seven":
-                    logger.info("SEVEN MODE")
+                # Vinyl Mode
+                elif self.scene_mode == "vinyl":
+                    logger.info("VINYL MODE")
                     self._switch_stage(
-                        StageSeven(
+                        StageVinyl(
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )
