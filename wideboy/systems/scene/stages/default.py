@@ -14,6 +14,7 @@ from ....entities import (
     WidgetTileGrid,
 )
 from ....sprites.graphics import load_image
+from ....sprites.slideshow import Transition
 from ..sprites import build_image_sprite, build_slideshow_sprite
 from . import Stage
 
@@ -100,7 +101,9 @@ class StageDefault(Stage):
             self.app_state.slideshow_index = 0
         next_image = load_image(self.slideshow_images[self.app_state.slideshow_index])
         widget_slideshow.sprite.set_next_image(next_image)
-        widget_slideshow.sprite.swap()
+        widget_slideshow.sprite.swap(
+            random.choice([Transition.FADE, Transition.WIPE, Transition.BLEED])
+        )
 
     def _glob_backgrounds(self, randomize: bool = False) -> None:
         app_state = next(self.entities.get_by_class(AppState))
