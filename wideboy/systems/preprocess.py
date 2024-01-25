@@ -124,7 +124,7 @@ class SysPreprocess(System):
                         "mode7_vinyl",
                         f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png",
                         (380, 64),
-                        0.25,
+                        0.2,
                         0 - r,
                         0.4,
                     ),
