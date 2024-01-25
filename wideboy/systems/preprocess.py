@@ -124,11 +124,31 @@ class SysPreprocess(System):
                     (
                         self.cache,
                         "mode7_vinyl",
-                        f"{self.app_state.config.paths.images_sprites}/misc/vinyl_serato.png",
-                        (self.display_info.current_w, self.display_info.current_h),
-                        0.15,
+                        f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png",
+                        (
+                            512,
+                            self.display_info.current_h,
+                        ),
+                        0.2,
                         0 - r,
-                        0.4,
+                        0.5,
+                    ),
+                )
+            )
+            self.queue.append(
+                (
+                    preprocess_mode7,
+                    (
+                        self.cache,
+                        "mode7_vinyl_serato",
+                        f"{self.app_state.config.paths.images_sprites}/misc/vinyl_serato.png",
+                        (
+                            512,
+                            self.display_info.current_h,
+                        ),
+                        0.2,
+                        0 - r,
+                        0.3,
                     ),
                 ),
             )

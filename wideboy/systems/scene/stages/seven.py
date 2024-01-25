@@ -29,15 +29,25 @@ class StageSeven(Stage):
     def setup(self) -> None:
         self.cache = next(self.entities.get_by_class(Cache))
 
-        self.stage_entities.append(
-            WidgetSpinner(
-                build_image_sprite(self.cache.surfaces["mode7_vinyl"][0]),
-                x=0,
-                y=0,
-                z_order=5,
-                frames=self.cache.surfaces["mode7_vinyl"],
-                frame_delay=1,
-            ),  # type: ignore[call-arg]
+        self.stage_entities.extend(
+            [
+                WidgetSpinner(
+                    build_image_sprite(self.cache.surfaces["mode7_vinyl"][0]),
+                    x=-100,
+                    y=0,
+                    z_order=5,
+                    frames=self.cache.surfaces["mode7_vinyl"],
+                    frame_delay=1,
+                ),  # type: ignore[call-arg]
+                WidgetSpinner(
+                    build_image_sprite(self.cache.surfaces["mode7_vinyl_serato"][0]),
+                    x=420,
+                    y=16,
+                    z_order=5,
+                    frames=self.cache.surfaces["mode7_vinyl_serato"],
+                    frame_delay=2,
+                ),  # type: ignore[call-arg]
+            ]
         )
 
         for w in self.entities.get_by_class(
