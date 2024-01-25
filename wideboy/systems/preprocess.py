@@ -160,13 +160,13 @@ class SysPreprocess(System):
             preprocess_mode7(
                 self.cache,
                 "mode7_tron_grid",
-                f"{self.app_state.config.paths.images_sprites}/misc/grid_squares_color.png",
+                f"{self.app_state.config.paths.images_sprites}/misc/circle_milky_way.png",
                 (
                     self.display_info.current_w,
                     self.display_info.current_h,
                 ),
-                0.05,
+                0.1,
                 0 - r,
-                0.9,
+                0.6,
             )
             yield f"Tron Grid [{r}]"
