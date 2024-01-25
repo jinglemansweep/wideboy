@@ -42,7 +42,7 @@ class StageSeven(Stage):
                 WidgetSpinner(
                     build_image_sprite(self.cache.surfaces["mode7_vinyl_serato"][0]),
                     x=420,
-                    y=16,
+                    y=24,
                     z_order=5,
                     frames=self.cache.surfaces["mode7_vinyl_serato"],
                     frame_delay=2,

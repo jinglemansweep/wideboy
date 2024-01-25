@@ -148,7 +148,7 @@ class SysPreprocess(System):
                         ),
                         0.2,
                         0 - r,
-                        0.3,
+                        0.175,
                     ),
                 ),
             )
