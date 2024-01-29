@@ -1,5 +1,6 @@
 import logging
 from ecs_pattern import EntityManager, System
+from pygame import Surface
 from pygame.display import Info as DisplayInfo
 from typing import Callable, Generator, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
@@ -48,20 +49,20 @@ def preprocess_text(cache: Cache, key: str, text: str):
 def preprocess_mode7(
     cache: Cache,
     key: str,
-    path: str,
+    surface: Surface,
     canvas_size: Tuple[int, int],
     perspective=0.5,
     rotation=0.0,
     zoom=1.0,
 ):
     logger.debug(
-        f"preprocess_mode7: key={key} path={path} canvas_size={canvas_size} perspective={perspective} rotation={rotation} zoom={zoom}"
+        f"preprocess_mode7: key={key} canvas_size={canvas_size} perspective={perspective} rotation={rotation} zoom={zoom}"
     )
 
     if key not in cache.surfaces:
         cache.surfaces[key] = []
     sprite = build_mode7_sprite(
-        load_image(path),
+        surface,
         canvas_size,
         perspective=perspective,
         rotation=rotation,
@@ -128,11 +129,14 @@ class SysPreprocess(System):
         )
         yield "Animated Duck"
         # Mode7 Vinyl
+        surface = load_image(
+            f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png"
+        )
         for r in range(1, 360, 5):
             preprocess_mode7(
                 self.cache,
                 "mode7_vinyl",
-                f"{self.app_state.config.paths.images_sprites}/misc/vinyl.png",
+                surface,
                 (
                     512,
                     self.display_info.current_h,
@@ -142,11 +146,14 @@ class SysPreprocess(System):
                 0.5,
             )
             yield f"Vinyl #1 [{r/360*100:.0f}%]"
+        surface = load_image(
+            f"{self.app_state.config.paths.images_sprites}/misc/vinyl_serato.png"
+        )
         for r in range(1, 360, 5):
             preprocess_mode7(
                 self.cache,
                 "mode7_vinyl_serato",
-                f"{self.app_state.config.paths.images_sprites}/misc/vinyl_serato.png",
+                surface,
                 (
                     512,
                     self.display_info.current_h,
@@ -156,11 +163,14 @@ class SysPreprocess(System):
                 0.175,
             )
             yield f"Vinyl #2 [{r/360*100:.0f}%]"
+        surface = load_image(
+            f"{self.app_state.config.paths.images_sprites}/misc/milky_way.png"
+        )
         for r in range(1, 360, 2):
             preprocess_mode7(
                 self.cache,
                 "mode7_milky_way",
-                f"{self.app_state.config.paths.images_sprites}/misc/milky_way.png",
+                surface,
                 (
                     self.display_info.current_w,
                     self.display_info.current_h,
