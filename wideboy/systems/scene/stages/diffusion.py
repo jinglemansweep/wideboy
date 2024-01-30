@@ -14,7 +14,11 @@ from . import Stage
 
 logger = logging.getLogger(__name__)
 
-IMAGE_CACHE_KEYS = ["gif_diffusion_monolith", "gif_diffusion_border_terriers"]
+IMAGE_CACHE_KEYS = [
+    "gif_diffusion_border_terriers",
+    "gif_diffusion_monolith",
+    "gif_diffusion_neon_city",
+]
 
 
 class StageDiffusion(Stage):

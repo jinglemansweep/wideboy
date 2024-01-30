@@ -186,3 +186,10 @@ class SysPreprocess(System):
             f"{self.app_state.config.paths.images_sprites}/diffusion/border_terriers.gif",
         )
         yield "Border Terriers"
+        # GIF: Neon City (Stable Diffusion)
+        preprocess_load_gif(
+            self.cache,
+            "gif_diffusion_neon_city",
+            f"{self.app_state.config.paths.images_sprites}/diffusion/neon_city.gif",
+        )
+        yield "Neon City"
