@@ -15,8 +15,28 @@ def load_image(filename: str, convert_alpha: bool = True) -> Surface:
     return image
 
 
-def pil_to_surface(image: Image.Image) -> Surface:
-    return pygame.image.fromstring(image.tobytes(), image.size, image.mode).convert_alpha()  # type: ignore
+def load_gif(filename: str, convert_alpha: bool = True) -> list[Surface]:
+    gif_image = Image.open(filename)
+    frames = []
+    try:
+        while True:
+            gif_image.seek(gif_image.tell() + 1)
+            gif_frame = gif_image.copy()
+            if gif_frame:
+                frame = pil_to_surface(gif_frame, convert_alpha)
+                frames.append(frame)
+    except EOFError:
+        pass
+    return frames
+
+
+def pil_to_surface(image: Image.Image, convert_alpha: bool = True) -> Surface:
+    if image.mode not in ["RGB", "RGBA"]:
+        image = image.convert("RGBA")
+    surface = pygame.image.fromstring(image.tobytes(), image.size, "RGBA")
+    if convert_alpha:
+        surface = surface.convert_alpha()  # type: ignore
+    return surface
 
 
 def surface_to_pil(surface: Surface) -> Image.Image:

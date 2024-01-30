@@ -18,6 +18,7 @@ from ...sprites.common import build_rect_sprite
 from .entity_tiles import CELLS
 from .stages import Stage
 from .stages.boot import StageBoot
+from .stages.city import StageCity
 from .stages.default import StageDefault
 from .stages.galaxy import StageGalaxy
 from .stages.vinyl import StageVinyl
@@ -157,7 +158,7 @@ class SysScene(System):
                     )
                 )
             else:
-                # Galaxy Mode
+                # Galaxy Stage
                 if self.scene_mode == "galaxy":
                     logger.info("GALAXY MODE")
                     self._switch_stage(
@@ -166,7 +167,7 @@ class SysScene(System):
                             (self.display_info.current_w, self.display_info.current_h),
                         )
                     )
-                # Vinyl Mode
+                # Vinyl Stage
                 elif self.scene_mode == "vinyl":
                     logger.info("VINYL MODE")
                     self._switch_stage(
@@ -175,7 +176,16 @@ class SysScene(System):
                             (self.display_info.current_w, self.display_info.current_h),
                         )
                     )
-                # Default Mode
+                # City Stage
+                elif self.scene_mode == "city":
+                    logger.info("CITY MODE")
+                    self._switch_stage(
+                        StageCity(
+                            self.entities,
+                            (self.display_info.current_w, self.display_info.current_h),
+                        )
+                    )
+                # Default Stage
                 else:
                     logger.info("DEFAULT MODE")
                     self._switch_stage(

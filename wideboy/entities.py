@@ -117,3 +117,8 @@ class WidgetVinyl(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
 @entity
 class WidgetGalaxy(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
     pass
+
+
+@entity
+class WidgetAnimatedGif(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
+    pass

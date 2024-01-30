@@ -4,7 +4,7 @@ from pygame import Surface
 from pygame.display import Info as DisplayInfo
 from typing import Callable, Generator, List, Tuple
 from ..entities import AppState, Cache, WidgetSysMessage
-from ..sprites.graphics import load_image
+from ..sprites.graphics import load_image, load_gif
 from .scene.sprites import build_mode7_sprite, build_system_message_sprite
 
 logger = logging.getLogger(__name__)
@@ -36,6 +36,14 @@ def preprocess_load_image(cache: Cache, key: str, path: str):
     if key not in cache.surfaces:
         cache.surfaces[key] = []
     cache.surfaces[key].append(load_image(path))
+
+
+def preprocess_load_gif(cache: Cache, key: str, path: str):
+    logger.debug(f"preprocess_load_gif: key={key} path={path}")
+    if key not in cache.surfaces:
+        cache.surfaces[key] = []
+    surfaces = load_gif(path)
+    cache.surfaces[key] = surfaces
 
 
 def preprocess_text(cache: Cache, key: str, text: str):
@@ -139,6 +147,7 @@ class SysPreprocess(System):
                 0.8,
             )
             yield f"Vinyl #1 [{r/360*100:.0f}%]"
+        # Mode7 Milky Way
         surface = load_image(
             f"{self.app_state.config.paths.images_sprites}/misc/milky_way.png"
         )
@@ -156,3 +165,10 @@ class SysPreprocess(System):
                 0.6,
             )
             yield f"Milky Way [{r/360*100:.0f}%]"
+        # Animated GIF Test
+        preprocess_load_gif(
+            self.cache,
+            "gif_test",
+            f"{self.app_state.config.paths.images_sprites}/misc/gif_cyberpunk.gif",
+        )
+        yield "Animated GIF Test"
