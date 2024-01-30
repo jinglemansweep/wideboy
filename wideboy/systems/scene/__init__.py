@@ -20,6 +20,7 @@ from .stages import Stage
 from .stages.boot import StageBoot
 from .stages.city import StageCity
 from .stages.default import StageDefault
+from .stages.diffusion import StageDiffusion
 from .stages.galaxy import StageGalaxy
 from .stages.vinyl import StageVinyl
 from .sprites import (
@@ -158,9 +159,27 @@ class SysScene(System):
                     )
                 )
             else:
+                # City Stage
+                if self.scene_mode == "city":
+                    logger.info("CITY STAGE")
+                    self._switch_stage(
+                        StageCity(
+                            self.entities,
+                            (self.display_info.current_w, self.display_info.current_h),
+                        )
+                    )
+                # Diffusion Stage
+                if self.scene_mode == "diffusion":
+                    logger.info("DIFFUSION STAGE")
+                    self._switch_stage(
+                        StageDiffusion(
+                            self.entities,
+                            (self.display_info.current_w, self.display_info.current_h),
+                        )
+                    )
                 # Galaxy Stage
-                if self.scene_mode == "galaxy":
-                    logger.info("GALAXY MODE")
+                elif self.scene_mode == "galaxy":
+                    logger.info("GALAXY STAGE")
                     self._switch_stage(
                         StageGalaxy(
                             self.entities,
@@ -169,25 +188,16 @@ class SysScene(System):
                     )
                 # Vinyl Stage
                 elif self.scene_mode == "vinyl":
-                    logger.info("VINYL MODE")
+                    logger.info("VINYL STAGE")
                     self._switch_stage(
                         StageVinyl(
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )
                     )
-                # City Stage
-                elif self.scene_mode == "city":
-                    logger.info("CITY MODE")
-                    self._switch_stage(
-                        StageCity(
-                            self.entities,
-                            (self.display_info.current_w, self.display_info.current_h),
-                        )
-                    )
                 # Default Stage
                 else:
-                    logger.info("DEFAULT MODE")
+                    logger.info("DEFAULT STAGE")
                     self._switch_stage(
                         StageDefault(
                             self.entities,

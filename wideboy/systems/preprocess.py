@@ -172,3 +172,10 @@ class SysPreprocess(System):
             f"{self.app_state.config.paths.images_sprites}/misc/gif_cyberpunk.gif",
         )
         yield "Animated GIF Test"
+        # GIF: Monolith (Stable Diffusion)
+        preprocess_load_gif(
+            self.cache,
+            "gif_diffusion_monolith",
+            f"{self.app_state.config.paths.images_sprites}/diffusion/monolith.gif",
+        )
+        yield "Monolith"
