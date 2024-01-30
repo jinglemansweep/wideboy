@@ -33,19 +33,11 @@ class StageVinyl(Stage):
             [
                 WidgetVinyl(
                     build_image_sprite(self.cache.surfaces["mode7_vinyl"][0]),
-                    x=-100,
-                    y=0,
+                    x=-150,
+                    y=-15,
                     z_order=5,
                     frames=self.cache.surfaces["mode7_vinyl"],
                     frame_delay=1,
-                ),  # type: ignore[call-arg]
-                WidgetVinyl(
-                    build_image_sprite(self.cache.surfaces["mode7_vinyl_serato"][0]),
-                    x=420,
-                    y=24,
-                    z_order=5,
-                    frames=self.cache.surfaces["mode7_vinyl_serato"],
-                    frame_delay=2,
                 ),  # type: ignore[call-arg]
             ]
         )

@@ -131,12 +131,12 @@ class SysPreprocess(System):
                 "mode7_vinyl",
                 surface,
                 (
-                    512,
-                    self.display_info.current_h,
+                    self.display_info.current_w,
+                    self.display_info.current_h * 2,
                 ),
-                0.2,
+                0.12,
                 0 - r,
-                0.5,
+                0.8,
             )
             yield f"Vinyl #1 [{r/360*100:.0f}%]"
         surface = load_image(
