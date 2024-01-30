@@ -112,13 +112,6 @@ class SysPreprocess(System):
             widget_message.sprite = build_system_message_sprite(message)
 
     def tasks(self) -> Generator:
-        # Duck Pixel
-        preprocess_load_image(
-            self.cache,
-            "duck_pixel",
-            f"{self.app_state.config.paths.images_sprites}/misc/duck-pixel.png",
-        )
-        yield "Pixelated Duck"
         # Animated Duck
         preprocess_load_spritesheet(
             self.cache,
@@ -146,23 +139,6 @@ class SysPreprocess(System):
                 0.5,
             )
             yield f"Vinyl #1 [{r/360*100:.0f}%]"
-        surface = load_image(
-            f"{self.app_state.config.paths.images_sprites}/misc/vinyl_serato.png"
-        )
-        for r in range(1, 360, 5):
-            preprocess_mode7(
-                self.cache,
-                "mode7_vinyl_serato",
-                surface,
-                (
-                    512,
-                    self.display_info.current_h,
-                ),
-                0.2,
-                0 - r,
-                0.175,
-            )
-            yield f"Vinyl #2 [{r/360*100:.0f}%]"
         surface = load_image(
             f"{self.app_state.config.paths.images_sprites}/misc/milky_way.png"
         )

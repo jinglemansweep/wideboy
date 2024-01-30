@@ -19,9 +19,7 @@ from .entity_tiles import CELLS
 from .stages import Stage
 from .stages.boot import StageBoot
 from .stages.default import StageDefault
-from .stages.ducks import StageDucks
 from .stages.galaxy import StageGalaxy
-from .stages.night import StageNight
 from .stages.vinyl import StageVinyl
 from .sprites import (
     build_date_sprite,
@@ -159,26 +157,8 @@ class SysScene(System):
                     )
                 )
             else:
-                # Duck Mode
-                if self.scene_mode == "ducks":
-                    logger.info("DUCK MODE")
-                    self._switch_stage(
-                        StageDucks(
-                            self.entities,
-                            (self.display_info.current_w, self.display_info.current_h),
-                        )
-                    )
-                # Night Mode
-                elif self.scene_mode == "night":
-                    logger.info("NIGHT MODE")
-                    self._switch_stage(
-                        StageNight(
-                            self.entities,
-                            (self.display_info.current_w, self.display_info.current_h),
-                        )
-                    )
                 # Galaxy Mode
-                elif self.scene_mode == "galaxy":
+                if self.scene_mode == "galaxy":
                     logger.info("GALAXY MODE")
                     self._switch_stage(
                         StageGalaxy(
