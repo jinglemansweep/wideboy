@@ -12,5 +12,5 @@ class ImageSprite(Sprite):
 
     def __init__(self, surface: Surface) -> None:
         self.image = surface
-        self.image_orig = self.image.copy()
+        # self.image_orig = self.image.copy()
         self.rect = self.image.get_rect()

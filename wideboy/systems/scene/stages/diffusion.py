@@ -1,8 +1,9 @@
 import logging
-import random
 from ecs_pattern import EntityManager
 from typing import Tuple
+from ....consts import EventTypes
 from ....entities import (
+    AppState,
     Cache,
     WidgetAnimatedGif,
     WidgetClockDate,
@@ -32,18 +33,21 @@ class StageDiffusion(Stage):
         self.setup()
 
     def setup(self) -> None:
+        self.app_state = next(self.entities.get_by_class(AppState))
         self.cache = next(self.entities.get_by_class(Cache))
-
-        cache_key = random.choice(IMAGE_CACHE_KEYS)
+        self.cache_keys = IMAGE_CACHE_KEYS
+        self.cache_index = 0
 
         self.stage_entities.append(
             WidgetAnimatedGif(
-                build_image_sprite(self.cache.surfaces[cache_key][0]),
+                build_image_sprite(
+                    self.cache.surfaces[self.cache_keys[self.cache_index]][0]
+                ),
                 x=0,
                 y=0,
                 z_order=5,
-                frames=self.cache.surfaces[cache_key],
-                frame_delay=2,
+                frames=self.cache.surfaces[self.cache_keys[self.cache_index]],
+                frame_delay=1,
             ),  # type: ignore[call-arg]
         )
 
@@ -53,3 +57,15 @@ class StageDiffusion(Stage):
             WidgetTileGrid,
         ):
             w.fade_target_alpha = 255
+
+    def update(self) -> None:
+        widget_animated_gif = next(self.entities.get_by_class(WidgetAnimatedGif))
+        for event_type, event_payload in self.app_state.events:
+            if event_type == EventTypes.EVENT_CLOCK_NEW_MINUTE:
+                self.cache_index += 1
+                if self.cache_index >= len(self.cache_keys):
+                    self.cache_index = 0
+                widget_animated_gif.frames = self.cache.surfaces[
+                    self.cache_keys[self.cache_index]
+                ]
+                widget_animated_gif.frame_index = 0
