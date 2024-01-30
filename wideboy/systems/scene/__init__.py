@@ -174,7 +174,7 @@ class SysScene(System):
                         )
                     )
                 # Diffusion Stage
-                if self.scene_mode == "diffusion":
+                elif self.scene_mode == "diffusion":
                     logger.info("DIFFUSION STAGE")
                     self._switch_stage(
                         StageDiffusion(
