@@ -179,3 +179,10 @@ class SysPreprocess(System):
             f"{self.app_state.config.paths.images_sprites}/diffusion/monolith.gif",
         )
         yield "Monolith"
+        # GIF: Border Terriers (Stable Diffusion)
+        preprocess_load_gif(
+            self.cache,
+            "gif_diffusion_border_terriers",
+            f"{self.app_state.config.paths.images_sprites}/diffusion/border_terriers.gif",
+        )
+        yield "Border Terriers"

@@ -61,7 +61,7 @@ class StageDefault(Stage):
                 build_image_sprite(self.cache.surfaces["duck_animated"][0]),
                 x=0,
                 y=self.display_size[1] - 32,
-                z_order=10,
+                z_order=5,
                 speed_x=1,
                 bound_rect=(
                     0,

@@ -1,4 +1,5 @@
 import logging
+import random
 from ecs_pattern import EntityManager
 from typing import Tuple
 from ....entities import (
@@ -12,6 +13,8 @@ from ..sprites import build_image_sprite
 from . import Stage
 
 logger = logging.getLogger(__name__)
+
+IMAGE_CACHE_KEYS = ["gif_diffusion_monolith", "gif_diffusion_border_terriers"]
 
 
 class StageDiffusion(Stage):
@@ -27,14 +30,16 @@ class StageDiffusion(Stage):
     def setup(self) -> None:
         self.cache = next(self.entities.get_by_class(Cache))
 
+        cache_key = random.choice(IMAGE_CACHE_KEYS)
+
         self.stage_entities.append(
             WidgetAnimatedGif(
-                build_image_sprite(self.cache.surfaces["gif_diffusion_monolith"][0]),
+                build_image_sprite(self.cache.surfaces[cache_key][0]),
                 x=0,
                 y=0,
                 z_order=5,
-                frames=self.cache.surfaces["gif_diffusion_monolith"],
-                frame_delay=2,
+                frames=self.cache.surfaces[cache_key],
+                frame_delay=3,
             ),  # type: ignore[call-arg]
         )
 

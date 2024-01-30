@@ -63,37 +63,42 @@ class SysScene(System):
 
         clock_x = self.display_info.current_w - CLOCK_WIDTH
         clock_y = 2
+        clock_z = 100
 
         self.entities.add(
             WidgetClockBackground(
                 build_rect_sprite(Color(0, 0, 0, 255), CLOCK_WIDTH, 46),
                 clock_x,
                 clock_y - 2,
-                z_order=5,
+                z_order=clock_z,
                 alpha=128,
             ),
             WidgetClockTime(
-                build_time_sprite(""), clock_x, clock_y, z_order=10, alpha=0
+                build_time_sprite(""),
+                clock_x + 2,
+                clock_y,
+                z_order=clock_z + 1,
+                alpha=0,
             ),
             WidgetClockDate(
                 build_date_sprite(""),
                 clock_x + 3,
                 clock_y + 28,
-                z_order=10,
+                z_order=clock_z + 1,
                 alpha=0,
             ),
             WidgetTileGrid(
                 build_tile_grid_sprite(CELLS, self.app_state.hass_state),
                 256,
                 0,
-                z_order=10,
+                z_order=clock_z,
                 alpha=0,
             ),
             WidgetSysMessage(
                 build_system_message_sprite("Hi!"),
                 5,
                 5,
-                z_order=10,
+                z_order=clock_z,
                 alpha=0,
                 fade_speed=16,
             ),
