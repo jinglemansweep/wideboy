@@ -47,7 +47,7 @@ class StageDiffusion(Stage):
                 y=0,
                 z_order=5,
                 frames=self.cache.surfaces[self.cache_keys[self.cache_index]],
-                frame_delay=1,
+                frame_delay=2,
             ),  # type: ignore[call-arg]
         )
 
