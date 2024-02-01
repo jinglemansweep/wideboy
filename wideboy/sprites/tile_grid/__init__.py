@@ -79,8 +79,13 @@ class TileGridCell(DirtySprite, StyleMixin):
             )
             image.blit(icon_surface, (0, 0))
             cx += icon_surface.get_width()
+        try:
+            label = self.label
+        except TypeError as e:
+            label = "?"
+            logger.warn(f"Label for {self.entity_id} is not a string", exc_info=e)
         label_surface = render_text(
-            text=self.label,
+            text=label,
             antialias=self.label_antialias,
             color_foreground=self.label_color_foreground,
             color_outline=self.label_color_outline,
