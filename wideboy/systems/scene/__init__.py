@@ -21,7 +21,6 @@ from .stages.boot import StageBoot
 from .stages.city import StageCity
 from .stages.default import StageDefault
 from .stages.diffusion import StageDiffusion
-from .stages.galaxy import StageGalaxy
 from .stages.vinyl import StageVinyl
 from .sprites import (
     build_date_sprite,
@@ -178,15 +177,6 @@ class SysScene(System):
                     logger.info("DIFFUSION STAGE")
                     self._switch_stage(
                         StageDiffusion(
-                            self.entities,
-                            (self.display_info.current_w, self.display_info.current_h),
-                        )
-                    )
-                # Galaxy Stage
-                elif self.scene_mode == "galaxy":
-                    logger.info("GALAXY STAGE")
-                    self._switch_stage(
-                        StageGalaxy(
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )

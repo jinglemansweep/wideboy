@@ -147,24 +147,6 @@ class SysPreprocess(System):
                 0.8,
             )
             yield f"Vinyl #1 [{r/360*100:.0f}%]"
-        # Mode7 Milky Way
-        surface = load_image(
-            f"{self.app_state.config.paths.images_sprites}/misc/milky_way.png"
-        )
-        for r in range(1, 360, 2):
-            preprocess_mode7(
-                self.cache,
-                "mode7_milky_way",
-                surface,
-                (
-                    self.display_info.current_w,
-                    self.display_info.current_h,
-                ),
-                0.1,
-                0 - r,
-                0.6,
-            )
-            yield f"Milky Way [{r/360*100:.0f}%]"
         # Animated GIF Test
         preprocess_load_gif(
             self.cache,

@@ -612,6 +612,31 @@ class CellWeatherRainProbability(GridCell):
         return is_defined(self.value) and self.value > self.limit
 
 
+# Date/Time Tiles
+
+
+class CellDateDogsFleaTreatment(GridCell):
+    entity_id = "input_datetime.dogs_flea_treatment"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_BUG
+
+    @property
+    def label(self):
+        if "state" not in self.entity_state:
+            return "N/A"
+        return f"{self.entity_state['day']}/{self.entity_state['month']}"
+
+
+class CellDateDogsWormTreatment(GridCell):
+    entity_id = "input_datetime.dogs_worm_treatment"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_WORM
+
+    @property
+    def label(self):
+        if "state" not in self.entity_state:
+            return "N/A"
+        return f"{self.entity_state['day']}/{self.entity_state['month']}"
+
+
 # Tall Cells
 
 
@@ -643,6 +668,8 @@ CELLS = [
         CellSpeedTestDownload,
         CellSpeedTestUpload,
         CellSpeedTestPing,
+        CellDateDogsFleaTreatment,
+        CellDateDogsWormTreatment,
     ],
     [
         CellElectricityDemand,
