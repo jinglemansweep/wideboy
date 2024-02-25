@@ -621,7 +621,7 @@ class CellDateDogsFleaTreatment(GridCell):
 
     @property
     def label(self):
-        if "state" not in self.entity_state:
+        if "day" not in self.entity_state or "month" not in self.entity_state:
             return "N/A"
         return f"{self.entity_state['day']}/{self.entity_state['month']}"
 
@@ -632,7 +632,7 @@ class CellDateDogsWormTreatment(GridCell):
 
     @property
     def label(self):
-        if "state" not in self.entity_state:
+        if "day" not in self.entity_state or "month" not in self.entity_state:
             return "N/A"
         return f"{self.entity_state['day']}/{self.entity_state['month']}"
 
