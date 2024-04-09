@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from ...sprites.tile_grid import VerticalCollapseTileGridCell, TallGridCell
@@ -45,6 +46,11 @@ def convert_ms_to_mph(ms: Optional[int] = None):
     if ms is None:
         return 0
     return round(ms * 2.237)
+
+
+def days_until(end: float):
+    start = datetime.now().timestamp()
+    return int(abs(int(start - end) / 60 / 60 / 24))
 
 
 # CUSTOM COLUMNS
@@ -146,7 +152,7 @@ class CellSensorLoungeAirPM(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value_quality) and self.value_quality > 2
+        return is_defined(self.value_quality) and self.value_quality > 3
 
     @property
     def cell_color_background(self):
@@ -250,7 +256,7 @@ class CellVPNPrivacyStatus(GridCell):
 class CellDS920VolumeUsage(GridCell):
     entity_id = "sensor.ds920plus_volume_used"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HARD_DRIVE
-    limit = 70
+    limit = 80
 
     @property
     def open(self):
@@ -354,7 +360,7 @@ class CellTemperatureBedroom(BaseCellTemperate):
 class CellElectricityDemand(GridCell):
     entity_id = "sensor.octopus_energy_electricity_current_demand"
     icon_codepoint = FontAwesomeIcons.ICON_FA_BOLT
-    limit = 600
+    limit = 1000
 
     @property
     def label(self):
@@ -620,6 +626,11 @@ class CellDateDogsFleaTreatment(GridCell):
     icon_codepoint = FontAwesomeIcons.ICON_FA_BUG
 
     @property
+    def open(self):
+        days = days_until(float(self.entity_state.get("timestamp", 0)))
+        return days < 7
+
+    @property
     def label(self):
         if "day" not in self.entity_state or "month" not in self.entity_state:
             return "N/A"
@@ -629,6 +640,11 @@ class CellDateDogsFleaTreatment(GridCell):
 class CellDateDogsWormTreatment(GridCell):
     entity_id = "input_datetime.dogs_worm_treatment"
     icon_codepoint = FontAwesomeIcons.ICON_FA_WORM
+
+    @property
+    def open(self):
+        days = days_until(float(self.entity_state.get("timestamp", 0)))
+        return days < 14
 
     @property
     def label(self):
