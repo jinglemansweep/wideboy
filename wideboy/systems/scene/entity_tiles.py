@@ -494,11 +494,11 @@ class CellBatteryLevel(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value < 50
+        return is_defined(self.value) and int(self.value) < 50
 
     @property
     def icon_codepoint(self):
-        if self.value is None:
+        if not is_defined(self.value):
             return None
         if self.value < 20:
             return FontAwesomeIcons.ICON_FA_BATTERY_EMPTY

@@ -94,7 +94,7 @@ class FontAwesomeIcons:
 
 
 def is_defined(value) -> bool:
-    return value is not None and value not in ["unavailable"]
+    return value is not None and value not in ["unavailable", "unknown"]
 
 
 def template_if_defined(value, template):
