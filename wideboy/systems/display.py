@@ -12,6 +12,8 @@ from ..entities import AppState
 from ..sprites.graphics import build_surface
 
 
+BRIGHTNESS_MULTIPLIER = 0.5
+
 logger = logging.getLogger(__name__)
 
 
@@ -47,7 +49,7 @@ class SysDisplay(System):
             return
         render_surface = self.screen if app_state.master_power else self.screen_off
         self.buffer.SetImage(surface_to_led_matrix(render_surface))
-        self.matrix.brightness = (app_state.master_brightness / 255) * 100
+        self.matrix.brightness = int((app_state.master_brightness / 255) * (100 * BRIGHTNESS_MULTIPLIER))
         self.matrix.SwapOnVSync(self.buffer)
 
     def _setup_matrix_driver(self) -> None:
