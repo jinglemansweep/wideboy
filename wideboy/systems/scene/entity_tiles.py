@@ -413,7 +413,7 @@ class CellBatteryDownstairs(GridCell):
         )
 
 
-# Weather Tiles
+# Weather/Temp Tiles
 
 
 class BaseCellTemperate(GridCell):
@@ -453,6 +453,32 @@ class CellWeatherRainProbability(GridCell):
     @property
     def open(self):
         return is_defined(self.value) and self.value > self.limit
+
+
+class CellHouseUpstairsRackTemperature(BaseCellTemperate):
+    entity_id = "sensor.laundry_temperature_sensor_temperature"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_SERVER
+    limit_high = 40
+
+    @property
+    def open(self):
+        return is_defined(self.value) and int(self.value)
+
+    @property
+    def cell_color_background(self):
+        return (
+            CommonColors.COLOR_RED_DARK
+            if is_defined(self.value) and self.value > self.limit_high
+            else CommonColors.COLOR_GREY_DARK
+        )
+
+    @property
+    def icon_color_background(self):
+        return (
+            CommonColors.COLOR_RED
+            if is_defined(self.value) and self.value > self.limit_high
+            else CommonColors.COLOR_GREY
+        )
 
 
 # Date/Time Tiles
@@ -524,6 +550,7 @@ CELLS = [
         CellWeatherTemperature,
         CellWeatherWindSpeed,
         CellWeatherRainProbability,
+        CellHouseUpstairsRackTemperature,
         CellDateDogsFleaTreatment,
         CellDateDogsWormTreatment,
     ],
