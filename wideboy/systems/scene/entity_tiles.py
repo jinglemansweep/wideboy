@@ -370,7 +370,7 @@ class CellBatteryUpstairs(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value < 50
+            if is_defined(self.value) and self.value < 30
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -378,7 +378,7 @@ class CellBatteryUpstairs(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value < 50
+            if is_defined(self.value) and self.value < 30
             else CommonColors.COLOR_GREY
         )
 
@@ -400,7 +400,7 @@ class CellBatteryDownstairs(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value < 50
+            if is_defined(self.value) and self.value < 30
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -408,7 +408,7 @@ class CellBatteryDownstairs(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value < 50
+            if is_defined(self.value) and self.value < 30
             else CommonColors.COLOR_GREY
         )
 
