@@ -254,15 +254,6 @@ class CellDS920VolumeUsage(GridCell):
         return template_if_defined(self.value, "{:.0f}%")
 
 
-# Temperature Tiles
-
-
-class BaseCellTemperate(GridCell):
-    @property
-    def label(self):
-        return template_if_defined(self.value, "{:.0f}°")
-
-
 # Energy Tiles
 
 
@@ -362,25 +353,24 @@ class CellElectricityAccumulativeCost(GridCell):
         )
 
 
-class CellGasAccumulativeCost(GridCell):
-    entity_id = "sensor.octopus_energy_gas_current_accumulative_cost"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_FIRE_FLAME_SIMPLE
-    limit = 2.00
-    limit_high = 3.00
+class CellBatteryUpstairs(GridCell):
+    entity_id = "sensor.delta_2_max_upstairs_battery_level"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_CHEVRON_UP
+    limit = 100
 
     @property
     def label(self):
-        return template_if_defined(self.value, "£{:.2f}")
+        return template_if_defined(self.value, "{:.0f}%")
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value > self.limit
+        return is_defined(self.value) and int(self.value) < self.limit
 
     @property
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value > self.limit_high
+            if is_defined(self.value) and self.value < 50
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -388,62 +378,15 @@ class CellGasAccumulativeCost(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value > self.limit_high
+            if is_defined(self.value) and self.value < 50
             else CommonColors.COLOR_GREY
         )
 
 
 class CellBatteryDownstairs(GridCell):
     entity_id = "sensor.delta_2_max_downstairs_battery_level"
-    limit = 50
-
-    @property
-    def label(self):
-        time_remaining = self.state.get(
-            "sensor.delta_2_max_downstairs_discharge_remaining_time"
-        )
-        print("TIME", time_remaining)
-        return template_if_defined(self.value, "{:.0f}%")
-
-    @property
-    def open(self):
-        return is_defined(self.value) and int(self.value) < 50
-
-    @property
-    def icon_codepoint(self):
-        if not is_defined(self.value):
-            return None
-        if self.value < 20:
-            return FontAwesomeIcons.ICON_FA_BATTERY_EMPTY
-        elif self.value < 40:
-            return FontAwesomeIcons.ICON_FA_BATTERY_QUARTER
-        elif self.value < 60:
-            return FontAwesomeIcons.ICON_FA_BATTERY_HALF
-        elif self.value < 80:
-            return FontAwesomeIcons.ICON_FA_BATTERY_THREE_QUARTERS
-        else:
-            return FontAwesomeIcons.ICON_FA_BATTERY_FULL
-
-    @property
-    def cell_color_background(self):
-        return (
-            CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value < self.limit
-            else CommonColors.COLOR_GREY_DARK
-        )
-
-    @property
-    def icon_color_background(self):
-        return (
-            CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value < self.limit
-            else CommonColors.COLOR_GREY
-        )
-
-
-class CellBatteryUpstairs(GridCell):
-    entity_id = "sensor.delta_2_max_upstairs_battery_level"
-    limit = 50
+    icon_codepoint = FontAwesomeIcons.ICON_FA_CHEVRON_DOWN
+    limit = 100
 
     @property
     def label(self):
@@ -451,28 +394,13 @@ class CellBatteryUpstairs(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and int(self.value) < 50
-
-    @property
-    def icon_codepoint(self):
-        if not is_defined(self.value):
-            return None
-        if self.value < 20:
-            return FontAwesomeIcons.ICON_FA_BATTERY_EMPTY
-        elif self.value < 40:
-            return FontAwesomeIcons.ICON_FA_BATTERY_QUARTER
-        elif self.value < 60:
-            return FontAwesomeIcons.ICON_FA_BATTERY_HALF
-        elif self.value < 80:
-            return FontAwesomeIcons.ICON_FA_BATTERY_THREE_QUARTERS
-        else:
-            return FontAwesomeIcons.ICON_FA_BATTERY_FULL
+        return is_defined(self.value) and int(self.value) < self.limit
 
     @property
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value < self.limit
+            if is_defined(self.value) and self.value < 50
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -480,66 +408,18 @@ class CellBatteryUpstairs(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value < self.limit
+            if is_defined(self.value) and self.value < 50
             else CommonColors.COLOR_GREY
         )
-
-
-class CellBatteryACInput(GridCell):
-    entity_id = "sensor.delta_2_max_downstairs_ac_in_power"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_PLUS
-
-    @property
-    def open(self):
-        return is_defined(self.value) and self.value > 0
-
-    @property
-    def label(self):
-        return format_watts(self.value)
-
-
-class CellBatteryACOutput(GridCell):
-    entity_id = "sensor.delta_2_max_downstairs_ac_out_power"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
-
-    @property
-    def open(self):
-        return is_defined(self.value) and self.value > 0
-
-    @property
-    def label(self):
-        return format_watts(self.value)
-
-
-class CellBatteryChargeRemainingTime(GridCell):
-    entity_id = "sensor.delta_2_max_downstairs_charge_remaining_time"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_PLUS
-    icon_color_background = CommonColors.COLOR_GREEN_DARK
-
-    @property
-    def open(self):
-        return is_defined(self.value) and self.value > 0
-
-    @property
-    def label(self):
-        return format_minutes(self.value)
-
-
-class CellBatteryDischargeRemainingTime(GridCell):
-    entity_id = "sensor.delta_2_max_downstairs_discharge_remaining_time"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG_CIRCLE_MINUS
-    icon_color_background = CommonColors.COLOR_RED_DARK
-
-    @property
-    def open(self):
-        return is_defined(self.value) and self.value > 0
-
-    @property
-    def label(self):
-        return format_minutes(self.value)
 
 
 # Weather Tiles
+
+
+class BaseCellTemperate(GridCell):
+    @property
+    def label(self):
+        return template_if_defined(self.value, "{:.0f}°")
 
 
 class CellWeatherTemperature(BaseCellTemperate):
@@ -632,14 +512,11 @@ CELLS = [
         CellSpeedTestDownload,
         CellSpeedTestUpload,
         CellSpeedTestPing,
-        CellDateDogsFleaTreatment,
-        CellDateDogsWormTreatment,
     ],
     [
         CellElectricityDemand,
         CellElectricityRate,
         CellElectricityAccumulativeCost,
-        CellGasAccumulativeCost,
         CellBatteryUpstairs,
         CellBatteryDownstairs,
     ],
@@ -647,5 +524,7 @@ CELLS = [
         CellWeatherTemperature,
         CellWeatherWindSpeed,
         CellWeatherRainProbability,
+        CellDateDogsFleaTreatment,
+        CellDateDogsWormTreatment,
     ],
 ]
