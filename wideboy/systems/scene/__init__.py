@@ -20,8 +20,6 @@ from .stages import Stage
 from .stages.boot import StageBoot
 from .stages.city import StageCity
 from .stages.default import StageDefault
-from .stages.diffusion import StageDiffusion
-from .stages.vinyl import StageVinyl
 from .sprites import (
     build_date_sprite,
     build_time_sprite,
@@ -168,24 +166,6 @@ class SysScene(System):
                     logger.info("CITY STAGE")
                     self._switch_stage(
                         StageCity(
-                            self.entities,
-                            (self.display_info.current_w, self.display_info.current_h),
-                        )
-                    )
-                # Diffusion Stage
-                elif self.scene_mode == "diffusion":
-                    logger.info("DIFFUSION STAGE")
-                    self._switch_stage(
-                        StageDiffusion(
-                            self.entities,
-                            (self.display_info.current_w, self.display_info.current_h),
-                        )
-                    )
-                # Vinyl Stage
-                elif self.scene_mode == "vinyl":
-                    logger.info("VINYL STAGE")
-                    self._switch_stage(
-                        StageVinyl(
                             self.entities,
                             (self.display_info.current_w, self.display_info.current_h),
                         )
