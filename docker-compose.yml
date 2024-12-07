@@ -1,6 +1,6 @@
 services:
   wideboy:
-    image: ghcr.io/jinglemansweep/wideboy:main
+    image: ghcr.io/jinglemansweep/wideboy:latest
     restart: always
     privileged: true
     user: root
