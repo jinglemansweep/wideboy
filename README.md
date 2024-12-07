@@ -1,5 +1,6 @@
 # WideBoy
 
+[![docker](https://github.com/jinglemansweep/wideboy/actions/workflows/docker.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/docker.yml)
 [![mypy](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/mypy.yml) [![flake8](https://github.com/jinglemansweep/wideboy/actions/workflows/flake8.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/flake8.yml) [![black](https://github.com/jinglemansweep/wideboy/actions/workflows/black.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/black.yml) [![codeql](https://github.com/jinglemansweep/wideboy/actions/workflows/codeql.yml/badge.svg)](https://github.com/jinglemansweep/wideboy/actions/workflows/codeql.yml) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 <img src="./docs/images/logo-new.png" width="50%" height="50%" alt="WideBoy Logo">
@@ -159,6 +160,26 @@ Project configuration is provided using [Dynaconf](https://www.dynaconf.com/), m
 
 The provided [`settings.toml`](./settings.toml) details all the available options, but they are all commented out. The preferred method of configuration is to override any settings by creating a `settings.local.toml` and/or a `secrets.toml` (for sensitive values). Both of these files, if they exist, will be used, but should not be stored in source control and are therefore ignored using `.gitignore`.
 
+If using the Docker container, the provided [`docker-compose.yml`](./docker-compose.yml) file will attempt to load environment variables from `./docker.local.env`. An example environment file is provided to copy and modify:
+
+    cp ./docker.env docker.local.env
+
+Any configuration value can be applied using environment variables which all start with `WIDEBOY_` and have a flattened uppercase underscore delimited format. Note that each nested level should be separated by double underscore (`__`). For example, the following TOML snippet and the equivalent environment variables:
+
+#### TOML
+
+    [mqtt]
+      host = mqtt.local
+      user = mqtt
+    [paths]
+      images_backgrounds = "/images"
+
+#### Environment Variables
+
+WIDEBOY_MQTT__HOST=mqtt.local
+WIDEBOY_MQTT__USER=mqtt
+WIDEBOY_PATHS__IMAGES_BACKGROUNDS=/images
+
 ## Development
 
 Create a Python 3.x virtual environment, and install project dependencies:
@@ -169,6 +190,22 @@ Create a Python 3.x virtual environment, and install project dependencies:
     poetry install
 
 ## Running
+
+### Docker
+
+There is now an official `arm64` image available in [GHCR](https://github.com/jinglemansweep/wideboy/pkgs/container/wideboy) which should run fine on any modern Raspberry Pi. An example [`docker-compose.yml`](./docker-compose.yml) has been provided which loads it environment variables from `docker.local.env` which needs to be created before starting.
+
+Note that the Docker image requires `privileged` mode and access to `/dev/mem` (for GPIO access):
+
+    cp ./docker.env ./docker.local.env
+    docker compose pull
+    docker compose up -d
+
+To view logs:
+
+    docker compose logs -f wideboy
+
+### Source
 
 To run the project:
 
