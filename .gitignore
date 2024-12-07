@@ -5,6 +5,7 @@ venv*
 __pycache__
 dietpi.txt
 settings.*.toml
+docker.*.env
 .env
 *.token
 *.log

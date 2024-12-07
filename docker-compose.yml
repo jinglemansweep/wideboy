@@ -1,0 +1,10 @@
+services:
+  wideboy:
+    image: ghcr.io/jinglemansweep/wideboy:main
+    restart: always
+    privileged: true
+    user: root
+    devices:
+      - /dev/mem:/dev/mem
+    env_file:
+      - ./docker.local.env     
