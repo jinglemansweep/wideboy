@@ -145,6 +145,8 @@ Each Entity tile must be created as a Python class which can then be added to Co
 
 ## Installation
 
+### RGB LED Matrix Driver
+
 Fetch dependencies submodules:
 
     git submodule update --init --recursive
@@ -153,6 +155,19 @@ Build `rpi-rgb-led-matrix` Python bindings:
 
     cd lib/rpi-rgb-led-matrix
     make build-python
+
+### Python 3.10
+
+If using Debian Bookworm, you will need to install Python 3.10 as the default 3.9 version will not work. You can add an APT repository to install Python 3.10 packages:
+
+Add the following to `/etc/apt/sources.list` or equivalent:
+
+    deb http://deb.pascalroeleven.nl/python3.10 bullseye-backports main
+
+Install:
+
+    apt update
+    apt install python3.10
 
 ## Configuration
 
@@ -182,7 +197,7 @@ Any configuration value can be applied using environment variables which all sta
 
 ## Development
 
-Create a Python 3.x virtual environment, and install project dependencies:
+Create a Python 3.10+ virtual environment, and install project dependencies:
 
     python3 -m venv venv
     . venv/bin/activate
