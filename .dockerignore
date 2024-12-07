@@ -1,2 +1,6 @@
-lib
 venv
+libs/rpi-rgb-led-matrix/fonts
+libs/rpi-rgb-led-matrix/images
+libs/rpi-rgb-led-matrix/bindings/python/build
+images/backgrounds/*
+images/weather/*
