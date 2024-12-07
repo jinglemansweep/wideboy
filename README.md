@@ -23,6 +23,7 @@ WideBoy has extensive [Home Assistant](https://www.home-assistant.io/) support i
 - :incoming_envelope: Announcements and notifications via [MQTT](https://en.wikipedia.org/wiki/MQTT)
 - :satellite: Remote control via MQTT and [Home Assistant](https://www.home-assistant.io/)
 - :white_square_button: QR code display for easy linking from mobile devices
+- :whale: Offical Docker image and example [Compose](./docker-compose.yml) configuration
 - :strawberry: Optimised for [DietPi](https://dietpi.com/) running on a Raspberry Pi 4
 
 ## Screenshots
