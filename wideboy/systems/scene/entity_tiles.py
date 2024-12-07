@@ -533,7 +533,7 @@ CELLS = [
         CellSensorBackFront,
     ],
     [
-        CellVPNPrivacyStatus,
+        # CellVPNPrivacyStatus,
         CellDS920VolumeUsage,
         CellSpeedTestDownload,
         CellSpeedTestUpload,

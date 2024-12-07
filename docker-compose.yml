@@ -6,5 +6,7 @@ services:
     user: root
     devices:
       - /dev/mem:/dev/mem
+    volumes:
+      - /mnt/nas/media/images/artyfarty:/external/images/backgrounds:ro
     env_file:
       - ./docker.local.env     
