@@ -162,7 +162,7 @@ The provided [`settings.toml`](./settings.toml) details all the available option
 
 If using the Docker container, the provided [`docker-compose.yml`](./docker-compose.yml) file will attempt to load environment variables from `./docker.local.env`. An example environment file is provided to copy and modify:
 
-    cp ./docker.env docker.local.env
+    cp ./docker.env ./docker.local.env
 
 Any configuration value can be applied using environment variables which all start with `WIDEBOY_` and have a flattened uppercase underscore delimited format. Note that each nested level should be separated by double underscore (`__`). For example, the following TOML snippet and the equivalent environment variables:
 
@@ -176,9 +176,9 @@ Any configuration value can be applied using environment variables which all sta
 
 #### Environment Variables
 
-WIDEBOY_MQTT__HOST=mqtt.local
-WIDEBOY_MQTT__USER=mqtt
-WIDEBOY_PATHS__IMAGES_BACKGROUNDS=/images
+    WIDEBOY_MQTT__HOST=mqtt.local
+    WIDEBOY_MQTT__USER=mqtt
+    WIDEBOY_PATHS__IMAGES_BACKGROUNDS=/images
 
 ## Development
 
