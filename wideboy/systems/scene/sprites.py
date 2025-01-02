@@ -2,7 +2,6 @@ import logging
 from pygame import Color, Surface
 from typing import Dict, List, Tuple, Type
 from ...sprites.image import ImageSprite
-from ...sprites.mode7 import Mode7Sprite
 from ...sprites.slideshow import SlideshowSprite
 from ...sprites.text import TextSprite
 from ...sprites.tile_grid import TileGrid, TileGridCell
@@ -49,13 +48,3 @@ def build_tile_grid_sprite(
 
 def build_slideshow_sprite(surface: Surface, size: Tuple[int, int]):
     return SlideshowSprite(surface, size)
-
-
-def build_mode7_sprite(
-    surface: Surface,
-    size: Tuple[int, int],
-    perspective: float,
-    rotation: float,
-    zoom: float,
-):
-    return Mode7Sprite(surface, size, perspective, rotation, zoom)

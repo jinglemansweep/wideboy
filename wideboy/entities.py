@@ -100,25 +100,3 @@ class WidgetTileGrid(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
 @entity
 class WidgetSlideshow(ComVisible):
     pass
-
-
-@entity
-class WidgetDucky(
-    ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComAlpha, ComVisible
-):
-    pass
-
-
-@entity
-class WidgetVinyl(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetGalaxy(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetAnimatedGif(ComFrame, ComFade, ComMotion, ComAlpha, ComVisible):
-    pass
