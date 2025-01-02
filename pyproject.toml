@@ -31,3 +31,6 @@ types-pillow = "^9.4.0.10"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+typeCheckingMode = "off"

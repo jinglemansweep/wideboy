@@ -3,199 +3,199 @@ from pathlib import Path
 
 VALIDATORS = [
     # General
-    Validator("GENERAL__DEVICE_ID", default=None),
-    Validator("GENERAL__DEBUG", default=False, cast=bool),
-    Validator("GENERAL__LOG_LEVEL", default="info"),  # error, warning, info, debug
+    Validator("GENERAL.DEVICE_ID", default=None),
+    Validator("GENERAL.DEBUG", default=False, cast=bool),
+    Validator("GENERAL.LOG_LEVEL", default="info"),  # error, warning, info, debug
     # Display
     Validator(
-        "DISPLAY__CANVAS__WIDTH",
+        "DISPLAY.CANVAS.WIDTH",
         default=768,
         cast=int,
     ),
     Validator(
-        "DISPLAY__CANVAS__HEIGHT",
+        "DISPLAY.CANVAS.HEIGHT",
         default=64,
         cast=int,
     ),
     # MQTT
     Validator(
-        "MQTT__HOST",
+        "MQTT.HOST",
         required=True,
         cast=str,
     ),
     Validator(
-        "MQTT__PORT",
+        "MQTT.PORT",
         default=1883,
         cast=int,
     ),
     Validator(
-        "MQTT__TOPIC_PREFIX__APP",
+        "MQTT.TOPIC_PREFIX.APP",
         default="wideboy",
         cast=str,
     ),
     Validator(
-        "MQTT__TOPIC_PREFIX__HOMEASSISTANT__DEFAULT",
+        "MQTT.TOPIC_PREFIX.HOMEASSISTANT.DEFAULT",
         default="homeassistant",
         cast=str,
     ),
     Validator(
-        "MQTT__TOPIC_PREFIX__HOMEASSISTANT__STATESTREAM",
+        "MQTT.TOPIC_PREFIX.HOMEASSISTANT.STATESTREAM",
         default="homeassistant/statestream",
         cast=str,
     ),
     Validator(
-        "MQTT__USER",
+        "MQTT.USER",
         default=None,
         cast=str,
     ),
     Validator(
-        "MQTT__PASSWORD",
+        "MQTT.PASSWORD",
         default=None,
         cast=str,
     ),
     Validator(
-        "MQTT__KEEPALIVE",
+        "MQTT.KEEPALIVE",
         default=60,
         cast=int,
     ),
     Validator(
-        "MQTT__LOG_MESSAGES",
+        "MQTT.LOG_MESSAGES",
         default=False,
         cast=bool,
     ),
     # PATHS
     Validator(
-        "PATHS__IMAGES_ICONS",
+        "PATHS.IMAGES_ICONS",
         default="images/icons",
         cast=Path,
     ),
     Validator(
-        "PATHS__IMAGES_BACKGROUNDS",
+        "PATHS.IMAGES_BACKGROUNDS",
         default="images/backgrounds",
         cast=Path,
     ),
     Validator(
-        "PATHS__IMAGES_SPRITES",
+        "PATHS.IMAGES_SPRITES",
         default="images/sprites",
         cast=Path,
     ),
     Validator(
-        "PATHS__IMAGES_WEATHER",
+        "PATHS.IMAGES_WEATHER",
         default="images/weather",
         cast=Path,
     ),
-    Validator("PATHS__IMAGES_SCREENSHOTS", default="images/screenshots", cast=Path),
+    Validator("PATHS.IMAGES_SCREENSHOTS", default="images/screenshots", cast=Path),
     # LED DISPLAY MATRIX
     Validator(
-        "DISPLAY__MATRIX__ENABLED",
+        "DISPLAY.MATRIX.ENABLED",
         default=False,
         cast=bool,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__GPIO_MAPPING",
+        "DISPLAY.MATRIX.DRIVER.GPIO_MAPPING",
         default="regular",
         cast=str,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__ROWS",
+        "DISPLAY.MATRIX.DRIVER.ROWS",
         default=64,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__COLS",
+        "DISPLAY.MATRIX.DRIVER.COLS",
         default=256,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__CHAIN",
+        "DISPLAY.MATRIX.DRIVER.CHAIN",
         default=1,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__PARALLEL",
+        "DISPLAY.MATRIX.DRIVER.PARALLEL",
         default=3,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__MULTIPLEXING",
+        "DISPLAY.MATRIX.DRIVER.MULTIPLEXING",
         default=0,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__PIXEL_MAPPER",
+        "DISPLAY.MATRIX.DRIVER.PIXEL_MAPPER",
         default="V-mapper",
         cast=str,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__PWM_BITS",
+        "DISPLAY.MATRIX.DRIVER.PWM_BITS",
         default=8,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__BRIGHTNESS",
+        "DISPLAY.MATRIX.DRIVER.BRIGHTNESS",
         default=50,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__SCAN_MODE",
+        "DISPLAY.MATRIX.DRIVER.SCAN_MODE",
         default=0,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__ROW_ADDR_TYPE",
+        "DISPLAY.MATRIX.DRIVER.ROW_ADDR_TYPE",
         default=0,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__SHOW_REFRESH",
+        "DISPLAY.MATRIX.DRIVER.SHOW_REFRESH",
         default=False,
         cast=bool,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__LIMIT_REFRESH",
+        "DISPLAY.MATRIX.DRIVER.LIMIT_REFRESH",
         default=None,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__INVERSE",
+        "DISPLAY.MATRIX.DRIVER.INVERSE",
         default=False,
         cast=bool,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__RGB_SEQUENCE",
+        "DISPLAY.MATRIX.DRIVER.RGB_SEQUENCE",
         default="RGB",
         cast=str,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__PWM_LSB_NANOSECONDS",
+        "DISPLAY.MATRIX.DRIVER.PWM_LSB_NANOSECONDS",
         default=200,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__PWM_DITHER_BITS",
+        "DISPLAY.MATRIX.DRIVER.PWM_DITHER_BITS",
         default=0,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__NO_HARDWARE_PULSE",
+        "DISPLAY.MATRIX.DRIVER.NO_HARDWARE_PULSE",
         default=False,
         cast=bool,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__PANEL_TYPE",
+        "DISPLAY.MATRIX.DRIVER.PANEL_TYPE",
         default=None,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__SLOWDOWN_GPIO",
+        "DISPLAY.MATRIX.DRIVER.SLOWDOWN_GPIO",
         default=4,
         cast=int,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__DAEMON",
+        "DISPLAY.MATRIX.DRIVER.DAEMON",
         default=False,
         cast=bool,
     ),
     Validator(
-        "DISPLAY__MATRIX__DRIVER__NO_DROP_PRIVS",
+        "DISPLAY.MATRIX.DRIVER.NO_DROP_PRIVS",
         default=True,
         cast=bool,
     ),
