@@ -9,7 +9,7 @@ from .config import VALIDATORS
 from .consts import FPS_MAX
 from .entities import AppState
 from .systems.animation import SysAnimation
-from .systems.boot import SysBoot, SysClock, SysDebug, SysEvents, SysInput
+from .systems.core import SysBoot, SysClock, SysDebug, SysEvents, SysInput
 from .systems.display import SysDisplay
 from .systems.draw import SysDraw
 from .systems.scene import SysScene
@@ -23,7 +23,7 @@ os.environ["SDL_VIDEO_CENTERED"] = "1"
 
 config = Dynaconf(
     envvar_prefix=_APP_NAME.upper(),
-    settings_files=["settings.toml", "settings.local.toml", "secrets.toml"],
+    settings_files=["settings.yml", "settings.local.yml", "secrets.yml"],
     validators=VALIDATORS,
 )
 

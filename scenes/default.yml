@@ -1,0 +1,59 @@
+metadata:
+  name: default
+  description: Default scene
+
+styles:
+  # default:
+  #   font:
+  #     name: "Font"
+  #     size: 12
+  #   color:
+  #     foreground: [255, 255, 255, 255]
+  #     background: [0, 0, 0, 0]
+  clock_time:
+    font:
+      name: "Font"
+      size: 20
+    color:
+      foreground: [255, 255, 255, 255]
+      background: [0, 0, 0, 0]
+  clock_date:
+    font:
+      name: "Font"
+      size: 12
+    color:
+      foreground: [128, 128, 255, 255]
+      background: [0, 0, 0, 0]
+
+widgets:
+  - id: background_slideshow
+    class: ImageSlideshow
+    position: [0, 0]
+    # size: [0, 0]
+    # style: default
+    settings:
+      path: /mnt/images
+      interval: 60
+    triggers:
+      - event: EVENT_CLOCK_NEW_SECOND
+        payload: 30
+
+  - id: clock_time
+    class: Text
+    position: [0, 0]
+    size: [128, 40]
+    style: clock_time
+    settings:
+      text: "${context.time.hh}:${context.time.ss}"
+    triggers:
+      - event: EVENT_CLOCK_NEW_SECOND
+
+  - id: clock_date
+    class: Text
+    position: [0, 40]
+    size: [128, 40]
+    style: clock_date
+    settings:
+      text: "${context.time.dd}/${context.time.mm}/${context.time.yyyy}"
+    triggers:
+      - event: EVENT_CLOCK_NEW_HOUR

@@ -2,7 +2,7 @@ import logging
 from ecs_pattern import EntityManager, System
 from pygame.display import Info as DisplayInfo
 from typing import Callable, Generator, List, Tuple
-from ..entities import AppState, Cache, WidgetSysMessage
+from ..entities import AppState, Cache, UIEntity
 from ..sprites.graphics import load_image, load_gif
 from .scene.sprites import build_system_message_sprite
 
@@ -88,7 +88,8 @@ class SysPreprocess(System):
             self._progress(visible=False)
 
     def _progress(self, message: str = "", visible: bool = True) -> None:
-        widget_message = next(self.entities.get_by_class(WidgetSysMessage))
+        ui_entities = self.entities.get_by_class(UIEntity)
+        widget_message = next(filter(lambda e: e.id == "message", ui_entities))
         if widget_message is not None:
             widget_message.fade_target_alpha = 255 if visible else 0
             widget_message.sprite = build_system_message_sprite(message)

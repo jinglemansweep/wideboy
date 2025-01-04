@@ -3,13 +3,13 @@ from ecs_pattern import EntityManager, System, entity
 
 from pygame.transform import flip as pygame_transform_flip
 from ..components import (
-    ComAlpha,
-    ComBound,
-    ComFade,
-    ComFrame,
-    ComMotion,
-    ComTarget,
-    ComVisible,
+    ComponentAlpha,
+    ComponentBound,
+    ComponentFade,
+    ComponentFrame,
+    ComponentMotion,
+    ComponentTarget,
+    ComponentVisible,
 )
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ class SysAnimation(System):
 
     def _update_fade(self):
         # Handle fade animation
-        for e in self.entities.get_with_component(ComFade, ComVisible):
+        for e in self.entities.get_with_component(ComponentFade, ComponentVisible):
             # If no fade target, skip
             if e.fade_target_alpha is None:
                 continue
@@ -56,7 +56,9 @@ class SysAnimation(System):
 
     def _update_target(self):
         # Set speed to move towards target
-        for e in self.entities.get_with_component(ComTarget, ComMotion, ComVisible):
+        for e in self.entities.get_with_component(
+            ComponentTarget, ComponentMotion, ComponentVisible
+        ):
             # If X target set, move towards it
             if e.target_x is not None:
                 # If current X is less than target, move right
@@ -83,7 +85,9 @@ class SysAnimation(System):
                     e.speed_y = 0
 
     def _update_bound(self):
-        for e in self.entities.get_with_component(ComBound, ComMotion, ComVisible):
+        for e in self.entities.get_with_component(
+            ComponentBound, ComponentMotion, ComponentVisible
+        ):
             # If no bound rect or size, skip
             if e.bound_rect is None or e.bound_size is None:
                 continue
@@ -118,7 +122,7 @@ class SysAnimation(System):
 
     def _update_frame(self):
         # Handle frame animation
-        for e in self.entities.get_with_component(ComFrame, ComVisible):
+        for e in self.entities.get_with_component(ComponentFrame, ComponentVisible):
             # If zero or one frame, skip
             if len(e.frames) <= 1:
                 continue
@@ -137,7 +141,7 @@ class SysAnimation(System):
 
     def _update_motion(self):
         # Move entity according to speed and set direction
-        for e in self.entities.get_with_component(ComMotion, ComVisible):
+        for e in self.entities.get_with_component(ComponentMotion, ComponentVisible):
             # Increase or decrease X and Y by speed
             e.x += e.speed_x
             e.y += e.speed_y
@@ -146,7 +150,7 @@ class SysAnimation(System):
             e.direction_y = 1 if e.speed_y > 0 else -1 if e.speed_y < 0 else 0
 
         # Flip sprite if moving left
-        for e in self.entities.get_with_component(ComFrame, ComMotion):
+        for e in self.entities.get_with_component(ComponentFrame, ComponentMotion):
             # If moving left, flip sprite
             if e.direction_x < 0:
                 e.sprite.image = pygame_transform_flip(
@@ -154,6 +158,6 @@ class SysAnimation(System):
                 )
 
     def _update_alpha(self):
-        for e in self.entities.get_with_component(ComAlpha):
+        for e in self.entities.get_with_component(ComponentAlpha):
             # Set alpha of sprite image
             e.sprite.image.set_alpha(e.alpha)

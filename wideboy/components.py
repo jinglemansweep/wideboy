@@ -6,7 +6,12 @@ from typing import List, Optional, Tuple
 
 
 @component
-class ComVisible:
+class ComponentIdentifiable:
+    id: str
+
+
+@component
+class ComponentVisible:
     sprite: Sprite
     x: int = 0
     y: int = 0
@@ -15,12 +20,12 @@ class ComVisible:
 
 
 @component
-class ComAlpha:
+class ComponentAlpha:
     alpha: int = 255
 
 
 @component
-class ComMotion:
+class ComponentMotion:
     speed_x: int = 0
     speed_y: int = 0
     direction_x: int = 0
@@ -28,26 +33,26 @@ class ComMotion:
 
 
 @component
-class ComTarget:
+class ComponentTarget:
     target_x: Optional[int] = None
     target_y: Optional[int] = None
 
 
 @component
-class ComBound:
+class ComponentBound:
     bound_mode: str = "bounce"
     bound_rect: Optional[Tuple[int, int, int, int]] = None
     bound_size: Optional[Tuple[int, int]] = None
 
 
 @component
-class ComFade:
+class ComponentFade:
     fade_target_alpha: Optional[int] = None
     fade_speed: int = 8
 
 
 @component
-class ComFrame:
+class ComponentFrame:
     frames: List[Surface] = field(default_factory=list)
     scene_frame: int = 0
     frame_index: int = 0

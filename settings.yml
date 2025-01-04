@@ -1,0 +1,54 @@
+general:
+  # device_id: "lounge"
+  # debug: false
+  # log_level: "debug" # info, debug
+
+display:
+  canvas:
+    # width: 768 # 64 * 12
+    # height: 64
+  matrix:
+    # enabled: true
+    driver:
+      # gpio_mapping: "regular"
+      # rows: 256
+      # cols: 64
+      # chain: 1
+      # parallel: 3
+      # multiplexing: 0
+      # pixel_mapper: "V-mapper"
+      # pwm_bits: 8
+      # brightness: 50
+      # scan_mode: 0
+      # row_addr_type: 0
+      # show_refresh: false
+      # limit_refresh: false
+      # inverse: false
+      # rgb_sequence: "RGB"
+      # pwm_lsb_nanoseconds: 200
+      # pwm_dither_bits: 0
+      # no_hardware_pulse: false
+      # panel_type: "FM6126A"
+      # slowdown_gpio: 4
+      # daemon: false
+      # no_drop_privs: false
+
+mqtt:
+  # host: "hass.local"
+  # port: 1883
+  # user: "user"
+  # password: "password"
+  # keepalive: 60
+  # log_messages: false
+  # topic_prefix:
+  # app: "wideboy"
+  # homeassistant:
+  # default: "homeassistant"
+  # statestream: "homeassistant/statestream"
+
+paths:
+  # images_backgrounds: "images/background"
+  # images_icons: "images/icons"
+  # images_screenshots; "images/screenshots"
+  # images_sprites: "images/sprites"
+  # images_weather: "images/icons"

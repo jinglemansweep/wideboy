@@ -4,7 +4,7 @@ from datetime import datetime
 from ecs_pattern import EntityManager, System
 from pygame.image import save as pygame_image_save
 from pygame.surface import Surface
-from ..components import ComVisible
+from ..components import ComponentVisible
 from ..entities import AppState
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ class SysDraw(System):
 
     def update(self) -> None:
         self.screen.fill((0, 0, 0))
-        visible_entities = self.entities.get_with_component(ComVisible)
+        visible_entities = self.entities.get_with_component(ComponentVisible)
         sorted_visible = sorted(visible_entities, key=lambda x: x.z_order)
 
         for e in sorted_visible:

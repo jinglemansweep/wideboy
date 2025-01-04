@@ -5,13 +5,12 @@ from ecs_pattern import entity
 from paho.mqtt.client import Client as MQTTClient
 from typing import Callable
 from .components import (
-    ComAlpha,
-    ComBound,
-    ComFade,
-    ComFrame,
-    ComMotion,
-    ComTarget,
-    ComVisible,
+    ComponentAlpha,
+    ComponentFade,
+    ComponentMotion,
+    ComponentTarget,
+    ComponentVisible,
+    ComponentIdentifiable,
 )
 
 
@@ -51,52 +50,12 @@ class Cache:
 
 
 @entity
-class WidgetText(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetSquare(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetImage(ComFade, ComBound, ComTarget, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetFrameAnimation(
-    ComFrame, ComFade, ComBound, ComTarget, ComMotion, ComAlpha, ComVisible
+class UIEntity(
+    ComponentFade,
+    ComponentTarget,
+    ComponentMotion,
+    ComponentAlpha,
+    ComponentVisible,
+    ComponentIdentifiable,
 ):
-    pass
-
-
-@entity
-class WidgetSysMessage(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetClockBackground(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetClockDate(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetClockTime(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetTileGrid(ComFade, ComTarget, ComMotion, ComAlpha, ComVisible):
-    pass
-
-
-@entity
-class WidgetSlideshow(ComVisible):
     pass

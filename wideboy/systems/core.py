@@ -35,12 +35,18 @@ class SysEvents(System):
     def update(self) -> None:
         pygame_events = get_pygame_events()
         app_state = next(self.entities.get_by_class(AppState))
-        app_state.events = [(event.type, event.dict) for event in pygame_events]
+        app_state.events = [
+            (
+                EventTypes.EVENT_PYGAME_INTERNAL,
+                {**event.dict, **{"pygame_type": event.type}},
+            )
+            for event in pygame_events
+        ]
         # logger.debug(
         #     f"sys.events.update: events={len(app_state.events)} pygame_events={len(pygame_events)}"
         # )
         # if len(app_state.events) > 0:
-        #     logger.debug(f"sys.events.update: {app_state.events}")
+        #   logger.debug(f"sys.events.update: {app_state.events}")
 
 
 class SysClock(System):
@@ -87,7 +93,8 @@ class SysInput(System):
                 app_state.running = False
             # Up/Down
             if event_type == KEYDOWN and event_key in (K_UP, K_DOWN):
-                logger.debug("Up/Down", event_key)
+                key = "UP" if event_key == K_UP else "DOWN"
+                logger.debug(f"Up/Down {key}")
 
 
 class SysDebug(System):

@@ -8,11 +8,7 @@ from ...consts import EventTypes
 from ...entities import (
     AppState,
     Cache,
-    WidgetClockBackground,
-    WidgetClockDate,
-    WidgetClockTime,
-    WidgetSysMessage,
-    WidgetTileGrid,
+    UIEntity,
 )
 from ...sprites.common import build_rect_sprite
 from .entity_tiles import CELLS
@@ -62,35 +58,40 @@ class SysScene(System):
         clock_z = 100
 
         self.entities.add(
-            WidgetClockBackground(
+            UIEntity(
+                "clock_background",
                 build_rect_sprite(Color(0, 0, 0, 255), CLOCK_WIDTH, 46),
                 clock_x,
                 clock_y - 2,
                 z_order=clock_z,
                 alpha=128,
             ),
-            WidgetClockTime(
+            UIEntity(
+                "clock_time",
                 build_time_sprite(""),
                 clock_x + 2,
                 clock_y,
                 z_order=clock_z + 1,
                 alpha=0,
             ),
-            WidgetClockDate(
+            UIEntity(
+                "clock_date",
                 build_date_sprite(""),
                 clock_x + 3,
                 clock_y + 28,
                 z_order=clock_z + 1,
                 alpha=0,
             ),
-            WidgetTileGrid(
+            UIEntity(
+                "tilegrid",
                 build_tile_grid_sprite(CELLS, self.app_state.hass_state),
                 256,
                 0,
                 z_order=clock_z,
                 alpha=0,
             ),
-            WidgetSysMessage(
+            UIEntity(
+                "message",
                 build_system_message_sprite("Hi!"),
                 5,
                 5,
@@ -109,9 +110,10 @@ class SysScene(System):
         app_state = next(self.entities.get_by_class(AppState))
 
         # logger.debug(f"sys.scene.update: events={len(self.app_state.events)}")
-        widget_clock_date = next(self.entities.get_by_class(WidgetClockDate))
-        widget_clock_time = next(self.entities.get_by_class(WidgetClockTime))
-        widget_tilegrid = next(self.entities.get_by_class(WidgetTileGrid))
+        ui_entities = self.entities.get_by_class(UIEntity)
+        widget_clock_time = next(filter(lambda e: e.id == "clock_time", ui_entities))
+        widget_clock_date = next(filter(lambda e: e.id == "clock_date", ui_entities))
+        widget_tilegrid = next(filter(lambda e: e.id == "tilegrid", ui_entities))
 
         time_fmt = "%H:%M" if app_state.clock_24_hour else "%l:%M %p"
         date_fmt = "%a %d %b"
