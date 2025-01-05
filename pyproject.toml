@@ -19,6 +19,7 @@ pygame-ce = "^2.2.1"
 types-pyyaml = "^6.0.12.12"
 ecs-pattern = "^1.2.0"
 toml = "^0.10.2"
+websocket-client = "^1.8.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

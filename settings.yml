@@ -3,6 +3,14 @@ general:
   # debug: false
   # log_level: "debug" # info, debug
 
+homeassistant:
+  # host: hass.local
+  # port: 8123
+  # token: abc123
+  # entities:
+  # - light.lounge_light
+  # - light.kitchen_light
+
 display:
   canvas:
     # width: 768 # 64 * 12

@@ -14,6 +14,7 @@ from .systems.display import SysDisplay
 from .systems.draw import SysDraw
 from .systems.scene import SysScene
 from .systems.scene.hass_entities import ENTITIES as HASS_ENTITIES
+from .systems.homeassistant import SysHomeAssistantWebsocket
 from .systems.mqtt import SysMQTT, SysHomeAssistant
 from .systems.preprocess import SysPreprocess
 from .utils import setup_logger
@@ -60,6 +61,7 @@ def main():
             SysInput(entities),
             SysMQTT(entities),
             SysHomeAssistant(entities, hass_entities=HASS_ENTITIES),
+            SysHomeAssistantWebsocket(entities),
             # Stage
             SysScene(entities),
             SysAnimation(entities),
