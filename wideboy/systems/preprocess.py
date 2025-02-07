@@ -1,11 +1,10 @@
 import logging
 from ecs_pattern import EntityManager, System
-from pygame import Surface
 from pygame.display import Info as DisplayInfo
 from typing import Callable, Generator, List, Tuple
-from ..entities import AppState, Cache, WidgetSysMessage
+from ..entities import AppState, Cache, UIEntity
 from ..sprites.graphics import load_image, load_gif
-from .scene.sprites import build_mode7_sprite, build_system_message_sprite
+from .scene.sprites import build_system_message_sprite
 
 logger = logging.getLogger(__name__)
 
@@ -54,31 +53,6 @@ def preprocess_text(cache: Cache, key: str, text: str):
     cache.surfaces[key].append(sprite.image)
 
 
-def preprocess_mode7(
-    cache: Cache,
-    key: str,
-    surface: Surface,
-    canvas_size: Tuple[int, int],
-    perspective=0.5,
-    rotation=0.0,
-    zoom=1.0,
-):
-    logger.debug(
-        f"preprocess_mode7: key={key} canvas_size={canvas_size} perspective={perspective} rotation={rotation} zoom={zoom}"
-    )
-
-    if key not in cache.surfaces:
-        cache.surfaces[key] = []
-    sprite = build_mode7_sprite(
-        surface,
-        canvas_size,
-        perspective=perspective,
-        rotation=rotation,
-        zoom=zoom,
-    )
-    cache.surfaces[key].append(sprite.image)
-
-
 class SysPreprocess(System):
     entities: EntityManager
     app_state: AppState
@@ -114,18 +88,11 @@ class SysPreprocess(System):
             self._progress(visible=False)
 
     def _progress(self, message: str = "", visible: bool = True) -> None:
-        widget_message = next(self.entities.get_by_class(WidgetSysMessage))
+        ui_entities = self.entities.get_by_class(UIEntity)
+        widget_message = next(filter(lambda e: e.id == "message", ui_entities))
         if widget_message is not None:
             widget_message.fade_target_alpha = 255 if visible else 0
             widget_message.sprite = build_system_message_sprite(message)
 
     def tasks(self) -> Generator:
-        # Animated Duck
-        preprocess_load_spritesheet(
-            self.cache,
-            "duck_animated",
-            f"{self.app_state.config.paths.images_sprites}/ducky/spritesheet.png",
-            (32, 32),
-            (6, 12),
-        )
-        yield "Animated Duck"
+        yield None

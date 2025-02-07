@@ -56,7 +56,7 @@ class SysMQTT(System):
         except Exception as e:
             logger.error(f"sys.mqtt.update: exception={e}")
         if not self.mqtt_connected:
-            logger.warn(
+            logger.warning(
                 f"sys.mqtt.reconnect: connected={self.mqtt_connected} retry={MQTT_RECONNECT_WAIT}s"
             )
             time.sleep(MQTT_RECONNECT_WAIT)

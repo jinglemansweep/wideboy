@@ -17,6 +17,27 @@ VALIDATORS = [
         default=64,
         cast=int,
     ),
+    # Home Assistant
+    Validator(
+        "HOMEASSISTANT.HOST",
+        default=None,
+        cast=str,
+    ),
+    Validator(
+        "HOMEASSISTANT.PORT",
+        default=8123,
+        cast=int,
+    ),
+    Validator(
+        "HOMEASSISTANT.TOKEN",
+        default=None,
+        cast=str,
+    ),
+    Validator(
+        "HOMEASSISTANT.ENTITIES",
+        default=[],
+        cast=list,
+    ),
     # MQTT
     Validator(
         "MQTT.HOST",

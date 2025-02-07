@@ -8,15 +8,11 @@ from ....consts import EventTypes
 from ....entities import (
     AppState,
     Cache,
-    WidgetClockDate,
-    WidgetClockTime,
-    WidgetDucky,
-    WidgetSlideshow,
-    WidgetTileGrid,
+    UIEntity,
 )
 from ....sprites.graphics import load_image, recolor_image
 from ....sprites.slideshow import Transition
-from ..sprites import build_image_sprite, build_slideshow_sprite
+from ..sprites import build_slideshow_sprite
 from . import Stage
 
 
@@ -49,42 +45,21 @@ class StageDefault(Stage):
             self.slideshow_images[self.app_state.slideshow_index]
         )
         self.stage_entities.append(
-            WidgetSlideshow(
+            UIEntity(
+                "slideshow",
                 build_slideshow_sprite(slideshow_image, self.display_size),
             )  # type: ignore[call-arg]
         )
 
-        # Add Main Widgets
-
-        self.stage_entities.append(
-            WidgetDucky(
-                build_image_sprite(self.cache.surfaces["duck_animated"][0]),
-                x=0,
-                y=self.display_size[1] - 32,
-                z_order=5,
-                speed_x=1,
-                bound_rect=(
-                    0,
-                    0,
-                    self.display_size[0] // 2,
-                    self.display_size[1],
-                ),
-                bound_size=(32, 32),
-                frames=self.cache.surfaces["duck_animated"],
-                frame_delay=4,
-            ),  # type: ignore[call-arg]
-        )
-
         # Fade in widgets
         for w in self.entities.get_by_class(
-            WidgetClockDate,
-            WidgetClockTime,
-            WidgetTileGrid,
+            UIEntity,
         ):
             w.fade_target_alpha = 255
 
     def update(self) -> None:
-        widget_slideshow = next(self.entities.get_by_class(WidgetSlideshow))
+        ui_entities = self.entities.get_by_class(UIEntity)
+        widget_slideshow = next(filter(lambda e: e.id == "slideshow", ui_entities))
         # widget_spinner = next(self.entities.get_by_class(WidgetSpinner))
         for event_type, event_payload in self.app_state.events:
             if event_type == EventTypes.EVENT_CLOCK_NEW_SECOND:
@@ -97,7 +72,8 @@ class StageDefault(Stage):
         widget_slideshow.sprite.update()
 
     def advance(self) -> None:
-        widget_slideshow = next(self.entities.get_by_class(WidgetSlideshow))
+        ui_entities = self.entities.get_by_class(UIEntity)
+        widget_slideshow = next(filter(lambda e: e.id == "slideshow", ui_entities))
         self.app_state.slideshow_index += 1
         if self.app_state.slideshow_index >= len(self.slideshow_images):
             self.app_state.slideshow_index = 0
