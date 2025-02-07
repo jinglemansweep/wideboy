@@ -1,5 +1,5 @@
 ARG base_image="python"
-ARG base_tag="3.10"
+ARG base_tag="3.11"
 
 FROM ${base_image}:${base_tag} AS build
 
