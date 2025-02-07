@@ -1,6 +1,6 @@
 services:
   wideboy:
-    image: ghcr.io/jinglemansweep/wideboy:latest
+    image: ghcr.io/jinglemansweep/wideboy:1.0.1
     restart: always
     privileged: true
     user: root
@@ -9,4 +9,4 @@ services:
     volumes:
       - /mnt/nas/media/images/artyfarty:/external/images/backgrounds:ro
     env_file:
-      - ./docker.local.env     
+      - ./docker.local.env
