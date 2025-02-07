@@ -48,6 +48,12 @@ def convert_ms_to_mph(ms: Optional[int] = None):
     return round(ms * 2.237)
 
 
+def convert_kph_to_mph(kph: Optional[int] = None):
+    if kph is None:
+        return 0
+    return round(kph * 0.621371)
+
+
 def days_until(end: float):
     start = datetime.now().timestamp()
     return int(abs(int(start - end) / 60 / 60 / 24))
@@ -105,19 +111,6 @@ class CellSensorBinCollection(GridCell):
             return CommonColors.COLOR_BLUE
         else:
             return CommonColors.COLOR_GREY
-
-
-class CellSensorStepsLouis(GridCell):
-    entity_id = "sensor.steps_louis"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_PERSON_WALKING
-
-    @property
-    def label(self):
-        return template_if_defined(self.value, "{:.0f}")
-
-    @property
-    def open(self):
-        return is_defined(self.value) and self.value > 500
 
 
 class CellSensorLoungeAirPM(GridCell):
@@ -225,21 +218,6 @@ class CellSpeedTestPing(GridCell):
         return template_if_defined(self.value, "{:.0f}ms")
 
 
-class CellVPNPrivacyStatus(GridCell):
-    entity_id = "binary_sensor.vpn_privacy_status"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_SHIELD_HALVED
-    cell_color_background = CommonColors.COLOR_RED_DARK
-    icon_color_background = CommonColors.COLOR_RED
-
-    @property
-    def open(self):
-        return is_defined(self.value) and not self.value
-
-    @property
-    def label(self):
-        return "VPN"
-
-
 class CellDS920VolumeUsage(GridCell):
     entity_id = "sensor.ds920plus_volume_used"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HARD_DRIVE
@@ -268,7 +246,7 @@ class CellElectricityDemand(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value > self.limit
+        return is_defined(self.value)
 
     @property
     def cell_color_background(self):
@@ -353,7 +331,10 @@ class CellElectricityAccumulativeCost(GridCell):
         )
 
 
-class CellBatteryUpstairs(GridCell):
+# Battery Tiles
+
+
+class CellBatteryUpstairsLevel(GridCell):
     entity_id = "sensor.delta_2_max_upstairs_battery_level"
     icon_codepoint = FontAwesomeIcons.ICON_FA_CHEVRON_UP
     limit = 100
@@ -383,7 +364,7 @@ class CellBatteryUpstairs(GridCell):
         )
 
 
-class CellBatteryDownstairs(GridCell):
+class CellBatteryDownstairsLevel(GridCell):
     entity_id = "sensor.delta_2_max_downstairs_battery_level"
     icon_codepoint = FontAwesomeIcons.ICON_FA_CHEVRON_DOWN
     limit = 100
@@ -413,6 +394,35 @@ class CellBatteryDownstairs(GridCell):
         )
 
 
+class CellBatteryDownstairsSolar1Watts(GridCell):
+    entity_id = "sensor.delta_2_max_downstairs_solar_1_in_power"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_SOLAR_PANEL
+
+    @property
+    def label(self):
+        return template_if_defined(self.value, "{:.0f}%")
+
+    @property
+    def open(self):
+        return is_defined(self.value)
+
+    @property
+    def cell_color_background(self):
+        return (
+            CommonColors.COLOR_GREEN_DARK
+            if is_defined(self.value) and self.value > 100
+            else CommonColors.COLOR_GREY_DARK
+        )
+
+    @property
+    def icon_color_background(self):
+        return (
+            CommonColors.COLOR_GREEN
+            if is_defined(self.value) and self.value > 100
+            else CommonColors.COLOR_GREY
+        )
+
+
 # Weather/Temp Tiles
 
 
@@ -423,28 +433,26 @@ class BaseCellTemperate(GridCell):
 
 
 class CellWeatherTemperature(BaseCellTemperate):
-    entity_id = "sensor.openweathermap_temperature"
+    entity_id = "sensor.ws_temperature"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HOUSE
 
 
 class CellWeatherWindSpeed(GridCell):
-    entity_id = "sensor.openweathermap_wind_speed"
+    entity_id = "sensor.ws_wind_speed"
     icon_codepoint = FontAwesomeIcons.ICON_FA_WIND
-    limit = 10.0
 
     @property
     def label(self):
-        return f"{convert_ms_to_mph(self.value)}mph"
+        return f"{convert_kph_to_mph(self.value)}mph"
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value > self.limit
+        return is_defined(self.value)
 
 
 class CellWeatherRainProbability(GridCell):
     entity_id = "sensor.openweathermap_forecast_precipitation_probability"
     icon_codepoint = FontAwesomeIcons.ICON_FA_UMBRELLA
-    limit = 30.0
 
     @property
     def label(self):
@@ -452,33 +460,7 @@ class CellWeatherRainProbability(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value > self.limit
-
-
-class CellHouseUpstairsRackTemperature(BaseCellTemperate):
-    entity_id = "sensor.laundry_temperature_sensor_temperature"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_SERVER
-    limit_high = 40
-
-    @property
-    def open(self):
-        return is_defined(self.value) and int(self.value)
-
-    @property
-    def cell_color_background(self):
-        return (
-            CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value > self.limit_high
-            else CommonColors.COLOR_GREY_DARK
-        )
-
-    @property
-    def icon_color_background(self):
-        return (
-            CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value > self.limit_high
-            else CommonColors.COLOR_GREY
-        )
+        return is_defined(self.value)
 
 
 # Date/Time Tiles
@@ -527,31 +509,31 @@ CELLS = [
     # [TestTallCell],
     [
         CellSensorBinCollection,
-        CellSensorStepsLouis,
         CellSensorLoungeAirPM,
+        CellDateDogsFleaTreatment,
+        CellDateDogsWormTreatment,
         CellSensorDoorFront,
         CellSensorBackFront,
     ],
     [
-        # CellVPNPrivacyStatus,
         CellDS920VolumeUsage,
         CellSpeedTestDownload,
         CellSpeedTestUpload,
         CellSpeedTestPing,
     ],
     [
+        CellBatteryUpstairsLevel,
+        CellBatteryDownstairsLevel,
+        CellBatteryDownstairsSolar1Watts,
+    ],
+    [
         CellElectricityDemand,
         CellElectricityRate,
         CellElectricityAccumulativeCost,
-        CellBatteryUpstairs,
-        CellBatteryDownstairs,
     ],
     [
         CellWeatherTemperature,
         CellWeatherWindSpeed,
         CellWeatherRainProbability,
-        CellHouseUpstairsRackTemperature,
-        CellDateDogsFleaTreatment,
-        CellDateDogsWormTreatment,
     ],
 ]
