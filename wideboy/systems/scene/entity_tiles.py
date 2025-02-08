@@ -400,7 +400,7 @@ class CellBatteryDownstairsSolar1Watts(GridCell):
 
     @property
     def label(self):
-        return template_if_defined(self.value, "{:.0f}%")
+        return format_watts(self.value)
 
     @property
     def open(self):
@@ -435,6 +435,10 @@ class BaseCellTemperate(GridCell):
 class CellWeatherTemperature(BaseCellTemperate):
     entity_id = "sensor.ws_temperature"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HOUSE
+
+    @property
+    def open(self):
+        return is_defined(self.value)
 
 
 class CellWeatherWindSpeed(GridCell):
