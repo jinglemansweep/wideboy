@@ -3,4 +3,4 @@ services:
     build:
       context: .
     volumes:
-      - ${PWD}/wideboy:/opt/app
+      - ${PWD}/wideboy:/app/wideboy

@@ -303,8 +303,7 @@ class CellElectricityRate(GridCell):
 class CellElectricityAccumulativeCost(GridCell):
     entity_id = "sensor.octopus_energy_electricity_current_accumulative_cost"
     icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG
-    limit = 2.00
-    limit_high = 3.00
+    limit_high = 4.00
 
     @property
     def label(self):
@@ -312,7 +311,7 @@ class CellElectricityAccumulativeCost(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value) and self.value > self.limit
+        return is_defined(self.value)
 
     @property
     def cell_color_background(self):
@@ -351,7 +350,7 @@ class CellBatteryUpstairsLevel(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value < 30
+            if is_defined(self.value) and self.value < 10
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -359,7 +358,7 @@ class CellBatteryUpstairsLevel(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value < 30
+            if is_defined(self.value) and self.value < 10
             else CommonColors.COLOR_GREY
         )
 
@@ -381,7 +380,7 @@ class CellBatteryDownstairsLevel(GridCell):
     def cell_color_background(self):
         return (
             CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value < 30
+            if is_defined(self.value) and self.value < 10
             else CommonColors.COLOR_GREY_DARK
         )
 
@@ -389,7 +388,7 @@ class CellBatteryDownstairsLevel(GridCell):
     def icon_color_background(self):
         return (
             CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value < 30
+            if is_defined(self.value) and self.value < 10
             else CommonColors.COLOR_GREY
         )
 
@@ -404,7 +403,7 @@ class CellBatteryDownstairsSolar1Watts(GridCell):
 
     @property
     def open(self):
-        return is_defined(self.value)
+        return is_defined(self.value) and self.value > 0
 
     @property
     def cell_color_background(self):
