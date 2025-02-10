@@ -1,0 +1,6 @@
+services:
+  wideboy:
+    build:
+      context: .
+    volumes:
+      - ${PWD}/wideboy:/opt/app

@@ -1,0 +1,3 @@
+services:
+  wideboy:
+    image: ghcr.io/jinglemansweep/wideboy:main

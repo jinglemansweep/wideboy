@@ -215,7 +215,7 @@ Note that the Docker image requires `privileged` mode and access to `/dev/mem` (
 
     cp ./docker.env ./docker.local.env
     docker compose pull
-    docker compose up -d
+    docker compose -f ./compose.common.yml -f ./compose.prod.yml up -d
 
 To view logs:
 
