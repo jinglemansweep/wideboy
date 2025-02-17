@@ -2,6 +2,10 @@ metadata:
   name: default
   description: Default scene
 
+homeassistant:
+  entities:
+    - sensor.weather_temperature
+
 styles:
   # default:
   #   font:

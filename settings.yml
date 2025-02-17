@@ -7,9 +7,9 @@ homeassistant:
   # host: hass.local
   # port: 8123
   # token: abc123
-  # entities:
-  # - light.lounge_light
-  # - light.kitchen_light
+
+scenes:
+  file: scenes/default.yml
 
 display:
   canvas:
