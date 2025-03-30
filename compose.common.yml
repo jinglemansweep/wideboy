@@ -6,6 +6,8 @@ services:
     devices:
       - /dev/mem:/dev/mem
     volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - /mnt/nas/media/images/artyfarty:/external/images/backgrounds:ro
     env_file:
       - ./docker.local.env
