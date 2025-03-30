@@ -10,6 +10,7 @@ from ....entities import (
     Cache,
     UIEntity,
 )
+from ....utils import read_yaml
 from ....sprites.graphics import load_image, recolor_image
 from ....sprites.slideshow import Transition
 from ..sprites import build_slideshow_sprite
@@ -36,6 +37,9 @@ class StageDefault(Stage):
     def setup(self) -> None:
         self.app_state = next(self.entities.get_by_class(AppState))
         self.cache = next(self.entities.get_by_class(Cache))
+
+        scene_config = read_yaml(self.app_state.config.scenes.file)
+        logger.debug(f"Scene config: {scene_config}")
 
         self.slideshow_timer = self.app_state.slideshow_interval
         self._glob_backgrounds(randomize=True)

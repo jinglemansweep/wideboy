@@ -33,11 +33,6 @@ VALIDATORS = [
         default=None,
         cast=str,
     ),
-    Validator(
-        "HOMEASSISTANT.ENTITIES",
-        default=[],
-        cast=list,
-    ),
     # MQTT
     Validator(
         "MQTT.HOST",
@@ -83,6 +78,12 @@ VALIDATORS = [
         "MQTT.LOG_MESSAGES",
         default=False,
         cast=bool,
+    ),
+    # SCENES
+    Validator(
+        "SCENES.FILE",
+        default="scenes/default.yml",
+        cast=str,
     ),
     # PATHS
     Validator(

@@ -39,10 +39,11 @@ class SysHomeAssistantWebsocket(System):
         auth = {"type": "auth", "access_token": config.token}
         self.ws.send(json.dumps(auth))
         # Get all entity states
-        state_message = {"id": self.REQ_IDX_GET_STATE, "type": "get_states"}
-        self.ws.send(json.dumps(state_message))
+        # state_message = {"id": self.REQ_IDX_GET_STATE, "type": "get_states"}
+        # self.ws.send(json.dumps(state_message))
         # Subscribe to watched entity changes
-        for idx, entity_id in enumerate(config.entities):
+        entities: List[str] = []
+        for idx, entity_id in enumerate(entities):
             subscription_idx = self.REQ_IDX_SUBSCRIBE + idx
             subscribe_message = {
                 "id": subscription_idx,
@@ -66,12 +67,7 @@ class SysHomeAssistantWebsocket(System):
                 if parsed["type"] == "event" and parsed["id"] in self.subscription_ids:
                     # Cache entity state updates
                     entity_id = parsed["event"]["variables"]["trigger"]["entity_id"]
-                    state = parsed["event"]["variables"]["trigger"]["to_state"]
-                    logger.debug(
-                        f"sys.hassws.event: entity_id={entity_id} state={state}"
-                    )
-                    self.cache.hass_entities[entity_id] = state
-                    # Send entity update event
+                    logger.debug(f"sys.hassws.event: entity_id={entity_id}")
                     self.app_state.events.append(
                         (
                             EventTypes.EVENT_HASS_WS_ENTITY_UPDATE,
