@@ -393,8 +393,8 @@ class CellBatteryDownstairsLevel(GridCell):
         )
 
 
-class CellBatteryDownstairsSolar1Watts(GridCell):
-    entity_id = "sensor.delta_2_max_downstairs_solar_1_in_power"
+class CellSolarTotalWatts(GridCell):
+    entity_id = "sensor.solar_input_total"
     icon_codepoint = FontAwesomeIcons.ICON_FA_SOLAR_PANEL
 
     @property
@@ -527,7 +527,7 @@ CELLS = [
     [
         CellBatteryUpstairsLevel,
         CellBatteryDownstairsLevel,
-        CellBatteryDownstairsSolar1Watts,
+        CellSolarTotalWatts,
     ],
     [
         CellElectricityDemand,
