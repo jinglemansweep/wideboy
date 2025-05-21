@@ -88,11 +88,16 @@ class SysInput(System):
     def update(self) -> None:
         app_state = next(self.entities.get_by_class(AppState))
         for event_type, event_payload in app_state.events:
+            if event_type is not EventTypes.EVENT_PYGAME_INTERNAL:
+                continue
+            pygame_type = event_payload.get("pygame_type")
+            if pygame_type not in self.event_types:
+                continue
             event_key = event_payload.get("key", None)
-            if (event_type == KEYDOWN and event_key == K_ESCAPE) or event_type == QUIT:
+            if (pygame_type == KEYDOWN and event_key == K_ESCAPE) or pygame_type == QUIT:
                 app_state.running = False
             # Up/Down
-            if event_type == KEYDOWN and event_key in (K_UP, K_DOWN):
+            if pygame_type == KEYDOWN and event_key in (K_UP, K_DOWN):
                 key = "UP" if event_key == K_UP else "DOWN"
                 logger.debug(f"Up/Down {key}")
 
