@@ -112,51 +112,6 @@ class CellSensorBinCollection(GridCell):
         else:
             return CommonColors.COLOR_GREY
 
-
-class CellSensorLoungeAirPM(GridCell):
-    entity_id = "sensor.core_300s_pm2_5"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_SMOKING
-
-    @property
-    def value_quality(self):
-        try:
-            return int(
-                self.state.get("sensor.core_300s_air_quality", dict()).get("state", 0)
-            )
-        except ValueError:
-            return None
-
-    @property
-    def label(self):
-        return template_if_defined(self.value, "{:.0f}")
-
-    @property
-    def open(self):
-        return is_defined(self.value_quality) and self.value_quality > 3
-
-    @property
-    def cell_color_background(self):
-        if self.value_quality == 1:
-            return CommonColors.COLOR_BLUE_DARK
-        elif self.value_quality == 2:
-            return CommonColors.COLOR_GREEN_DARK
-        elif self.value_quality == 3:
-            return CommonColors.COLOR_ORANGE_DARK
-        else:
-            return CommonColors.COLOR_RED_DARK
-
-    @property
-    def icon_color_background(self):
-        if self.value_quality == 1:
-            return CommonColors.COLOR_BLUE
-        elif self.value_quality == 2:
-            return CommonColors.COLOR_GREEN
-        elif self.value_quality == 3:
-            return CommonColors.COLOR_ORANGE
-        else:
-            return CommonColors.COLOR_RED
-
-
 class CellSensorDoorFront(GridCell):
     entity_id = "binary_sensor.front_door_contact_sensor_contact"
     icon_codepoint = FontAwesomeIcons.ICON_FA_DOOR_CLOSED
@@ -265,71 +220,6 @@ class CellElectricityDemand(GridCell):
         )
 
 
-class CellElectricityRate(GridCell):
-    entity_id = "sensor.octopus_energy_electricity_current_rate"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_CIRCLE_HALF_STROKE
-
-    @property
-    def label(self):
-        return template_if_defined(self.value, "£{:.2f}")
-
-    @property
-    def cell_color_background(self):
-        if self.value is None:
-            return CommonColors.COLOR_GREY_DARK
-        elif self.value < 0.00:
-            return CommonColors.COLOR_BLUE_DARK
-        elif self.value <= 0.20:
-            return CommonColors.COLOR_GREEN_DARK
-        elif self.value <= 0.30:
-            return CommonColors.COLOR_ORANGE_DARK
-        else:
-            return CommonColors.COLOR_RED_DARK
-
-    @property
-    def icon_color_background(self):
-        if self.value is None:
-            return CommonColors.COLOR_GREY
-        if self.value < 0.00:
-            return CommonColors.COLOR_BLUE
-        elif self.value <= 0.20:
-            return CommonColors.COLOR_GREEN
-        elif self.value <= 0.30:
-            return CommonColors.COLOR_ORANGE
-        else:
-            return CommonColors.COLOR_RED
-
-
-class CellElectricityAccumulativeCost(GridCell):
-    entity_id = "sensor.octopus_energy_electricity_current_accumulative_cost"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_PLUG
-    limit_high = 4.00
-
-    @property
-    def label(self):
-        return template_if_defined(self.value, "£{:.2f}")
-
-    @property
-    def open(self):
-        return is_defined(self.value)
-
-    @property
-    def cell_color_background(self):
-        return (
-            CommonColors.COLOR_RED_DARK
-            if is_defined(self.value) and self.value > self.limit_high
-            else CommonColors.COLOR_GREY_DARK
-        )
-
-    @property
-    def icon_color_background(self):
-        return (
-            CommonColors.COLOR_RED
-            if is_defined(self.value) and self.value > self.limit_high
-            else CommonColors.COLOR_GREY
-        )
-
-
 # Battery Tiles
 
 
@@ -393,35 +283,6 @@ class CellBatteryDownstairsLevel(GridCell):
         )
 
 
-class CellSolarTotalWatts(GridCell):
-    entity_id = "sensor.solar_input_total"
-    icon_codepoint = FontAwesomeIcons.ICON_FA_SOLAR_PANEL
-
-    @property
-    def label(self):
-        return format_watts(self.value)
-
-    @property
-    def open(self):
-        return is_defined(self.value) and self.value > 0
-
-    @property
-    def cell_color_background(self):
-        return (
-            CommonColors.COLOR_GREEN_DARK
-            if is_defined(self.value) and self.value > 100
-            else CommonColors.COLOR_GREY_DARK
-        )
-
-    @property
-    def icon_color_background(self):
-        return (
-            CommonColors.COLOR_GREEN
-            if is_defined(self.value) and self.value > 100
-            else CommonColors.COLOR_GREY
-        )
-
-
 # Weather/Temp Tiles
 
 
@@ -432,7 +293,7 @@ class BaseCellTemperate(GridCell):
 
 
 class CellWeatherTemperature(BaseCellTemperate):
-    entity_id = "sensor.ws_temperature"
+    entity_id = "sensor.openweathermap_temperature"
     icon_codepoint = FontAwesomeIcons.ICON_FA_HOUSE
 
     @property
@@ -441,12 +302,12 @@ class CellWeatherTemperature(BaseCellTemperate):
 
 
 class CellWeatherWindSpeed(GridCell):
-    entity_id = "sensor.ws_wind_speed"
+    entity_id = "sensor.openweathermap_wind_speed"
     icon_codepoint = FontAwesomeIcons.ICON_FA_WIND
 
     @property
     def label(self):
-        return f"{convert_kph_to_mph(self.value)}mph"
+        return template_if_defined(self.value, "{:.0f}m/s")
 
     @property
     def open(self):
@@ -454,12 +315,12 @@ class CellWeatherWindSpeed(GridCell):
 
 
 class CellWeatherRainProbability(GridCell):
-    entity_id = "sensor.openweathermap_forecast_precipitation_probability"
+    entity_id = "sensor.openweathermap_rain"
     icon_codepoint = FontAwesomeIcons.ICON_FA_UMBRELLA
 
     @property
     def label(self):
-        return template_if_defined(self.value, "{:.0f}%")
+        return template_if_defined(self.value, "{:.0f}mm")
 
     @property
     def open(self):
@@ -512,7 +373,6 @@ CELLS = [
     # [TestTallCell],
     [
         CellSensorBinCollection,
-        CellSensorLoungeAirPM,
         CellDateDogsFleaTreatment,
         CellDateDogsWormTreatment,
         CellSensorDoorFront,
@@ -524,16 +384,16 @@ CELLS = [
         CellSpeedTestUpload,
         CellSpeedTestPing,
     ],
-    [
-        CellBatteryUpstairsLevel,
-        CellBatteryDownstairsLevel,
-        CellSolarTotalWatts,
-    ],
-    [
-        CellElectricityDemand,
-        CellElectricityRate,
-        CellElectricityAccumulativeCost,
-    ],
+    #[
+    #    CellBatteryUpstairsLevel,
+    #    CellBatteryDownstairsLevel,
+    #    CellSolarTotalWatts,
+    #],
+    #[
+    #    CellElectricityDemand,
+    #    CellElectricityRate,
+    #    CellElectricityAccumulativeCost,
+    #],
     [
         CellWeatherTemperature,
         CellWeatherWindSpeed,
