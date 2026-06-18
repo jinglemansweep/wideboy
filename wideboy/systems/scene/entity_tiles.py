@@ -82,35 +82,35 @@ HOUR_EVENING = 20
 # Sensor Tiles
 
 
-class CellSensorBinCollection(GridCell):
-    entity_id = "calendar.bin_collection"
+class CellBinCollectionBlack(GridCell):
+    entity_id = "binary_sensor.bin_black"
     icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
+    label = "Black"
+    icon_color_background = CommonColors.COLOR_GREY_DARK
 
-    @property
-    def bin_type(self):
-        return self.entity_state.get("message", "")[1:-1].lower()
+class CellBinCollectionBlue(GridCell):
+    entity_id = "binary_sensor.bin_blue"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
+    label = "Blue"
+    icon_color_background = CommonColors.COLOR_BLUE_DARK
 
-    @property
-    def label(self):
-        return f"{self.bin_type.capitalize()}"
+class CellBinCollectionBrown(GridCell):
+    entity_id = "binary_sensor.bin_brown"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
+    label = "Brown"
+    icon_color_background = CommonColors.COLOR_GREY_DARK
 
-    @property
-    def open(self):
-        return self.value is True
+class CellBinCollectionGreen(GridCell):
+    entity_id = "binary_sensor.bin_green"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
+    label = "Green"
+    icon_color_background = CommonColors.COLOR_GREEN_DARK
 
-    @property
-    def cell_color_background(self):
-        if self.bin_type == "blue":
-            return CommonColors.COLOR_BLUE_DARK
-        else:
-            return CommonColors.COLOR_GREY_DARK
-
-    @property
-    def icon_color_background(self):
-        if self.bin_type == "blue":
-            return CommonColors.COLOR_BLUE
-        else:
-            return CommonColors.COLOR_GREY
+class CellBinCollectionFood(GridCell):
+    entity_id = "binary_sensor.bin_food"
+    icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
+    label = "Food"
+    icon_color_background = CommonColors.COLOR_GREY
 
 class CellSensorDoorFront(GridCell):
     entity_id = "binary_sensor.front_door_contact_sensor_contact"
@@ -128,8 +128,7 @@ class CellSensorBackFront(GridCell):
     icon_color_background = CommonColors.COLOR_RED
 
 
-# Home Lab Tiles
-
+# Home Tiles
 
 class CellSpeedTestDownload(GridCell):
     entity_id = "sensor.speedtest_download_average"
@@ -372,7 +371,13 @@ class TestTallCell(TallGridCell):
 CELLS = [
     # [TestTallCell],
     [
-        CellSensorBinCollection,
+        CellBinCollectionBlack,
+        CellBinCollectionBlue,
+        CellBinCollectionBrown,
+        CellBinCollectionGreen,
+        CellBinCollectionFood
+    ],
+    [
         CellDateDogsFleaTreatment,
         CellDateDogsWormTreatment,
         CellSensorDoorFront,
@@ -389,11 +394,11 @@ CELLS = [
     #    CellBatteryDownstairsLevel,
     #    CellSolarTotalWatts,
     #],
-    #[
-    #    CellElectricityDemand,
+    [
+         CellElectricityDemand
     #    CellElectricityRate,
     #    CellElectricityAccumulativeCost,
-    #],
+    ],
     [
         CellWeatherTemperature,
         CellWeatherWindSpeed,
