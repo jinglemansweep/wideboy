@@ -86,19 +86,19 @@ class CellBinCollectionBlack(GridCell):
     entity_id = "binary_sensor.bin_black"
     icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
     label = "Black"
-    icon_color_background = CommonColors.COLOR_GREY_DARK
+    icon_color_background = CommonColors.COLOR_GREY
 
 class CellBinCollectionBlue(GridCell):
     entity_id = "binary_sensor.bin_blue"
     icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
     label = "Blue"
-    icon_color_background = CommonColors.COLOR_BLUE_DARK
+    icon_color_background = CommonColors.COLOR_BLUE
 
 class CellBinCollectionBrown(GridCell):
     entity_id = "binary_sensor.bin_brown"
     icon_codepoint = FontAwesomeIcons.ICON_FA_TRASH_CAN
     label = "Brown"
-    icon_color_background = CommonColors.COLOR_GREY_DARK
+    icon_color_background = CommonColors.COLOR_BROWN_DARK
 
 class CellBinCollectionGreen(GridCell):
     entity_id = "binary_sensor.bin_green"

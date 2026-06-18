@@ -36,6 +36,8 @@ class CommonColors:
     COLOR_BLACK = pygame.Color(0, 0, 0, 255)
     COLOR_GREY = pygame.Color(64, 64, 64, 255)
     COLOR_GREY_DARK = pygame.Color(16, 16, 16, 255)
+    COLOR_BROWN = pygame.Color(165, 42, 42, 255)
+    COLOR_BROWN_DARK = pygame.Color(120, 20, 20, 255)
     COLOR_TRANSPARENT = pygame.Color(0, 0, 0, 0)
 
 
