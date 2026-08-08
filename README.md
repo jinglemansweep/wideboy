@@ -1,4 +1,6 @@
-# wideboy
+# WideBoy
+
+<img src="docs/images/logo-new.png" width="50%" alt="WideBoy Logo">
 
 768x64 RGB LED matrix dashboard for Raspberry Pi.
 
