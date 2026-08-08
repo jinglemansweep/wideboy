@@ -1,0 +1,16 @@
+[Unit]
+Description=wideboy RGB LED matrix dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/wideboy/.venv/bin/python -m wideboy --backend hardware
+WorkingDirectory=/opt/wideboy
+Environment=SDL_VIDEODRIVER=dummy
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

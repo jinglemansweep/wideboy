@@ -1,0 +1,150 @@
+metadata:
+  name: default
+  description: Default dashboard scene
+
+palette:
+  default: neon
+  fade_seconds: 3.0
+
+backgrounds:
+  - type: procedural
+    tags: []
+
+widgets:
+  - type: clock
+    position: [2, 0]
+    anchor: top-right
+
+  - type: tile_grid
+    position: [128, 0]
+    anchor: top-right
+    settings:
+      columns:
+        # Column 1: Bin collections (collapse when not due)
+        - - entity_id: binary_sensor.bin_black
+            icon: 0xF2ED
+            label: "Black"
+            visible_when: "on"
+            color_icon_bg: [100, 100, 100, 255]
+
+          - entity_id: binary_sensor.bin_blue
+            icon: 0xF2ED
+            label: "Blue"
+            visible_when: "on"
+            color_icon_bg: [0, 0, 255, 255]
+
+          - entity_id: binary_sensor.bin_brown
+            icon: 0xF2ED
+            label: "Brown"
+            visible_when: "on"
+            color_icon_bg: [120, 20, 20, 255]
+
+          - entity_id: binary_sensor.bin_green
+            icon: 0xF2ED
+            label: "Green"
+            visible_when: "on"
+            color_icon_bg: [0, 64, 0, 255]
+
+          - entity_id: binary_sensor.bin_food
+            icon: 0xF2ED
+            label: "Food"
+            visible_when: "on"
+            color_icon_bg: [100, 100, 100, 255]
+
+        # Column 2: Dates & door sensors
+        - - entity_id: input_datetime.dogs_flea_treatment
+            icon: 0xF188
+            visible_when: days_until
+            visible_attribute: timestamp
+            threshold: 7
+            label_template: "{value}"
+
+          - entity_id: input_datetime.dogs_worm_treatment
+            icon: 0xE599
+            visible_when: days_until
+            visible_attribute: timestamp
+            threshold: 14
+            label_template: "{value}"
+
+          - entity_id: binary_sensor.front_door_contact_sensor_contact
+            icon: 0xF52A
+            label: "Front"
+            visible_when: "on"
+            color_bg: [64, 0, 0, 255]
+            color_icon_bg: [255, 0, 0, 255]
+
+          - entity_id: binary_sensor.back_door_contact_sensor_contact
+            icon: 0xF52A
+            label: "Back"
+            visible_when: "on"
+            color_bg: [64, 0, 0, 255]
+            color_icon_bg: [255, 0, 0, 255]
+
+        # Column 3: Network & NAS (show only when degraded)
+        - - entity_id: sensor.ds920plus_volume_used
+            icon: 0xF0A0
+            visible_when: above
+            threshold: 80
+            label_template: "{value:.0f}%"
+            color_bg: [64, 0, 0, 255]
+            color_icon_bg: [255, 0, 0, 255]
+
+          - entity_id: sensor.speedtest_download_average
+            icon: 0xF0AB
+            visible_when: below
+            threshold: 500
+            label_template: "{value:.0f}Mb"
+            color_bg: [64, 0, 0, 255]
+            color_icon_bg: [255, 0, 0, 255]
+
+          - entity_id: sensor.speedtest_upload_average
+            icon: 0xF0AA
+            visible_when: below
+            threshold: 500
+            label_template: "{value:.0f}Mb"
+            color_bg: [64, 0, 0, 255]
+            color_icon_bg: [255, 0, 0, 255]
+
+        # Column 4: Energy (always visible when defined, red above 1kW)
+        - - entity_id: sensor.octopus_energy_electricity_current_demand
+            icon: 0xF0E7
+            visible_when: defined
+            threshold: 1000
+            label_template: "{value:.0f}W"
+            color_bg_alert: [64, 0, 0, 255]
+            color_icon_bg_alert: [255, 0, 0, 255]
+
+        # Column 5: Weather (visible when data available)
+        - - entity_id: sensor.openweathermap_temperature
+            icon: 0xF015
+            visible_when: defined
+            label_template: "{value:.0f}°"
+
+          - entity_id: sensor.openweathermap_wind_speed
+            icon: 0xF72E
+            visible_when: defined
+            label_template: "{value:.0f}m/s"
+
+          - entity_id: sensor.openweathermap_rain
+            icon: 0xF0E9
+            visible_when: defined
+            label_template: "{value:.0f}mm"
+
+homeassistant:
+  entities:
+    - binary_sensor.bin_black
+    - binary_sensor.bin_blue
+    - binary_sensor.bin_brown
+    - binary_sensor.bin_green
+    - binary_sensor.bin_food
+    - input_datetime.dogs_flea_treatment
+    - input_datetime.dogs_worm_treatment
+    - binary_sensor.front_door_contact_sensor_contact
+    - binary_sensor.back_door_contact_sensor_contact
+    - sensor.ds920plus_volume_used
+    - sensor.speedtest_download_average
+    - sensor.speedtest_upload_average
+    - sensor.octopus_energy_electricity_current_demand
+    - sensor.openweathermap_temperature
+    - sensor.openweathermap_wind_speed
+    - sensor.openweathermap_rain

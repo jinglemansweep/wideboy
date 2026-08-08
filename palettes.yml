@@ -1,0 +1,42 @@
+palettes:
+  neon:
+    primary: [0, 220, 255]
+    secondary: [255, 0, 200]
+    accent: [255, 220, 0]
+    highlight: [255, 255, 255]
+    dim: [10, 10, 40]
+
+  muted:
+    primary: [30, 50, 80]
+    secondary: [60, 20, 60]
+    accent: [70, 60, 20]
+    highlight: [110, 110, 130]
+    dim: [5, 5, 12]
+
+  ocean:
+    primary: [0, 120, 200]
+    secondary: [0, 200, 180]
+    accent: [100, 220, 255]
+    highlight: [200, 240, 255]
+    dim: [5, 15, 40]
+
+  sunset:
+    primary: [255, 80, 40]
+    secondary: [255, 160, 50]
+    accent: [255, 50, 120]
+    highlight: [255, 240, 180]
+    dim: [40, 10, 30]
+
+  forest:
+    primary: [40, 180, 60]
+    secondary: [100, 200, 40]
+    accent: [200, 220, 50]
+    highlight: [220, 255, 200]
+    dim: [10, 30, 10]
+
+  mono:
+    primary: [200, 200, 200]
+    secondary: [140, 140, 140]
+    accent: [240, 240, 240]
+    highlight: [255, 255, 255]
+    dim: [20, 20, 20]

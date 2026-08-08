@@ -1,0 +1,60 @@
+# wideboy
+
+768x64 RGB LED matrix dashboard for Raspberry Pi.
+
+Drives 6x 128x64 HUB75 panels (logical 768x64) via a Pi 4 + Electrodragon v2 HAT.
+Displays a clock and Home Assistant entity tile grid over animated procedural backgrounds.
+
+![plasma](docs/screenshots/plasma.png)
+![matrix](docs/screenshots/matrix.png)
+![starfield](docs/screenshots/starfield.png)
+![aurora](docs/screenshots/aurora.png)
+![breakout](docs/screenshots/breakout.png)
+![bubbles](docs/screenshots/bubbles.png)
+
+## Features
+
+- **22 procedural effects** with tag-based selection and auto-rotation
+- **Home Assistant integration** via WebSocket (entity state) and MQTT (control)
+- **Live control** from HA: on/off, brightness, effect, palette, tag filter, scene
+- **Scene-based config** in YAML with layered settings and env var overrides
+- **Emulator mode** for local development (no Pi required)
+- **Smooth transitions** between effects (1-second crossfade each minute)
+
+## Quick start
+
+```bash
+uv venv && uv pip install -e ".[dev]"
+python -m wideboy                            # emulator at http://localhost:8888
+python -m wideboy --test-pattern             # test pattern (verify panel wiring)
+```
+
+Requires Python 3.11+. The emulator uses [RGBMatrixEmulator](https://github.com/dfirestone/RGBMatrixEmulator).
+
+## Documentation
+
+- [Installation](docs/install.md) -- Pi setup, rpi-rgb-led-matrix build, systemd, wiring
+- [Configuration](docs/config.md) -- settings reference, scene format, MQTT entities
+
+## Project layout
+
+```
+wideboy/
+├── settings.yml              # default config
+├── secrets.yml.example       # template for HA credentials
+├── scenes/default.yml        # active scene
+├── palettes.yml              # colour palettes
+├── fonts/                    # white-rabbit, bitstream-vera, fontawesome-solid
+├── assets/backgrounds/       # user-provided slideshow images
+├── systemd/                  # systemd service unit
+├── scripts/                  # utility scripts (screenshot capture)
+└── src/wideboy/
+    ├── __main__.py           # entrypoint + main loop
+    ├── config.py             # pydantic-settings models
+    ├── display/              # emulator + hardware backends + remap
+    ├── core/                 # scene loader, factory, layer base
+    ├── backgrounds/          # image, slideshow, gif, procedural (22 effects)
+    ├── widgets/              # clock, tile_grid
+    ├── services/             # HA WebSocket + MQTT/HASS
+    └── render/               # text, icons, palette, brightness
+```

@@ -1,0 +1,44 @@
+[project]
+name = "wideboy"
+version = "0.1.0"
+description = "768x64 RGB LED matrix dashboard for Raspberry Pi"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pygame-ce>=2.2.1",
+    "numpy>=1.24",
+    "pillow>=9.4",
+    "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "requests>=2.28",
+    "websocket-client>=1.8",
+    "paho-mqtt>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "RGBMatrixEmulator>=0.10",
+    "pytest>=7.0",
+    "ruff>=0.4",
+]
+
+[project.scripts]
+wideboy = "wideboy.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/wideboy"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

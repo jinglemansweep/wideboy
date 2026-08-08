@@ -1,0 +1,7 @@
+{
+  "display_adapter": "pygame",
+  "pixel_style": "square",
+  "pixel_size": 8,
+  "window_width": 768,
+  "window_height": 64
+}

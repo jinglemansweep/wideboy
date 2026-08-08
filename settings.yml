@@ -1,0 +1,57 @@
+general:
+  log_level: info
+
+display:
+  canvas:
+    width: 768
+    height: 64
+  matrix:
+    enabled: false
+    driver:
+      gpio_mapping: regular
+      rows: 64
+      cols: 128
+      chain: 2
+      parallel: 3
+      multiplexing: 0
+      pixel_mapper: ""
+      pwm_bits: 8
+      brightness: 50
+      scan_mode: 0
+      row_addr_type: 0
+      show_refresh: false
+      rgb_sequence: RGB
+      pwm_lsb_nanoseconds: 200
+      pwm_dither_bits: 0
+      no_hardware_pulse: false
+      slowdown_gpio: 4
+      daemon: false
+      no_drop_privs: true
+    remap:
+      output_order: [0, 1, 2]
+
+homeassistant:
+  host: ""
+  port: 8123
+  token: ""
+
+scenes:
+  file: scenes/default.yml
+
+paths:
+  backgrounds: assets/backgrounds
+  fonts: fonts
+
+brightness:
+  background:
+    default: 0.8
+  foreground:
+    default: 0.8
+
+mqtt:
+  enabled: true
+  host: hass.adm.ptre.es
+  port: 1883
+  discovery_prefix: homeassistant
+  device_id: wideboy
+  device_name: "Wideboy LED Display"

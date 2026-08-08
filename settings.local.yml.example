@@ -1,0 +1,6 @@
+general:
+  log_level: debug
+
+display:
+  matrix:
+    enabled: true
