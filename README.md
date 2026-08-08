@@ -9,7 +9,7 @@ Displays a clock and Home Assistant entity tile grid over animated procedural ba
 
 ## Effects
 
-22 procedural background effects with tag-based selection and auto-rotation.
+24 procedural background effects with tag-based selection and auto-rotation.
 
 ### Airwolf
 
@@ -65,11 +65,23 @@ Scrolling conveyor belt. Tags: `linear`, `retro`. Palette: `neon`.
 
 Audio spectrum bar visualiser. Tags: `retro`, `energetic`. Palette: `neon`.
 
+### Flappy
+
+![flappy](docs/screenshots/flappy.png)
+
+AI-controlled flappy bird with organic movement. Tags: `game`, `retro`. Palette: `neon`.
+
 ### Gradient
 
 ![gradient](docs/screenshots/gradient.png)
 
 Smooth animated colour gradient. Tags: `abstract`, `calm`. Palette: `ocean`.
+
+### Life
+
+![life](docs/screenshots/life.png)
+
+Conway's Game of Life cellular automaton. Tags: `abstract`, `calm`. Palette: `neon`.
 
 ### Lightning
 
@@ -145,7 +157,7 @@ Sine-wave interference patterns. Tags: `abstract`, `calm`. Palette: `forest`.
 
 ## Features
 
-- **22 procedural effects** with tag-based selection and auto-rotation
+- **24 procedural effects** with tag-based selection and auto-rotation
 - **Home Assistant integration** via WebSocket (entity state) and MQTT (control)
 - **Live control** from HA: on/off, brightness, effect, palette, tag filter, scene
 - **Scene-based config** in YAML with layered settings and env var overrides
@@ -184,7 +196,7 @@ wideboy/
     ├── config.py             # pydantic-settings models
     ├── display/              # emulator + hardware backends + remap
     ├── core/                 # scene loader, factory, layer base
-    ├── backgrounds/          # image, slideshow, gif, procedural (22 effects)
+    ├── backgrounds/          # image, slideshow, gif, procedural (24 effects)
     ├── widgets/              # clock, tile_grid
     ├── services/             # HA WebSocket + MQTT/HASS
     └── render/               # text, icons, palette, brightness
