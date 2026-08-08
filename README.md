@@ -32,13 +32,13 @@ Retro vector asteroids game. Tags: `game`, `retro`, `energetic`. Palette: `mono`
 
 ![aurora](docs/screenshots/aurora.png)
 
-Undulating aurora borealis bands. Tags: `abstract`, `calm`. Palette: `ocean`.
+Undulating aurora borealis bands. Tags: `abstract`, `calm`, `dark`. Palette: `ocean`.
 
 ### Boids
 
 ![boids](docs/screenshots/boids.png)
 
-Flocking boids simulation. Tags: `nature`, `calm`. Palette: `neon`.
+Flocking boids simulation. Tags: `nature`, `calm`, `particle`. Palette: `neon`.
 
 ### Breakout
 
@@ -56,7 +56,7 @@ Rising iridescent bubbles. Tags: `particle`, `calm`. Palette: `ocean`.
 
 ![cityscape](docs/screenshots/cityscape.png)
 
-Procedural city skyline. Tags: `nostalgic`, `calm`. Palette: `neon`.
+Procedural neon city skyline. Tags: `nostalgic`, `energetic`, `dark`. Palette: `neon`.
 
 ### Conveyor
 
@@ -86,7 +86,7 @@ Smooth animated colour gradient. Tags: `abstract`, `calm`. Palette: `ocean`.
 
 ![life](docs/screenshots/life.png)
 
-Conway's Game of Life cellular automaton. Tags: `abstract`, `calm`. Palette: `neon`.
+Conway's Game of Life cellular automaton. Tags: `abstract`, `calm`, `geometric`, `retro`. Palette: `neon`.
 
 ### Lightning
 

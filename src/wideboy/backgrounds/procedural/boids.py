@@ -11,7 +11,7 @@ from ._base import Effect
 class _BoidsEffect(Effect):
     name = "boids"
     default_palette = "neon"
-    tags = ("nature", "calm")
+    tags = ("nature", "calm", "particle")
 
     _N_BOIDS = 80
     _MAX_SPEED = 60.0

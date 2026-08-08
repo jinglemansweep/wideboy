@@ -120,16 +120,16 @@ Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 |--------|------|-----------------|
 | airwolf | energetic, nostalgic | mono |
 | asteroids | energetic, game, retro | mono |
-| aurora | abstract, calm | ocean |
-| boids | calm, nature | neon |
+| aurora | abstract, calm, dark | ocean |
+| boids | calm, nature, particle | neon |
 | breakout | energetic, game, retro | neon |
 | bubbles | calm, particle | ocean |
-| cityscape | calm, nostalgic | neon |
+| cityscape | dark, energetic, nostalgic | neon |
 | conveyor | linear, retro | neon |
 | equalizer | energetic, retro | neon |
 | flappy | game, retro | neon |
 | gradient | abstract, calm | ocean |
-| life | abstract, calm | neon |
+| life | abstract, calm, geometric, retro | neon |
 | lightning | dark, energetic | neon |
 | mandelbrot | abstract, geometric | sunset |
 | matrix | dark, retro | forest |

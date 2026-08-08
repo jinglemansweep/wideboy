@@ -32,7 +32,7 @@ _PENTADECATHLON = [
 class _LifeEffect(Effect):
     name = "life"
     default_palette = "neon"
-    tags = ("abstract", "calm")
+    tags = ("abstract", "calm", "geometric", "retro")
 
     _CELL = 3
     _STEP_INTERVAL = 0.3

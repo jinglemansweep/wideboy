@@ -10,7 +10,7 @@ from ._utils import palette_array, sample_palette
 class _AuroraEffect(Effect):
     name = "aurora"
     default_palette = "ocean"
-    tags = ("abstract", "calm")
+    tags = ("abstract", "calm", "dark")
 
     def __call__(self, t: float, w: int, h: int, palette: Palette) -> np.ndarray:
         colors = palette_array(palette)

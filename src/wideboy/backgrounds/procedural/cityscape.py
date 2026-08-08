@@ -9,7 +9,7 @@ from ._base import Effect
 class _CityScapeEffect(Effect):
     name = "cityscape"
     default_palette = "neon"
-    tags = ("nostalgic", "calm")
+    tags = ("nostalgic", "energetic", "dark")
 
     _LAYERS = (
         {
