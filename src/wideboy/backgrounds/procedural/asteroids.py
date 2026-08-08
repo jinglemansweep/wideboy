@@ -74,16 +74,19 @@ class _AsteroidsEffect(Effect):
             a = 2 * math.pi * i / n_verts
             r = radius * self._rng.uniform(0.7, 1.0)
             verts.append((math.cos(a) * r, math.sin(a) * r))
-        self._rocks.append({
-            "x": x, "y": y,
-            "vx": speed * math.cos(angle),
-            "vy": speed * math.sin(angle),
-            "radius": radius,
-            "size": size,
-            "verts": verts,
-            "rot": self._rng.uniform(0, 2 * math.pi),
-            "rot_speed": self._rng.uniform(-1.5, 1.5),
-        })
+        self._rocks.append(
+            {
+                "x": x,
+                "y": y,
+                "vx": speed * math.cos(angle),
+                "vy": speed * math.sin(angle),
+                "radius": radius,
+                "size": size,
+                "verts": verts,
+                "rot": self._rng.uniform(0, 2 * math.pi),
+                "rot_speed": self._rng.uniform(-1.5, 1.5),
+            }
+        )
 
     def _init(self, w: int, h: int) -> None:
         self._w = w
@@ -108,8 +111,7 @@ class _AsteroidsEffect(Effect):
             if self._rocks:
                 nearest = min(
                     self._rocks,
-                    key=lambda r: (r["x"] - self._ship_x) ** 2
-                    + (r["y"] - self._ship_y) ** 2,
+                    key=lambda r: (r["x"] - self._ship_x) ** 2 + (r["y"] - self._ship_y) ** 2,
                 )
                 dx = nearest["x"] - self._ship_x
                 dy = nearest["y"] - self._ship_y
@@ -122,7 +124,7 @@ class _AsteroidsEffect(Effect):
         thrust = 0.3 + 0.3 * math.sin(t * 2.0)
         self._ship_vx += math.cos(self._ship_angle) * self._SHIP_SPEED * thrust * dt
         self._ship_vy += math.sin(self._ship_angle) * self._SHIP_SPEED * thrust * dt
-        speed = math.sqrt(self._ship_vx ** 2 + self._ship_vy ** 2)
+        speed = math.sqrt(self._ship_vx**2 + self._ship_vy**2)
         max_speed = self._SHIP_SPEED * 1.5
         if speed > max_speed:
             self._ship_vx *= max_speed / speed
@@ -134,13 +136,15 @@ class _AsteroidsEffect(Effect):
         self._fire_timer -= dt
         if self._fire_timer <= 0 and self._rocks:
             self._fire_timer = self._FIRE_INTERVAL + self._rng.uniform(-0.2, 0.2)
-            self._bullets.append({
-                "x": self._ship_x + math.cos(self._ship_angle) * self._SHIP_SIZE,
-                "y": self._ship_y + math.sin(self._ship_angle) * self._SHIP_SIZE,
-                "vx": math.cos(self._ship_angle) * self._BULLET_SPEED + self._ship_vx * 0.3,
-                "vy": math.sin(self._ship_angle) * self._BULLET_SPEED + self._ship_vy * 0.3,
-                "life": self._BULLET_LIFE,
-            })
+            self._bullets.append(
+                {
+                    "x": self._ship_x + math.cos(self._ship_angle) * self._SHIP_SIZE,
+                    "y": self._ship_y + math.sin(self._ship_angle) * self._SHIP_SIZE,
+                    "vx": math.cos(self._ship_angle) * self._BULLET_SPEED + self._ship_vx * 0.3,
+                    "vy": math.sin(self._ship_angle) * self._BULLET_SPEED + self._ship_vy * 0.3,
+                    "life": self._BULLET_LIFE,
+                }
+            )
         new_bullets = []
         for b in self._bullets:
             b["x"], b["y"] = self._wrap(b["x"] + b["vx"] * dt, b["y"] + b["vy"] * dt)
@@ -165,13 +169,15 @@ class _AsteroidsEffect(Effect):
                     for _ in range(20):
                         angle = self._rng.uniform(0, 2 * math.pi)
                         spd = self._rng.uniform(20, 80)
-                        self._particles.append({
-                            "x": rock["x"],
-                            "y": rock["y"],
-                            "vx": rock["vx"] * 0.3 + math.cos(angle) * spd,
-                            "vy": rock["vy"] * 0.3 + math.sin(angle) * spd,
-                            "life": self._rng.uniform(0.3, 0.8),
-                        })
+                        self._particles.append(
+                            {
+                                "x": rock["x"],
+                                "y": rock["y"],
+                                "vx": rock["vx"] * 0.3 + math.cos(angle) * spd,
+                                "vy": rock["vy"] * 0.3 + math.sin(angle) * spd,
+                                "life": self._rng.uniform(0.3, 0.8),
+                            }
+                        )
                     if rock["size"] > 1:
                         for _ in range(2):
                             self._spawn_rock(rock["size"] - 1, rock["x"], rock["y"])
@@ -206,10 +212,14 @@ class _AsteroidsEffect(Effect):
         sin_a = math.sin(self._ship_angle)
         ship_pts = [
             (int(self._ship_x + cos_a * s), int(self._ship_y + sin_a * s)),
-            (int(self._ship_x + math.cos(self._ship_angle + 2.4) * s * 0.8),
-             int(self._ship_y + math.sin(self._ship_angle + 2.4) * s * 0.8)),
-            (int(self._ship_x + math.cos(self._ship_angle - 2.4) * s * 0.8),
-             int(self._ship_y + math.sin(self._ship_angle - 2.4) * s * 0.8)),
+            (
+                int(self._ship_x + math.cos(self._ship_angle + 2.4) * s * 0.8),
+                int(self._ship_y + math.sin(self._ship_angle + 2.4) * s * 0.8),
+            ),
+            (
+                int(self._ship_x + math.cos(self._ship_angle - 2.4) * s * 0.8),
+                int(self._ship_y + math.sin(self._ship_angle - 2.4) * s * 0.8),
+            ),
         ]
         draw_filled_wrapped_polygon(frame, ship_pts, pri, w, h)
         for b in self._bullets:

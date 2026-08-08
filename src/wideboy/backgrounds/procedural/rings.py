@@ -17,7 +17,7 @@ class _RingsEffect(Effect):
         pri = np.array(palette.primary, dtype=np.float32)
         sec = np.array(palette.secondary, dtype=np.float32)
         acc = np.array(palette.accent, dtype=np.float32)
-        ring_colors = [pri, sec, acc, pri, sec, acc][:self._N_RINGS]
+        ring_colors = [pri, sec, acc, pri, sec, acc][: self._N_RINGS]
 
         frame = np.zeros((h, w, 3), dtype=np.float32)
         frame[:, :] = np.array(palette.dim, dtype=np.float32)
@@ -28,7 +28,7 @@ class _RingsEffect(Effect):
             (w // 3, h // 3),
             (2 * w // 3, h // 3),
             (w // 2, 2 * h // 3),
-        ][:self._N_RINGS]
+        ][: self._N_RINGS]
         max_radius = h * 1.5
         ring_width = h / 4.0
         ys = np.arange(h, dtype=np.float32)[:, np.newaxis]
@@ -41,7 +41,7 @@ class _RingsEffect(Effect):
             if radius < 2:
                 continue
             dist = np.sqrt((xs - cx) ** 2 + (ys - cy) ** 2)
-            ring = np.exp(-((dist - radius) ** 2) / (2 * ring_width ** 2))
+            ring = np.exp(-((dist - radius) ** 2) / (2 * ring_width**2))
             fade = max(0, 1.0 - phase / 5.0)
             intensity = (ring * fade)[..., np.newaxis]
             color = ring_colors[i]

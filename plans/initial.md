@@ -47,7 +47,7 @@ is **256×192** (chains extend horizontally, parallel outputs stack vertically) 
 
   ```python
   # frame: np.ndarray shape (64, 768, 3), order: list of segment indices e.g. [0,1,2]
-  segs = frame.reshape(64, 3, 256, 3)          # (rows, segment, cols, rgb)
+  segs = frame.reshape(64, 3, 256, 3)  # (rows, segment, cols, rgb)
   physical = segs[:, order].transpose(1, 0, 2, 3).reshape(192, 256, 3)
   ```
 

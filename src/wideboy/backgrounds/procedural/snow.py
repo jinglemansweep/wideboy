@@ -52,7 +52,7 @@ class _SnowEffect(Effect):
         phase = (t % self._CYCLE) / self._CYCLE
         if phase >= self._MELT_START:
             melt_rate = (phase - self._MELT_START) / (1.0 - self._MELT_START)
-            self._hm *= (1.0 - melt_rate * dt * 2.0)
+            self._hm *= 1.0 - melt_rate * dt * 2.0
 
         dim = np.array(palette.dim, dtype=np.uint8)
         hi = np.array(palette.highlight, dtype=np.float32)
@@ -106,7 +106,7 @@ class _SnowEffect(Effect):
         for x in range(w):
             sh = hm_int[x]
             if sh > 0:
-                frame[h - sh:h, x] = snow_color
+                frame[h - sh : h, x] = snow_color
 
         for i in range(self._N_FLAKES):
             yi = iy[i]

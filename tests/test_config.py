@@ -1,4 +1,3 @@
-
 from wideboy.config import Settings, load_settings
 
 
@@ -16,8 +15,7 @@ def test_default_settings():
 
 def test_load_settings_from_yaml(tmp_path):
     (tmp_path / "settings.yml").write_text(
-        "general:\n  log_level: debug\n  fps: 60\n"
-        "display:\n  matrix:\n    enabled: true\n"
+        "general:\n  log_level: debug\n  fps: 60\ndisplay:\n  matrix:\n    enabled: true\n"
     )
     s = load_settings(base_dir=tmp_path, settings_files=["settings.yml"])
     assert s.general.log_level == "debug"

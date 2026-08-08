@@ -13,19 +13,42 @@ class _CityScapeEffect(Effect):
 
     _LAYERS = (
         {
-            "speed": 35.0, "h_min": 20, "h_max": 46, "w_min": 10, "w_max": 26,
-            "gap": 20, "bright": 0.50, "win_prob": 0.04, "seed": 37,
+            "speed": 35.0,
+            "h_min": 20,
+            "h_max": 46,
+            "w_min": 10,
+            "w_max": 26,
+            "gap": 20,
+            "bright": 0.50,
+            "win_prob": 0.04,
+            "seed": 37,
         },
         {
-            "speed": 60.0, "h_min": 32, "h_max": 58, "w_min": 14, "w_max": 32,
-            "gap": 50, "bright": 0.85, "win_prob": 0.06, "seed": 53,
+            "speed": 60.0,
+            "h_min": 32,
+            "h_max": 58,
+            "w_min": 14,
+            "w_max": 32,
+            "gap": 50,
+            "bright": 0.85,
+            "win_prob": 0.06,
+            "seed": 53,
         },
     )
 
-    _NEON = np.array([
-        [0, 255, 255], [255, 0, 255], [0, 255, 0], [255, 20, 147],
-        [0, 120, 255], [255, 100, 0], [255, 255, 0], [148, 0, 211],
-    ], dtype=np.float32)
+    _NEON = np.array(
+        [
+            [0, 255, 255],
+            [255, 0, 255],
+            [0, 255, 0],
+            [255, 20, 147],
+            [0, 120, 255],
+            [255, 100, 0],
+            [255, 255, 0],
+            [148, 0, 211],
+        ],
+        dtype=np.float32,
+    )
 
     def __init__(self) -> None:
         self._w = 0
@@ -33,7 +56,10 @@ class _CityScapeEffect(Effect):
         self._strips: list[tuple] = []
 
     def _gen_strip(
-        self, layer: dict, w: int, h: int,
+        self,
+        layer: dict,
+        w: int,
+        h: int,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         rng = np.random.RandomState(layer["seed"])
         strip_w = w * 2
@@ -105,16 +131,20 @@ class _CityScapeEffect(Effect):
             else:
                 r = offset + w - strip_w
                 vb = np.concatenate(
-                    [body_m[:, offset:], body_m[:, :r]], axis=1,
+                    [body_m[:, offset:], body_m[:, :r]],
+                    axis=1,
                 )
                 vo = np.concatenate(
-                    [outline_m[:, offset:], outline_m[:, :r]], axis=1,
+                    [outline_m[:, offset:], outline_m[:, :r]],
+                    axis=1,
                 )
                 voc = np.concatenate(
-                    [outline_rgb_m[:, offset:], outline_rgb_m[:, :r]], axis=1,
+                    [outline_rgb_m[:, offset:], outline_rgb_m[:, :r]],
+                    axis=1,
                 )
                 vw = np.concatenate(
-                    [win_m[:, offset:], win_m[:, :r]], axis=1,
+                    [win_m[:, offset:], win_m[:, :r]],
+                    axis=1,
                 )
 
             b = layer["bright"]

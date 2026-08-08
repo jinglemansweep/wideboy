@@ -36,7 +36,7 @@ def test_remap_reversed_order():
 def test_remap_custom_order():
     frame = np.zeros((64, 768, 3), dtype=np.uint8)
     for i in range(3):
-        frame[:, i * 256:(i + 1) * 256, i] = 128
+        frame[:, i * 256 : (i + 1) * 256, i] = 128
 
     physical = remap_logical_to_physical(frame, [1, 0, 2])
     assert physical.shape == (192, 256, 3)

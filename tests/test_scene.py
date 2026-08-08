@@ -1,4 +1,3 @@
-
 from wideboy.core.scene import SceneDef, load_scene
 
 
@@ -76,8 +75,8 @@ def test_background_conditions(tmp_path):
         "backgrounds:\n"
         "  - type: procedural\n"
         "    settings:\n      effect: plasma\n"
-        "    after: \"07:00\"\n"
-        "    before: \"21:00\"\n"
+        '    after: "07:00"\n'
+        '    before: "21:00"\n'
         "  - type: procedural\n"
         "    settings:\n      effect: starfield\n"
     )
@@ -105,9 +104,7 @@ def test_composite_background_filters_by_condition():
     day_rule = PaletteRule(after=time(7, 0), before=time(21, 0))
     bgs = [DummyBg("day_only"), DummyBg("always")]
     conditions = [day_rule, None]
-    composite = CompositeBackground(
-        backgrounds=bgs, conditions=conditions
-    )
+    composite = CompositeBackground(backgrounds=bgs, conditions=conditions)
 
     active_day = composite._active_indices(datetime(2026, 1, 1, 12, 0))
     assert 0 in active_day
@@ -209,10 +206,7 @@ def test_tag_expansion_in_factory(tmp_path):
     from wideboy.render.palette import load_palettes
 
     (tmp_path / "test.yml").write_text(
-        "palette:\n  default: neon\n"
-        "backgrounds:\n"
-        "  - type: procedural\n"
-        "    tags: [liquid]\n"
+        "palette:\n  default: neon\nbackgrounds:\n  - type: procedural\n    tags: [liquid]\n"
     )
     scene = load_scene(str(tmp_path / "test.yml"))
     palettes = load_palettes("palettes.yml")
@@ -228,13 +222,10 @@ def test_tag_expansion_all_effects(tmp_path):
     from wideboy.render.palette import load_palettes
 
     (tmp_path / "test.yml").write_text(
-        "palette:\n  default: neon\n"
-        "backgrounds:\n"
-        "  - type: procedural\n"
-        "    tags: []\n"
+        "palette:\n  default: neon\nbackgrounds:\n  - type: procedural\n    tags: []\n"
     )
     scene = load_scene(str(tmp_path / "test.yml"))
     palettes = load_palettes("palettes.yml")
     bg = build_background(scene, palette_definitions=palettes)
     assert isinstance(bg, CompositeBackground)
-    assert len(bg._backgrounds) == 22
+    assert len(bg._backgrounds) == 24

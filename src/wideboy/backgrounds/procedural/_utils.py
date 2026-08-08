@@ -21,8 +21,9 @@ def sample_palette(colors: np.ndarray, t: np.ndarray) -> np.ndarray:
     return colors[lo] * (1 - frac) + colors[hi] * frac
 
 
-def draw_line(frame: np.ndarray, x0: int, y0: int, x1: int, y1: int,
-              color: np.ndarray, w: int, h: int) -> None:
+def draw_line(
+    frame: np.ndarray, x0: int, y0: int, x1: int, y1: int, color: np.ndarray, w: int, h: int
+) -> None:
     dx = abs(x1 - x0)
     dy = abs(y1 - y0)
     if dx > w or dy > h:
@@ -44,14 +45,13 @@ def draw_line(frame: np.ndarray, x0: int, y0: int, x1: int, y1: int,
             y0 += sy
 
 
-def draw_wrapped_polygon(frame: np.ndarray, pts: list[tuple[int, int]],
-                         color: np.ndarray, w: int, h: int) -> None:
+def draw_wrapped_polygon(
+    frame: np.ndarray, pts: list[tuple[int, int]], color: np.ndarray, w: int, h: int
+) -> None:
     for ox in (-w, 0, w):
         for oy in (-h, 0, h):
             offset_pts = [(x + ox, y + oy) for x, y in pts]
-            all_outside = all(
-                x < 0 or x >= w or y < 0 or y >= h for x, y in offset_pts
-            )
+            all_outside = all(x < 0 or x >= w or y < 0 or y >= h for x, y in offset_pts)
             if all_outside:
                 continue
             for i in range(len(offset_pts)):
@@ -60,8 +60,9 @@ def draw_wrapped_polygon(frame: np.ndarray, pts: list[tuple[int, int]],
                 draw_line(frame, p1[0], p1[1], p2[0], p2[1], color, w, h)
 
 
-def draw_filled_wrapped_polygon(frame: np.ndarray, pts: list[tuple[int, int]],
-                                color: np.ndarray, w: int, h: int) -> None:
+def draw_filled_wrapped_polygon(
+    frame: np.ndarray, pts: list[tuple[int, int]], color: np.ndarray, w: int, h: int
+) -> None:
     for ox in (-w, 0, w):
         for oy in (-h, 0, h):
             offset_pts = [(x + ox, y + oy) for x, y in pts]
@@ -88,11 +89,10 @@ def draw_filled_wrapped_polygon(frame: np.ndarray, pts: list[tuple[int, int]],
                     x_start = max(0, intersections[i])
                     x_end = min(w - 1, intersections[i + 1])
                     if x_start <= x_end:
-                        frame[y, x_start:x_end + 1] = color
+                        frame[y, x_start : x_end + 1] = color
 
 
-def draw_obj(frame: np.ndarray, obj: np.ndarray, x: int, y: int,
-             colors: list, max_y: int) -> None:
+def draw_obj(frame: np.ndarray, obj: np.ndarray, x: int, y: int, colors: list, max_y: int) -> None:
     oh, ow = obj.shape
     h, w = frame.shape[:2]
     for oy in range(oh):

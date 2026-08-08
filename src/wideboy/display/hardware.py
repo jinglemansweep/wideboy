@@ -52,8 +52,13 @@ class HardwareDisplay(Display):
 
         self.matrix = RGBMatrix(options=options)
         self.buffer = self.matrix.CreateFrameCanvas()
-        logger.info("Hardware display started (%dx%d, chain=%d, parallel=%d)",
-                     d.rows, d.cols, d.chain, d.parallel)
+        logger.info(
+            "Hardware display started (%dx%d, chain=%d, parallel=%d)",
+            d.rows,
+            d.cols,
+            d.chain,
+            d.parallel,
+        )
 
     def present(self, surface: pygame.Surface) -> None:
         if self.matrix is None:
@@ -66,6 +71,7 @@ class HardwareDisplay(Display):
         physical = remap_logical_to_physical(logical, order)
 
         from PIL import Image
+
         image = Image.frombytes("RGB", (physical.shape[1], physical.shape[0]), physical.tobytes())
         self.buffer.SetImage(image)
         self.matrix.SwapOnVSync(self.buffer)

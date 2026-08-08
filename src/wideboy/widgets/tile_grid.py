@@ -108,9 +108,7 @@ class Tile:
             case "days_until":
                 v = _parse_numeric(raw_state)
                 return (
-                    v is not None
-                    and self.threshold is not None
-                    and _days_until(v) < self.threshold
+                    v is not None and self.threshold is not None and _days_until(v) < self.threshold
                 )
             case _:
                 return True
@@ -181,9 +179,7 @@ class TileGridWidget(Layer):
 
         bg = tile.color_bg_alert if alert and tile.color_bg_alert else tile.color_bg
         icon_bg = (
-            tile.color_icon_bg_alert
-            if alert and tile.color_icon_bg_alert
-            else tile.color_icon_bg
+            tile.color_icon_bg_alert if alert and tile.color_icon_bg_alert else tile.color_icon_bg
         )
 
         surface = pygame.Surface((TILE_WIDTH, TILE_HEIGHT), pygame.SRCALPHA)

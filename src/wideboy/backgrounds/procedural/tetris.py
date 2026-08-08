@@ -125,7 +125,7 @@ class _TetrisEffect(Effect):
         filled = np.cumsum(occupied, axis=0)
         total_below = np.where(
             col_has_block,
-            filled[-1, :] - np.choose(col_top, filled, mode='clip'),
+            filled[-1, :] - np.choose(col_top, filled, mode="clip"),
             0,
         )
         holes = int(total_below.sum())

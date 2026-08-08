@@ -24,7 +24,7 @@ class _MandelbrotEffect(Effect):
         t_mod = t % cycle
         phase = t_mod / cycle
         zoom_exp = max_zoom_exp * (1.0 - abs(2.0 * phase - 1.0))
-        zoom = 2.0 ** zoom_exp
+        zoom = 2.0**zoom_exp
         max_iter = min(20 + int(5 * zoom_exp), 35)
 
         cache = self._cache

@@ -17,7 +17,9 @@ from .bubbles import bubbles
 from .cityscape import cityscape
 from .conveyor import conveyor
 from .equalizer import equalizer
+from .flappy import flappy
 from .gradient import gradient_scroll
+from .life import life
 from .lightning import lightning
 from .mandelbrot import mandelbrot
 from .matrix_rain import matrix_rain
@@ -49,6 +51,7 @@ EFFECTS = {
     slosh.name: slosh,
     airwolf.name: airwolf,
     lightning.name: lightning,
+    life.name: life,
     mandelbrot.name: mandelbrot,
     conveyor.name: conveyor,
     breakout.name: breakout,
@@ -56,6 +59,7 @@ EFFECTS = {
     cityscape.name: cityscape,
     tetris.name: tetris,
     asteroids.name: asteroids,
+    flappy.name: flappy,
 }
 
 
@@ -63,10 +67,7 @@ def get_effects_by_tags(tags: list[str] | None) -> dict[str, Effect]:
     if not tags:
         return dict(EFFECTS)
     tag_set = set(tags)
-    return {
-        name: effect for name, effect in EFFECTS.items()
-        if tag_set & set(effect.tags)
-    }
+    return {name: effect for name, effect in EFFECTS.items() if tag_set & set(effect.tags)}
 
 
 def get_effect_metadata() -> list[dict[str, Any]]:

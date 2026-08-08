@@ -80,6 +80,18 @@ Only `settings.yml` is committed. Pydantic models live in `config.py` — add ne
 3. Implement `__call__(self, t, w, h, palette) -> np.ndarray` returning shape `(h, w, 3)` uint8.
 4. Use `palette_array()` and `sample_palette()` from `_utils` to map palette colors to pixel data.
 5. Import and register in `_registry.py`: add the import and entry in the `EFFECTS` dict.
+6. Run `python scripts/capture_effects.py <name>` to capture the new effect's screenshot into `docs/screenshots/`. Omit the name to regenerate all screenshots. It runs headless (sets `SDL_VIDEODRIVER=dummy`).
+7. Update `README.md`:
+   - Bump the effect count in three places: the `## Effects` intro line, the Features bullet (`**N procedural effects**`), and the project-layout comment (`procedural (N effects)`).
+   - Add a new `### Display Name` section (kept in alphabetical order) following the existing format:
+
+     ```markdown
+     ### Display Name
+
+     ![name](docs/screenshots/name.png)
+
+     One-line description. Tags: `tag1`, `tag2`. Palette: `palette`.
+     ```
 
 ## Adding a Widget
 

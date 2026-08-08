@@ -82,7 +82,7 @@ def test_available_effects():
     assert "plasma" in effects
     assert "aurora" in effects
     assert "auto" in effects
-    assert len(effects) == 23
+    assert len(effects) == 25
 
 
 def test_handle_light_on():
@@ -154,6 +154,7 @@ def test_publish_offline_on_disconnect():
     svc._client.loop_stop = MagicMock()
     svc._client.disconnect = MagicMock()
     import asyncio
+
     asyncio.run(svc.disconnect())
     first_call = svc._client.publish.call_args_list[0]
     assert first_call[0][0] == "test_display/status"

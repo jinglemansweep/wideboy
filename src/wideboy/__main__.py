@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import contextlib
 import logging
 import os
+import signal
 import time
 from pathlib import Path
 from typing import Any
@@ -130,6 +132,7 @@ async def run_loop(
     mqtt_service: Any,
     settings: Settings,
     test_pattern: bool,
+    stop_event: asyncio.Event,
 ) -> None:
     w = settings.display.canvas.width
     h = settings.display.canvas.height
@@ -137,7 +140,7 @@ async def run_loop(
     frame_time = 1.0 / fps
     running = True
 
-    while running:
+    while running and not stop_event.is_set():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -217,27 +220,49 @@ async def async_main(args) -> None:
         mqtt_service = MqttHassService(settings.mqtt, state, settings)
         await mqtt_service.connect()
 
-    tasks = [
-        run_loop(screen, display, state, ha_service, mqtt_service, settings, args.test_pattern),
-    ]
+    stop_event = asyncio.Event()
+
+    def _request_stop() -> None:
+        if not stop_event.is_set():
+            logger.info("Stop signal received, initiating shutdown")
+            stop_event.set()
+
+    loop = asyncio.get_running_loop()
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        with contextlib.suppress(NotImplementedError, RuntimeError, ValueError):
+            loop.add_signal_handler(sig, _request_stop)
+
+    main_task = asyncio.create_task(
+        run_loop(
+            screen,
+            display,
+            state,
+            ha_service,
+            mqtt_service,
+            settings,
+            args.test_pattern,
+            stop_event,
+        )
+    )
+    mqtt_task: asyncio.Task | None = None
     if mqtt_service:
-        tasks.append(mqtt_service.run())
+        mqtt_task = asyncio.create_task(mqtt_service.run())
 
     try:
-        await asyncio.gather(*tasks)
+        await main_task
     finally:
+        if mqtt_task is not None:
+            mqtt_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await mqtt_task
         if mqtt_service:
             await mqtt_service.disconnect()
         if ha_service:
             ha_service.stop()
-        try:
+        with contextlib.suppress(Exception):
             display.stop()
-        except Exception:
-            pass
-        try:
+        with contextlib.suppress(Exception):
             pygame.quit()
-        except Exception:
-            pass
         logger.info("Shutdown complete")
 
 

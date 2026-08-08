@@ -41,6 +41,7 @@ class CompositeBackground(Background):
                     bg = self._backgrounds[i]
                     effect_name = getattr(bg, "_effect_name", "")
                     from ..backgrounds.procedural import EFFECTS
+
                     effect = EFFECTS.get(effect_name)
                     if effect and self._tag_filter not in effect.tags:
                         continue

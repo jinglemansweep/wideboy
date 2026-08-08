@@ -141,9 +141,13 @@ class _BreakoutEffect(Effect):
             bx = self._ball_x
             by = self._ball_y
             br = self._BALL_SIZE / 2
-            if (self._ball_vy > 0 and
-                    bx + br > px0 and bx - br < px1 and
-                    by + br > py0 and by - br < py1):
+            if (
+                self._ball_vy > 0
+                and bx + br > px0
+                and bx - br < px1
+                and by + br > py0
+                and by - br < py1
+            ):
                 hit_pos = np.clip((bx - self._paddle_x) / (self._PADDLE_W / 2), -1.0, 1.0)
                 angle = hit_pos * (math.pi / 3)
                 if abs(angle) < self._MIN_BOUNCE_ANGLE:
@@ -158,8 +162,12 @@ class _BreakoutEffect(Effect):
                         continue
                     brick_x = self._brick_offset_x + col * (self._brick_w + self._BRICK_GAP)
                     brick_y = row * (self._BRICK_H + self._BRICK_GAP)
-                    if (bx + br > brick_x and bx - br < brick_x + self._brick_w and
-                            by + br > brick_y and by - br < brick_y + self._BRICK_H):
+                    if (
+                        bx + br > brick_x
+                        and bx - br < brick_x + self._brick_w
+                        and by + br > brick_y
+                        and by - br < brick_y + self._BRICK_H
+                    ):
                         self._bricks[row, col] = False
                         overlap_left = (bx + br) - brick_x
                         overlap_right = (brick_x + self._brick_w) - (bx - br)

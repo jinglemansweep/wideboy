@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import argparse
 import os
 from pathlib import Path
 
@@ -14,13 +15,28 @@ OUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "screenshots"
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Capture procedural effect screenshots")
+    parser.add_argument(
+        "effect",
+        nargs="?",
+        default=None,
+        help="effect name to capture (default: all effects)",
+    )
+    args = parser.parse_args()
+
+    if args.effect is not None and args.effect not in EFFECTS:
+        raise SystemExit(
+            f"unknown effect '{args.effect}' (available: {', '.join(sorted(EFFECTS))})"
+        )
+    names = [args.effect] if args.effect is not None else sorted(EFFECTS)
+
     os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
     pygame.init()
     surface = pygame.Surface((W, H))
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    for name in sorted(EFFECTS):
+    for name in names:
         bg = ProceduralBackground({"effect": name, "speed": 1.0})
 
         dt = 1.0 / FPS

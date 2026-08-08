@@ -38,10 +38,10 @@ class _SloshEffect(Effect):
             crest_x = (1.0 - eased) * w
 
         dist = np.abs(xs - crest_x)
-        crest = crest_amp * np.exp(-(dist ** 2) / (2 * (crest_width / 2) ** 2))
+        crest = crest_amp * np.exp(-(dist**2) / (2 * (crest_width / 2) ** 2))
 
         trough_dist = np.abs(xs - (w - crest_x))
-        trough = crest_amp * 0.3 * np.exp(-(trough_dist ** 2) / (2 * (crest_width * 0.8 / 2) ** 2))
+        trough = crest_amp * 0.3 * np.exp(-(trough_dist**2) / (2 * (crest_width * 0.8 / 2) ** 2))
 
         ripples = np.sin(xs / 25.0 + t * 3.0) * 1.0 + np.sin(xs / 12.0 - t * 4.5) * 0.6
         surface = base_y - crest + trough + ripples
@@ -61,10 +61,7 @@ class _SloshEffect(Effect):
             + pri[np.newaxis, :] * depth_frac[..., np.newaxis]
         )
 
-        caustic = (
-            np.sin(xs[np.newaxis, :] / 18.0 + t * 1.5)
-            + np.sin(ys / 12.0 + t * 1.0)
-        ) * 0.07
+        caustic = (np.sin(xs[np.newaxis, :] / 18.0 + t * 1.5) + np.sin(ys / 12.0 + t * 1.0)) * 0.07
         water_color = np.clip(water_color + water_color * caustic[..., np.newaxis], 0, 255)
 
         below = ys >= surface[np.newaxis, :]
@@ -79,9 +76,7 @@ class _SloshEffect(Effect):
             frame[vys, vxs] = frame[vys, vxs] * 0.3 + hi * 0.7
             below_v = vys + 1
             bmask = below_v < h
-            frame[below_v[bmask], vxs[bmask]] = (
-                frame[below_v[bmask], vxs[bmask]] * 0.6 + hi * 0.4
-            )
+            frame[below_v[bmask], vxs[bmask]] = frame[below_v[bmask], vxs[bmask]] * 0.6 + hi * 0.4
 
         left_wall_h = base_y - surface[0]
         right_wall_h = base_y - surface[-1]

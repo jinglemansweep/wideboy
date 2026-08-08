@@ -60,6 +60,7 @@ class MqttHassService:
             return bg._resolver.base_name
         if hasattr(bg, "_backgrounds"):
             from ..backgrounds.composite import CompositeBackground
+
             if isinstance(bg, CompositeBackground):
                 current = bg._backgrounds[bg._current_index]
                 if hasattr(current, "get_palette"):
@@ -69,6 +70,7 @@ class MqttHassService:
     def _get_available_effects(self) -> list[str]:
         try:
             from ..backgrounds.procedural import EFFECTS
+
             return ["auto"] + sorted(EFFECTS.keys())
         except ImportError:
             return ["auto"]
@@ -76,6 +78,7 @@ class MqttHassService:
     def _get_available_tags(self) -> list[str]:
         try:
             from ..backgrounds.procedural import get_all_tags
+
             return ["all"] + get_all_tags()
         except ImportError:
             return ["all"]
@@ -85,9 +88,11 @@ class MqttHassService:
             from pathlib import Path
 
             from ..render.palette import BUILTIN_PALETTES
+
             names = set(BUILTIN_PALETTES.keys())
             if Path("palettes.yml").exists():
                 from ..render.palette import load_palettes
+
                 names.update(load_palettes("palettes.yml").keys())
             return sorted(names)
         except ImportError:
@@ -117,29 +122,35 @@ class MqttHassService:
         }
 
         if component == "light":
-            base.update({
-                "state_topic": "~/state",
-                "command_topic": "~/set",
-                "brightness": True,
-                "brightness_scale": 255,
-                "schema": "json",
-                "state_value_template": "{{ value_json.state }}",
-                "brightness_value_template": "{{ value_json.brightness }}",
-            })
+            base.update(
+                {
+                    "state_topic": "~/state",
+                    "command_topic": "~/set",
+                    "brightness": True,
+                    "brightness_scale": 255,
+                    "schema": "json",
+                    "state_value_template": "{{ value_json.state }}",
+                    "brightness_value_template": "{{ value_json.brightness }}",
+                }
+            )
         elif component == "number":
-            base.update({
-                "state_topic": "~/state",
-                "command_topic": "~/set",
-            })
+            base.update(
+                {
+                    "state_topic": "~/state",
+                    "command_topic": "~/set",
+                }
+            )
             if object_id in ("fg_brightness",):
                 base.update({"min": 0, "max": 100, "step": 1, "unit_of_measurement": "%"})
             elif object_id == "effect_speed":
                 base.update({"min": 0.1, "max": 5.0, "step": 0.1})
         elif component == "select":
-            base.update({
-                "state_topic": "~/state",
-                "command_topic": "~/set",
-            })
+            base.update(
+                {
+                    "state_topic": "~/state",
+                    "command_topic": "~/set",
+                }
+            )
 
         return base
 
@@ -171,8 +182,7 @@ class MqttHassService:
                     payload["options"] = self._get_available_palettes()
 
             topic = (
-                f"{self._discovery_prefix}/{component}/"
-                f"{self._config.device_id}/{object_id}/config"
+                f"{self._discovery_prefix}/{component}/{self._config.device_id}/{object_id}/config"
             )
             self._client.publish(topic, json.dumps(payload), retain=True)
             logger.debug("Published discovery: %s", topic)
@@ -184,10 +194,12 @@ class MqttHassService:
         state_topic = f"{self._base_topic}/{object_id}/state"
 
         if object_id == "light":
-            payload = json.dumps({
-                "state": self._current_state["state"],
-                "brightness": self._current_state["brightness"],
-            })
+            payload = json.dumps(
+                {
+                    "state": self._current_state["state"],
+                    "brightness": self._current_state["brightness"],
+                }
+            )
         elif object_id == "fg_brightness":
             payload = str(self._current_state["fg_brightness"])
         elif object_id == "effect_speed":
@@ -207,9 +219,13 @@ class MqttHassService:
 
     def _publish_all_states(self) -> None:
         for object_id in (
-            "light", "fg_brightness",
-            "effect_speed", "scene", "effect",
-            "tag", "palette",
+            "light",
+            "fg_brightness",
+            "effect_speed",
+            "scene",
+            "effect",
+            "tag",
+            "palette",
         ):
             self._publish_state(object_id)
 
@@ -365,6 +381,7 @@ class MqttHassService:
             return
         if hasattr(bg, "_backgrounds"):
             from ..backgrounds.composite import CompositeBackground
+
             if isinstance(bg, CompositeBackground):
                 if name == "auto":
                     bg.unlock()
@@ -383,6 +400,7 @@ class MqttHassService:
             return
         if hasattr(bg, "_backgrounds"):
             from ..backgrounds.composite import CompositeBackground
+
             if isinstance(bg, CompositeBackground):
                 current = bg._backgrounds[bg._current_index]
                 if hasattr(current, "set_palette"):
@@ -395,6 +413,7 @@ class MqttHassService:
             return
         if hasattr(bg, "_backgrounds"):
             from ..backgrounds.composite import CompositeBackground
+
             if isinstance(bg, CompositeBackground):
                 current = bg._backgrounds[bg._current_index]
                 if hasattr(current, "set_speed"):

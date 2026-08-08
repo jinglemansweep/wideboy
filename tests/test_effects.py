@@ -18,17 +18,17 @@ def test_all_effects_have_metadata():
 
 
 def test_effects_count():
-    assert len(EFFECTS) == 22
+    assert len(EFFECTS) == 24
 
 
 def test_get_effects_by_tags_empty():
     result = get_effects_by_tags([])
-    assert len(result) == 22
+    assert len(result) == 24
 
 
 def test_get_effects_by_tags_none():
     result = get_effects_by_tags(None)
-    assert len(result) == 22
+    assert len(result) == 24
 
 
 def test_get_effects_by_tags_retro():
@@ -36,6 +36,7 @@ def test_get_effects_by_tags_retro():
     assert "matrix" in result
     assert "tetris" in result
     assert "asteroids" in result
+    assert "flappy" in result
     assert "plasma" not in result
 
 
@@ -44,6 +45,7 @@ def test_get_effects_by_tags_or_match():
     assert "breakout" in result
     assert "tetris" in result
     assert "asteroids" in result
+    assert "flappy" in result
     assert "slosh" in result
     assert "plasma" not in result
 
@@ -55,7 +57,7 @@ def test_get_effects_by_tags_nonexistent():
 
 def test_get_effect_metadata():
     meta = get_effect_metadata()
-    assert len(meta) == 22
+    assert len(meta) == 24
     names = [m["name"] for m in meta]
     assert "plasma" in names
     plasma_meta = next(m for m in meta if m["name"] == "plasma")
@@ -76,12 +78,21 @@ def test_get_all_tags():
 
 def test_specific_effect_metadata():
     from wideboy.backgrounds.procedural.starfield import starfield
+
     assert starfield.name == "starfield"
     assert starfield.default_palette == "mono"
     assert "particle" in starfield.tags
     assert "dark" in starfield.tags
 
     from wideboy.backgrounds.procedural.slosh import slosh
+
     assert slosh.name == "slosh"
     assert slosh.default_palette == "ocean"
     assert "liquid" in slosh.tags
+
+    from wideboy.backgrounds.procedural.flappy import flappy
+
+    assert flappy.name == "flappy"
+    assert flappy.default_palette == "neon"
+    assert "game" in flappy.tags
+    assert "retro" in flappy.tags

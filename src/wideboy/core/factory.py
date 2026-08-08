@@ -85,9 +85,7 @@ def build_background(
 
     if len(backgrounds) == 1:
         return backgrounds[0]
-    return CompositeBackground(
-        backgrounds=backgrounds, conditions=conditions
-    )
+    return CompositeBackground(backgrounds=backgrounds, conditions=conditions)
 
 
 class _SharedClockResolver:

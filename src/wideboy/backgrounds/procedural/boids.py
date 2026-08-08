@@ -109,11 +109,13 @@ class _BoidsEffect(Effect):
         too_slow = speed < self._MIN_SPEED
         safe_speed = speed + 0.001
         vx = np.where(
-            too_fast, vx / speed * self._MAX_SPEED,
+            too_fast,
+            vx / speed * self._MAX_SPEED,
             np.where(too_slow, vx / safe_speed * self._MIN_SPEED, vx),
         )
         vy = np.where(
-            too_fast, vy / speed * self._MAX_SPEED,
+            too_fast,
+            vy / speed * self._MAX_SPEED,
             np.where(too_slow, vy / safe_speed * self._MIN_SPEED, vy),
         )
 
@@ -154,10 +156,14 @@ class _BoidsEffect(Effect):
             tail_y = by + int(-s * 5)
 
             body = [
-                (tip_x, tip_y), (mid_x, mid_y),
+                (tip_x, tip_y),
+                (mid_x, mid_y),
                 (mid_x + int(-s), mid_y + int(c)),
                 (mid_x + int(s), mid_y - int(c)),
-                (bx, by), (l_x, l_y), (r_x, r_y), (tail_x, tail_y),
+                (bx, by),
+                (l_x, l_y),
+                (r_x, r_y),
+                (tail_x, tail_y),
             ]
             for px_t, py_t in body:
                 if 0 <= px_t < w and 0 <= py_t < h:

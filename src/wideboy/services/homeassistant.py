@@ -234,9 +234,7 @@ class HomeAssistantService:
             logger.debug("HA unhandled message type: %s", msg_type)
 
     def _start_polling_fallback(self) -> None:
-        self._poll_thread = threading.Thread(
-            target=self._poll_loop, daemon=True, name="ha-poll"
-        )
+        self._poll_thread = threading.Thread(target=self._poll_loop, daemon=True, name="ha-poll")
         self._poll_thread.start()
 
     def _poll_loop(self) -> None:
