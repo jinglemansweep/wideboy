@@ -114,7 +114,7 @@ backgrounds:
 
 Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 
-#### Available effects (24)
+#### Available effects (26)
 
 | Effect | Tags | Default palette |
 |--------|------|-----------------|
@@ -134,6 +134,8 @@ Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 | mandelbrot | abstract, geometric | sunset |
 | matrix | dark, retro | forest |
 | plasma | abstract, calm | neon |
+| polyhedrons | dark, geometric, particle | neon |
+| primes | calm, dark, geometric | neon |
 | rings | calm, geometric | sunset |
 | scanlines | dark, retro | neon |
 | slosh | calm, liquid | ocean |

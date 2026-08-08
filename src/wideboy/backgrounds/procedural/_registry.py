@@ -24,6 +24,8 @@ from .lightning import lightning
 from .mandelbrot import mandelbrot
 from .matrix_rain import matrix_rain
 from .plasma import plasma
+from .polyhedrons import polyhedrons
+from .primes import primes
 from .rings import rings
 from .scanlines import scanlines
 from .slosh import slosh
@@ -37,6 +39,8 @@ logger = logging.getLogger(__name__)
 
 EFFECTS = {
     plasma.name: plasma,
+    polyhedrons.name: polyhedrons,
+    primes.name: primes,
     gradient_scroll.name: gradient_scroll,
     starfield.name: starfield,
     waves.name: waves,

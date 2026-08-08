@@ -14,7 +14,7 @@ Displays a clock and Home Assistant entity tile grid over animated procedural ba
 
 ## Effects
 
-24 procedural background effects with tag-based selection and auto-rotation.
+26 procedural background effects with tag-based selection and auto-rotation.
 
 ### Airwolf
 
@@ -112,6 +112,18 @@ Falling green code rain. Tags: `retro`, `dark`. Palette: `forest`.
 
 Classic plasma colour cycling. Tags: `abstract`, `calm`. Palette: `neon`.
 
+### Polyhedrons
+
+![polyhedrons](docs/screenshots/polyhedrons.png)
+
+Random 3D wireframe polyhedra drifting and rotating with depth shading and fade-in/out lifecycle. Tags: `geometric`, `particle`, `dark`. Palette: `neon`.
+
+### Primes
+
+![primes](docs/screenshots/primes.png)
+
+Incrementing prime counter with a scrolling prime-gap skyline. Tags: `geometric`, `dark`, `calm`. Palette: `neon`.
+
 ### Rings
 
 ![rings](docs/screenshots/rings.png)
@@ -162,7 +174,7 @@ Sine-wave interference patterns. Tags: `abstract`, `calm`. Palette: `forest`.
 
 ## Features
 
-- **24 procedural effects** with tag-based selection and auto-rotation
+- **26 procedural effects** with tag-based selection and auto-rotation
 - **Custom tags** assignable to any effect via settings YAML for personalised groupings
 - **Home Assistant integration** via WebSocket (entity state) and MQTT (control)
 - **Live control** from HA: on/off, brightness, effect, palette, tag filter, scene
@@ -197,7 +209,7 @@ wideboy/
     ├── config.py             # pydantic-settings models
     ├── display/              # emulator + hardware backends + remap
     ├── core/                 # scene loader, factory, layer base
-    ├── backgrounds/          # image, slideshow, gif, procedural (24 effects)
+    ├── backgrounds/          # image, slideshow, gif, procedural (26 effects)
     ├── widgets/              # clock, tile_grid
     ├── services/             # HA WebSocket + MQTT/HASS
     └── render/               # text, icons, palette, brightness

@@ -82,7 +82,7 @@ def test_available_effects():
     assert "plasma" in effects
     assert "aurora" in effects
     assert "auto" in effects
-    assert len(effects) == 25
+    assert len(effects) == 27
 
 
 def test_handle_light_on():
