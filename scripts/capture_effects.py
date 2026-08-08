@@ -26,8 +26,7 @@ def main() -> None:
         dt = 1.0 / FPS
         for _ in range(int(DURATION * FPS)):
             bg.update(dt)
-
-        bg.render(surface)
+            bg.render(surface)
         path = OUT_DIR / f"{name}.png"
         arr = pygame.surfarray.array3d(surface).transpose(1, 0, 2)
         Image.fromarray(arr).save(path)

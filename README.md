@@ -5,26 +5,141 @@
 Drives 6x 128x64 HUB75 panels (logical 768x64) via a Pi 4 + Electrodragon v2 HAT.
 Displays a clock and Home Assistant entity tile grid over animated procedural backgrounds.
 
-## Screenshots
+## Effects
 
-| | | |
-|---|---|---|
-| **Plasma**<br>![plasma](docs/screenshots/plasma.png) | **Matrix Rain**<br>![matrix](docs/screenshots/matrix.png) | **Starfield**<br>![starfield](docs/screenshots/starfield.png) |
-| Classic plasma colour cycling | Falling green code rain | 3D star warp fly-through |
-| **Aurora**<br>![aurora](docs/screenshots/aurora.png) | **Breakout**<br>![breakout](docs/screenshots/breakout.png) | **Bubbles**<br>![bubbles](docs/screenshots/bubbles.png) |
-| Undulating aurora borealis bands | Paddle-and-ball brick breaker | Rising iridescent bubbles |
-| **Asteroids**<br>![asteroids](docs/screenshots/asteroids.png) | **Traffic**<br>![traffic](docs/screenshots/traffic.png) | **Slosh**<br>![slosh](docs/screenshots/slosh.png) |
-| Retro vector asteroids game | Animated traffic jam scene | Fluid sloshing liquid sim |
-| **Equalizer**<br>![equalizer](docs/screenshots/equalizer.png) | **Lightning**<br>![lightning](docs/screenshots/lightning.png) | **Airwolf**<br>![airwolf](docs/screenshots/airwolf.png) |
-| Audio spectrum bar visualiser | Branching lightning bolts | Airwolf helicopter fly-by |
-| **Snow**<br>![snow](docs/screenshots/snow.png) | **Waves**<br>![waves](docs/screenshots/waves.png) | **Mandelbrot**<br>![mandelbrot](docs/screenshots/mandelbrot.png) |
-| Falling snowflake particles | Sine-wave interference patterns | Animated Mandelbrot zoom |
-| **Rings**<br>![rings](docs/screenshots/rings.png) | **Tetris**<br>![tetris](docs/screenshots/tetris.png) | **Cityscape**<br>![cityscape](docs/screenshots/cityscape.png) |
-| Expanding concentric ring ripples | Falling Tetris blocks | Procedural city skyline |
-| **Boids**<br>![boids](docs/screenshots/boids.png) | **Scanlines**<br>![scanlines](docs/screenshots/scanlines.png) | **Conveyor**<br>![conveyor](docs/screenshots/conveyor.png) |
-| Flocking boids simulation | CRT-style scanline sweep | Scrolling conveyor belt |
-| **Gradient**<br>![gradient](docs/screenshots/gradient.png) | | |
-| Smooth animated colour gradient | | |
+22 procedural background effects with tag-based selection and auto-rotation.
+
+### Airwolf
+
+![airwolf](docs/screenshots/airwolf.png)
+
+Airwolf helicopter fly-by. Tags: `nostalgic`, `energetic`. Palette: `mono`.
+
+### Asteroids
+
+![asteroids](docs/screenshots/asteroids.png)
+
+Retro vector asteroids game. Tags: `game`, `retro`, `energetic`. Palette: `mono`.
+
+### Aurora
+
+![aurora](docs/screenshots/aurora.png)
+
+Undulating aurora borealis bands. Tags: `abstract`, `calm`. Palette: `ocean`.
+
+### Boids
+
+![boids](docs/screenshots/boids.png)
+
+Flocking boids simulation. Tags: `nature`, `calm`. Palette: `neon`.
+
+### Breakout
+
+![breakout](docs/screenshots/breakout.png)
+
+Paddle-and-ball brick breaker. Tags: `game`, `retro`, `energetic`. Palette: `neon`.
+
+### Bubbles
+
+![bubbles](docs/screenshots/bubbles.png)
+
+Rising iridescent bubbles. Tags: `particle`, `calm`. Palette: `ocean`.
+
+### Cityscape
+
+![cityscape](docs/screenshots/cityscape.png)
+
+Procedural city skyline. Tags: `nostalgic`, `calm`. Palette: `neon`.
+
+### Conveyor
+
+![conveyor](docs/screenshots/conveyor.png)
+
+Scrolling conveyor belt. Tags: `linear`, `retro`. Palette: `neon`.
+
+### Equalizer
+
+![equalizer](docs/screenshots/equalizer.png)
+
+Audio spectrum bar visualiser. Tags: `retro`, `energetic`. Palette: `neon`.
+
+### Gradient
+
+![gradient](docs/screenshots/gradient.png)
+
+Smooth animated colour gradient. Tags: `abstract`, `calm`. Palette: `ocean`.
+
+### Lightning
+
+![lightning](docs/screenshots/lightning.png)
+
+Branching lightning bolts. Tags: `energetic`, `dark`. Palette: `neon`.
+
+### Mandelbrot
+
+![mandelbrot](docs/screenshots/mandelbrot.png)
+
+Animated Mandelbrot zoom. Tags: `abstract`, `geometric`. Palette: `sunset`.
+
+### Matrix Rain
+
+![matrix](docs/screenshots/matrix.png)
+
+Falling green code rain. Tags: `retro`, `dark`. Palette: `forest`.
+
+### Plasma
+
+![plasma](docs/screenshots/plasma.png)
+
+Classic plasma colour cycling. Tags: `abstract`, `calm`. Palette: `neon`.
+
+### Rings
+
+![rings](docs/screenshots/rings.png)
+
+Expanding concentric ring ripples. Tags: `geometric`, `calm`. Palette: `sunset`.
+
+### Scanlines
+
+![scanlines](docs/screenshots/scanlines.png)
+
+CRT-style scanline sweep. Tags: `retro`, `dark`. Palette: `neon`.
+
+### Slosh
+
+![slosh](docs/screenshots/slosh.png)
+
+Fluid sloshing liquid simulation. Tags: `liquid`, `calm`. Palette: `ocean`.
+
+### Snow
+
+![snow](docs/screenshots/snow.png)
+
+Falling snowflake particles. Tags: `particle`, `calm`. Palette: `mono`.
+
+### Starfield
+
+![starfield](docs/screenshots/starfield.png)
+
+3D star warp fly-through. Tags: `particle`, `calm`, `dark`. Palette: `mono`.
+
+### Tetris
+
+![tetris](docs/screenshots/tetris.png)
+
+AI-controlled falling Tetris blocks. Tags: `game`, `retro`. Palette: `neon`.
+
+### Traffic
+
+![traffic](docs/screenshots/traffic.png)
+
+Animated traffic jam scene. Tags: `linear`, `energetic`. Palette: `neon`.
+
+### Waves
+
+![waves](docs/screenshots/waves.png)
+
+Sine-wave interference patterns. Tags: `abstract`, `calm`. Palette: `forest`.
 
 ## Features
 
