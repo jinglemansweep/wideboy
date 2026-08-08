@@ -30,6 +30,7 @@ from .rings import rings
 from .scanlines import scanlines
 from .slosh import slosh
 from .snow import snow
+from .solar import solar
 from .starfield import starfield
 from .tetris import tetris
 from .traffic import traffic
@@ -64,6 +65,7 @@ EFFECTS = {
     tetris.name: tetris,
     asteroids.name: asteroids,
     flappy.name: flappy,
+    solar.name: solar,
 }
 
 

@@ -114,7 +114,7 @@ backgrounds:
 
 Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 
-#### Available effects (26)
+#### Available effects (27)
 
 | Effect | Tags | Default palette |
 |--------|------|-----------------|
@@ -138,6 +138,7 @@ Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 | primes | calm, dark, geometric | neon |
 | rings | calm, geometric | sunset |
 | scanlines | dark, retro | neon |
+| solar | calm, dark, nature | mono |
 | slosh | calm, liquid | ocean |
 | snow | calm, particle | mono |
 | starfield | calm, dark, particle | mono |
