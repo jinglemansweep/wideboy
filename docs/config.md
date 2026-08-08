@@ -38,6 +38,7 @@ Settings are loaded in precedence order, with later files overriding earlier one
 | `paths.fonts` | `fonts` | Font directory |
 | `brightness.background.default` | `1.0` | Background brightness multiplier |
 | `brightness.foreground.default` | `1.0` | Foreground brightness multiplier |
+| `effect_tags` | `{}` | Extra tags per effect (see [Custom effect tags](#custom-effect-tags)) |
 
 ## Scene format
 
@@ -108,35 +109,39 @@ backgrounds:
 
 #### Available tags
 
-`abstract`, `geometric`, `particle`, `retro`, `game`, `calm`, `energetic`, `dark`,
-`nostalgic`, `nature`, `linear`, `liquid`
+`abstract`, `calm`, `dark`, `energetic`, `game`, `geometric`, `linear`,
+`liquid`, `nature`, `nostalgic`, `particle`, `retro`
 
-#### Available effects (22)
+Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
+
+#### Available effects (24)
 
 | Effect | Tags | Default palette |
 |--------|------|-----------------|
-| airwolf | nostalgic, retro, linear | neon |
-| asteroids | game, retro, particle | mono |
-| aurora | nature, calm, liquid | ocean |
-| boids | particle, abstract, nature | forest |
-| breakout | game, retro, geometric | neon |
-| bubbles | particle, calm, abstract | ocean |
-| cityscape | nostalgic, geometric, dark | muted |
-| conveyor | abstract, linear, geometric | neon |
-| equalizer | abstract, energetic, linear | neon |
-| gradient | calm, linear, abstract | sunset |
-| lightning | energetic, nature, particle | neon |
-| mandelbrot | abstract, geometric, dark | neon |
-| matrix | nostalgic, retro, particle | forest |
-| plasma | abstract, liquid, calm | neon |
-| rings | geometric, abstract, calm | neon |
-| scanlines | retro, linear, nostalgic | mono |
-| slosh | liquid, abstract, calm | ocean |
-| snow | nature, calm, particle | mono |
-| starfield | particle, calm, dark | neon |
-| tetris | game, retro, geometric | neon |
-| traffic | geometric, energetic, linear | neon |
-| waves | liquid, calm, nature | ocean |
+| airwolf | energetic, nostalgic | mono |
+| asteroids | energetic, game, retro | mono |
+| aurora | abstract, calm | ocean |
+| boids | calm, nature | neon |
+| breakout | energetic, game, retro | neon |
+| bubbles | calm, particle | ocean |
+| cityscape | calm, nostalgic | neon |
+| conveyor | linear, retro | neon |
+| equalizer | energetic, retro | neon |
+| flappy | game, retro | neon |
+| gradient | abstract, calm | ocean |
+| life | abstract, calm | neon |
+| lightning | dark, energetic | neon |
+| mandelbrot | abstract, geometric | sunset |
+| matrix | dark, retro | forest |
+| plasma | abstract, calm | neon |
+| rings | calm, geometric | sunset |
+| scanlines | dark, retro | neon |
+| slosh | calm, liquid | ocean |
+| snow | calm, particle | mono |
+| starfield | calm, dark, particle | mono |
+| tetris | game, retro | neon |
+| traffic | energetic, linear | neon |
+| waves | abstract, calm | forest |
 
 #### Other background types
 
@@ -161,6 +166,36 @@ backgrounds:
   - type: gif
     settings:
       path: assets/backgrounds/anim.gif
+```
+
+### Custom effect tags
+
+The `effect_tags` setting lets you add your own tags to any effect. These
+merge with the effect's built-in tags and are available everywhere tags
+are used -- the HASS tag dropdown, tag-filtered rotation, and
+`get_effects_by_tags` / `get_all_tags` APIs.
+
+```yaml
+effect_tags:
+  plasma: [evening]
+  rings: [evening]
+  starfield: [evening]
+  flappy: [fun, loud]
+```
+
+Selecting the `evening` tag from HASS then rotates only those three effects.
+
+Tags specified in later settings files replace the per-effect list (they
+are not concatenated):
+
+```yaml
+# settings.yml
+effect_tags:
+  plasma: [evening]
+
+# settings.local.yml
+effect_tags:
+  plasma: [morning]    # result: [morning], not [evening, morning]
 ```
 
 ### Widgets

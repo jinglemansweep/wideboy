@@ -158,6 +158,7 @@ Sine-wave interference patterns. Tags: `abstract`, `calm`. Palette: `forest`.
 ## Features
 
 - **24 procedural effects** with tag-based selection and auto-rotation
+- **Custom tags** assignable to any effect via settings YAML for personalised groupings
 - **Home Assistant integration** via WebSocket (entity state) and MQTT (control)
 - **Live control** from HA: on/off, brightness, effect, palette, tag filter, scene
 - **Scene-based config** in YAML with layered settings and env var overrides

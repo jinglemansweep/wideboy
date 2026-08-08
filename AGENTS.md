@@ -29,7 +29,7 @@ src/wideboy/
     gif.py                 # Animated GIF background
     procedural/            # numpy-based procedural effects
       _base.py             # Effect base class
-      _registry.py         # EFFECTS dict + ProceduralBackground
+      _registry.py         # EFFECTS dict, tag merging, ProceduralBackground
       _utils.py            # palette_array, sample_palette, draw helpers
       <effect>.py          # One file per effect (plasma.py, tetris.py, etc.)
   widgets/
@@ -73,6 +73,8 @@ settings.yml  →  settings.local.yml  →  secrets.yml
 
 Only `settings.yml` is committed. Pydantic models live in `config.py` — add new fields there. Environment variables override via `WIDEBOY_<SECTION>__<KEY>` (double underscore delimiter).
 
+The top-level `effect_tags` setting (`dict[str, list[str]]`) adds user-defined tags to effects. These merge with built-in tags at startup via `set_extra_tags()` in `_registry.py`. Merged tags flow through `get_effect_tags()`, `get_effects_by_tags()`, `get_effect_metadata()`, `get_all_tags()`, and `CompositeBackground` tag filtering. See `docs/config.md` for usage.
+
 ## Adding a Procedural Effect
 
 1. Create `src/wideboy/backgrounds/procedural/<name>.py`
@@ -99,6 +101,18 @@ Only `settings.yml` is committed. Pydantic models live in `config.py` — add ne
 2. Subclass `Widget` from `widgets.base` (extends `Layer`).
 3. Implement `update(dt)` and `_render(surface)`. The `Layer` base handles dirty-checking and blitting.
 4. Wire in `core/factory.py`: add a type case in `build_widgets()`, then configure in `scenes/default.yml`.
+
+## Documentation
+
+Before committing changes, verify that docs are in sync with the codebase:
+
+- **New/changed effect**: update `README.md` (effect section + count in three places), `docs/config.md` (effects table, tags list, count in heading), and run `scripts/capture_effects.py` for screenshots.
+- **New/changed setting**: update `settings.yml` (add key with default), `docs/config.md` (key settings table + usage section if non-trivial).
+- **New/changed MQTT entity**: update `docs/config.md` (MQTT entities table).
+- **Architecture change**: update the tree in `AGENTS.md` and `README.md` project layout.
+- **Effect counts**: `README.md` (intro line, Features bullet, layout comment) and `docs/config.md` (table heading) must all match `len(EFFECTS)` — run `pytest` to catch mismatches.
+- **Effect tags/palettes**: the table in `docs/config.md` must match actual effect metadata. Verify with `.venv/bin/python -c "from wideboy.backgrounds.procedural import get_effect_metadata; [print(m) for m in get_effect_metadata()]"`.
+- Always run `pytest` and `ruff check .` before committing.
 
 ## Constraints
 
