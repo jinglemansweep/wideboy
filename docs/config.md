@@ -114,7 +114,7 @@ backgrounds:
 
 Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 
-#### Available effects (27)
+#### Available effects (28)
 
 | Effect | Tags | Default palette |
 |--------|------|-----------------|
@@ -142,6 +142,7 @@ Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 | slosh | calm, liquid | ocean |
 | snow | calm, particle | mono |
 | starfield | calm, dark, particle | mono |
+| strobe | geometric, linear, retro | mono |
 | tetris | game, retro | neon |
 | traffic | energetic, linear | neon |
 | waves | abstract, calm | forest |

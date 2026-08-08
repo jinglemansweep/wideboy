@@ -14,7 +14,7 @@ Displays a clock and Home Assistant entity tile grid over animated procedural ba
 
 ## Effects
 
-27 procedural background effects with tag-based selection and auto-rotation.
+28 procedural background effects with tag-based selection and auto-rotation.
 
 ### Airwolf
 
@@ -142,6 +142,12 @@ CRT-style scanline sweep. Tags: `retro`, `dark`. Palette: `neon`.
 
 Sun and 8 planets orbiting with realistic colors, periods, and adaptive-tilt perspective. Tags: `nature`, `calm`, `dark`. Palette: `mono`.
 
+### Strobe
+
+![strobe](docs/screenshots/strobe.png)
+
+Four rows of dots scrolling at different speeds and directions, evoking Technics SL-1210 turntable strobe markings. Tags: `retro`, `geometric`, `linear`. Palette: `mono`.
+
 ### Slosh
 
 ![slosh](docs/screenshots/slosh.png)
@@ -180,7 +186,7 @@ Sine-wave interference patterns. Tags: `abstract`, `calm`. Palette: `forest`.
 
 ## Features
 
-- **27 procedural effects** with tag-based selection and auto-rotation
+- **28 procedural effects** with tag-based selection and auto-rotation
 - **Custom tags** assignable to any effect via settings YAML for personalised groupings
 - **Home Assistant integration** via WebSocket (entity state) and MQTT (control)
 - **Live control** from HA: on/off, brightness, effect, palette, tag filter, scene
@@ -215,7 +221,7 @@ wideboy/
     ├── config.py             # pydantic-settings models
     ├── display/              # emulator + hardware backends + remap
     ├── core/                 # scene loader, factory, layer base
-    ├── backgrounds/          # image, slideshow, gif, procedural (27 effects)
+    ├── backgrounds/          # image, slideshow, gif, procedural (28 effects)
     ├── widgets/              # clock, tile_grid
     ├── services/             # HA WebSocket + MQTT/HASS
     └── render/               # text, icons, palette, brightness

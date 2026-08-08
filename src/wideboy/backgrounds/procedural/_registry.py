@@ -32,6 +32,7 @@ from .slosh import slosh
 from .snow import snow
 from .solar import solar
 from .starfield import starfield
+from .strobe import strobe
 from .tetris import tetris
 from .traffic import traffic
 from .waves import waves
@@ -66,6 +67,7 @@ EFFECTS = {
     asteroids.name: asteroids,
     flappy.name: flappy,
     solar.name: solar,
+    strobe.name: strobe,
 }
 
 
