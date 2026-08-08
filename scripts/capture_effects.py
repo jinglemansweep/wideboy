@@ -9,7 +9,7 @@ from wideboy.backgrounds.procedural import EFFECTS, ProceduralBackground
 
 W, H = 768, 64
 FPS = 30
-DURATION = 2.0
+DURATION = 30.0
 OUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "screenshots"
 
 
