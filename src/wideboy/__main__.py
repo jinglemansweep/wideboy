@@ -196,6 +196,10 @@ async def async_main(args) -> None:
     settings = load_settings(base_dir=args.config_dir)
     _setup_logging(settings.general.log_level)
 
+    from .backgrounds.procedural._registry import set_extra_tags
+
+    set_extra_tags(settings.effect_tags)
+
     logger.info("wideboy v%s starting (backend=%s)", __version__, args.backend)
 
     pygame.init()

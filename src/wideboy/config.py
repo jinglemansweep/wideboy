@@ -107,6 +107,7 @@ class Settings(BaseSettings):
     scenes: ScenesConfig = Field(default_factory=ScenesConfig)
     paths: PathsConfig = Field(default_factory=PathsConfig)
     brightness: BrightnessConfig = Field(default_factory=BrightnessConfig)
+    effect_tags: dict[str, list[str]] = Field(default_factory=dict)
 
 
 def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:

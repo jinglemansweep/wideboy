@@ -4,6 +4,7 @@ from ._registry import (
     ProceduralBackground,
     get_all_tags,
     get_effect_metadata,
+    get_effect_tags,
     get_effects_by_tags,
 )
 
@@ -13,5 +14,7 @@ __all__ = [
     "ProceduralBackground",
     "get_all_tags",
     "get_effect_metadata",
+    "get_effect_tags",
     "get_effects_by_tags",
+    "set_extra_tags",
 ]

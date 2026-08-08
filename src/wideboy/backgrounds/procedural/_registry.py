@@ -63,11 +63,27 @@ EFFECTS = {
 }
 
 
+_EXTRA_TAGS: dict[str, set[str]] = {}
+
+
+def set_extra_tags(extra: dict[str, list[str]]) -> None:
+    _EXTRA_TAGS.clear()
+    for name, tags in extra.items():
+        if tags:
+            _EXTRA_TAGS[name] = set(tags)
+
+
+def get_effect_tags(name: str) -> set[str]:
+    effect = EFFECTS.get(name)
+    built_in = set(effect.tags) if effect else set()
+    return built_in | _EXTRA_TAGS.get(name, set())
+
+
 def get_effects_by_tags(tags: list[str] | None) -> dict[str, Effect]:
     if not tags:
         return dict(EFFECTS)
     tag_set = set(tags)
-    return {name: effect for name, effect in EFFECTS.items() if tag_set & set(effect.tags)}
+    return {name: effect for name, effect in EFFECTS.items() if tag_set & get_effect_tags(name)}
 
 
 def get_effect_metadata() -> list[dict[str, Any]]:
@@ -75,7 +91,7 @@ def get_effect_metadata() -> list[dict[str, Any]]:
         {
             "name": effect.name,
             "default_palette": effect.default_palette,
-            "tags": list(effect.tags),
+            "tags": sorted(get_effect_tags(effect.name)),
         }
         for effect in EFFECTS.values()
     ]
@@ -83,8 +99,8 @@ def get_effect_metadata() -> list[dict[str, Any]]:
 
 def get_all_tags() -> list[str]:
     tags: set[str] = set()
-    for effect in EFFECTS.values():
-        tags.update(effect.tags)
+    for name in EFFECTS:
+        tags.update(get_effect_tags(name))
     return sorted(tags)
 
 
