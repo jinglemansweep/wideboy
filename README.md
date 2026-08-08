@@ -5,12 +5,26 @@
 Drives 6x 128x64 HUB75 panels (logical 768x64) via a Pi 4 + Electrodragon v2 HAT.
 Displays a clock and Home Assistant entity tile grid over animated procedural backgrounds.
 
-![plasma](docs/screenshots/plasma.png)
-![matrix](docs/screenshots/matrix.png)
-![starfield](docs/screenshots/starfield.png)
-![aurora](docs/screenshots/aurora.png)
-![breakout](docs/screenshots/breakout.png)
-![bubbles](docs/screenshots/bubbles.png)
+## Screenshots
+
+| | | |
+|---|---|---|
+| **Plasma**<br>![plasma](docs/screenshots/plasma.png) | **Matrix Rain**<br>![matrix](docs/screenshots/matrix.png) | **Starfield**<br>![starfield](docs/screenshots/starfield.png) |
+| Classic plasma colour cycling | Falling green code rain | 3D star warp fly-through |
+| **Aurora**<br>![aurora](docs/screenshots/aurora.png) | **Breakout**<br>![breakout](docs/screenshots/breakout.png) | **Bubbles**<br>![bubbles](docs/screenshots/bubbles.png) |
+| Undulating aurora borealis bands | Paddle-and-ball brick breaker | Rising iridescent bubbles |
+| **Asteroids**<br>![asteroids](docs/screenshots/asteroids.png) | **Traffic**<br>![traffic](docs/screenshots/traffic.png) | **Slosh**<br>![slosh](docs/screenshots/slosh.png) |
+| Retro vector asteroids game | Animated traffic jam scene | Fluid sloshing liquid sim |
+| **Equalizer**<br>![equalizer](docs/screenshots/equalizer.png) | **Lightning**<br>![lightning](docs/screenshots/lightning.png) | **Airwolf**<br>![airwolf](docs/screenshots/airwolf.png) |
+| Audio spectrum bar visualiser | Branching lightning bolts | Airwolf helicopter fly-by |
+| **Snow**<br>![snow](docs/screenshots/snow.png) | **Waves**<br>![waves](docs/screenshots/waves.png) | **Mandelbrot**<br>![mandelbrot](docs/screenshots/mandelbrot.png) |
+| Falling snowflake particles | Sine-wave interference patterns | Animated Mandelbrot zoom |
+| **Rings**<br>![rings](docs/screenshots/rings.png) | **Tetris**<br>![tetris](docs/screenshots/tetris.png) | **Cityscape**<br>![cityscape](docs/screenshots/cityscape.png) |
+| Expanding concentric ring ripples | Falling Tetris blocks | Procedural city skyline |
+| **Boids**<br>![boids](docs/screenshots/boids.png) | **Scanlines**<br>![scanlines](docs/screenshots/scanlines.png) | **Conveyor**<br>![conveyor](docs/screenshots/conveyor.png) |
+| Flocking boids simulation | CRT-style scanline sweep | Scrolling conveyor belt |
+| **Gradient**<br>![gradient](docs/screenshots/gradient.png) | | |
+| Smooth animated colour gradient | | |
 
 ## Features
 
