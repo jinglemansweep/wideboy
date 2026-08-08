@@ -7,6 +7,11 @@
 Drives 6x 128x64 HUB75 panels (logical 768x64) via a Pi 4 + Electrodragon v2 HAT.
 Displays a clock and Home Assistant entity tile grid over animated procedural backgrounds.
 
+## Documentation
+
+- [Installation](docs/install.md) -- Pi setup, rpi-rgb-led-matrix build, systemd, wiring
+- [Configuration](docs/config.md) -- settings reference, scene format, MQTT entities
+
 ## Effects
 
 24 procedural background effects with tag-based selection and auto-rotation.
@@ -174,11 +179,6 @@ python -m wideboy --test-pattern             # test pattern (verify panel wiring
 ```
 
 Requires Python 3.11+. The emulator uses [RGBMatrixEmulator](https://github.com/dfirestone/RGBMatrixEmulator).
-
-## Documentation
-
-- [Installation](docs/install.md) -- Pi setup, rpi-rgb-led-matrix build, systemd, wiring
-- [Configuration](docs/config.md) -- settings reference, scene format, MQTT entities
 
 ## Project layout
 
