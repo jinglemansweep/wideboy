@@ -48,10 +48,3 @@ brightness:
   foreground:
     default: 0.8
 
-mqtt:
-  enabled: true
-  host: hass.adm.ptre.es
-  port: 1883
-  discovery_prefix: homeassistant
-  device_id: wideboy
-  device_name: "Wideboy LED Display"

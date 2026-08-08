@@ -4,3 +4,8 @@ general:
 display:
   matrix:
     enabled: true
+
+mqtt:
+  enabled: true
+  host: homeassistant.local
+  port: 1883
