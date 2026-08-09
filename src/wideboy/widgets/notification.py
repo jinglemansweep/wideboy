@@ -19,7 +19,7 @@ _DEFAULTS = {
     "bar_height": 18,
     "right_margin": 128,
     "fade_duration": 1.0,
-    "separator": "  |  ",
+    "separator": "    |    ",
 }
 
 
