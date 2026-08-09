@@ -19,6 +19,7 @@ _DEFAULTS = {
     "bar_height": 18,
     "right_margin": 128,
     "fade_duration": 1.0,
+    "separator": "  |  ",
 }
 
 
@@ -45,8 +46,10 @@ class NotificationOverlay(Widget):
 
     def _build_text_surface(self, text: str) -> pygame.Surface:
         s = self._merged
+        sep = s["separator"]
+        full_text = f"{text}{sep}" if sep else text
         return render_text(
-            text,
+            full_text,
             s["font"],
             s["font_size"],
             color_fg=pygame.Color(*s["color_fg"]),
@@ -109,15 +112,15 @@ class NotificationOverlay(Widget):
 
         scroll_speed = s["scroll_speed"]
         gap = 0
-        period = bar_w + text_w + gap
-        offset = int(self._elapsed * scroll_speed) % period
+        step = text_w + gap
+        offset = int(self._elapsed * scroll_speed) % step
         x = bar_w - offset
 
         text_surf.set_alpha(self._fade_alpha)
         surface.set_clip(pygame.Rect(0, bar_y, bar_w, bar_h))
-        surface.blit(text_surf, (x, text_y))
-        if text_w >= bar_w and x + text_w < bar_w:
-            surface.blit(text_surf, (x + text_w, text_y))
+        while x > -text_w:
+            surface.blit(text_surf, (x, text_y))
+            x -= step
         surface.set_clip(None)
 
     @property
