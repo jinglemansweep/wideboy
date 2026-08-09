@@ -15,7 +15,9 @@ class _OutrunEffect(Effect):
 
     _HORIZON = 22
     _CAR_W = 80
-    _CAR_H = 36
+    _CAR_H = 19
+    _CAR_ANGLE_GENTLE = 6.0
+    _CAR_ANGLE_HARD = 10.0
     _SPEED = 60.0
     _OBJECT_SPEED = 7.0
     _N_TREES = 20
@@ -86,6 +88,103 @@ class _OutrunEffect(Effect):
             + math.sin(scroll * 0.0041 + 1.3) * 0.3
             + math.sin(scroll * 0.0083 + 2.7) * 0.12
         )
+
+    def _car_angle(self, scroll: float) -> float:
+        cv = self._curve_value(scroll)
+        if cv > 0.6:
+            return self._CAR_ANGLE_HARD
+        if cv > 0.2:
+            return self._CAR_ANGLE_GENTLE
+        if cv < -0.6:
+            return -self._CAR_ANGLE_HARD
+        if cv < -0.2:
+            return -self._CAR_ANGLE_GENTLE
+        return 0.0
+
+    def _draw_car(
+        self,
+        frame: np.ndarray,
+        w: int,
+        h: int,
+        car_x: int,
+        roof: np.ndarray,
+        body: np.ndarray,
+        window: np.ndarray,
+        tail: np.ndarray,
+        angle_deg: float,
+    ) -> None:
+        cw, ch = self._CAR_W, self._CAR_H
+        pivot_x = cw / 2.0
+        pivot_y = ch - 1.0
+
+        sprite = np.zeros((ch, cw, 3), dtype=np.float32)
+        mask = np.zeros((ch, cw), dtype=bool)
+
+        def span(y0: int, y1: int, x0: int, x1: int, color: np.ndarray) -> None:
+            sprite[y0:y1, x0:x1] = color
+            mask[y0:y1, x0:x1] = True
+
+        # Roof - tapered at top (rows 0-2 narrow, 3-6 full width)
+        span(0, 3, 14, cw - 13, roof)
+        span(3, 7, 0, cw, roof)
+        # Rear window band (rows 7-13): body fill + inset glass
+        span(7, 14, 0, cw, body)
+        span(7, 14, 8, cw - 7, window)
+        # Rear body (rows 14-18)
+        span(14, 19, 0, cw, body)
+        # Tail lights (rows 15-18)
+        span(15, 19, 4, 14, tail)
+        span(15, 19, cw - 13, cw - 3, tail)
+
+        if angle_deg == 0.0:
+            x0 = car_x - cw // 2
+            y0 = h - ch
+            for dy in range(ch):
+                py = y0 + dy
+                if 0 <= py < h:
+                    frame[py, max(0, x0) : min(w, x0 + cw)] = sprite[dy]
+            return
+
+        theta = math.radians(angle_deg)
+        cos_t = math.cos(theta)
+        sin_t = math.sin(theta)
+
+        # Corner offsets from pivot -> rotated bounding box
+        corners = np.array(
+            [
+                [0 - pivot_x, 0 - pivot_y],
+                [cw - pivot_x, 0 - pivot_y],
+                [cw - pivot_x, ch - pivot_y],
+                [0 - pivot_x, ch - pivot_y],
+            ],
+            dtype=np.float32,
+        )
+        rx_c = corners[:, 0] * cos_t - corners[:, 1] * sin_t
+        ry_c = corners[:, 0] * sin_t + corners[:, 1] * cos_t
+        min_x, max_x = rx_c.min(), rx_c.max()
+        min_y, max_y = ry_c.min(), ry_c.max()
+        canvas_w = int(math.ceil(max_x - min_x)) + 1
+        canvas_h = int(math.ceil(max_y - min_y)) + 1
+
+        oy_g, ox_g = np.meshgrid(
+            np.arange(canvas_h), np.arange(canvas_w), indexing="ij"
+        )
+        rx = ox_g + min_x
+        ry = oy_g + min_y
+        dx = rx * cos_t + ry * sin_t
+        dy = -rx * sin_t + ry * cos_t
+        sx = (pivot_x + dx + 0.5).astype(np.int32)
+        sy = (pivot_y + dy + 0.5).astype(np.int32)
+        valid = (sx >= 0) & (sx < cw) & (sy >= 0) & (sy < ch)
+
+        # Screen pivot: bottom-center at (car_x, h-1)
+        screen_x = (car_x + ox_g + min_x).astype(np.int32)
+        screen_y = (h - 1 + oy_g + min_y).astype(np.int32)
+        in_frame = (
+            valid & (screen_x >= 0) & (screen_x < w) & (screen_y >= 0) & (screen_y < h)
+        )
+        ix, iy = np.where(in_frame)
+        frame[screen_y[ix, iy], screen_x[ix, iy]] = sprite[sy[ix, iy], sx[ix, iy]]
 
     def __call__(self, t: float, w: int, h: int, palette: Palette) -> np.ndarray:
         if self._w != w or self._h != h:
@@ -316,48 +415,22 @@ class _OutrunEffect(Effect):
                 if iy0 < iy1 and ix0 < ix1:
                     frame[iy0:iy1, ix0:ix1] = acc
 
-        # Car - large rear-view, only top half (roof + window + shoulders) visible
-        # Sprite is 36 rows; positioned so bottom is clipped below the display
-        car_y = h - 19
-        car_hw = self._CAR_W // 2
-        car_left = max(0, car_x - car_hw)
-        car_right = min(w, car_x + car_hw + 1)
+        # Car - large rear-view, rotated to steer into curves
         car_window = dim * 0.45
         roof_color = sec
         body_color = pri
         tail_color = np.array([255, 60, 50], dtype=np.float32)
-
-        def _car_row(dy: int, x0: int, x1: int, color: np.ndarray) -> None:
-            py = car_y + dy
-            if 0 <= py < h and x0 < x1:
-                frame[py, x0:x1] = color
-
-        # Roof - tapered at top (rows 0-2 narrow, 3-6 full width)
-        roof_narrow0 = max(0, car_x - car_hw + 14)
-        roof_narrow1 = min(w, car_x + car_hw - 13)
-        for dy in range(3):
-            _car_row(dy, roof_narrow0, roof_narrow1, roof_color)
-        for dy in range(3, 7):
-            _car_row(dy, car_left, car_right, roof_color)
-
-        # Rear window - inset dark glass (rows 7-13)
-        win0 = max(0, car_x - car_hw + 8)
-        win1 = min(w, car_x + car_hw - 7)
-        for dy in range(7, 14):
-            _car_row(dy, car_left, car_right, body_color)
-            _car_row(dy, win0, win1, car_window)
-
-        # Rear body + tail lights (rows 14-18, the visible bottom edge)
-        tail_w = 10
-        tl0 = max(0, car_x - car_hw + 4)
-        tl1 = min(w, tl0 + tail_w)
-        tr0 = max(0, car_x + car_hw - tail_w - 3)
-        tr1 = min(w, tr0 + tail_w)
-        for dy in range(14, 19):
-            _car_row(dy, car_left, car_right, body_color)
-        for dy in range(15, 19):
-            _car_row(dy, tl0, tl1, tail_color)
-            _car_row(dy, tr0, tr1, tail_color)
+        self._draw_car(
+            frame,
+            w,
+            h,
+            car_x,
+            roof_color,
+            body_color,
+            car_window,
+            tail_color,
+            self._car_angle(scroll),
+        )
 
         return np.clip(frame, 0, 255).astype(np.uint8)
 
