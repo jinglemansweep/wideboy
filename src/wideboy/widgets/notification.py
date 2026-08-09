@@ -18,6 +18,7 @@ _DEFAULTS = {
     "scroll_speed": 60.0,
     "bar_height": 18,
     "right_margin": 128,
+    "fade_duration": 1.0,
 }
 
 
@@ -39,6 +40,7 @@ class NotificationOverlay(Widget):
         self._text_surface: pygame.Surface | None = None
         self._current_text: str | None = None
         self._elapsed: float = 0.0
+        self._fade_alpha: int = 255
         self.visible = False
 
     def _build_text_surface(self, text: str) -> pygame.Surface:
@@ -73,6 +75,14 @@ class NotificationOverlay(Widget):
             self._text_surface = self._build_text_surface(text)
 
         self._elapsed = now - notification["received_at"]
+
+        remaining = notification["expire_time"] - now
+        fade_dur = self._merged["fade_duration"]
+        if remaining < fade_dur:
+            self._fade_alpha = max(0, int(255 * remaining / fade_dur))
+        else:
+            self._fade_alpha = 255
+
         self.mark_dirty()
 
     def _surface_size(self) -> tuple[int, int] | None:
@@ -90,6 +100,7 @@ class NotificationOverlay(Widget):
 
         bar = pygame.Surface((bar_w, bar_h), pygame.SRCALPHA)
         bar.fill(tuple(s["color_bar"]))
+        bar.set_alpha(self._fade_alpha)
         surface.blit(bar, (0, bar_y))
 
         text_surf = self._text_surface
@@ -97,13 +108,15 @@ class NotificationOverlay(Widget):
         text_y = bar_y + (bar_h - text_surf.get_height()) // 2
 
         scroll_speed = s["scroll_speed"]
-        period = text_w + bar_w
+        gap = 120
+        period = bar_w + text_w + gap
         offset = int(self._elapsed * scroll_speed) % period
         x = bar_w - offset
 
+        text_surf.set_alpha(self._fade_alpha)
         surface.set_clip(pygame.Rect(0, bar_y, bar_w, bar_h))
         surface.blit(text_surf, (x, text_y))
-        if x + text_w < bar_w:
+        if text_w >= bar_w and x + text_w < bar_w:
             surface.blit(text_surf, (x + text_w, text_y))
         surface.set_clip(None)
 
