@@ -26,12 +26,16 @@ class _OutrunEffect(Effect):
     _ROAD_HALF_BOTTOM = 420
     _RUMBLE_FRACTION = 0.06
     _CURVE_STRENGTH = 0.36
+    _CORNER_SLOWDOWN = 0.45
     _RECYCLE_RANGE = 24.0
     _NEAR_CLIP = 0.4
 
     def __init__(self) -> None:
         self._w = 0
         self._h = 0
+        self._last_t: float | None = None
+        self._scroll = 0.0
+        self._obj_scroll = 0.0
         self._trees: list[dict] = []
         self._signs: list[dict] = []
         self._mountains: list[tuple[int, int, int]] = []
@@ -96,8 +100,16 @@ class _OutrunEffect(Effect):
 
         frame = np.zeros((h, w, 3), dtype=np.float32)
         horizon = self._HORIZON
-        scroll = t * self._SPEED
-        obj_scroll = t * self._OBJECT_SPEED
+        if self._last_t is None:
+            self._last_t = t
+        dt = max(0.0, t - self._last_t)
+        self._last_t = t
+        curve_now = self._curve_value(self._scroll)
+        factor = 1.0 - self._CORNER_SLOWDOWN * min(1.0, abs(curve_now))
+        self._scroll += dt * self._SPEED * factor
+        self._obj_scroll += dt * self._OBJECT_SPEED * factor
+        scroll = self._scroll
+        obj_scroll = self._obj_scroll
 
         # Sky gradient
         sky_blend = np.linspace(0, 1, horizon)[:, np.newaxis, np.newaxis]
@@ -161,7 +173,7 @@ class _OutrunEffect(Effect):
             dash_pixel_mask[:, :, np.newaxis], hi * 0.85, frame[horizon + 1 : h, :]
         )
 
-        car_x = int(w / 2 + self._curve_value(scroll) * 38)
+        car_x = int(w / 2 - self._curve_value(scroll) * 38)
 
         # Mountains - vectorized
         for mx, mw, mh in self._mountains:
