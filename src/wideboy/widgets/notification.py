@@ -16,7 +16,7 @@ _DEFAULTS = {
     "color_bar": [0, 0, 0, 180],
     "duration": 30.0,
     "scroll_speed": 60.0,
-    "bar_height": 17,
+    "bar_height": 18,
     "right_margin": 128,
     "fade_duration": 1.0,
 }
