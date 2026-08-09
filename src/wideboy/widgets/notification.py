@@ -17,7 +17,7 @@ _DEFAULTS = {
     "duration": 10.0,
     "scroll_speed": 60.0,
     "bar_height": 18,
-    "right_margin": 130,
+    "right_margin": 128,
 }
 
 
@@ -101,9 +101,11 @@ class NotificationOverlay(Widget):
         offset = int(self._elapsed * scroll_speed) % period
         x = bar_w - offset
 
+        surface.set_clip(pygame.Rect(0, bar_y, bar_w, bar_h))
         surface.blit(text_surf, (x, text_y))
         if x + text_w < bar_w:
             surface.blit(text_surf, (x + text_w, text_y))
+        surface.set_clip(None)
 
     @property
     def content_size(self) -> tuple[int, int]:
