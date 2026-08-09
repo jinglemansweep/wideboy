@@ -17,7 +17,7 @@ _DEFAULTS = {
     "duration": 10.0,
     "scroll_speed": 60.0,
     "bar_height": 18,
-    "right_margin": 134,
+    "right_margin": 130,
 }
 
 
