@@ -3,9 +3,18 @@ from __future__ import annotations
 import math
 
 import numpy as np
+import pygame
 
 from ...render.palette import Palette
 from ._base import Effect
+
+
+def _to_rgb(c: np.ndarray) -> tuple[int, int, int]:
+    return (
+        int(max(0.0, min(255.0, c[0]))),
+        int(max(0.0, min(255.0, c[1]))),
+        int(max(0.0, min(255.0, c[2]))),
+    )
 
 
 class _OutrunEffect(Effect):
@@ -14,10 +23,17 @@ class _OutrunEffect(Effect):
     tags = ("game", "retro", "energetic", "nostalgic")
 
     _HORIZON = 22
-    _CAR_W = 80
-    _CAR_H = 19
-    _CAR_ANGLE_GENTLE = 6.0
-    _CAR_ANGLE_HARD = 10.0
+    _CAR_YAW_GENTLE = 22.0
+    _CAR_YAW_HARD = 40.0
+    _CAR_TILT_GENTLE = 2.0
+    _CAR_TILT_HARD = 4.0
+    _CAR_CANVAS_W = 180
+    _CAR_CANVAS_H = 96
+    _CAR_CAM_Y = 16.0
+    _CAR_CAM_D = 58.0
+    _CAR_FOCAL = 70.0
+    _CAR_SCY = 50.0
+    _CAR_WHEEL_R_MAX = 7
     _SPEED = 60.0
     _OBJECT_SPEED = 7.0
     _N_TREES = 20
@@ -29,6 +45,10 @@ class _OutrunEffect(Effect):
     _RUMBLE_FRACTION = 0.06
     _CURVE_STRENGTH = 0.36
     _CORNER_SLOWDOWN = 0.45
+    _CURVE_F1 = 0.012
+    _CURVE_F2 = 0.028
+    _CURVE_F3 = 0.0504
+    _CURVE_POW = 2.2
     _RECYCLE_RANGE = 24.0
     _NEAR_CLIP = 0.4
 
@@ -38,6 +58,7 @@ class _OutrunEffect(Effect):
         self._last_t: float | None = None
         self._scroll = 0.0
         self._obj_scroll = 0.0
+        self._curve_scale = self._compute_curve_scale()
         self._trees: list[dict] = []
         self._signs: list[dict] = []
         self._mountains: list[tuple[int, int, int]] = []
@@ -82,24 +103,55 @@ class _OutrunEffect(Effect):
             self._hills.append((x, hw, hh))
             x += hw + rng.randint(5, 25)
 
-    def _curve_value(self, scroll: float) -> float:
+    def _curve_raw(self, scroll: float) -> float:
         return (
-            math.sin(scroll * 0.0016) * 0.7
-            + math.sin(scroll * 0.0041 + 1.3) * 0.3
-            + math.sin(scroll * 0.0083 + 2.7) * 0.12
+            math.sin(scroll * self._CURVE_F1) * 0.85
+            + math.sin(scroll * self._CURVE_F2 + 1.3) * 0.28
+            + math.sin(scroll * self._CURVE_F3 + 2.7) * 0.08
         )
 
-    def _car_angle(self, scroll: float) -> float:
+    def _compute_curve_scale(self) -> float:
+        peak = 0.0
+        for s in range(0, 50000, 5):
+            peak = max(peak, abs(self._curve_raw(float(s))))
+        return 1.0 / (peak ** self._CURVE_POW)
+
+    def _curve_value(self, scroll: float) -> float:
+        raw = self._curve_raw(scroll)
+        return math.copysign(abs(raw) ** self._CURVE_POW * self._curve_scale, raw)
+
+    def _car_yaw(self, scroll: float) -> float:
         cv = self._curve_value(scroll)
         if cv > 0.6:
-            return self._CAR_ANGLE_HARD
+            return self._CAR_YAW_HARD
         if cv > 0.2:
-            return self._CAR_ANGLE_GENTLE
+            return self._CAR_YAW_GENTLE
         if cv < -0.6:
-            return -self._CAR_ANGLE_HARD
+            return -self._CAR_YAW_HARD
         if cv < -0.2:
-            return -self._CAR_ANGLE_GENTLE
+            return -self._CAR_YAW_GENTLE
         return 0.0
+
+    def _car_tilt(self, scroll: float) -> float:
+        cv = self._curve_value(scroll)
+        if cv > 0.6:
+            return self._CAR_TILT_HARD
+        if cv > 0.2:
+            return self._CAR_TILT_GENTLE
+        if cv < -0.6:
+            return -self._CAR_TILT_HARD
+        if cv < -0.2:
+            return -self._CAR_TILT_GENTLE
+        return 0.0
+
+    def _project(self, pts: np.ndarray, scx: float, scy: float) -> np.ndarray:
+        x = pts[:, 0]
+        y = pts[:, 1]
+        z = pts[:, 2]
+        cz = np.maximum(z + self._CAR_CAM_D, 0.1)
+        sx = scx + self._CAR_FOCAL * x / cz
+        sy = scy - self._CAR_FOCAL * (y - self._CAR_CAM_Y) / cz
+        return np.stack([sx, sy], axis=1)
 
     def _draw_car(
         self,
@@ -107,84 +159,146 @@ class _OutrunEffect(Effect):
         w: int,
         h: int,
         car_x: int,
-        roof: np.ndarray,
-        body: np.ndarray,
-        window: np.ndarray,
-        tail: np.ndarray,
-        angle_deg: float,
+        palette: Palette,
+        yaw_deg: float,
+        tilt_deg: float,
     ) -> None:
-        cw, ch = self._CAR_W, self._CAR_H
-        pivot_x = cw / 2.0
-        pivot_y = ch - 1.0
+        surf = pygame.Surface(
+            (self._CAR_CANVAS_W, self._CAR_CANVAS_H), pygame.SRCALPHA
+        )
+        scx = self._CAR_CANVAS_W / 2.0
+        scy = self._CAR_SCY
 
-        sprite = np.zeros((ch, cw, 3), dtype=np.float32)
-        mask = np.zeros((ch, cw), dtype=bool)
+        pri = np.array(palette.primary, dtype=np.float32)
+        sec = np.array(palette.secondary, dtype=np.float32)
+        dim = np.array(palette.dim, dtype=np.float32)
+        colors = {
+            "body": pri,
+            "side": pri * 0.7,
+            "top": np.clip(pri * 0.55 + 70.0, 0, 255),
+            "glass": dim * 0.45,
+            "glass_side": dim * 0.6,
+            "roof": sec,
+            "tail": np.array([255.0, 60.0, 50.0], dtype=np.float32),
+            "tire": np.array([18.0, 18.0, 18.0], dtype=np.float32),
+        }
 
-        def span(y0: int, y1: int, x0: int, x1: int, color: np.ndarray) -> None:
-            sprite[y0:y1, x0:x1] = color
-            mask[y0:y1, x0:x1] = True
+        a = math.radians(yaw_deg)
+        ca, sa = math.cos(a), math.sin(a)
 
-        # Roof - tapered at top (rows 0-2 narrow, 3-6 full width)
-        span(0, 3, 14, cw - 13, roof)
-        span(3, 7, 0, cw, roof)
-        # Rear window band (rows 7-13): body fill + inset glass
-        span(7, 14, 0, cw, body)
-        span(7, 14, 8, cw - 7, window)
-        # Rear body (rows 14-18)
-        span(14, 19, 0, cw, body)
-        # Tail lights (rows 15-18)
-        span(15, 19, 4, 14, tail)
-        span(15, 19, cw - 13, cw - 3, tail)
+        def rot(pts: np.ndarray) -> np.ndarray:
+            out = pts.copy()
+            out[:, 0] = pts[:, 0] * ca + pts[:, 2] * sa
+            out[:, 2] = -pts[:, 0] * sa + pts[:, 2] * ca
+            return out
 
-        if angle_deg == 0.0:
-            x0 = car_x - cw // 2
-            y0 = h - ch
-            for dy in range(ch):
-                py = y0 + dy
-                if 0 <= py < h:
-                    frame[py, max(0, x0) : min(w, x0 + cw)] = sprite[dy]
-            return
-
-        theta = math.radians(angle_deg)
-        cos_t = math.cos(theta)
-        sin_t = math.sin(theta)
-
-        # Corner offsets from pivot -> rotated bounding box
-        corners = np.array(
+        # Body box
+        HW, HL = 16.0, 24.0
+        BY0, BY1 = 3.0, 13.0
+        # Stable ground line: rear-wheel contact at yaw 0 (anchors vertical placement)
+        rear_cz = self._CAR_CAM_D - (HL - 6.0)
+        ground_ref = (
+            self._CAR_SCY
+            + self._CAR_FOCAL * self._CAR_CAM_Y / rear_cz
+            + self._CAR_WHEEL_R_MAX
+        )
+        body = np.array(
             [
-                [0 - pivot_x, 0 - pivot_y],
-                [cw - pivot_x, 0 - pivot_y],
-                [cw - pivot_x, ch - pivot_y],
-                [0 - pivot_x, ch - pivot_y],
+                [-HW, BY0, -HL], [HW, BY0, -HL], [HW, BY1, -HL], [-HW, BY1, -HL],
+                [-HW, BY0, HL], [HW, BY0, HL], [HW, BY1, HL], [-HW, BY1, HL],
             ],
-            dtype=np.float32,
+            dtype=np.float64,
         )
-        rx_c = corners[:, 0] * cos_t - corners[:, 1] * sin_t
-        ry_c = corners[:, 0] * sin_t + corners[:, 1] * cos_t
-        min_x, max_x = rx_c.min(), rx_c.max()
-        min_y, max_y = ry_c.min(), ry_c.max()
-        canvas_w = int(math.ceil(max_x - min_x)) + 1
-        canvas_h = int(math.ceil(max_y - min_y)) + 1
+        # Cabin / greenhouse on top, set toward the rear
+        CW, CZ0, CZ1 = 12.0, -12.0, 8.0
+        CY0, CY1 = BY1, 20.0
+        cabin = np.array(
+            [
+                [-CW, CY0, CZ0], [CW, CY0, CZ0], [CW, CY1, CZ0], [-CW, CY1, CZ0],
+                [-CW, CY0, CZ1], [CW, CY0, CZ1], [CW, CY1, CZ1], [-CW, CY1, CZ1],
+            ],
+            dtype=np.float64,
+        )
+        body_r = rot(body)
+        cabin_r = rot(cabin)
+        bp = self._project(body_r, scx, scy)
+        cp = self._project(cabin_r, scx, scy)
+        bz = body_r[:, 2]
+        czz = cabin_r[:, 2]
 
-        oy_g, ox_g = np.meshgrid(
-            np.arange(canvas_h), np.arange(canvas_w), indexing="ij"
-        )
-        rx = ox_g + min_x
-        ry = oy_g + min_y
-        dx = rx * cos_t + ry * sin_t
-        dy = -rx * sin_t + ry * cos_t
-        sx = (pivot_x + dx + 0.5).astype(np.int32)
-        sy = (pivot_y + dy + 0.5).astype(np.int32)
-        valid = (sx >= 0) & (sx < cw) & (sy >= 0) & (sy < ch)
+        # Painter's algorithm: farthest (largest z) first
+        items: list[tuple[float, str, object]] = []
 
-        # Screen pivot: bottom-center at (car_x, h-1)
-        screen_x = (car_x + ox_g + min_x).astype(np.int32)
-        screen_y = (h - 1 + oy_g + min_y).astype(np.int32)
-        in_frame = (
-            valid & (screen_x >= 0) & (screen_x < w) & (screen_y >= 0) & (screen_y < h)
+        def face(depth: float, idx: tuple[int, ...], verts: np.ndarray, color: np.ndarray) -> None:
+            items.append((depth, "face", ([verts[i] for i in idx], color)))
+
+        face(float(np.mean(bz[[0, 1, 2, 3]])), (0, 1, 2, 3), bp, colors["body"])
+        face(float(np.mean(bz[[4, 5, 6, 7]])), (4, 5, 6, 7), bp, colors["body"])
+        face(float(np.mean(bz[[0, 3, 7, 4]])), (0, 3, 7, 4), bp, colors["side"])
+        face(float(np.mean(bz[[1, 2, 6, 5]])), (1, 2, 6, 5), bp, colors["side"])
+        face(float(np.mean(bz[[3, 2, 6, 7]])), (3, 2, 6, 7), bp, colors["top"])
+        face(float(np.mean(czz[[0, 1, 2, 3]])), (0, 1, 2, 3), cp, colors["glass"])
+        face(float(np.mean(czz[[4, 5, 6, 7]])), (4, 5, 6, 7), cp, colors["glass"])
+        face(float(np.mean(czz[[0, 3, 7, 4]])), (0, 3, 7, 4), cp, colors["glass_side"])
+        face(float(np.mean(czz[[1, 2, 6, 5]])), (1, 2, 6, 5), cp, colors["glass_side"])
+        face(float(np.mean(czz[[3, 2, 6, 7]])), (3, 2, 6, 7), cp, colors["roof"])
+
+        # Wheels at the four corners, just outside the body
+        for wsx in (-1.0, 1.0):
+            for wsz in (-1.0, 1.0):
+                wpt = rot(
+                    np.array([[wsx * (HW + 1.0), 0.0, wsz * (HL - 6.0)]], dtype=np.float64)
+                )
+                wproj = self._project(wpt, scx, scy)[0]
+                depth = float(wpt[0, 2])
+                cz_w = max(depth + self._CAR_CAM_D, 0.1)
+                r = min(
+                    self._CAR_WHEEL_R_MAX, max(3, int(self._CAR_FOCAL * 4.5 / cz_w))
+                )
+                items.append((depth, "wheel", (wproj, r)))
+
+        # Tail lights, just proud of the rear face (toward the camera)
+        for ttx in (-HW * 0.62, HW * 0.62):
+            tpt = rot(np.array([[ttx, BY0 + 2.5, -HL - 0.5]], dtype=np.float64))
+            tproj = self._project(tpt, scx, scy)[0]
+            depth = float(tpt[0, 2])
+            cz_t = max(depth + self._CAR_CAM_D, 0.1)
+            r = max(2, int(self._CAR_FOCAL * 2.2 / cz_t))
+            items.append((depth, "tail", (tproj, r)))
+
+        items.sort(key=lambda it: -it[0])
+
+        for _, kind, payload in items:
+            if kind == "face":
+                verts, color = payload
+                poly = [(float(v[0]), float(v[1])) for v in verts]
+                pygame.draw.polygon(surf, _to_rgb(color), poly)
+            elif kind == "wheel":
+                (cxw, cyw), rr = payload
+                pygame.draw.circle(surf, _to_rgb(colors["tire"]), (int(cxw), int(cyw)), rr)
+            elif kind == "tail":
+                (cxt, cyt), rr = payload
+                pygame.draw.circle(surf, _to_rgb(colors["tail"]), (int(cxt), int(cyt)), rr)
+
+        if abs(tilt_deg) > 0.01:
+            surf = pygame.transform.rotate(surf, tilt_deg)
+
+        # Alpha-blend the car sprite into the numpy frame
+        arr3 = pygame.surfarray.array3d(surf).transpose(1, 0, 2).astype(np.float32)
+        alpha = (
+            pygame.surfarray.array_alpha(surf).transpose(1, 0).astype(np.float32) / 255.0
         )
-        ix, iy = np.where(in_frame)
-        frame[screen_y[ix, iy], screen_x[ix, iy]] = sprite[sy[ix, iy], sx[ix, iy]]
+        ch2, cw2 = arr3.shape[:2]
+        x0 = car_x - cw2 // 2
+        y0 = (h - 1) - int(round(ground_ref))
+        gx, gy = np.meshgrid(np.arange(cw2) + x0, np.arange(ch2) + y0)
+        valid = (gx >= 0) & (gx < w) & (gy >= 0) & (gy < h) & (alpha > 0.0)
+        iy, ix = np.where(valid)
+        if iy.size:
+            a_ = alpha[iy, ix][:, None]
+            frame[gy[iy, ix], gx[iy, ix]] = (
+                frame[gy[iy, ix], gx[iy, ix]] * (1.0 - a_) + arr3[iy, ix] * a_
+            )
 
     def __call__(self, t: float, w: int, h: int, palette: Palette) -> np.ndarray:
         if self._w != w or self._h != h:
@@ -415,21 +529,15 @@ class _OutrunEffect(Effect):
                 if iy0 < iy1 and ix0 < ix1:
                     frame[iy0:iy1, ix0:ix1] = acc
 
-        # Car - large rear-view, rotated to steer into curves
-        car_window = dim * 0.45
-        roof_color = sec
-        body_color = pri
-        tail_color = np.array([255, 60, 50], dtype=np.float32)
+        # Car - 3D box-car that yaws into curves, with a subtle lean
         self._draw_car(
             frame,
             w,
             h,
             car_x,
-            roof_color,
-            body_color,
-            car_window,
-            tail_color,
-            self._car_angle(scroll),
+            palette,
+            self._car_yaw(scroll),
+            self._car_tilt(scroll),
         )
 
         return np.clip(frame, 0, 255).astype(np.uint8)
