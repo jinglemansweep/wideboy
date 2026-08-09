@@ -108,7 +108,7 @@ class NotificationOverlay(Widget):
         text_y = bar_y + (bar_h - text_surf.get_height()) // 2 + 1
 
         scroll_speed = s["scroll_speed"]
-        gap = 40
+        gap = 0
         period = bar_w + text_w + gap
         offset = int(self._elapsed * scroll_speed) % period
         x = bar_w - offset
