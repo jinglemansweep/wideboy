@@ -14,7 +14,7 @@ _DEFAULTS = {
     "color_fg": [255, 255, 255, 255],
     "color_outline": [0, 0, 0, 255],
     "color_bar": [0, 0, 0, 180],
-    "duration": 10.0,
+    "duration": 30.0,
     "scroll_speed": 60.0,
     "bar_height": 18,
     "right_margin": 128,
