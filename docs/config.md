@@ -114,7 +114,7 @@ backgrounds:
 
 Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 
-#### Available effects (28)
+#### Available effects (29)
 
 | Effect | Tags | Default palette |
 |--------|------|-----------------|
@@ -133,6 +133,7 @@ Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 | lightning | dark, energetic | neon |
 | mandelbrot | abstract, geometric | sunset |
 | matrix | dark, retro | forest |
+| outrun | energetic, game, nostalgic, retro | sunset |
 | plasma | abstract, calm | neon |
 | polyhedrons | dark, geometric, particle | neon |
 | primes | calm, dark, geometric | neon |

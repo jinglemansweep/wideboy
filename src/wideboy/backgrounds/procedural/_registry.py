@@ -23,6 +23,7 @@ from .life import life
 from .lightning import lightning
 from .mandelbrot import mandelbrot
 from .matrix_rain import matrix_rain
+from .outrun import outrun
 from .plasma import plasma
 from .polyhedrons import polyhedrons
 from .primes import primes
@@ -47,6 +48,7 @@ EFFECTS = {
     starfield.name: starfield,
     waves.name: waves,
     matrix_rain.name: matrix_rain,
+    outrun.name: outrun,
     aurora.name: aurora,
     equalizer.name: equalizer,
     rings.name: rings,

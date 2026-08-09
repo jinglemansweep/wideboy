@@ -29,17 +29,17 @@ def test_all_effects_have_metadata():
 
 
 def test_effects_count():
-    assert len(EFFECTS) == 28
+    assert len(EFFECTS) == 29
 
 
 def test_get_effects_by_tags_empty():
     result = get_effects_by_tags([])
-    assert len(result) == 28
+    assert len(result) == 29
 
 
 def test_get_effects_by_tags_none():
     result = get_effects_by_tags(None)
-    assert len(result) == 28
+    assert len(result) == 29
 
 
 def test_get_effects_by_tags_retro():
@@ -68,7 +68,7 @@ def test_get_effects_by_tags_nonexistent():
 
 def test_get_effect_metadata():
     meta = get_effect_metadata()
-    assert len(meta) == 28
+    assert len(meta) == 29
     names = [m["name"] for m in meta]
     assert "plasma" in names
     plasma_meta = next(m for m in meta if m["name"] == "plasma")

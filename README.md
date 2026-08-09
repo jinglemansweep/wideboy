@@ -14,7 +14,7 @@ Displays a clock and Home Assistant entity tile grid over animated procedural ba
 
 ## Effects
 
-28 procedural background effects with tag-based selection and auto-rotation.
+29 procedural background effects with tag-based selection and auto-rotation.
 
 ### Airwolf
 
@@ -106,6 +106,12 @@ Animated Mandelbrot zoom. Tags: `abstract`, `geometric`. Palette: `sunset`.
 
 Falling green code rain. Tags: `retro`, `dark`. Palette: `forest`.
 
+### Outrun
+
+![outrun](docs/screenshots/outrun.png)
+
+Retro rear-view racing with parallax road curves, roadside trees and signs. Tags: `game`, `retro`, `energetic`, `nostalgic`. Palette: `sunset`.
+
 ### Plasma
 
 ![plasma](docs/screenshots/plasma.png)
@@ -186,7 +192,7 @@ Sine-wave interference patterns. Tags: `abstract`, `calm`. Palette: `forest`.
 
 ## Features
 
-- **28 procedural effects** with tag-based selection and auto-rotation
+- **29 procedural effects** with tag-based selection and auto-rotation
 - **Custom tags** assignable to any effect via settings YAML for personalised groupings
 - **Home Assistant integration** via WebSocket (entity state) and MQTT (control)
 - **Live control** from HA: on/off, brightness, effect, palette, tag filter, scene
@@ -221,7 +227,7 @@ wideboy/
     ├── config.py             # pydantic-settings models
     ├── display/              # emulator + hardware backends + remap
     ├── core/                 # scene loader, factory, layer base
-    ├── backgrounds/          # image, slideshow, gif, procedural (28 effects)
+    ├── backgrounds/          # image, slideshow, gif, procedural (29 effects)
     ├── widgets/              # clock, tile_grid
     ├── services/             # HA WebSocket + MQTT/HASS
     └── render/               # text, icons, palette, brightness

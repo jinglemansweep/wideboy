@@ -228,4 +228,4 @@ def test_tag_expansion_all_effects(tmp_path):
     palettes = load_palettes("palettes.yml")
     bg = build_background(scene, palette_definitions=palettes)
     assert isinstance(bg, CompositeBackground)
-    assert len(bg._backgrounds) == 28
+    assert len(bg._backgrounds) == 29
