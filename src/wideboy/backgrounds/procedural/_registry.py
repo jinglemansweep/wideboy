@@ -35,6 +35,7 @@ from .solar import solar
 from .starfield import starfield
 from .strobe import strobe
 from .tetris import tetris
+from .trench import trench
 from .traffic import traffic
 from .waves import waves
 
@@ -66,6 +67,7 @@ EFFECTS = {
     boids.name: boids,
     cityscape.name: cityscape,
     tetris.name: tetris,
+    trench.name: trench,
     asteroids.name: asteroids,
     flappy.name: flappy,
     solar.name: solar,

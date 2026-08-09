@@ -114,7 +114,7 @@ backgrounds:
 
 Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 
-#### Available effects (29)
+#### Available effects (30)
 
 | Effect | Tags | Default palette |
 |--------|------|-----------------|
@@ -146,6 +146,7 @@ Custom tags can be added via the [`effect_tags`](#custom-effect-tags) setting.
 | strobe | geometric, linear, retro | mono |
 | tetris | game, retro | neon |
 | traffic | energetic, linear | neon |
+| trench | energetic, game, nostalgic, retro | mono |
 | waves | abstract, calm | forest |
 
 #### Other background types

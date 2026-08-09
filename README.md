@@ -14,7 +14,7 @@ Displays a clock and Home Assistant entity tile grid over animated procedural ba
 
 ## Effects
 
-29 procedural background effects with tag-based selection and auto-rotation.
+30 procedural background effects with tag-based selection and auto-rotation.
 
 ### Airwolf
 
@@ -184,6 +184,12 @@ AI-controlled falling Tetris blocks. Tags: `game`, `retro`. Palette: `neon`.
 
 Animated traffic jam scene. Tags: `linear`, `energetic`. Palette: `neon`.
 
+### Trench Run
+
+![trench](docs/screenshots/trench.png)
+
+Death Star trench assault -- a chase-cam run through a zooming trench, weaving between full-height wall buttresses and gun turrets that protrude from the sides. Tags: `game`, `retro`, `nostalgic`, `energetic`. Palette: `mono`.
+
 ### Waves
 
 ![waves](docs/screenshots/waves.png)
@@ -192,7 +198,7 @@ Sine-wave interference patterns. Tags: `abstract`, `calm`. Palette: `forest`.
 
 ## Features
 
-- **29 procedural effects** with tag-based selection and auto-rotation
+- **30 procedural effects** with tag-based selection and auto-rotation
 - **Custom tags** assignable to any effect via settings YAML for personalised groupings
 - **Home Assistant integration** via WebSocket (entity state) and MQTT (control)
 - **Live control** from HA: on/off, brightness, effect, palette, tag filter, scene
@@ -227,7 +233,7 @@ wideboy/
     ├── config.py             # pydantic-settings models
     ├── display/              # emulator + hardware backends + remap
     ├── core/                 # scene loader, factory, layer base
-    ├── backgrounds/          # image, slideshow, gif, procedural (29 effects)
+    ├── backgrounds/          # image, slideshow, gif, procedural (30 effects)
     ├── widgets/              # clock, tile_grid
     ├── services/             # HA WebSocket + MQTT/HASS
     └── render/               # text, icons, palette, brightness
