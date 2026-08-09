@@ -10,13 +10,14 @@ from .base import Widget
 
 _DEFAULTS = {
     "font": "fonts/white-rabbit.ttf",
-    "font_size": 16,
+    "font_size": 14,
     "color_fg": [255, 255, 255, 255],
     "color_outline": [0, 0, 0, 255],
     "color_bar": [0, 0, 0, 180],
     "duration": 10.0,
     "scroll_speed": 60.0,
-    "bar_height": 24,
+    "bar_height": 18,
+    "right_margin": 130,
 }
 
 
@@ -82,12 +83,12 @@ class NotificationOverlay(Widget):
             return
 
         s = self._merged
-        w = self._canvas_w
         h = self._canvas_h
         bar_h = s["bar_height"]
-        bar_y = (h - bar_h) // 2
+        bar_w = self._canvas_w - s["right_margin"]
+        bar_y = h - bar_h
 
-        bar = pygame.Surface((w, bar_h), pygame.SRCALPHA)
+        bar = pygame.Surface((bar_w, bar_h), pygame.SRCALPHA)
         bar.fill(tuple(s["color_bar"]))
         surface.blit(bar, (0, bar_y))
 
@@ -96,12 +97,12 @@ class NotificationOverlay(Widget):
         text_y = bar_y + (bar_h - text_surf.get_height()) // 2
 
         scroll_speed = s["scroll_speed"]
-        period = text_w + w
+        period = text_w + bar_w
         offset = int(self._elapsed * scroll_speed) % period
-        x = w - offset
+        x = bar_w - offset
 
         surface.blit(text_surf, (x, text_y))
-        if x + text_w < w:
+        if x + text_w < bar_w:
             surface.blit(text_surf, (x + text_w, text_y))
 
     @property
