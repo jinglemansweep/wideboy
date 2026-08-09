@@ -16,7 +16,7 @@ _DEFAULTS = {
     "color_bar": [0, 0, 0, 180],
     "duration": 30.0,
     "scroll_speed": 60.0,
-    "bar_height": 18,
+    "bar_height": 17,
     "right_margin": 128,
     "fade_duration": 1.0,
 }
@@ -105,7 +105,7 @@ class NotificationOverlay(Widget):
 
         text_surf = self._text_surface
         text_w = text_surf.get_width()
-        text_y = bar_y + (bar_h - text_surf.get_height()) // 2
+        text_y = bar_y + (bar_h - text_surf.get_height()) // 2 + 1
 
         scroll_speed = s["scroll_speed"]
         gap = 120
