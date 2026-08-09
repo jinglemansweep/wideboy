@@ -79,12 +79,19 @@ class NotificationOverlay(Widget):
 
         self._elapsed = now - notification["received_at"]
 
-        remaining = notification["expire_time"] - now
         fade_dur = self._merged["fade_duration"]
-        if remaining < fade_dur:
-            self._fade_alpha = max(0, int(255 * remaining / fade_dur))
+        if self._elapsed < fade_dur:
+            fade_in = int(255 * self._elapsed / fade_dur)
         else:
-            self._fade_alpha = 255
+            fade_in = 255
+
+        remaining = notification["expire_time"] - now
+        if remaining < fade_dur:
+            fade_out = max(0, int(255 * remaining / fade_dur))
+        else:
+            fade_out = 255
+
+        self._fade_alpha = min(fade_in, fade_out)
 
         self.mark_dirty()
 
