@@ -36,6 +36,7 @@ src/wideboy/
     base.py                # Widget ABC (extends Layer)
     clock.py               # Digital clock widget
     tile_grid.py           # Home Assistant entity tile grid
+    notification.py        # Scrolling notification overlay (MQTT notify)
   render/
     palette.py             # Palette model + PaletteClock for palette cycling
     text.py                # Bitmap font rendering

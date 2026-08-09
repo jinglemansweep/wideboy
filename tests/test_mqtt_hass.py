@@ -196,3 +196,21 @@ def test_handle_effect_auto():
     svc._client = MagicMock()
     svc._handle_command("test_display/effect/set", "auto")
     assert svc._current_state["effect"] == "auto"
+
+
+def test_discovery_payload_notify():
+    svc = _make_service()
+    payload = svc._discovery_payload("notify", "notify")
+    assert payload["command_topic"] == "~/set"
+    assert "state_topic" not in payload
+    assert payload["unique_id"] == "test_display_notify"
+
+
+def test_handle_notify():
+    svc = _make_service()
+    svc._client = MagicMock()
+    svc._handle_command("test_display/notify/set", "Hello world!")
+    assert svc._state.notification is not None
+    assert svc._state.notification["text"] == "Hello world!"
+    assert "received_at" in svc._state.notification
+    assert "expire_time" in svc._state.notification

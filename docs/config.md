@@ -303,6 +303,7 @@ When MQTT is enabled, wideboy publishes Home Assistant discovery entities:
 | `effect` | Select | Lock to specific effect, or `auto` to resume rotation |
 | `tag` | Select | Filter effects by tag, or `all` |
 | `palette` | Select | Override palette for current effect |
+| `notify` | Notify | Send a text notification to the display (scrolling banner, 10s) |
 
 Topics follow the pattern `{device_id}/{entity}/set` for commands and
 `{device_id}/{entity}/state` for state updates.
@@ -316,3 +317,15 @@ Discovery is published to `{discovery_prefix}/component/{device_id}/{entity}/con
 - Selecting a **tag** filters the rotation pool and unlocks any locked effect.
 - Selecting a **palette** applies to the currently active effect only.
 - **Scene** changes reload the full scene file and reset all overrides.
+- **Notify** publishes a message to `{device_id}/notify/set`; it appears as a scrolling banner overlay for 10 seconds.
+
+### Usage from Home Assistant
+
+```yaml
+# In an automation or script
+action: notify.send_message
+data:
+  message: "Doorbell rang!"
+target:
+  entity_id: notify.wideboy_notify
+```

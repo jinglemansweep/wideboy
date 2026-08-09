@@ -100,10 +100,16 @@ class DisplayState:
         self.brightness = brightness
         self.master_on: bool = True
         self.master_level: float = 1.0
+        self.notification: dict | None = None
 
 
 def _build_scene(settings: Settings):
-    from .core.factory import build_background, build_widgets, collect_entity_ids
+    from .core.factory import (
+        add_system_overlays,
+        build_background,
+        build_widgets,
+        collect_entity_ids,
+    )
     from .core.scene import load_scene
     from .render.brightness import BrightnessConfig, BrightnessManager
     from .render.palette import load_palettes
@@ -121,7 +127,13 @@ def _build_scene(settings: Settings):
         foreground=BrightnessConfig(default=settings.brightness.foreground.default),
     )
     entity_ids = collect_entity_ids(scene)
-    return DisplayState(scene, palettes, background, widgets, brightness), entity_ids
+    state = DisplayState(scene, palettes, background, widgets, brightness)
+    add_system_overlays(
+        state,
+        canvas_width=settings.display.canvas.width,
+        canvas_height=settings.display.canvas.height,
+    )
+    return state, entity_ids
 
 
 async def run_loop(

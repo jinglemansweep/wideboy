@@ -152,6 +152,13 @@ class MqttHassService:
                 }
             )
 
+        elif component == "notify":
+            base.update(
+                {
+                    "command_topic": "~/set",
+                }
+            )
+
         return base
 
     def _publish_discovery(self) -> None:
@@ -166,6 +173,7 @@ class MqttHassService:
             ("select", "effect"),
             ("select", "tag"),
             ("select", "palette"),
+            ("notify", "notify"),
         ]
 
         for component, object_id in entities:
@@ -374,6 +382,18 @@ class MqttHassService:
             self._set_palette(payload)
             self._publish_state("palette")
 
+        elif object_id == "notify":
+            import time
+
+            duration = 10.0
+            now = time.monotonic()
+            self._state.notification = {
+                "text": payload,
+                "received_at": now,
+                "expire_time": now + duration,
+            }
+            logger.info("Notification received: %s", payload[:100])
+
     def _set_effect(self, name: str) -> None:
         bg = self._state.background
         if hasattr(bg, "set_effect"):
@@ -421,7 +441,7 @@ class MqttHassService:
 
     def _reload_scene(self, scene_file: str) -> None:
         try:
-            from ..core.factory import build_background, build_widgets
+            from ..core.factory import add_system_overlays, build_background, build_widgets
             from ..core.scene import load_scene
             from ..render.palette import load_palettes
 
@@ -438,6 +458,11 @@ class MqttHassService:
             self._state.palettes = palettes
             self._state.background = background
             self._state.widgets = widgets
+            add_system_overlays(
+                self._state,
+                canvas_width=self._settings.display.canvas.width,
+                canvas_height=self._settings.display.canvas.height,
+            )
             self._settings.scenes.file = scene_file
 
             logger.info("Scene reloaded: %s", scene_file)

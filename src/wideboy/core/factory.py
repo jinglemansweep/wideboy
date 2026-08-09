@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from ..backgrounds.base import Background
 from ..backgrounds.composite import CompositeBackground
@@ -160,3 +161,15 @@ def collect_entity_ids(scene: SceneDef) -> list[str]:
                     if eid and eid not in ids:
                         ids.append(eid)
     return ids
+
+
+def add_system_overlays(state: Any, canvas_width: int = 768, canvas_height: int = 64) -> None:
+    from ..widgets.notification import NotificationOverlay
+
+    state.widgets.append(
+        NotificationOverlay(
+            state,
+            canvas_width=canvas_width,
+            canvas_height=canvas_height,
+        )
+    )
