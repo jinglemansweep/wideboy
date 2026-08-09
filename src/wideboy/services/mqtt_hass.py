@@ -385,7 +385,7 @@ class MqttHassService:
         elif object_id == "notify":
             import time
 
-            duration = 10.0
+            duration = 30.0
             now = time.monotonic()
             self._state.notification = {
                 "text": payload,
